@@ -23,7 +23,20 @@ export function CaseSignalPanel({ caseFile }: { caseFile: SignalCaseFile }) {
                 <span>{labelKind(signal.kind)}</span>
               </div>
               <p>{signal.summary}</p>
-              <small>{signal.caveat}</small>
+              <dl className="signalProof">
+                <div>
+                  <dt>Evidencia</dt>
+                  <dd>{signal.evidence}</dd>
+                </div>
+                <div>
+                  <dt>Caveat</dt>
+                  <dd>{signal.caveat}</dd>
+                </div>
+                <div>
+                  <dt>Siguiente paso</dt>
+                  <dd>{signal.action}</dd>
+                </div>
+              </dl>
             </div>
           </article>
         ))}

@@ -3,6 +3,7 @@ import { Download, ExternalLink, FileSearch, Route, Satellite, ShieldCheck } fro
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
 
@@ -19,6 +20,7 @@ export function CaseDetails({
 }) {
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
+  const expediente = buildExpediente(caseFile as ExpedienteCaseFile);
   return (
     <div className="caseDetails">
       <div className="panelKicker">
@@ -46,8 +48,8 @@ export function CaseDetails({
       </div>
 
       <section className="whyBox">
-        <h2>Por que mirar</h2>
-        <p>{formatWhy(caseFile)}</p>
+        <h2>Por que aparecio</h2>
+        <p>{expediente.summary.plainSummary}</p>
       </section>
 
       <CaseSignalPanel caseFile={caseFile} />
@@ -74,10 +76,13 @@ export function CaseDetails({
       </section>
 
       <section className="receiptBox">
-        <h2>Evidence receipt</h2>
+        <h2>Rastro oficial</h2>
         <dl>
           <ReceiptRow label="Fuente" value={caseFile.receipt.sourceName} />
+          <ReceiptRow label="Locator" value={expediente.officialTrail.primary.locator.label} />
+          <ReceiptRow label="Nota" value={expediente.officialTrail.primary.locator.note} />
           <ReceiptRow label="Hash" value={`${caseFile.receipt.fileHash.slice(0, 24)}...`} />
+          <ReceiptRow label="Raw path" value={caseFile.receipt.rawPath} />
           <ReceiptRow
             label="Extraido"
             value={new Date(caseFile.receipt.extractedAt).toLocaleString("es-AR")}
@@ -119,6 +124,15 @@ export function CaseDetails({
             ? "El punto se dibuja porque el contrato cruza contra una obra con coordenada oficial. El domicilio del proveedor no se usa como ubicacion de ejecucion."
             : "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra."}
         </p>
+      </section>
+
+      <section className="nextStepsBox">
+        <h2>Que verificar despues</h2>
+        <ol>
+          {expediente.nextVerification.slice(0, 5).map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
       </section>
     </div>
   );
@@ -232,17 +246,6 @@ function labelCaseType(caseType: CrossCountryCaseFile["caseType"]): string {
 
 function formatSupplier(caseFile: CrossCountryCaseFile): string {
   return caseFile.supplierName ?? caseFile.supplierDocument ?? "Sin dato";
-}
-
-function formatWhy(caseFile: ExplorerCase): string {
-  if (isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract") {
-    const competition = formatBidderCount(caseFile);
-    const suffix = competition === "Sin dato"
-      ? "Falta medir competencia con ofertas o actas."
-      : `El cruce oficial muestra ${competition.toLowerCase()}.`;
-    return `Es un contrato oficial enlazado a una obra con coordenada verificada. ${suffix} Faro muestra evidencia relacionada sin inferir pagos.`;
-  }
-  return "Es una obra publica declarada con coordenadas oficiales. Faro la convierte en un punto investigable: ubicacion, expediente, organismo, fuente y descarga del caso.";
 }
 
 function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {

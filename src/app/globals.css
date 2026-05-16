@@ -442,7 +442,8 @@ a {
 .signalsBox,
 .satelliteBox,
 .receiptBox,
-.traceBox {
+.traceBox,
+.nextStepsBox {
   border: 1px solid var(--faro-line);
   background: rgba(255, 255, 255, 0.035);
   padding: 12px;
@@ -450,6 +451,7 @@ a {
 
 .metric span,
 .receiptBox dt,
+.signalProof dt,
 .satelliteGrid span {
   display: block;
   color: rgba(255, 255, 255, 0.48);
@@ -457,7 +459,8 @@ a {
 }
 
 .metric strong,
-.receiptBox dd {
+.receiptBox dd,
+.signalProof dd {
   display: block;
   margin-top: 5px;
   color: var(--faro-text);
@@ -469,7 +472,8 @@ a {
 .whyBox h2,
 .signalsBox h2,
 .satelliteBox h2,
-.receiptBox h2 {
+.receiptBox h2,
+.nextStepsBox h2 {
   margin: 0 0 8px;
   font-size: 13px;
 }
@@ -558,6 +562,25 @@ a {
   color: rgba(255, 255, 255, 0.48);
   font-size: 11px;
   line-height: 1.35;
+}
+
+.signalProof {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0 0;
+}
+
+.signalProof dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.signalProof dd {
+  margin-left: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
 }
 
 .countryExplorer {
@@ -748,6 +771,25 @@ a {
 
 .traceBox button.active {
   background: rgba(243, 201, 105, 0.23);
+}
+
+.nextStepsBox {
+  display: grid;
+  gap: 8px;
+}
+
+.nextStepsBox h2 {
+  margin-bottom: 0;
+}
+
+.nextStepsBox ol {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--faro-muted);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .emptyState {
