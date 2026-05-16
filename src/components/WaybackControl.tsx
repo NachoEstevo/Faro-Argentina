@@ -55,7 +55,7 @@ function Body({
   if (state.status === "error") {
     return (
       <div className="waybackError">
-        <p>{state.message || "No se pudo cargar Wayback."}</p>
+        <p>{state.message}</p>
         {onRetry ? (
           <button type="button" onClick={onRetry}>
             <RefreshCw size={12} aria-hidden /> Reintentar
@@ -63,6 +63,9 @@ function Body({
         ) : null}
       </div>
     );
+  }
+  if (state.status === "active" && state.releases.length === 0) {
+    return <p className="waybackEmpty">No hay releases disponibles.</p>;
   }
   const { releases, activeReleaseId } = state;
   const activeIndex = releases.findIndex((release) => release.releaseId === activeReleaseId);
@@ -77,7 +80,7 @@ function Body({
       <div className="waybackSlider">
         <button
           type="button"
-          onClick={() => canGoBack && onActiveReleaseChange(releases[safeIndex - 1].releaseId)}
+          onClick={() => onActiveReleaseChange(releases[safeIndex - 1].releaseId)}
           disabled={!canGoBack}
           aria-label="Release anterior"
         >
@@ -98,7 +101,7 @@ function Body({
         />
         <button
           type="button"
-          onClick={() => canGoForward && onActiveReleaseChange(releases[safeIndex + 1].releaseId)}
+          onClick={() => onActiveReleaseChange(releases[safeIndex + 1].releaseId)}
           disabled={!canGoForward}
           aria-label="Release siguiente"
         >
@@ -106,7 +109,7 @@ function Body({
         </button>
       </div>
       <p className="waybackMeta">
-        Maxar / Airbus . {releases.length} {releases.length === 1 ? "release" : "releases"} disponibles
+        Maxar / Airbus {"·"} {releases.length} {releases.length === 1 ? "release" : "releases"} disponibles
       </p>
     </div>
   );
