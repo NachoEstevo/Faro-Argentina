@@ -79,6 +79,9 @@ export interface PeruContractRow {
   urlcontrato: string;
   fecha_publicacion_contrato: string;
   fecha_suscripcion_contrato: string;
+  fecha_vigencia_inicial?: string;
+  fecha_vigencia_final?: string;
+  fecha_vigencia_fin_actualizada?: string;
 }
 
 export interface ChileCompraSnapshot {
@@ -202,19 +205,21 @@ export function buildPeruContractCases(
       const recordId = [contractCode, clean(row.num_item) || "item"].join("-");
       const amount = parseMoney(row.monto_contratado_item) ?? parseMoney(row.monto_contratado_total);
       const detailUrl = clean(row.urlcontrato);
+      const signedDate = normalizeDate(row.fecha_suscripcion_contrato);
+      const validity = buildValidityTerm(row);
       return {
         id: `PE-CONTRACT-${recordId}`,
         countryCode: "PE",
         caseType: "procurement_contract",
         workNumber: recordId,
-        year: parseYear(clean(row.fecha_suscripcion_contrato).slice(0, 4)),
+        year: parseYear(signedDate?.slice(0, 4)),
         title: clean(row.descripcion_proceso) || clean(row.num_contrato) || contractCode,
         procedureNumber: clean(row.codigoconvocatoria),
         agencyName: `Entidad OECE ${clean(row.codigoentidad)}`,
         agencyCode: clean(row.codigoentidad),
         contractingUnit: clean(row.num_contrato),
-        executionTerm: null,
-        executionTermType: null,
+        executionTerm: validity,
+        executionTermType: validity ? "vigencia_contractual" : null,
         coordinates: null,
         evidenceLevel: "official_dataset",
         amount: amount === null ? null : { value: amount, currency: normalizePeruCurrency(row.moneda), label: "monto_contratado" },
@@ -338,6 +343,22 @@ function normalizePeruCurrency(value: string): string {
   if (cleaned.includes("sol")) return "PEN";
   if (cleaned.includes("dolar") || cleaned.includes("dólar")) return "USD";
   return clean(value) || "PEN";
+}
+
+function buildValidityTerm(row: PeruContractRow): string | null {
+  const start = normalizeDate(row.fecha_vigencia_inicial);
+  const end = normalizeDate(row.fecha_vigencia_fin_actualizada) ?? normalizeDate(row.fecha_vigencia_final);
+  if (start && end) return `${start} - ${end}`;
+  return start ?? end;
+}
+
+function normalizeDate(value: string | undefined): string | null {
+  const cleaned = clean(value);
+  if (/^\d{4}-\d{2}-\d{2}/.test(cleaned)) return cleaned.slice(0, 10);
+  if (!/^\d+(\.\d+)?$/.test(cleaned)) return null;
+  const serial = Number(cleaned);
+  if (!Number.isFinite(serial) || serial < 20000 || serial > 80000) return null;
+  return new Date(Math.round((serial - 25569) * 86_400_000)).toISOString().slice(0, 10);
 }
 
 function clean(value: string | number | null | undefined): string {

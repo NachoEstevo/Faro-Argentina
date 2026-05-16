@@ -155,6 +155,44 @@ test("buildPeruContractCases turns OECE contract rows into supplier-aware cases"
   assert.equal(caseFile?.receipt.locatorType, "official_detail");
 });
 
+test("buildPeruContractCases normalizes OECE Excel serial dates for filters and validity", () => {
+  const [caseFile] = buildPeruContractCases(
+    [
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Contratacion de maquinaria pesada",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "1",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "113868.79",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "45811",
+        fecha_suscripcion_contrato: "45811",
+        fecha_vigencia_inicial: "45811",
+        fecha_vigencia_final: "45819",
+        fecha_vigencia_fin_actualizada: "45819",
+      },
+    ],
+    {
+      ...options,
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    },
+  );
+
+  assert.equal(caseFile?.year, 2025);
+  assert.equal(caseFile?.executionTerm, "2025-06-03 - 2025-06-11");
+  assert.equal(caseFile?.executionTermType, "vigencia_contractual");
+});
+
 test("buildChileCompraCases turns API details into exportable procurement cases", () => {
   const snapshot: ChileCompraSnapshot = {
     details: [
