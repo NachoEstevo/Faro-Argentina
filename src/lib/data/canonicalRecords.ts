@@ -6,6 +6,7 @@ export type CanonicalRecordType =
   | "public_entity"
   | "geo_point"
   | "procurement_process"
+  | "procurement_contract"
   | "budget_execution"
   | "supplier";
 
@@ -60,6 +61,18 @@ export interface ProcurementProcess extends CanonicalRecordBase {
   amount: CrossCountryCaseFile["amount"];
 }
 
+export interface ProcurementContract extends CanonicalRecordBase {
+  type: "procurement_contract";
+  title: string;
+  officialIds: {
+    contractNumber: string;
+    procedureNumber: string;
+  };
+  publicEntityId: string | null;
+  supplierId: string | null;
+  amount: CrossCountryCaseFile["amount"];
+}
+
 export interface BudgetExecution extends CanonicalRecordBase {
   type: "budget_execution";
   title: string;
@@ -75,6 +88,7 @@ export interface Supplier extends CanonicalRecordBase {
   name: string;
   officialIds: {
     normalizedName: string;
+    document: string | null;
   };
 }
 
@@ -83,6 +97,7 @@ export type CanonicalRecord =
   | PublicEntity
   | GeoPoint
   | ProcurementProcess
+  | ProcurementContract
   | BudgetExecution
   | Supplier;
 
@@ -156,8 +171,9 @@ export function buildCanonicalRecordsFromCrossCountryCase(
   const publicEntityId = caseFile.agencyCode
     ? `public_entity:${caseFile.countryCode}:${caseFile.agencyCode}`
     : null;
-  const supplierId = caseFile.supplierName
-    ? `supplier:${caseFile.countryCode}:${slug(caseFile.supplierName)}`
+  const supplierKey = caseFile.supplierDocument ?? caseFile.supplierName;
+  const supplierId = supplierKey
+    ? `supplier:${caseFile.countryCode}:${slug(supplierKey)}`
     : null;
 
   if (publicEntityId) {
@@ -175,7 +191,7 @@ export function buildCanonicalRecordsFromCrossCountryCase(
     });
   }
 
-  if (supplierId && caseFile.supplierName) {
+  if (supplierId && supplierKey) {
     records.push({
       canonicalId: supplierId,
       type: "supplier",
@@ -183,9 +199,10 @@ export function buildCanonicalRecordsFromCrossCountryCase(
       receiptIds,
       confidence: "official_dataset",
       caveats: ["Proveedor declarado en adjudicacion oficial; no prueba pago."],
-      name: caseFile.supplierName,
+      name: caseFile.supplierName ?? `Proveedor ${caseFile.supplierDocument}`,
       officialIds: {
-        normalizedName: slug(caseFile.supplierName),
+        normalizedName: slug(caseFile.supplierName ?? supplierKey),
+        document: caseFile.supplierDocument,
       },
     });
   }
@@ -200,6 +217,26 @@ export function buildCanonicalRecordsFromCrossCountryCase(
       caveats: caseFile.caveats,
       title: caseFile.title,
       officialIds: {
+        procedureNumber: caseFile.procedureNumber,
+      },
+      publicEntityId,
+      supplierId,
+      amount: caseFile.amount,
+    });
+    return records;
+  }
+
+  if (caseFile.caseType === "procurement_contract") {
+    records.push({
+      canonicalId: `procurement_contract:${caseFile.countryCode}:${caseFile.workNumber}`,
+      type: "procurement_contract",
+      countryCode: caseFile.countryCode,
+      receiptIds,
+      confidence: "official_dataset",
+      caveats: caseFile.caveats,
+      title: caseFile.title,
+      officialIds: {
+        contractNumber: caseFile.workNumber,
         procedureNumber: caseFile.procedureNumber,
       },
       publicEntityId,

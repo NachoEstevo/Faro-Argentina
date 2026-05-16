@@ -208,7 +208,7 @@
     "accessMode": "portal_download",
     "format": "csv_xlsx",
     "sourceUrl": "https://www.datosabiertos.gob.pe/node/20236/dataset",
-    "downloadUrl": null,
+    "downloadUrl": "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx",
     "updateFrequency": "monthly",
     "keyFields": ["nomenclatura", "ruc_proveedor", "numero_contrato", "monto_contrato", "fecha_suscripcion"],
     "caveats": ["Contrato no confirma devengado ni pago; usar MEF para contexto presupuestario."]

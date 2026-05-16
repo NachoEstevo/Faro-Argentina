@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildCanonicalRecordsFromArgentinaWork,
   buildCanonicalRecordsFromCrossCountryCase,
+  type ProcurementContract,
   type ProcurementProcess,
   type PublicWork,
   type Supplier,
@@ -61,6 +62,7 @@ test("buildCanonicalRecordsFromCrossCountryCase emits buyer, supplier and procur
     evidenceLevel: "official_dataset",
     amount: { value: 294, currency: "CLP", label: "monto_adjudicado" },
     supplierName: "Sociedad de Gestion e Inversiones Julfior SPA",
+    supplierDocument: "78.047.617-6",
     receipt: {
       receiptId: "CL-MERCADO-PUBLICO-API-1159-2-LP26",
       sourceId: "CL-MERCADO-PUBLICO-API",
@@ -83,7 +85,54 @@ test("buildCanonicalRecordsFromCrossCountryCase emits buyer, supplier and procur
   );
   const supplier = records.find((record): record is Supplier => record.type === "supplier");
 
-  assert.equal(process?.supplierId, "supplier:CL:sociedad-de-gestion-e-inversiones-julfior-spa");
+  assert.equal(process?.supplierId, "supplier:CL:78-047-617-6");
   assert.equal(process?.publicEntityId, "public_entity:CL:1159");
   assert.equal(supplier?.name, "Sociedad de Gestion e Inversiones Julfior SPA");
+  assert.equal(supplier?.officialIds.document, "78.047.617-6");
+});
+
+test("buildCanonicalRecordsFromCrossCountryCase emits contract records with supplier RUC", () => {
+  const records = buildCanonicalRecordsFromCrossCountryCase({
+    id: "PE-CONTRACT-2328678-1",
+    countryCode: "PE",
+    caseType: "procurement_contract",
+    workNumber: "2328678-1",
+    year: 2025,
+    title: "Contratacion de maquinaria pesada",
+    procedureNumber: "1122118",
+    agencyName: "Entidad OECE 010373",
+    agencyCode: "010373",
+    contractingUnit: "ORDEN DE SERVICIO N. 373",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: null,
+    evidenceLevel: "official_dataset",
+    amount: { value: 113868.79, currency: "PEN", label: "monto_contratado" },
+    supplierName: null,
+    supplierDocument: "20487924050",
+    receipt: {
+      receiptId: "PE-OECE-CONTRATOS-2328678-1",
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+      snapshotHash: "sha256-snapshot",
+      fileHash: "sha256-snapshot",
+      rowHash: "sha256-row",
+      recordId: "2328678-1",
+      locatorType: "official_dataset",
+      extractedAt: "2026-05-16T00:00:00.000Z",
+      parserVersion: "cross-country@1",
+    },
+    caveats: ["Contrato no prueba pago."],
+  });
+
+  const contract = records.find(
+    (record): record is ProcurementContract => record.type === "procurement_contract",
+  );
+  const supplier = records.find((record): record is Supplier => record.type === "supplier");
+
+  assert.equal(contract?.supplierId, "supplier:PE:20487924050");
+  assert.equal(contract?.officialIds.procedureNumber, "1122118");
+  assert.equal(supplier?.officialIds.document, "20487924050");
 });

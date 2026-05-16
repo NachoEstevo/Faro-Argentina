@@ -2,7 +2,10 @@ import { createEvidenceReceipt, type EvidenceReceipt } from "./evidenceReceipts.
 import { parseCsv } from "./argentinaWorks.ts";
 
 export type CrossCountryCode = "PE" | "CL";
-export type CrossCountryCaseType = "budget_execution" | "procurement_process";
+export type CrossCountryCaseType =
+  | "budget_execution"
+  | "procurement_process"
+  | "procurement_contract";
 
 export interface CrossCountryCaseFile {
   id: string;
@@ -25,6 +28,7 @@ export interface CrossCountryCaseFile {
     label: string;
   } | null;
   supplierName: string | null;
+  supplierDocument: string | null;
   receipt: EvidenceReceipt;
   caveats: string[];
 }
@@ -43,6 +47,24 @@ export interface PeruBudgetRow {
   ESPECIFICA_DET_NOMBRE: string;
   MONTO_DEVENGADO: string;
   MONTO_GIRADO: string;
+}
+
+export interface PeruContractRow {
+  codigoentidad: string;
+  codigoconvocatoria: string;
+  descripcion_proceso: string;
+  n_cod_contrato: string;
+  codigo_contrato: string;
+  num_contrato: string;
+  num_item: string;
+  monto_contratado_total: string;
+  monto_contratado_item: string;
+  moneda: string;
+  ruc_contratista: string;
+  ruc_destinatario_pago: string;
+  urlcontrato: string;
+  fecha_publicacion_contrato: string;
+  fecha_suscripcion_contrato: string;
 }
 
 export interface ChileCompraSnapshot {
@@ -132,6 +154,7 @@ export function buildPeruBudgetCases(
         evidenceLevel: "official_dataset",
         amount: amount === null ? null : { value: amount, currency: "PEN", label: "devengado" },
         supplierName: null,
+        supplierDocument: null,
         receipt: createEvidenceReceipt({
           sourceId: options.sourceId,
           sourceName: options.sourceName,
@@ -147,6 +170,57 @@ export function buildPeruBudgetCases(
         caveats: [
           "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
           "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final.",
+        ],
+      };
+    });
+}
+
+export function buildPeruContractCases(
+  rows: PeruContractRow[],
+  options: BuildOptions,
+  limit = 25,
+): CrossCountryCaseFile[] {
+  return rows
+    .filter((row) => clean(row.codigo_contrato).length > 0)
+    .slice(0, limit)
+    .map((row) => {
+      const contractCode = clean(row.codigo_contrato);
+      const recordId = [contractCode, clean(row.num_item) || "item"].join("-");
+      const amount = parseMoney(row.monto_contratado_item) ?? parseMoney(row.monto_contratado_total);
+      const detailUrl = clean(row.urlcontrato);
+      return {
+        id: `PE-CONTRACT-${recordId}`,
+        countryCode: "PE",
+        caseType: "procurement_contract",
+        workNumber: recordId,
+        year: parseYear(clean(row.fecha_suscripcion_contrato).slice(0, 4)),
+        title: clean(row.descripcion_proceso) || clean(row.num_contrato) || contractCode,
+        procedureNumber: clean(row.codigoconvocatoria),
+        agencyName: `Entidad OECE ${clean(row.codigoentidad)}`,
+        agencyCode: clean(row.codigoentidad),
+        contractingUnit: clean(row.num_contrato),
+        executionTerm: null,
+        executionTermType: null,
+        coordinates: null,
+        evidenceLevel: "official_dataset",
+        amount: amount === null ? null : { value: amount, currency: normalizePeruCurrency(row.moneda), label: "monto_contratado" },
+        supplierName: null,
+        supplierDocument: clean(row.ruc_contratista) || null,
+        receipt: createEvidenceReceipt({
+          sourceId: options.sourceId,
+          sourceName: options.sourceName,
+          sourceUrl: detailUrl || options.sourceUrl,
+          rawPath: options.rawPath,
+          snapshotHash: options.fileHash,
+          recordId,
+          locatorType: detailUrl ? "official_detail" : "official_dataset",
+          extractedAt: options.extractedAt,
+          parserVersion: options.parserVersion,
+          row: { ...row },
+        }),
+        caveats: [
+          "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+          "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada.",
         ],
       };
     });
@@ -178,6 +252,7 @@ export function buildChileCompraCases(
       evidenceLevel: "official_dataset",
       amount: amount === null ? null : { value: amount, currency: tender.Moneda ?? "CLP", label: award.amount === null ? "monto_estimado" : "monto_adjudicado" },
       supplierName: award.supplierName,
+      supplierDocument: award.supplierDocument,
       receipt: createEvidenceReceipt({
         sourceId: options.sourceId,
         sourceName: options.sourceName,
@@ -201,10 +276,12 @@ export function buildChileCompraCases(
 function summarizeChileAward(tender: ChileTender): {
   amount: number | null;
   supplierName: string | null;
+  supplierDocument: string | null;
 } {
   const awardedItems = (tender.Items?.Listado ?? [])
     .map((item) => ({
       supplierName: clean(item.Adjudicacion?.NombreProveedor),
+      supplierDocument: clean(item.Adjudicacion?.RutProveedor),
       amount:
         typeof item.Adjudicacion?.MontoUnitario === "number"
           ? item.Adjudicacion.MontoUnitario * (item.Cantidad ?? 1)
@@ -212,13 +289,17 @@ function summarizeChileAward(tender: ChileTender): {
     }))
     .filter((item) => item.supplierName.length > 0 || item.amount !== null);
 
-  if (awardedItems.length === 0) return { amount: null, supplierName: null };
+  if (awardedItems.length === 0) {
+    return { amount: null, supplierName: null, supplierDocument: null };
+  }
 
   const supplierName = Array.from(new Set(awardedItems.map((item) => item.supplierName).filter(Boolean))).join(", ");
+  const supplierDocument = Array.from(new Set(awardedItems.map((item) => item.supplierDocument).filter(Boolean))).join(", ");
   const amount = awardedItems.reduce((total, item) => total + (item.amount ?? 0), 0);
   return {
     amount: Number.isFinite(amount) ? amount : null,
     supplierName: supplierName || null,
+    supplierDocument: supplierDocument || null,
   };
 }
 
@@ -236,6 +317,13 @@ function parseYear(value: string | undefined): number | null {
 
 function titleJoin(...parts: Array<string | undefined>): string {
   return parts.map(clean).filter(Boolean).join(" / ") || "Sin dato";
+}
+
+function normalizePeruCurrency(value: string): string {
+  const cleaned = clean(value).toLowerCase();
+  if (cleaned.includes("sol")) return "PEN";
+  if (cleaned.includes("dolar") || cleaned.includes("dólar")) return "USD";
+  return clean(value) || "PEN";
 }
 
 function clean(value: string | number | null | undefined): string {

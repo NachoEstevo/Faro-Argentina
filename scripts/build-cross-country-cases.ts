@@ -3,11 +3,15 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
   buildChileCompraCases,
   buildPeruBudgetCases,
+  buildPeruContractCases,
   type ChileCompraSnapshot,
+  type PeruContractRow,
 } from "../src/lib/data/crossCountryCases.ts";
 import { profileCsvSnapshot, profileJsonSnapshot } from "../src/lib/data/snapshots.ts";
+import { profileXlsxSnapshot, readXlsxRows } from "../src/lib/data/xlsx.ts";
 
 const pePath = new URL("../data/official/pe/mef-2026-gasto-diario.sample.csv", import.meta.url);
+const peContractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
 const clPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
   import.meta.url,
@@ -16,6 +20,7 @@ const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta
 
 const generatedAt = new Date().toISOString();
 const peText = await readFile(pePath, "utf8");
+const peContractsBuffer = await readFile(peContractsPath);
 const clText = await readFile(clPath, "utf8");
 const peProfile = profileCsvSnapshot({
   sourceId: "PE-MEF-GASTO-DIARIO",
@@ -29,6 +34,11 @@ const clProfile = profileJsonSnapshot({
   text: clText,
   recordPath: ["details"],
 });
+const peContractsProfile = profileXlsxSnapshot({
+  sourceId: "PE-OECE-CONTRATOS",
+  rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+  buffer: peContractsBuffer,
+});
 
 const peCases = buildPeruBudgetCases(peText, {
   sourceId: "PE-MEF-GASTO-DIARIO",
@@ -36,6 +46,17 @@ const peCases = buildPeruBudgetCases(peText, {
   sourceUrl: "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
   rawPath: "data/official/pe/mef-2026-gasto-diario.sample.csv",
   fileHash: peProfile.fileHash,
+  extractedAt: generatedAt,
+  parserVersion: "cross-country@1",
+});
+const peContractRows = readXlsxRows(peContractsBuffer, { limit: 30 })
+  .rows as unknown as PeruContractRow[];
+const peContractCases = buildPeruContractCases(peContractRows, {
+  sourceId: "PE-OECE-CONTRATOS",
+  sourceName: "OECE contratos",
+  sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+  rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+  fileHash: peContractsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
 });
@@ -63,6 +84,16 @@ const payload = {
       cases: peCases,
     }),
     buildDataset({
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      filePath: "data/official/pe/oece-contratos-2025.xlsx",
+      fileHash: peContractsProfile.fileHash,
+      snapshotProfile: peContractsProfile,
+      rawRows: peContractsProfile.rowCount,
+      cases: peContractCases,
+    }),
+    buildDataset({
       sourceId: "CL-MERCADO-PUBLICO-API",
       sourceName: "API de Mercado Publico",
       sourceUrl: "https://api.mercadopublico.cl/modules/api.aspx",
@@ -73,7 +104,7 @@ const payload = {
       cases: clCases,
     }),
   ],
-  cases: [...peCases, ...clCases],
+  cases: [...peCases, ...peContractCases, ...clCases],
 };
 
 await mkdir(new URL("../src/data/", import.meta.url), { recursive: true });

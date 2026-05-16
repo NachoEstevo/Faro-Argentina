@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const chileCompraTicket =
   process.env.CHILECOMPRA_TICKET ?? "F8537A18-6766-4DEF-9E59-426B4FEE2844";
@@ -12,6 +12,10 @@ const peOutputPath = new URL(
   "../data/official/pe/mef-2026-gasto-diario.sample.csv",
   import.meta.url,
 );
+const peContractsOutputPath = new URL(
+  "../data/official/pe/oece-contratos-2025.xlsx",
+  import.meta.url,
+);
 const clOutputPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
   import.meta.url,
@@ -19,17 +23,20 @@ const clOutputPath = new URL(
 const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
 const peMefUrl = "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv";
+const peOeceContractsUrl =
+  "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx";
 const clListUrl = `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=${chileCompraDate}&estado=${chileCompraState}&ticket=${chileCompraTicket}`;
 
 await mkdir(new URL("../data/official/pe/", import.meta.url), { recursive: true });
 await mkdir(new URL("../data/official/cl/", import.meta.url), { recursive: true });
 
 const peSnapshot = await fetchPeruMefSample();
+const peContractsSnapshot = await fetchPeruOeceContracts();
 const clSnapshot = await fetchChileCompraSample();
 
 await writeFile(manifestPath, `${JSON.stringify({
   generatedAt: new Date().toISOString(),
-  snapshots: [peSnapshot, clSnapshot],
+  snapshots: [peSnapshot, peContractsSnapshot, clSnapshot],
 }, null, 2)}\n`, "utf8");
 
 async function fetchPeruMefSample() {
@@ -57,38 +64,74 @@ async function fetchPeruMefSample() {
   };
 }
 
-async function fetchChileCompraSample() {
-  const list = await fetchJson<ChileListResponse>(clListUrl);
-  const listing = list.Listado.slice(0, chileCompraDetailLimit);
-  const details: ChileDetailResponse[] = [];
-  for (const item of listing) {
-    details.push(await fetchChileDetail(item));
-    await sleep(750);
+async function fetchPeruOeceContracts() {
+  const response = await fetch(peOeceContractsUrl);
+  if (!response.ok) {
+    throw new Error(`PE OECE contracts fetch failed with ${response.status}`);
   }
-  const payload = {
-    sourceId: "CL-MERCADO-PUBLICO-API",
-    sampleDate: chileCompraDate,
-    sampleState: chileCompraState,
-    list: {
-      ...list,
-      FechaCreacion: null,
-      Listado: listing,
-    },
-    details: details.map((detail) => ({
-      ...detail,
-      FechaCreacion: null,
-    })),
-  };
-  const text = `${JSON.stringify(payload, null, 2)}\n`;
-  await writeFile(clOutputPath, text, "utf8");
 
+  const buffer = Buffer.from(await response.arrayBuffer());
+  await writeFile(peContractsOutputPath, buffer);
+
+  return {
+    sourceId: "PE-OECE-CONTRATOS",
+    rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    fetchUrl: peOeceContractsUrl,
+    fetchedAt: new Date().toISOString(),
+    contentType:
+      response.headers.get("content-type") ??
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    contentLength: response.headers.get("content-length"),
+    partial: false,
+    fileHash: hashBuffer(buffer),
+    byteSize: buffer.byteLength,
+  };
+}
+
+async function fetchChileCompraSample() {
+  try {
+    const list = await fetchJson<ChileListResponse>(clListUrl);
+    const listing = list.Listado.slice(0, chileCompraDetailLimit);
+    const details: ChileDetailResponse[] = [];
+    for (const item of listing) {
+      details.push(await fetchChileDetail(item));
+      await sleep(750);
+    }
+    const payload = {
+      sourceId: "CL-MERCADO-PUBLICO-API",
+      sampleDate: chileCompraDate,
+      sampleState: chileCompraState,
+      list: {
+        ...list,
+        FechaCreacion: null,
+        Listado: listing,
+      },
+      details: details.map((detail) => ({
+        ...detail,
+        FechaCreacion: null,
+      })),
+    };
+    const text = `${JSON.stringify(payload, null, 2)}\n`;
+    await writeFile(clOutputPath, text, "utf8");
+    return buildChileSnapshotEntry(text, details.length);
+  } catch (error) {
+    const cached = await readFile(clOutputPath, "utf8");
+    const parsed = JSON.parse(cached) as { details?: unknown[] };
+    return {
+      ...buildChileSnapshotEntry(cached, parsed.details?.length ?? 0),
+      fetchWarning: error instanceof Error ? error.message : "unknown_fetch_error",
+    };
+  }
+}
+
+function buildChileSnapshotEntry(text: string, recordCount: number) {
   return {
     sourceId: "CL-MERCADO-PUBLICO-API",
     rawPath: "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
     fetchUrl: redactTicket(clListUrl),
     fetchedAt: new Date().toISOString(),
     contentType: "application/json",
-    recordCount: details.length,
+    recordCount,
     partial: true,
     fileHash: hashText(text),
     byteSize: Buffer.byteLength(text, "utf8"),
@@ -127,6 +170,10 @@ function trimToCompleteRows(text: string): string {
 
 function hashText(text: string): string {
   return `sha256-${createHash("sha256").update(text).digest("hex")}`;
+}
+
+function hashBuffer(buffer: Buffer): string {
+  return `sha256-${createHash("sha256").update(buffer).digest("hex")}`;
 }
 
 function redactTicket(url: string): string {

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-16T05:15:51.294Z",
+  "generatedAt": "2026-05-16T05:24:12.970Z",
   "datasets": [
     {
-      "generatedAt": "2026-05-16T05:15:51.294Z",
+      "generatedAt": "2026-05-16T05:24:12.970Z",
       "source": {
         "sourceId": "PE-MEF-GASTO-DIARIO",
         "sourceName": "MEF presupuesto y ejecucion de gasto diario",
@@ -127,6 +127,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004430-1",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -138,7 +139,7 @@
             "rowHash": "sha256-a33801ba8c99e7555522688913aea0f5b234a424af54edfe94b50f45aa191465",
             "recordId": "2026-725-3000001-5004430-1",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -167,6 +168,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-723-3999999-5000616-2",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -178,7 +180,7 @@
             "rowHash": "sha256-ecbde015193c4d6b44a2786f09aab181e115ecb0a5692f2397fc6cff163b5a13",
             "recordId": "2026-723-3999999-5000616-2",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -207,6 +209,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3999999-5001566-3",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -218,7 +221,7 @@
             "rowHash": "sha256-a330a796711a93b8da045c1acf1b7c0294fbb12f7338b56894ea14ca683e789d",
             "recordId": "2026-998-3999999-5001566-3",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -247,6 +250,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000016-5000114-4",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -258,7 +262,7 @@
             "rowHash": "sha256-ddf874f88f01651ce1fe9d495f680ed534c5a446ed36492511a41d28357fb24d",
             "recordId": "2026-998-3000016-5000114-4",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -287,6 +291,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000691-5005157-5",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -298,7 +303,7 @@
             "rowHash": "sha256-55d2eac51c29dcadba84388ee59c4d7f57955e21361ebd406ac02f765d7e28de",
             "recordId": "2026-998-3000691-5005157-5",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -327,6 +332,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000691-5005157-6",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -338,7 +344,7 @@
             "rowHash": "sha256-a8e5a7045b49866a52377d766d355353a52964f8fdea98c95bb0f6a7058412d6",
             "recordId": "2026-725-3000691-5005157-6",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -367,6 +373,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3043960-5000070-7",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -378,7 +385,7 @@
             "rowHash": "sha256-f468e3444dd2114c5613f3612a2b84247f41a29ff86af13e626ec2ad00d784e9",
             "recordId": "2026-725-3043960-5000070-7",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -407,6 +414,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000384-5005177-8",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -418,7 +426,7 @@
             "rowHash": "sha256-a70485d4841257a3b58e8e9d866fbf152e5ef106a3140a2799ad8825a429ceb8",
             "recordId": "2026-721-3000384-5005177-8",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -447,6 +455,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000699-5005189-9",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -458,7 +467,7 @@
             "rowHash": "sha256-8e58550541d9b700d79212e9b4ea268aaf1809cefe72eeb53c4b16dbb8688f18",
             "recordId": "2026-725-3000699-5005189-9",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -487,6 +496,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000881-5005193-10",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -498,7 +508,7 @@
             "rowHash": "sha256-6e361409df01c4743268b6891a02318ecc88505141bc4e7a6d1d7e2bbe8071ec",
             "recordId": "2026-725-3000881-5005193-10",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -527,6 +537,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000702-5005196-11",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -538,7 +549,7 @@
             "rowHash": "sha256-6efbcfb8a9bd8b52cf9820f6170a9687a16df5e4e7a7e581dfbaf20577b55079",
             "recordId": "2026-725-3000702-5005196-11",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -567,6 +578,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000705-5005201-12",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -578,7 +590,7 @@
             "rowHash": "sha256-d3ef6253005b5cbf64d9a9b444e88d841c17f7acfe87053adfd869da5a03f4e3",
             "recordId": "2026-725-3000705-5005201-12",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -607,6 +619,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004279-13",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -618,7 +631,7 @@
             "rowHash": "sha256-31333e9f332e81685cde04ee7f7cdf35bf8b8da2cbc115a4f92802551cb514cf",
             "recordId": "2026-725-3000001-5004279-13",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -647,6 +660,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3999999-5000004-14",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -658,7 +672,7 @@
             "rowHash": "sha256-545db768568e5bb4cbd23f33f9875542bc4eae09ababd0d01b0016f3b12be982",
             "recordId": "2026-721-3999999-5000004-14",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -687,6 +701,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005560-15",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -698,7 +713,7 @@
             "rowHash": "sha256-0162a2df565f5ddb229124165eb907e844a5ee9fa8722ef0b5b8c62a5e3d35fe",
             "recordId": "2026-721-3000734-5005560-15",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -727,6 +742,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005561-16",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -738,7 +754,7 @@
             "rowHash": "sha256-55a0f629a1fa8aa626bd01b1df0573dd3fbaeb0607ed8e806410e63193054bbb",
             "recordId": "2026-721-3000734-5005561-16",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -767,6 +783,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033172-5000037-17",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -778,7 +795,7 @@
             "rowHash": "sha256-aedea2f216ae4055abe8ac98977003fa04a1b3f9edc0571762abe6a9640648fd",
             "recordId": "2026-998-3033172-5000037-17",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -807,6 +824,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033172-5000037-18",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -818,7 +836,7 @@
             "rowHash": "sha256-85299172385df9801e1f617d8f8c54dffb1cb074204a6cdb68680df75a23c54f",
             "recordId": "2026-725-3033172-5000037-18",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -847,6 +865,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-19",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -858,7 +877,7 @@
             "rowHash": "sha256-64b1b4dd034c55ac5947439738572801ebce1dc5879ab9682113bf0b50e2dd32",
             "recordId": "2026-725-3033254-5000017-19",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -887,6 +906,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-20",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -898,7 +918,7 @@
             "rowHash": "sha256-808363a2ee9bdd45a1a50b41ef68daf60a98af1f80b6fb454bbcfd2ffea46efa",
             "recordId": "2026-725-3033254-5000017-20",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -927,6 +947,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-21",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -938,7 +959,7 @@
             "rowHash": "sha256-ef4b6107c64828feeaf1cd4795608c542d7d44c59efc0b2ed0b131c211a4c3c6",
             "recordId": "2026-725-3033254-5000017-21",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -967,6 +988,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-22",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -978,7 +1000,7 @@
             "rowHash": "sha256-cc85f7323dee063f60161abc5645181d9f2184c20f6eee9fa9d5ea63bf9fcd7b",
             "recordId": "2026-725-3033254-5000017-22",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1007,6 +1029,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033255-5000018-23",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1018,7 +1041,7 @@
             "rowHash": "sha256-318164d0e1baa04d04f23c9a6723288aff05ce6d26671503f28fa2c473a2f771",
             "recordId": "2026-725-3033255-5000018-23",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1047,6 +1070,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033292-5000043-24",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1058,7 +1082,7 @@
             "rowHash": "sha256-867844a25cb0a5a1c28f2bc899ba840003bd7cc4c9a4f8effe72d9df3100b320",
             "recordId": "2026-998-3033292-5000043-24",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1087,6 +1111,7 @@
             "label": "devengado"
           },
           "supplierName": null,
+          "supplierDocument": null,
           "receipt": {
             "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033307-5000055-25",
             "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1098,7 +1123,7 @@
             "rowHash": "sha256-e54919a8deda0e7fb78321da6492162aea1f689dd795bce98d8e7fa82669344f",
             "recordId": "2026-998-3033307-5000055-25",
             "locatorType": "official_dataset",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1109,7 +1134,1084 @@
       ]
     },
     {
-      "generatedAt": "2026-05-16T05:15:51.294Z",
+      "generatedAt": "2026-05-16T05:24:12.970Z",
+      "source": {
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://www.datosabiertos.gob.pe/node/20236/dataset",
+        "filePath": "data/official/pe/oece-contratos-2025.xlsx",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb"
+      },
+      "snapshotProfile": {
+        "sourceId": "PE-OECE-CONTRATOS",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "byteSize": 15827272,
+        "sheetPath": "xl/worksheets/sheet1.xml",
+        "dimension": "A1:X63235",
+        "rowCount": 63234,
+        "columns": [
+          "codigoentidad",
+          "codigoconvocatoria",
+          "descripcion_proceso",
+          "n_cod_contrato",
+          "codigo_contrato",
+          "num_contrato",
+          "num_item",
+          "monto_contratado_total",
+          "monto_contratado_item",
+          "monto_adicional",
+          "monto_reduccion",
+          "monto_prorroga",
+          "monto_complementario",
+          "moneda",
+          "ruc_contratista",
+          "ruc_destinatario_pago",
+          "tieneresolucion",
+          "urlcontrato",
+          "espublicado",
+          "fecha_publicacion_contrato",
+          "fecha_suscripcion_contrato",
+          "fecha_vigencia_inicial",
+          "fecha_vigencia_final",
+          "fecha_vigencia_fin_actualizada"
+        ]
+      },
+      "stats": {
+        "rawRows": 63234,
+        "caseFiles": 25,
+        "mapReadyCases": 0
+      },
+      "cases": [
+        {
+          "id": "PE-CONTRACT-2328678-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2328678-1",
+          "year": 4581,
+          "title": "CONTRATACION DEL SERVICIO DE ALQUILER DE MAQUINARIA PESADA PARA LA EJECUCION DE LA FICHA TECNICA PARA INTERVENCION POR EMERGENCIA DENOMINADA:\"LIMPIEZA DE CUNETAS Y ESTABILIZACION DE TALUDES EN LA VIA QUE UNE EL CASERIO EL ARENAL - SAN JOSE, DISTRITO DE LA PECA, PROVINCIA DE BAGUA, AMAZONAS",
+          "procedureNumber": "1122118",
+          "agencyName": "Entidad OECE 010373",
+          "agencyCode": "010373",
+          "contractingUnit": "ORDEN DE SERVICIO N. 373",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 113868.79,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20487924050",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2328678-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d1530e49-b4c8-4d51-a9ab-5fdf0fb43468.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-275c8ef6a2e8f8199798a92eeca64724f6f68fefafee2dd1d4660352989d8c04",
+            "recordId": "2328678-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2310233-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2310233-1",
+          "year": 4570,
+          "title": "ADQUISICION DE SUMINISTRO PETROLEO DIESEL B5 S-50",
+          "procedureNumber": "1087217",
+          "agencyName": "Entidad OECE 002371",
+          "agencyCode": "002371",
+          "contractingUnit": "001-2025-EPS-M/GG",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 112500,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20608461371",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2310233-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bb65cbc4-9234-4e4c-b5bd-ce1e135cf403.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-8f507b97969d4239864f21e61a52f8ccf00616b06cfa639eb09c0260ebacede4",
+            "recordId": "2310233-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2349451-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2349451-1",
+          "year": 4592,
+          "title": "ADQUISICIÓN DE EQUIPAMIENTO BIOMEDICO (REFRIGERADORAS Y CAMARA DE CONSERVACION DE CADAVER) PARA LA OBRA: ¿REEMPLAZO DE LA INFRAESTRUCTURA E IMPLEMENTACIÓN DEL CENTRO DE SALUD SAN JUAN BAUTISTA ¿ MICRO RED SAN JUAN BAUTISTA DE LA RED DE SALUD HUAMANGA ¿ DIRESA - AYACUCHO¿",
+          "procedureNumber": "1147593",
+          "agencyName": "Entidad OECE 000035",
+          "agencyCode": "000035",
+          "contractingUnit": "N°3678-2025",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 92000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20608811380",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2349451-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=07b8d9a9-cb90-4a38-b7ec-869075c75f2b.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-834bb87163d91d37658d3632a671de470c741793048ce0283c67f55f56f3c93c",
+            "recordId": "2349451-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2361889-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2361889-1",
+          "year": 4598,
+          "title": "ADQUISICIÓN DE UNA (1) BISELADORA DE LENTES OFTÁLMICOS COMPUTARIZADA PARA LA UNIDAD FUNCIONAL DE ÓPTICA POR OPTIMIZACIÓN",
+          "procedureNumber": "1166863",
+          "agencyName": "Entidad OECE 010196",
+          "agencyCode": "010196",
+          "contractingUnit": "084-2025-OLOG-OEA-INO",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 198000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20358856684",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2361889-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=038ad674-803a-4b58-91d6-7613523e4727.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-28c29cc167cd153370db59122ca3905f9d864f3b2b0334afe2e947643c166a96",
+            "recordId": "2361889-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2341719-5",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2341719-5",
+          "year": 4583,
+          "title": "ADQUISICION DE PRODUCTOS FARMACEUTICOS SIN FICHA TECNICA APROBADA GRUPO I PARA BENEFICIARIOS DE LA IAFAS EP",
+          "procedureNumber": "1117933",
+          "agencyName": "Entidad OECE 200683",
+          "agencyCode": "200683",
+          "contractingUnit": "133",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 93408,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20100127670",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2341719-5",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=9f5dd2c3-f1d8-4b7a-9192-cb0dbfe87436.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-ced753902d0e13e131884fe1450ec3024eda300e68c57f37f26575be65f66f21",
+            "recordId": "2341719-5",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2316821-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2316821-1",
+          "year": 4574,
+          "title": "ADQUISICIÓN DE ACCESORIOS Y MATERIALES PARA EL TALLER DE PARCHADO, ENLLANTE Y DESENLLANTE DE NEUMATICOS PARA LA DISTINTAS UNIDADES VEHICULARES PERTENECIENTES A LA MUNICIPALIDAD DISTRITAL VEINTISÉIS DE OCTUBRE",
+          "procedureNumber": "1098333",
+          "agencyName": "Entidad OECE 201043",
+          "agencyCode": "201043",
+          "contractingUnit": "142",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 63570,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "10709045933",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2316821-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=04d8d657-41d0-4666-8a54-9a217df201ee.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-9d17f5c959981bec7aa356a1f9563296d9e3aa3b29c58e501b7b1d4346654907",
+            "recordId": "2316821-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2359991-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2359991-1",
+          "year": 4596,
+          "title": "SUMINISTRO DE MATERIAL GRANULAR PARA AFIRMADO A - 1, SEGUN ESPECIFICACIONES TÉCNICAS, DERIVADA DE SIE N° 19 PARA EL MEJORAMIENTO DEL SERVICIO DE FORMACION DE PREGRADO EN EDUCACION SUPERIOR UNIVERSITARIA EN LA ESCUELA PROFESIONAL DE CIENCIAS DE LA COMUNICACION SOCIAL DE LA UNIVERSIDAD NACIONAL",
+          "procedureNumber": "1153007",
+          "agencyName": "Entidad OECE 001897",
+          "agencyCode": "001897",
+          "contractingUnit": "CONTRATO N° 088-2025-UA/DGA-UNA-PUNO",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 159408,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20447985731",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2359991-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=c4a3ca7b-dcc9-4d6f-b7c7-2e658a680933.PDF",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-3c9be03dccee4f3738da6ccdfeb767d735a3dbbf042d454a18acaeb788bd9d60",
+            "recordId": "2359991-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2342406-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2342406-1",
+          "year": 4588,
+          "title": "SERVICIO DE PUBLICIDAD DIGITAL EN FACEBOOK E INSTAGRAM PARA LA CAMPAÑA ¿REACTIVACIÓN NORTE 2DA ETAPA¿",
+          "procedureNumber": "1142800",
+          "agencyName": "Entidad OECE 001947",
+          "agencyCode": "001947",
+          "contractingUnit": "OS25080194",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 6000,
+            "currency": "USD",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "L0606465503",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2342406-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=a3924301-700f-466d-8b47-d37a7eebe79c.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-138781886e6108b9dd7418b7a84d02bacd928626273787cc6fa85a1e44b64028",
+            "recordId": "2342406-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2360164-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2360164-1",
+          "year": 4596,
+          "title": "SERVICIO DE RENOVACIÓN DE GARANTÍA, SOPORTE TÉCNICO Y MANTENIMIENTO PREVENTIVO DE LA PLATAFORMA HPE O EQUIVALENTE DEL CENTRO DE DATOS DEL MTPE",
+          "procedureNumber": "1137648",
+          "agencyName": "Entidad OECE 000023",
+          "agencyCode": "000023",
+          "contractingUnit": "023-2025-MTPE",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 1452000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20507241400",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2360164-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bbfd4bd7-7175-42e1-8111-9de60348162d.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-367c196c1d2d920fcefb9db82224820a23c950f5223e911efc31924ac0fc8524",
+            "recordId": "2360164-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2355539-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2355539-1",
+          "year": 4592,
+          "title": "CONTRATACION DEL SERVICIO PARA LA ELABORACION DEL ESTUDIO DE PREINVERSION DEL PROYECTO: MEJORAMIENTO DE LOS SERVICIOSOPERATIVOS O MISIONALES INSTITUCIONALES EN LA RED INTEGRAL DE SALUD JAEN",
+          "procedureNumber": "1146808",
+          "agencyName": "Entidad OECE 010433",
+          "agencyCode": "010433",
+          "contractingUnit": "6",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 129960,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "10723726501",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2355539-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d0b10440-6d9b-466a-921f-7841cde4906d.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-1b03200299c7dc76c66a65af84630fa46fae313fac5a5e3d5a8fe5008b00cec4",
+            "recordId": "2355539-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2374651-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2374651-1",
+          "year": 4589,
+          "title": "SERVICIO DE UNA CONSULTA SOCIAL PARA LA PROPUESTA DE LINEAMIENTOS CONCEPTUALES Y PLAN MUSEOLOGICO DEL PROYECTO:MEJORAMIENTO Y AMPLIACIÓNDE LOS SERVICIOS DEL SANTUARIO DE LA MEMORIA LA HOYADA EN EL DISTRITO DE ANDRES AVELINO CACERES - PROVINCIA DE HUAMANGA - DEPARTAMENTO DE AYACUCHO",
+          "procedureNumber": "1126429",
+          "agencyName": "Entidad OECE 000035",
+          "agencyCode": "000035",
+          "contractingUnit": "136-2025-GRA-SEDECENTRAL-OAPF",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 190000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "10418962572",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2374651-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e0dac0e2-3d75-4779-bfaf-dc8bc80e3b5d.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-562ddd8e7c26261331136c554b86a19473c61991e685057b96ce696f4a8dc6be",
+            "recordId": "2374651-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2360398-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2360398-1",
+          "year": 4597,
+          "title": "ADQUISICION DE TACHOS DE METAL CON INSTALACIÓN A TODO COSTO PARA LA IOAR: ¿REMODELACIÓN DE BERMA; EN EL (LA) ALAMEDA AV. COLONIZADORES, DISTRITO DE MAJES, PROVINCIA CAYLLOMA, DEPARTAMENTO DE AREQUIPA¿",
+          "procedureNumber": "1164567",
+          "agencyName": "Entidad OECE 002606",
+          "agencyCode": "002606",
+          "contractingUnit": "1085",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 74880,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20614103842",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2360398-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e4e8c5e9-9767-4ee7-a160-678a97431435.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-fdeaec97e51891c8a2c0d038a38e43bc7ebee3aa03088698a446f93b2ad51f4c",
+            "recordId": "2360398-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2355815-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2355815-1",
+          "year": 4595,
+          "title": "AQUISICION DE ASFALTO LIQUIDO CUT BACK MC-30(CURADO MEDIO GRADO MC-30)SEGÚN ESPECIFICACIONES TECNICAS PARA LA META MEJORAMIENTO DE LA CARRETERA PU 146; EMP PE - 34 I (HUANCANÉ) - HUERTAPATA - VISCACHANI - QUELLAHUYO - EMP PE - 34 (CACUÑA), DISTRITO DE HUANCANE - PROVINCIA DE HUANCANE - DEPARTAMENTO",
+          "procedureNumber": "1132181",
+          "agencyName": "Entidad OECE 000049",
+          "agencyCode": "000049",
+          "contractingUnit": "CONTRATO N° 111-2025-SIE-GR PUNO",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 482220,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20574690219",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2355815-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=0bb13c23-3486-4b12-a295-6f91f01cad3c.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-fc9acfbb38eb0923be73512a87db15c66ad4f0b5f3b7d789113dc439aec4536c",
+            "recordId": "2355815-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2351399-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2351399-1",
+          "year": 4592,
+          "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LA EFICIENCIA DEL SISTEMA HIDRÁULICO DE CONDUCCIÓN Y DISTRIBUCIÓN DE PAMPA GRANDE - SECTOR RIEGO CHONGOYAPE\" CUI 2360385",
+          "procedureNumber": "1136235",
+          "agencyName": "Entidad OECE 010353",
+          "agencyCode": "010353",
+          "contractingUnit": "CONTRATO N° 000021-2025-GR.LAMB/PEOT-GG [515617519 - 46]",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 2304694.59,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1704847",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2351399-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=83bef642-495e-4789-b09e-d81f0b3e68c7.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-6c25968d5c7018bfb0539fc6047f447bd91ac0d558198f0749f369efc76f82b9",
+            "recordId": "2351399-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2348455-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2348455-1",
+          "year": 4591,
+          "title": "ADQUISICION DE SEIS (06) CAMIONETAS PICK - UP DOBLE CABINA Y TRACCION 4X4 DEBIDAMENTE EQUIPADAS  PARA PATRULLAJE DE SERENAZGO EN EL DISTRITO DE LA ESPERANZA PROVINCIA DE TRUJILLO DEPARTAMENTO DE LA LIBERTAD",
+          "procedureNumber": "1139903",
+          "agencyName": "Entidad OECE 001194",
+          "agencyCode": "001194",
+          "contractingUnit": "CONTRATO N°013-2025",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 990000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1711585",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2348455-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=da22114a-5251-49a4-9a2d-42d5d94d85ce.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-5587fd7b7c384210fb6d70ee7f2184933b19404801da68b12d869e2052310e56",
+            "recordId": "2348455-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2323213-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2323213-1",
+          "year": 4575,
+          "title": "Mantenimiento Rutinario del Camino Vecinal No Pavimentado, Tramo: EMP. AP-100 (CCORIPACCHA) - EMP. AP-584 (ROSASPATA), longitud de 8.385Km, Distrito(s) de KISHUARA, Provincia de ANDAHUAYLAS, Región de APURIMAC.",
+          "procedureNumber": "1092314",
+          "agencyName": "Entidad OECE 200252",
+          "agencyCode": "200252",
+          "contractingUnit": "CONTRATO GERENCIAL N° 29-2025-MPA/IVP-GG",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 41589.6,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1651071",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2323213-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=9046d0c8-827a-4a45-abb8-9261b4abfea0.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-a5f1c29d6ef4df35c33db29afe45ee32ad8ba25a444227b76ca6528e5eaa685f",
+            "recordId": "2323213-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2345020-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2345020-1",
+          "year": 4590,
+          "title": "ADQUISICION DE CEMENTO PORTLAND TIPO I",
+          "procedureNumber": "1134317",
+          "agencyName": "Entidad OECE 000645",
+          "agencyCode": "000645",
+          "contractingUnit": "N° 006-2025-MDCH/GM-OAyCP",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 177192.4,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20611580780",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2345020-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=3981d9a2-ba2d-40a3-8a4b-5c776cc20f42.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-47b73f46549df180d00f67adc00ad33bc9b2cd7b7b8ac3ec45e4cb3b8ae7894d",
+            "recordId": "2345020-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2362944-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2362944-1",
+          "year": 4598,
+          "title": "CONTRATACION PARA LA EJECUCION DE OBRA: RENOVACION DE PUENTE; EN EL (LA) CAMINO VECINAL PU-1103 (PUENTE CHILA), TRAMO: EMP. 36B - EMP 665 , DISTRITO DE PICHACANI, PROVINCIA PUNO, DEPARTAMENTO PUNO",
+          "procedureNumber": "1157076",
+          "agencyName": "Entidad OECE 001648",
+          "agencyCode": "001648",
+          "contractingUnit": "055-2025-MPP/GA",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 423441.6,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1731938",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2362944-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=8a421135-d202-43fc-8504-c648cc0f9d38.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-6a6569ff6988d74382e71237a6505e4be9f8a7c5cc50999e846d161e9d703935",
+            "recordId": "2362944-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2343822-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2343822-1",
+          "year": 4589,
+          "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA EJECUCIÓN DE IOARR: ¿RENOVACIÓN DE PUENTE: EN EL (LA) LUPUCHE, PUENTE SALITRE EN EL TRAMO EMP. PE-1N (NUEVO PIEDRAL) ¿ PIEDRAL ANTIGUO ¿ EMP. PI-1034 (DV. EL TALLAN) DISTRITO DE EL TALLAN, PROVINCIA DE PIURA, DEPARTAMENTO DE",
+          "procedureNumber": "1134700",
+          "agencyName": "Entidad OECE 001584",
+          "agencyCode": "001584",
+          "contractingUnit": "N°54-2025-OA/MPP",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 112464,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1709475",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2343822-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=f80b184d-ad44-4cd9-82dd-0f40e5e215b0.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-2f3062a2d8a4686b6e30a1f081b5239585ef5383711b615e6390ef0b0be347bb",
+            "recordId": "2343822-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2339116-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2339116-1",
+          "year": 4586,
+          "title": "CONTRATACIÓN DE LA CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LOS SERVICIO EDUCATIVOS EN LA INSTITUCIÓN EDUCATIVA N° 40199 CIUDAD MI TRABAJO EN LA URBANIZACIÓN CIUDAD MI TRABAJO DEL DISTRITO DE SOCABAYA - PROVINCIA DE AREQUIPA - DEPARTAMENTO DE AREQUIPA\" - I ETAPA - CUI N° 2493448",
+          "procedureNumber": "1123318",
+          "agencyName": "Entidad OECE 000416",
+          "agencyCode": "000416",
+          "contractingUnit": "CONTRATO N° 051-2025-MDS-GM",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 82968.71,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1698599",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2339116-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=f24f2591-64f2-48af-a198-7a003750607d.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-d41655792fb47ef6223b98a968880dee807968ffd154de4e313704909b1715b7",
+            "recordId": "2339116-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2372103-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2372103-1",
+          "year": 4594,
+          "title": "CONTRATACION DEL SERVICIO A TODO COSTO DE FABRICACION, INSTALACION Y PINTADO DE JUEGOS INFANTILES PARA LA OBRA CREACION DEL PARQUE RECREATIVO INFANTIL EN LA ASOC PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO MZ E-6 LT 1, AOCIACION PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO DEL DISTRITO DE CERRO COL",
+          "procedureNumber": "1142722",
+          "agencyName": "Entidad OECE 000399",
+          "agencyCode": "000399",
+          "contractingUnit": "CONTRATO N° 47-2025-MDCC",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 55500,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1721625",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2372103-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=8df9dcfc-1791-4573-af40-7f0af236d650.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-c35794ffe5e09849018e5d103b7d602b022e7b4952a2f8e0b02349a510840945",
+            "recordId": "2372103-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2324024-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2324024-1",
+          "year": 4578,
+          "title": "CONTRATACION DEL SERVICIO DE ESPECIALISTA EN GESTION AMBIENTAL, SEGURIDAD Y SALUD OCUPACIONAL PARA EL PROYECTO: \"MEJORAMIENTO DE LA INFRAESTRUCTURA EDUCATIVA Y COMPLEMENTARIA DE LA ESCUELA SUPERIOR DE FORMACION ARTISTICA PUBLICA EDUARDO MEZA SARAVIA - YARINACOCHA - CORONEL PORTILLO - UCAYALI\". CUI N° 2424348.",
+          "procedureNumber": "1112914",
+          "agencyName": "Entidad OECE 000053",
+          "agencyCode": "000053",
+          "contractingUnit": "036-2025-GRU-GGR-ORA",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 148680,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "10456433044",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2324024-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bbf934a1-3324-401e-866a-11ae59b7695a.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-346e03ecdbb434383e079cfdd2bf518f46e5cde736f10258962c3a071c8394cc",
+            "recordId": "2324024-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2379625-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2379625-1",
+          "year": 4608,
+          "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORIA DE OBRA PARA LA ELABORACION DE EXPEDIENTE TECNICO DEL PROYECTO: MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE AGUA POTABLE RURAL Y MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE ALCANTARILLADO U OTRAS FORMAS DE DISPOSICIÓN SANITARIA DE EXCRETAS EN EL CASERIO MAZARAY D",
+          "procedureNumber": "1186506",
+          "agencyName": "Entidad OECE 001871",
+          "agencyCode": "001871",
+          "contractingUnit": "000001-2026-MPCP/ALC-GM",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 318168,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "1763739",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2379625-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e7438b5e-8395-4437-b914-81e4227ae9d9.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-4e9cacb44c85cea70597e681406253c183b7570c794410e2e4a50d301d65ab8b",
+            "recordId": "2379625-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2362913-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2362913-1",
+          "year": 4598,
+          "title": "SERVICIO DE OPERADOR TURÍSTICO PARA VIAJE DE INFLUENCERS ESPAÑA 2025",
+          "procedureNumber": "1165169",
+          "agencyName": "Entidad OECE 001947",
+          "agencyCode": "001947",
+          "contractingUnit": "OS25110303",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 45000,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20452714125",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2362913-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=308bfd25-c26d-4ebb-8040-6231034bd5b3.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-1600e0f77887fef1a504722bfc2cc2cb16396c3eedddf7fd107aff18ce6b6a79",
+            "recordId": "2362913-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        },
+        {
+          "id": "PE-CONTRACT-2320371-1",
+          "countryCode": "PE",
+          "caseType": "procurement_contract",
+          "workNumber": "2320371-1",
+          "year": 4576,
+          "title": "SERVICIO DE ALIMENTACION PARA PACIENTES Y PERSONAL CON 12 HORAS CONTINUAS DEL HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR POR UN PERÍODO DE 03 MESES",
+          "procedureNumber": "1109454",
+          "agencyName": "Entidad OECE 203086",
+          "agencyCode": "203086",
+          "contractingUnit": "18-2025",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 1398886,
+            "currency": "PEN",
+            "label": "monto_contratado"
+          },
+          "supplierName": null,
+          "supplierDocument": "20547662203",
+          "receipt": {
+            "receiptId": "PE-OECE-CONTRATOS-2320371-1",
+            "sourceId": "PE-OECE-CONTRATOS",
+            "sourceName": "OECE contratos",
+            "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d9b4e88e-9c5c-4349-aeb5-40e106777ea3.pdf",
+            "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+            "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+            "rowHash": "sha256-8bbb0008573a445d3c6c41bdf39dc5844c85b181deff0758821d7e4e24848230",
+            "recordId": "2320371-1",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+          ]
+        }
+      ]
+    },
+    {
+      "generatedAt": "2026-05-16T05:24:12.970Z",
       "source": {
         "sourceId": "CL-MERCADO-PUBLICO-API",
         "sourceName": "API de Mercado Publico",
@@ -1159,6 +2261,7 @@
             "label": "monto_adjudicado"
           },
           "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
+          "supplierDocument": "78.047.617-6",
           "receipt": {
             "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -1170,7 +2273,7 @@
             "rowHash": "sha256-2a227354adf8ce4206e3094ef8599c0ff897bb8156f6cfa904a0d5124716db59",
             "recordId": "1159-2-LP26",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1199,6 +2302,7 @@
             "label": "monto_adjudicado"
           },
           "supplierName": "PABLO GALDAMES DIAZ SPA",
+          "supplierDocument": "77.694.443-2",
           "receipt": {
             "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -1210,7 +2314,7 @@
             "rowHash": "sha256-f00c946a846ef46492b6c5745d81368354b9678f89deca45e9843597bc98e271",
             "recordId": "3494-14-LE26",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1239,6 +2343,7 @@
             "label": "monto_adjudicado"
           },
           "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
+          "supplierDocument": "76.125.451-0",
           "receipt": {
             "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -1250,7 +2355,7 @@
             "rowHash": "sha256-98d94a9bc3eb331ced8e6e446bbdadff836f426cd0eb8a05577fc5851abc65d0",
             "recordId": "3019-7-LE26",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "extractedAt": "2026-05-16T05:24:12.970Z",
             "parserVersion": "cross-country@1"
           },
           "caveats": [
@@ -1283,6 +2388,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004430-1",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1294,7 +2400,7 @@
         "rowHash": "sha256-a33801ba8c99e7555522688913aea0f5b234a424af54edfe94b50f45aa191465",
         "recordId": "2026-725-3000001-5004430-1",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1323,6 +2429,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-723-3999999-5000616-2",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1334,7 +2441,7 @@
         "rowHash": "sha256-ecbde015193c4d6b44a2786f09aab181e115ecb0a5692f2397fc6cff163b5a13",
         "recordId": "2026-723-3999999-5000616-2",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1363,6 +2470,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3999999-5001566-3",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1374,7 +2482,7 @@
         "rowHash": "sha256-a330a796711a93b8da045c1acf1b7c0294fbb12f7338b56894ea14ca683e789d",
         "recordId": "2026-998-3999999-5001566-3",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1403,6 +2511,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000016-5000114-4",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1414,7 +2523,7 @@
         "rowHash": "sha256-ddf874f88f01651ce1fe9d495f680ed534c5a446ed36492511a41d28357fb24d",
         "recordId": "2026-998-3000016-5000114-4",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1443,6 +2552,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000691-5005157-5",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1454,7 +2564,7 @@
         "rowHash": "sha256-55d2eac51c29dcadba84388ee59c4d7f57955e21361ebd406ac02f765d7e28de",
         "recordId": "2026-998-3000691-5005157-5",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1483,6 +2593,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000691-5005157-6",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1494,7 +2605,7 @@
         "rowHash": "sha256-a8e5a7045b49866a52377d766d355353a52964f8fdea98c95bb0f6a7058412d6",
         "recordId": "2026-725-3000691-5005157-6",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1523,6 +2634,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3043960-5000070-7",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1534,7 +2646,7 @@
         "rowHash": "sha256-f468e3444dd2114c5613f3612a2b84247f41a29ff86af13e626ec2ad00d784e9",
         "recordId": "2026-725-3043960-5000070-7",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1563,6 +2675,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000384-5005177-8",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1574,7 +2687,7 @@
         "rowHash": "sha256-a70485d4841257a3b58e8e9d866fbf152e5ef106a3140a2799ad8825a429ceb8",
         "recordId": "2026-721-3000384-5005177-8",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1603,6 +2716,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000699-5005189-9",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1614,7 +2728,7 @@
         "rowHash": "sha256-8e58550541d9b700d79212e9b4ea268aaf1809cefe72eeb53c4b16dbb8688f18",
         "recordId": "2026-725-3000699-5005189-9",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1643,6 +2757,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000881-5005193-10",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1654,7 +2769,7 @@
         "rowHash": "sha256-6e361409df01c4743268b6891a02318ecc88505141bc4e7a6d1d7e2bbe8071ec",
         "recordId": "2026-725-3000881-5005193-10",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1683,6 +2798,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000702-5005196-11",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1694,7 +2810,7 @@
         "rowHash": "sha256-6efbcfb8a9bd8b52cf9820f6170a9687a16df5e4e7a7e581dfbaf20577b55079",
         "recordId": "2026-725-3000702-5005196-11",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1723,6 +2839,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000705-5005201-12",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1734,7 +2851,7 @@
         "rowHash": "sha256-d3ef6253005b5cbf64d9a9b444e88d841c17f7acfe87053adfd869da5a03f4e3",
         "recordId": "2026-725-3000705-5005201-12",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1763,6 +2880,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004279-13",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1774,7 +2892,7 @@
         "rowHash": "sha256-31333e9f332e81685cde04ee7f7cdf35bf8b8da2cbc115a4f92802551cb514cf",
         "recordId": "2026-725-3000001-5004279-13",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1803,6 +2921,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3999999-5000004-14",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1814,7 +2933,7 @@
         "rowHash": "sha256-545db768568e5bb4cbd23f33f9875542bc4eae09ababd0d01b0016f3b12be982",
         "recordId": "2026-721-3999999-5000004-14",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1843,6 +2962,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005560-15",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1854,7 +2974,7 @@
         "rowHash": "sha256-0162a2df565f5ddb229124165eb907e844a5ee9fa8722ef0b5b8c62a5e3d35fe",
         "recordId": "2026-721-3000734-5005560-15",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1883,6 +3003,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005561-16",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1894,7 +3015,7 @@
         "rowHash": "sha256-55a0f629a1fa8aa626bd01b1df0573dd3fbaeb0607ed8e806410e63193054bbb",
         "recordId": "2026-721-3000734-5005561-16",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1923,6 +3044,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033172-5000037-17",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1934,7 +3056,7 @@
         "rowHash": "sha256-aedea2f216ae4055abe8ac98977003fa04a1b3f9edc0571762abe6a9640648fd",
         "recordId": "2026-998-3033172-5000037-17",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -1963,6 +3085,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033172-5000037-18",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -1974,7 +3097,7 @@
         "rowHash": "sha256-85299172385df9801e1f617d8f8c54dffb1cb074204a6cdb68680df75a23c54f",
         "recordId": "2026-725-3033172-5000037-18",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2003,6 +3126,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-19",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2014,7 +3138,7 @@
         "rowHash": "sha256-64b1b4dd034c55ac5947439738572801ebce1dc5879ab9682113bf0b50e2dd32",
         "recordId": "2026-725-3033254-5000017-19",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2043,6 +3167,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-20",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2054,7 +3179,7 @@
         "rowHash": "sha256-808363a2ee9bdd45a1a50b41ef68daf60a98af1f80b6fb454bbcfd2ffea46efa",
         "recordId": "2026-725-3033254-5000017-20",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2083,6 +3208,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-21",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2094,7 +3220,7 @@
         "rowHash": "sha256-ef4b6107c64828feeaf1cd4795608c542d7d44c59efc0b2ed0b131c211a4c3c6",
         "recordId": "2026-725-3033254-5000017-21",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2123,6 +3249,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-22",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2134,7 +3261,7 @@
         "rowHash": "sha256-cc85f7323dee063f60161abc5645181d9f2184c20f6eee9fa9d5ea63bf9fcd7b",
         "recordId": "2026-725-3033254-5000017-22",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2163,6 +3290,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033255-5000018-23",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2174,7 +3302,7 @@
         "rowHash": "sha256-318164d0e1baa04d04f23c9a6723288aff05ce6d26671503f28fa2c473a2f771",
         "recordId": "2026-725-3033255-5000018-23",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2203,6 +3331,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033292-5000043-24",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2214,7 +3343,7 @@
         "rowHash": "sha256-867844a25cb0a5a1c28f2bc899ba840003bd7cc4c9a4f8effe72d9df3100b320",
         "recordId": "2026-998-3033292-5000043-24",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2243,6 +3372,7 @@
         "label": "devengado"
       },
       "supplierName": null,
+      "supplierDocument": null,
       "receipt": {
         "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033307-5000055-25",
         "sourceId": "PE-MEF-GASTO-DIARIO",
@@ -2254,12 +3384,1037 @@
         "rowHash": "sha256-e54919a8deda0e7fb78321da6492162aea1f689dd795bce98d8e7fa82669344f",
         "recordId": "2026-998-3033307-5000055-25",
         "locatorType": "official_dataset",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
         "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
         "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2328678-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2328678-1",
+      "year": 4581,
+      "title": "CONTRATACION DEL SERVICIO DE ALQUILER DE MAQUINARIA PESADA PARA LA EJECUCION DE LA FICHA TECNICA PARA INTERVENCION POR EMERGENCIA DENOMINADA:\"LIMPIEZA DE CUNETAS Y ESTABILIZACION DE TALUDES EN LA VIA QUE UNE EL CASERIO EL ARENAL - SAN JOSE, DISTRITO DE LA PECA, PROVINCIA DE BAGUA, AMAZONAS",
+      "procedureNumber": "1122118",
+      "agencyName": "Entidad OECE 010373",
+      "agencyCode": "010373",
+      "contractingUnit": "ORDEN DE SERVICIO N. 373",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 113868.79,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20487924050",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2328678-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d1530e49-b4c8-4d51-a9ab-5fdf0fb43468.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-275c8ef6a2e8f8199798a92eeca64724f6f68fefafee2dd1d4660352989d8c04",
+        "recordId": "2328678-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2310233-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2310233-1",
+      "year": 4570,
+      "title": "ADQUISICION DE SUMINISTRO PETROLEO DIESEL B5 S-50",
+      "procedureNumber": "1087217",
+      "agencyName": "Entidad OECE 002371",
+      "agencyCode": "002371",
+      "contractingUnit": "001-2025-EPS-M/GG",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 112500,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20608461371",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2310233-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bb65cbc4-9234-4e4c-b5bd-ce1e135cf403.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-8f507b97969d4239864f21e61a52f8ccf00616b06cfa639eb09c0260ebacede4",
+        "recordId": "2310233-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2349451-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2349451-1",
+      "year": 4592,
+      "title": "ADQUISICIÓN DE EQUIPAMIENTO BIOMEDICO (REFRIGERADORAS Y CAMARA DE CONSERVACION DE CADAVER) PARA LA OBRA: ¿REEMPLAZO DE LA INFRAESTRUCTURA E IMPLEMENTACIÓN DEL CENTRO DE SALUD SAN JUAN BAUTISTA ¿ MICRO RED SAN JUAN BAUTISTA DE LA RED DE SALUD HUAMANGA ¿ DIRESA - AYACUCHO¿",
+      "procedureNumber": "1147593",
+      "agencyName": "Entidad OECE 000035",
+      "agencyCode": "000035",
+      "contractingUnit": "N°3678-2025",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 92000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20608811380",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2349451-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=07b8d9a9-cb90-4a38-b7ec-869075c75f2b.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-834bb87163d91d37658d3632a671de470c741793048ce0283c67f55f56f3c93c",
+        "recordId": "2349451-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2361889-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2361889-1",
+      "year": 4598,
+      "title": "ADQUISICIÓN DE UNA (1) BISELADORA DE LENTES OFTÁLMICOS COMPUTARIZADA PARA LA UNIDAD FUNCIONAL DE ÓPTICA POR OPTIMIZACIÓN",
+      "procedureNumber": "1166863",
+      "agencyName": "Entidad OECE 010196",
+      "agencyCode": "010196",
+      "contractingUnit": "084-2025-OLOG-OEA-INO",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 198000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20358856684",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2361889-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=038ad674-803a-4b58-91d6-7613523e4727.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-28c29cc167cd153370db59122ca3905f9d864f3b2b0334afe2e947643c166a96",
+        "recordId": "2361889-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2341719-5",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2341719-5",
+      "year": 4583,
+      "title": "ADQUISICION DE PRODUCTOS FARMACEUTICOS SIN FICHA TECNICA APROBADA GRUPO I PARA BENEFICIARIOS DE LA IAFAS EP",
+      "procedureNumber": "1117933",
+      "agencyName": "Entidad OECE 200683",
+      "agencyCode": "200683",
+      "contractingUnit": "133",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 93408,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20100127670",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2341719-5",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=9f5dd2c3-f1d8-4b7a-9192-cb0dbfe87436.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-ced753902d0e13e131884fe1450ec3024eda300e68c57f37f26575be65f66f21",
+        "recordId": "2341719-5",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2316821-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2316821-1",
+      "year": 4574,
+      "title": "ADQUISICIÓN DE ACCESORIOS Y MATERIALES PARA EL TALLER DE PARCHADO, ENLLANTE Y DESENLLANTE DE NEUMATICOS PARA LA DISTINTAS UNIDADES VEHICULARES PERTENECIENTES A LA MUNICIPALIDAD DISTRITAL VEINTISÉIS DE OCTUBRE",
+      "procedureNumber": "1098333",
+      "agencyName": "Entidad OECE 201043",
+      "agencyCode": "201043",
+      "contractingUnit": "142",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 63570,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "10709045933",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2316821-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=04d8d657-41d0-4666-8a54-9a217df201ee.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-9d17f5c959981bec7aa356a1f9563296d9e3aa3b29c58e501b7b1d4346654907",
+        "recordId": "2316821-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2359991-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2359991-1",
+      "year": 4596,
+      "title": "SUMINISTRO DE MATERIAL GRANULAR PARA AFIRMADO A - 1, SEGUN ESPECIFICACIONES TÉCNICAS, DERIVADA DE SIE N° 19 PARA EL MEJORAMIENTO DEL SERVICIO DE FORMACION DE PREGRADO EN EDUCACION SUPERIOR UNIVERSITARIA EN LA ESCUELA PROFESIONAL DE CIENCIAS DE LA COMUNICACION SOCIAL DE LA UNIVERSIDAD NACIONAL",
+      "procedureNumber": "1153007",
+      "agencyName": "Entidad OECE 001897",
+      "agencyCode": "001897",
+      "contractingUnit": "CONTRATO N° 088-2025-UA/DGA-UNA-PUNO",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 159408,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20447985731",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2359991-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=c4a3ca7b-dcc9-4d6f-b7c7-2e658a680933.PDF",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-3c9be03dccee4f3738da6ccdfeb767d735a3dbbf042d454a18acaeb788bd9d60",
+        "recordId": "2359991-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2342406-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2342406-1",
+      "year": 4588,
+      "title": "SERVICIO DE PUBLICIDAD DIGITAL EN FACEBOOK E INSTAGRAM PARA LA CAMPAÑA ¿REACTIVACIÓN NORTE 2DA ETAPA¿",
+      "procedureNumber": "1142800",
+      "agencyName": "Entidad OECE 001947",
+      "agencyCode": "001947",
+      "contractingUnit": "OS25080194",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 6000,
+        "currency": "USD",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "L0606465503",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2342406-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=a3924301-700f-466d-8b47-d37a7eebe79c.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-138781886e6108b9dd7418b7a84d02bacd928626273787cc6fa85a1e44b64028",
+        "recordId": "2342406-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2360164-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2360164-1",
+      "year": 4596,
+      "title": "SERVICIO DE RENOVACIÓN DE GARANTÍA, SOPORTE TÉCNICO Y MANTENIMIENTO PREVENTIVO DE LA PLATAFORMA HPE O EQUIVALENTE DEL CENTRO DE DATOS DEL MTPE",
+      "procedureNumber": "1137648",
+      "agencyName": "Entidad OECE 000023",
+      "agencyCode": "000023",
+      "contractingUnit": "023-2025-MTPE",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 1452000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20507241400",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2360164-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bbfd4bd7-7175-42e1-8111-9de60348162d.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-367c196c1d2d920fcefb9db82224820a23c950f5223e911efc31924ac0fc8524",
+        "recordId": "2360164-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2355539-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2355539-1",
+      "year": 4592,
+      "title": "CONTRATACION DEL SERVICIO PARA LA ELABORACION DEL ESTUDIO DE PREINVERSION DEL PROYECTO: MEJORAMIENTO DE LOS SERVICIOSOPERATIVOS O MISIONALES INSTITUCIONALES EN LA RED INTEGRAL DE SALUD JAEN",
+      "procedureNumber": "1146808",
+      "agencyName": "Entidad OECE 010433",
+      "agencyCode": "010433",
+      "contractingUnit": "6",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 129960,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "10723726501",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2355539-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d0b10440-6d9b-466a-921f-7841cde4906d.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-1b03200299c7dc76c66a65af84630fa46fae313fac5a5e3d5a8fe5008b00cec4",
+        "recordId": "2355539-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2374651-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2374651-1",
+      "year": 4589,
+      "title": "SERVICIO DE UNA CONSULTA SOCIAL PARA LA PROPUESTA DE LINEAMIENTOS CONCEPTUALES Y PLAN MUSEOLOGICO DEL PROYECTO:MEJORAMIENTO Y AMPLIACIÓNDE LOS SERVICIOS DEL SANTUARIO DE LA MEMORIA LA HOYADA EN EL DISTRITO DE ANDRES AVELINO CACERES - PROVINCIA DE HUAMANGA - DEPARTAMENTO DE AYACUCHO",
+      "procedureNumber": "1126429",
+      "agencyName": "Entidad OECE 000035",
+      "agencyCode": "000035",
+      "contractingUnit": "136-2025-GRA-SEDECENTRAL-OAPF",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 190000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "10418962572",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2374651-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e0dac0e2-3d75-4779-bfaf-dc8bc80e3b5d.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-562ddd8e7c26261331136c554b86a19473c61991e685057b96ce696f4a8dc6be",
+        "recordId": "2374651-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2360398-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2360398-1",
+      "year": 4597,
+      "title": "ADQUISICION DE TACHOS DE METAL CON INSTALACIÓN A TODO COSTO PARA LA IOAR: ¿REMODELACIÓN DE BERMA; EN EL (LA) ALAMEDA AV. COLONIZADORES, DISTRITO DE MAJES, PROVINCIA CAYLLOMA, DEPARTAMENTO DE AREQUIPA¿",
+      "procedureNumber": "1164567",
+      "agencyName": "Entidad OECE 002606",
+      "agencyCode": "002606",
+      "contractingUnit": "1085",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 74880,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20614103842",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2360398-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e4e8c5e9-9767-4ee7-a160-678a97431435.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-fdeaec97e51891c8a2c0d038a38e43bc7ebee3aa03088698a446f93b2ad51f4c",
+        "recordId": "2360398-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2355815-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2355815-1",
+      "year": 4595,
+      "title": "AQUISICION DE ASFALTO LIQUIDO CUT BACK MC-30(CURADO MEDIO GRADO MC-30)SEGÚN ESPECIFICACIONES TECNICAS PARA LA META MEJORAMIENTO DE LA CARRETERA PU 146; EMP PE - 34 I (HUANCANÉ) - HUERTAPATA - VISCACHANI - QUELLAHUYO - EMP PE - 34 (CACUÑA), DISTRITO DE HUANCANE - PROVINCIA DE HUANCANE - DEPARTAMENTO",
+      "procedureNumber": "1132181",
+      "agencyName": "Entidad OECE 000049",
+      "agencyCode": "000049",
+      "contractingUnit": "CONTRATO N° 111-2025-SIE-GR PUNO",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 482220,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20574690219",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2355815-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=0bb13c23-3486-4b12-a295-6f91f01cad3c.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-fc9acfbb38eb0923be73512a87db15c66ad4f0b5f3b7d789113dc439aec4536c",
+        "recordId": "2355815-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2351399-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2351399-1",
+      "year": 4592,
+      "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LA EFICIENCIA DEL SISTEMA HIDRÁULICO DE CONDUCCIÓN Y DISTRIBUCIÓN DE PAMPA GRANDE - SECTOR RIEGO CHONGOYAPE\" CUI 2360385",
+      "procedureNumber": "1136235",
+      "agencyName": "Entidad OECE 010353",
+      "agencyCode": "010353",
+      "contractingUnit": "CONTRATO N° 000021-2025-GR.LAMB/PEOT-GG [515617519 - 46]",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 2304694.59,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1704847",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2351399-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=83bef642-495e-4789-b09e-d81f0b3e68c7.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-6c25968d5c7018bfb0539fc6047f447bd91ac0d558198f0749f369efc76f82b9",
+        "recordId": "2351399-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2348455-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2348455-1",
+      "year": 4591,
+      "title": "ADQUISICION DE SEIS (06) CAMIONETAS PICK - UP DOBLE CABINA Y TRACCION 4X4 DEBIDAMENTE EQUIPADAS  PARA PATRULLAJE DE SERENAZGO EN EL DISTRITO DE LA ESPERANZA PROVINCIA DE TRUJILLO DEPARTAMENTO DE LA LIBERTAD",
+      "procedureNumber": "1139903",
+      "agencyName": "Entidad OECE 001194",
+      "agencyCode": "001194",
+      "contractingUnit": "CONTRATO N°013-2025",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 990000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1711585",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2348455-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=da22114a-5251-49a4-9a2d-42d5d94d85ce.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-5587fd7b7c384210fb6d70ee7f2184933b19404801da68b12d869e2052310e56",
+        "recordId": "2348455-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2323213-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2323213-1",
+      "year": 4575,
+      "title": "Mantenimiento Rutinario del Camino Vecinal No Pavimentado, Tramo: EMP. AP-100 (CCORIPACCHA) - EMP. AP-584 (ROSASPATA), longitud de 8.385Km, Distrito(s) de KISHUARA, Provincia de ANDAHUAYLAS, Región de APURIMAC.",
+      "procedureNumber": "1092314",
+      "agencyName": "Entidad OECE 200252",
+      "agencyCode": "200252",
+      "contractingUnit": "CONTRATO GERENCIAL N° 29-2025-MPA/IVP-GG",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 41589.6,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1651071",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2323213-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=9046d0c8-827a-4a45-abb8-9261b4abfea0.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-a5f1c29d6ef4df35c33db29afe45ee32ad8ba25a444227b76ca6528e5eaa685f",
+        "recordId": "2323213-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2345020-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2345020-1",
+      "year": 4590,
+      "title": "ADQUISICION DE CEMENTO PORTLAND TIPO I",
+      "procedureNumber": "1134317",
+      "agencyName": "Entidad OECE 000645",
+      "agencyCode": "000645",
+      "contractingUnit": "N° 006-2025-MDCH/GM-OAyCP",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 177192.4,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20611580780",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2345020-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=3981d9a2-ba2d-40a3-8a4b-5c776cc20f42.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-47b73f46549df180d00f67adc00ad33bc9b2cd7b7b8ac3ec45e4cb3b8ae7894d",
+        "recordId": "2345020-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2362944-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2362944-1",
+      "year": 4598,
+      "title": "CONTRATACION PARA LA EJECUCION DE OBRA: RENOVACION DE PUENTE; EN EL (LA) CAMINO VECINAL PU-1103 (PUENTE CHILA), TRAMO: EMP. 36B - EMP 665 , DISTRITO DE PICHACANI, PROVINCIA PUNO, DEPARTAMENTO PUNO",
+      "procedureNumber": "1157076",
+      "agencyName": "Entidad OECE 001648",
+      "agencyCode": "001648",
+      "contractingUnit": "055-2025-MPP/GA",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 423441.6,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1731938",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2362944-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=8a421135-d202-43fc-8504-c648cc0f9d38.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-6a6569ff6988d74382e71237a6505e4be9f8a7c5cc50999e846d161e9d703935",
+        "recordId": "2362944-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2343822-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2343822-1",
+      "year": 4589,
+      "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA EJECUCIÓN DE IOARR: ¿RENOVACIÓN DE PUENTE: EN EL (LA) LUPUCHE, PUENTE SALITRE EN EL TRAMO EMP. PE-1N (NUEVO PIEDRAL) ¿ PIEDRAL ANTIGUO ¿ EMP. PI-1034 (DV. EL TALLAN) DISTRITO DE EL TALLAN, PROVINCIA DE PIURA, DEPARTAMENTO DE",
+      "procedureNumber": "1134700",
+      "agencyName": "Entidad OECE 001584",
+      "agencyCode": "001584",
+      "contractingUnit": "N°54-2025-OA/MPP",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 112464,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1709475",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2343822-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=f80b184d-ad44-4cd9-82dd-0f40e5e215b0.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-2f3062a2d8a4686b6e30a1f081b5239585ef5383711b615e6390ef0b0be347bb",
+        "recordId": "2343822-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2339116-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2339116-1",
+      "year": 4586,
+      "title": "CONTRATACIÓN DE LA CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LOS SERVICIO EDUCATIVOS EN LA INSTITUCIÓN EDUCATIVA N° 40199 CIUDAD MI TRABAJO EN LA URBANIZACIÓN CIUDAD MI TRABAJO DEL DISTRITO DE SOCABAYA - PROVINCIA DE AREQUIPA - DEPARTAMENTO DE AREQUIPA\" - I ETAPA - CUI N° 2493448",
+      "procedureNumber": "1123318",
+      "agencyName": "Entidad OECE 000416",
+      "agencyCode": "000416",
+      "contractingUnit": "CONTRATO N° 051-2025-MDS-GM",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 82968.71,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1698599",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2339116-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=f24f2591-64f2-48af-a198-7a003750607d.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-d41655792fb47ef6223b98a968880dee807968ffd154de4e313704909b1715b7",
+        "recordId": "2339116-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2372103-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2372103-1",
+      "year": 4594,
+      "title": "CONTRATACION DEL SERVICIO A TODO COSTO DE FABRICACION, INSTALACION Y PINTADO DE JUEGOS INFANTILES PARA LA OBRA CREACION DEL PARQUE RECREATIVO INFANTIL EN LA ASOC PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO MZ E-6 LT 1, AOCIACION PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO DEL DISTRITO DE CERRO COL",
+      "procedureNumber": "1142722",
+      "agencyName": "Entidad OECE 000399",
+      "agencyCode": "000399",
+      "contractingUnit": "CONTRATO N° 47-2025-MDCC",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 55500,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1721625",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2372103-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=8df9dcfc-1791-4573-af40-7f0af236d650.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-c35794ffe5e09849018e5d103b7d602b022e7b4952a2f8e0b02349a510840945",
+        "recordId": "2372103-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2324024-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2324024-1",
+      "year": 4578,
+      "title": "CONTRATACION DEL SERVICIO DE ESPECIALISTA EN GESTION AMBIENTAL, SEGURIDAD Y SALUD OCUPACIONAL PARA EL PROYECTO: \"MEJORAMIENTO DE LA INFRAESTRUCTURA EDUCATIVA Y COMPLEMENTARIA DE LA ESCUELA SUPERIOR DE FORMACION ARTISTICA PUBLICA EDUARDO MEZA SARAVIA - YARINACOCHA - CORONEL PORTILLO - UCAYALI\". CUI N° 2424348.",
+      "procedureNumber": "1112914",
+      "agencyName": "Entidad OECE 000053",
+      "agencyCode": "000053",
+      "contractingUnit": "036-2025-GRU-GGR-ORA",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 148680,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "10456433044",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2324024-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=bbf934a1-3324-401e-866a-11ae59b7695a.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-346e03ecdbb434383e079cfdd2bf518f46e5cde736f10258962c3a071c8394cc",
+        "recordId": "2324024-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2379625-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2379625-1",
+      "year": 4608,
+      "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORIA DE OBRA PARA LA ELABORACION DE EXPEDIENTE TECNICO DEL PROYECTO: MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE AGUA POTABLE RURAL Y MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE ALCANTARILLADO U OTRAS FORMAS DE DISPOSICIÓN SANITARIA DE EXCRETAS EN EL CASERIO MAZARAY D",
+      "procedureNumber": "1186506",
+      "agencyName": "Entidad OECE 001871",
+      "agencyCode": "001871",
+      "contractingUnit": "000001-2026-MPCP/ALC-GM",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 318168,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "1763739",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2379625-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=e7438b5e-8395-4437-b914-81e4227ae9d9.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-4e9cacb44c85cea70597e681406253c183b7570c794410e2e4a50d301d65ab8b",
+        "recordId": "2379625-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2362913-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2362913-1",
+      "year": 4598,
+      "title": "SERVICIO DE OPERADOR TURÍSTICO PARA VIAJE DE INFLUENCERS ESPAÑA 2025",
+      "procedureNumber": "1165169",
+      "agencyName": "Entidad OECE 001947",
+      "agencyCode": "001947",
+      "contractingUnit": "OS25110303",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 45000,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20452714125",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2362913-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=308bfd25-c26d-4ebb-8040-6231034bd5b3.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-1600e0f77887fef1a504722bfc2cc2cb16396c3eedddf7fd107aff18ce6b6a79",
+        "recordId": "2362913-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
+      ]
+    },
+    {
+      "id": "PE-CONTRACT-2320371-1",
+      "countryCode": "PE",
+      "caseType": "procurement_contract",
+      "workNumber": "2320371-1",
+      "year": 4576,
+      "title": "SERVICIO DE ALIMENTACION PARA PACIENTES Y PERSONAL CON 12 HORAS CONTINUAS DEL HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR POR UN PERÍODO DE 03 MESES",
+      "procedureNumber": "1109454",
+      "agencyName": "Entidad OECE 203086",
+      "agencyCode": "203086",
+      "contractingUnit": "18-2025",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 1398886,
+        "currency": "PEN",
+        "label": "monto_contratado"
+      },
+      "supplierName": null,
+      "supplierDocument": "20547662203",
+      "receipt": {
+        "receiptId": "PE-OECE-CONTRATOS-2320371-1",
+        "sourceId": "PE-OECE-CONTRATOS",
+        "sourceName": "OECE contratos",
+        "sourceUrl": "https://prodapp2.seace.gob.pe/portalseace-uiwd-pub/DownloadContratosFileServlet?fileName=d9b4e88e-9c5c-4349-aeb5-40e106777ea3.pdf",
+        "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+        "snapshotHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+        "rowHash": "sha256-8bbb0008573a445d3c6c41bdf39dc5844c85b181deff0758821d7e4e24848230",
+        "recordId": "2320371-1",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
     {
@@ -2283,6 +4438,7 @@
         "label": "monto_adjudicado"
       },
       "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
+      "supplierDocument": "78.047.617-6",
       "receipt": {
         "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -2294,7 +4450,7 @@
         "rowHash": "sha256-2a227354adf8ce4206e3094ef8599c0ff897bb8156f6cfa904a0d5124716db59",
         "recordId": "1159-2-LP26",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2323,6 +4479,7 @@
         "label": "monto_adjudicado"
       },
       "supplierName": "PABLO GALDAMES DIAZ SPA",
+      "supplierDocument": "77.694.443-2",
       "receipt": {
         "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -2334,7 +4491,7 @@
         "rowHash": "sha256-f00c946a846ef46492b6c5745d81368354b9678f89deca45e9843597bc98e271",
         "recordId": "3494-14-LE26",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [
@@ -2363,6 +4520,7 @@
         "label": "monto_adjudicado"
       },
       "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
+      "supplierDocument": "76.125.451-0",
       "receipt": {
         "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -2374,7 +4532,7 @@
         "rowHash": "sha256-98d94a9bc3eb331ced8e6e446bbdadff836f426cd0eb8a05577fc5851abc65d0",
         "recordId": "3019-7-LE26",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "extractedAt": "2026-05-16T05:24:12.970Z",
         "parserVersion": "cross-country@1"
       },
       "caveats": [

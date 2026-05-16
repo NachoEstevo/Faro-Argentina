@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-05-16T05:15:38.777Z",
+  "generatedAt": "2026-05-16T05:23:41.872Z",
   "snapshots": [
     {
       "sourceId": "PE-MEF-GASTO-DIARIO",
       "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
       "fetchUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
-      "fetchedAt": "2026-05-16T05:15:32.633Z",
+      "fetchedAt": "2026-05-16T05:23:34.162Z",
       "contentType": "text/csv",
       "contentRange": "bytes 0-120000/4236445622",
       "partial": true,
@@ -13,15 +13,27 @@
       "byteSize": 119669
     },
     {
+      "sourceId": "PE-OECE-CONTRATOS",
+      "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
+      "fetchUrl": "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx",
+      "fetchedAt": "2026-05-16T05:23:41.740Z",
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "contentLength": "15827272",
+      "partial": false,
+      "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
+      "byteSize": 15827272
+    },
+    {
       "sourceId": "CL-MERCADO-PUBLICO-API",
       "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
       "fetchUrl": "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>",
-      "fetchedAt": "2026-05-16T05:15:38.777Z",
+      "fetchedAt": "2026-05-16T05:23:41.872Z",
       "contentType": "application/json",
       "recordCount": 3,
       "partial": true,
       "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
-      "byteSize": 16318
+      "byteSize": 16318,
+      "fetchWarning": "Fetch failed with 429: https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>"
     }
   ]
 }

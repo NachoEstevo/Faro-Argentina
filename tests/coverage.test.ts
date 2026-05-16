@@ -23,7 +23,7 @@ test("buildCoverageReport summarizes source readiness and case evidence coverage
   assert.equal(report.countries.AR.caseFilesWithReceipts, 246);
   assert.equal(report.countries.AR.caseFilesWithCoordinates, 246);
   assert.equal(report.countries.PE.mvpSources >= 1, true);
-  assert.equal(report.countries.PE.sourcesWithSnapshots, 1);
+  assert.equal(report.countries.PE.sourcesWithSnapshots, 2);
   assert.equal(report.countries.PE.caseFiles > 0, true);
   assert.equal(report.countries.PE.caseFilesWithReceipts, report.countries.PE.caseFiles);
   assert.equal(report.countries.CL.mvpSources >= 1, true);

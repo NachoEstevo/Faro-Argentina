@@ -6,6 +6,7 @@ import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import type { CsvSnapshotProfile, JsonSnapshotProfile } from "@/lib/data/snapshots";
 import type { SourceCatalogEntry } from "@/lib/data/sourceCatalog";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
+import type { XlsxSnapshotProfile } from "@/lib/data/xlsx";
 
 import sourceCatalogPayload from "../../data/sources/source-catalog.json";
 
@@ -20,7 +21,7 @@ export interface CaseDataset<TCase extends FaroCaseFile = FaroCaseFile> {
     filePath: string;
     fileHash: string;
   };
-  snapshotProfile: CsvSnapshotProfile | JsonSnapshotProfile;
+  snapshotProfile: CsvSnapshotProfile | JsonSnapshotProfile | XlsxSnapshotProfile;
   stats: {
     rawRows: number;
     caseFiles: number;

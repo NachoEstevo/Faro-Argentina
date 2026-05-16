@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildChileCompraCases,
   buildPeruBudgetCases,
+  buildPeruContractCases,
   type ChileCompraSnapshot,
 } from "../src/lib/data/crossCountryCases.ts";
 
@@ -30,6 +31,43 @@ test("buildPeruBudgetCases turns MEF rows into exportable evidence cases", () =>
   assert.equal(caseFile?.agencyName, "REGION AMAZONAS-TRANSPORTES");
   assert.equal(caseFile?.amount?.currency, "PEN");
   assert.equal(caseFile?.receipt.locatorType, "official_dataset");
+});
+
+test("buildPeruContractCases turns OECE contract rows into supplier-aware cases", () => {
+  const [caseFile] = buildPeruContractCases(
+    [
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Contratacion de maquinaria pesada",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "1",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "113868.79",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "2025-01-05",
+        fecha_suscripcion_contrato: "2025-01-03",
+      },
+    ],
+    {
+      ...options,
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    },
+  );
+
+  assert.equal(caseFile?.countryCode, "PE");
+  assert.equal(caseFile?.caseType, "procurement_contract");
+  assert.equal(caseFile?.supplierDocument, "20487924050");
+  assert.equal(caseFile?.amount?.currency, "PEN");
+  assert.equal(caseFile?.receipt.locatorType, "official_detail");
 });
 
 test("buildChileCompraCases turns API details into exportable procurement cases", () => {
@@ -82,5 +120,6 @@ test("buildChileCompraCases turns API details into exportable procurement cases"
   assert.equal(caseFile?.amount?.value, 1000);
   assert.equal(caseFile?.amount?.label, "monto_adjudicado");
   assert.equal(caseFile?.supplierName, "Proveedor adjudicado");
+  assert.equal(caseFile?.supplierDocument, "78.047.617-6");
   assert.equal(caseFile?.receipt.locatorType, "official_detail");
 });
