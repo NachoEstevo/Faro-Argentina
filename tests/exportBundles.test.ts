@@ -4,6 +4,12 @@ import assert from "node:assert/strict";
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
 import {
+  buildEvidencePack,
+  buildLeadFeed,
+  getCaseById,
+  getExpedienteById,
+} from "../src/lib/caseRepository.ts";
+import {
   buildCaseCollectionPack,
   filterCaseFiles,
   type ExportableCaseFile,
@@ -107,4 +113,46 @@ test("buildCaseCollectionPack exports Chile award evidence with official act con
   assert.equal(pack.cases.every((caseFile) => Boolean(caseFile.supplierName)), true);
   assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
   assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);
+});
+
+test("buildLeadFeed exposes ranked Argentina case leads", () => {
+  const feed = buildLeadFeed({ countryCode: "AR", limit: 5 });
+
+  assert.equal(feed.feedType, "faro_case_lead_feed");
+  assert.equal(feed.filters.countryCode, "AR");
+  assert.equal(feed.stats.cases > 0, true);
+  assert.equal(feed.leads.length > 0, true);
+  assert.equal(feed.leads.length <= 5, true);
+  assert.equal(feed.leads.every((lead) => lead.countryCode === "AR"), true);
+
+  const priorities = feed.leads.map((lead) => lead.primarySignal.priority);
+  assert.deepEqual([...priorities].sort((left, right) => right - left), priorities);
+});
+
+test("getExpedienteById returns an expediente view for lead cases", () => {
+  const lead = buildLeadFeed({ countryCode: "AR", limit: 1 }).leads[0];
+  assert.ok(lead);
+
+  const expediente = getExpedienteById(lead.caseId);
+
+  assert.equal(expediente?.expedienteType, "faro_expediente_v1");
+  assert.equal(expediente?.summary.caseId, lead.caseId);
+  assert.equal((expediente?.whyItAppeared.length ?? 0) > 0, true);
+});
+
+test("buildEvidencePack includes receipts, signals and official-source verification steps", () => {
+  const caseFile = buildLeadFeed({ countryCode: "AR", limit: 1 }).leads[0];
+  assert.ok(caseFile);
+
+  const sourceCaseFile = getCaseById(caseFile.caseId);
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(pack.packType, "faro_evidence_pack");
+  assert.equal(Array.isArray(pack.relatedReceipts), true);
+  assert.equal(Array.isArray(pack.signals), true);
+  assert.equal(pack.signals.length > 0, true);
+  assert.equal(Array.isArray(pack.verificationSteps), true);
+  assert.match(pack.verificationSteps.join("\n"), /fuente oficial/i);
 });
