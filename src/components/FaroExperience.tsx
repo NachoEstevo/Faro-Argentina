@@ -13,7 +13,8 @@ import {
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
-import { CaseDetails, EmptyCountry } from "./CaseDetails";
+import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import { CaseDetails, CountryExplorer } from "./CaseDetails";
 import EntryGate from "./EntryGate";
 import FaroMark from "./FaroMark";
 
@@ -24,16 +25,21 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
 
 interface Props {
   dataset: CaseDataset<ArgentinaWorkCase>;
+  crossCountryCases: CrossCountryCaseFile[];
 }
 
 const countries = [
   { code: "AR", label: "Argentina", status: "Obras CONTRAT.AR", ready: true },
-  { code: "PE", label: "Peru", status: "SEACE/OECE", ready: false },
-  { code: "CL", label: "Chile", status: "ChileCompra", ready: false },
+  { code: "PE", label: "Peru", status: "Contratos OECE", ready: true },
+  { code: "CL", label: "Chile", status: "Adjudicaciones", ready: true },
 ] as const;
 
-export default function FaroExperience({ dataset }: Props) {
-  const yearBounds = useMemo(() => getYearBounds(dataset.cases), [dataset.cases]);
+export default function FaroExperience({ dataset, crossCountryCases }: Props) {
+  const allCases = useMemo(
+    () => [...dataset.cases, ...crossCountryCases],
+    [crossCountryCases, dataset.cases],
+  );
+  const yearBounds = useMemo(() => getYearBounds(allCases), [allCases]);
   const [entryOpen, setEntryOpen] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">("AR");
   const [selectedCaseId, setSelectedCaseId] = useState(dataset.cases[0]?.id ?? "");
@@ -44,13 +50,17 @@ export default function FaroExperience({ dataset }: Props) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("demo") === "map") setEntryOpen(false);
+    const country = params.get("country");
+    if (country === "AR" || country === "PE" || country === "CL") {
+      setSelectedCountry(country);
+    }
   }, []);
 
   useEffect(() => {
     setYear(yearBounds.max);
   }, [yearBounds.max]);
 
-  const filteredCases = useMemo(() => {
+  const argentinaCases = useMemo(() => {
     if (selectedCountry !== "AR") return [];
     const normalizedQuery = query.trim().toLowerCase();
     return dataset.cases.filter((caseFile) => {
@@ -67,19 +77,42 @@ export default function FaroExperience({ dataset }: Props) {
     });
   }, [dataset.cases, query, selectedCountry, year]);
 
+  const countryCases = useMemo(() => {
+    if (selectedCountry === "AR") return argentinaCases;
+    const normalizedQuery = query.trim().toLowerCase();
+    return crossCountryCases.filter((caseFile) => {
+      const matchesYear = caseFile.year === null || caseFile.year <= year;
+      const searchable = [
+        caseFile.title,
+        caseFile.workNumber,
+        caseFile.procedureNumber,
+        caseFile.agencyName,
+        caseFile.supplierName,
+        caseFile.supplierDocument,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return (
+        caseFile.countryCode === selectedCountry &&
+        matchesYear &&
+        (normalizedQuery.length === 0 || searchable.includes(normalizedQuery))
+      );
+    });
+  }, [argentinaCases, crossCountryCases, query, selectedCountry, year]);
+
   useEffect(() => {
-    if (!filteredCases.some((caseFile) => caseFile.id === selectedCaseId)) {
-      setSelectedCaseId(filteredCases[0]?.id ?? "");
+    if (!argentinaCases.some((caseFile) => caseFile.id === selectedCaseId)) {
+      setSelectedCaseId(argentinaCases[0]?.id ?? "");
     }
-  }, [filteredCases, selectedCaseId]);
+  }, [argentinaCases, selectedCaseId]);
 
   const selectedCase =
-    filteredCases.find((caseFile) => caseFile.id === selectedCaseId) ?? filteredCases[0] ?? null;
+    argentinaCases.find((caseFile) => caseFile.id === selectedCaseId) ?? argentinaCases[0] ?? null;
 
   return (
     <main className="faroShell">
       <CaseMap
-        cases={filteredCases}
+        cases={argentinaCases}
         selectedCaseId={selectedCase?.id ?? null}
         traceMode={traceMode}
         onSelectCase={setSelectedCaseId}
@@ -90,8 +123,8 @@ export default function FaroExperience({ dataset }: Props) {
         <FaroMark />
         <div className="topBarMeta">
           <span>Demo 90 seg</span>
-          <strong>{dataset.stats.mapReadyCases}</strong>
-          <span>puntos verificables</span>
+          <strong>{selectedCountry === "AR" ? dataset.stats.mapReadyCases : countryCases.length}</strong>
+          <span>{selectedCountry === "AR" ? "puntos verificables" : "casos exportables"}</span>
         </div>
       </header>
 
@@ -101,7 +134,7 @@ export default function FaroExperience({ dataset }: Props) {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar obra, organismo o numero"
+            placeholder="Buscar obra, organismo, proveedor o numero"
           />
         </label>
 
@@ -136,7 +169,7 @@ export default function FaroExperience({ dataset }: Props) {
       </section>
 
       <aside className="casePanel" aria-label="Expediente Faro">
-        {selectedCase ? (
+        {selectedCountry === "AR" && selectedCase ? (
           <CaseDetails
             caseFile={selectedCase}
             dataset={dataset}
@@ -144,7 +177,10 @@ export default function FaroExperience({ dataset }: Props) {
             onTraceModeChange={setTraceMode}
           />
         ) : (
-          <EmptyCountry selectedCountry={selectedCountry} />
+          <CountryExplorer
+            selectedCountry={selectedCountry}
+            cases={selectedCountry === "AR" ? [] : countryCases as CrossCountryCaseFile[]}
+          />
         )}
       </aside>
 
@@ -159,7 +195,7 @@ export default function FaroExperience({ dataset }: Props) {
         </span>
         <span>
           <MapPin size={15} aria-hidden />
-          {filteredCases.length} visibles
+          {countryCases.length} visibles
         </span>
       </footer>
 
@@ -168,7 +204,7 @@ export default function FaroExperience({ dataset }: Props) {
   );
 }
 
-function getYearBounds(cases: ArgentinaWorkCase[]) {
+function getYearBounds(cases: Array<{ year: number | null }>) {
   const years = cases.map((caseFile) => caseFile.year).filter((value): value is number => value !== null);
   return {
     min: Math.min(...years, 2017),

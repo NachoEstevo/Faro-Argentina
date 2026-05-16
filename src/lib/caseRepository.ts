@@ -52,6 +52,7 @@ export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[]
 
 export const argentinaWorkDataset = buildExplorerDataset(rawArgentinaWorkDataset);
 export const crossCountryDatasets = crossCountryCasePayload.datasets;
+export const crossCountryCaseFiles = crossCountryCasePayload.cases;
 
 export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   sources: sourceCatalogEntries,
@@ -83,7 +84,7 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
 }
 
 function allCaseFiles(): FaroCaseFile[] {
-  return [...argentinaWorkDataset.cases, ...crossCountryCasePayload.cases];
+  return [...argentinaWorkDataset.cases, ...crossCountryCaseFiles];
 }
 
 function buildExplorerDataset(

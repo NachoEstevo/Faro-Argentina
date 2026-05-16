@@ -280,7 +280,8 @@ a {
   pointer-events: auto;
 }
 
-.caseDetails {
+.caseDetails,
+.countryExplorer {
   display: grid;
   gap: 16px;
   padding: 18px;
@@ -305,6 +306,7 @@ a {
 }
 
 .caseDetails h1,
+.countryExplorer h1,
 .emptyState h1 {
   margin: 0;
   font-size: clamp(24px, 3vw, 36px);
@@ -356,11 +358,59 @@ a {
 .whyBox p,
 .satelliteBox p,
 .traceBox p,
+.explorerIntro,
 .emptyState p {
   margin: 0;
   color: var(--faro-muted);
   font-size: 13px;
   line-height: 1.55;
+}
+
+.countryExplorer {
+  align-content: start;
+}
+
+.caseRows {
+  display: grid;
+  gap: 10px;
+}
+
+.caseRow {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--faro-line);
+  padding: 14px 0 4px;
+}
+
+.caseRow:first-child {
+  border-top: 0;
+}
+
+.caseRow > div:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.caseRow span {
+  color: var(--faro-amber-strong);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.caseRow h2 {
+  margin: 0;
+  color: var(--faro-text);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.caseRow dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0;
 }
 
 .satelliteBox {

@@ -2,6 +2,7 @@ import { Download, ExternalLink, FileSearch, Route, Satellite, ShieldCheck } fro
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
+import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 
 export function CaseDetails({
   caseFile,
@@ -110,6 +111,55 @@ export function EmptyCountry({ selectedCountry }: { selectedCountry: "AR" | "PE"
   );
 }
 
+export function CountryExplorer({
+  selectedCountry,
+  cases,
+}: {
+  selectedCountry: "PE" | "CL" | "AR";
+  cases: CrossCountryCaseFile[];
+}) {
+  if (selectedCountry === "AR") return null;
+  const countryLabel = selectedCountry === "PE" ? "Peru" : "Chile";
+  return (
+    <div className="countryExplorer">
+      <div className="panelKicker">
+        <FileSearch size={16} aria-hidden />
+        Explorer verificable
+      </div>
+      <h1>{countryLabel}</h1>
+      <p className="explorerIntro">
+        Casos con fuente oficial, hash local y descarga. No se dibujan en mapa hasta tener
+        geometria oficial suficiente.
+      </p>
+      <div className="caseRows">
+        {cases.slice(0, 14).map((caseFile) => (
+          <article key={caseFile.id} className="caseRow">
+            <div>
+              <span>{labelCaseType(caseFile.caseType)}</span>
+              <h2>{caseFile.title}</h2>
+            </div>
+            <dl>
+              <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />
+              <ReceiptRow label="Proveedor" value={formatSupplier(caseFile)} />
+              <ReceiptRow label="Monto" value={formatAmount(caseFile)} />
+            </dl>
+            <div className="actionRow">
+              <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
+                <ExternalLink size={16} aria-hidden />
+                Fuente oficial
+              </a>
+              <a href={`/api/export/${caseFile.id}`} download>
+                <Download size={16} aria-hidden />
+                Descargar JSON
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="metric">
@@ -131,4 +181,19 @@ function ReceiptRow({ label, value }: { label: string; value: string }) {
 function formatExecutionTerm(caseFile: ArgentinaWorkCase): string {
   if (!caseFile.executionTerm) return "Sin dato";
   return `${caseFile.executionTerm} ${caseFile.executionTermType ?? ""}`.trim();
+}
+
+function labelCaseType(caseType: CrossCountryCaseFile["caseType"]): string {
+  if (caseType === "procurement_contract") return "Contrato";
+  if (caseType === "procurement_process") return "Adjudicacion";
+  return "Ejecucion presupuestaria";
+}
+
+function formatSupplier(caseFile: CrossCountryCaseFile): string {
+  return caseFile.supplierName ?? caseFile.supplierDocument ?? "Sin dato";
+}
+
+function formatAmount(caseFile: CrossCountryCaseFile): string {
+  if (!caseFile.amount) return "Sin dato";
+  return `${caseFile.amount.currency} ${Math.round(caseFile.amount.value).toLocaleString("es-AR")}`;
 }
