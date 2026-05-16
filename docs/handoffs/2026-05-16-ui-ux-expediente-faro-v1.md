@@ -85,6 +85,8 @@ Design opportunity:
 Files:
 
 - `src/lib/data/expediente.ts`
+- `src/lib/data/caseInspector.ts`
+- `src/components/CaseInspector.tsx`
 - `src/components/CaseDetails.tsx`
 - `src/components/CaseSignals.tsx`
 
@@ -108,6 +110,27 @@ In the UI today, that maps to:
 - "Que verificar despues".
 
 The expediente answers: "Why is this case reviewable, and what can I verify?"
+
+## Investigator Explorer Right Rail
+
+The Explorer mode now uses a compact right rail by default. Treat this rail as
+an Inspector, not as the full expediente.
+
+The Inspector exists so an investigator can click scanner rows quickly without
+losing the list. It shows:
+
+- short case summary;
+- four key facts;
+- strongest signal;
+- evidence, caveat, and next step for that signal;
+- official source locator;
+- source/export actions;
+- an explicit action to open the full expediente.
+
+The full expediente still exists and remains the complete reading surface, but
+it should not be the default Explorer rail because it competes with the scanner.
+On desktop, the Inspector can remain fixed on the right. On smaller screens, it
+should become a drawer or secondary view.
 
 ## Signals
 
@@ -314,4 +337,3 @@ The local demo was running at:
 ```text
 http://127.0.0.1:3003/?demo=map
 ```
-

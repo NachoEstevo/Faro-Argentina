@@ -90,6 +90,10 @@ export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[]
 export const argentinaWorkDataset = buildExplorerDataset(rawArgentinaWorkDataset);
 export const crossCountryDatasets = crossCountryCasePayload.datasets;
 export const crossCountryCaseFiles = crossCountryCasePayload.cases;
+export const investigatorCaseFiles: FaroCaseFile[] = [
+  ...rawArgentinaWorkDataset.cases,
+  ...crossCountryCaseFiles,
+];
 
 export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   sources: sourceCatalogEntries,
