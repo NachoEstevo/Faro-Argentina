@@ -21,6 +21,7 @@ export function CaseDetails({
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile);
+  const { hasOfficialGeometry, satelliteCandidate } = expediente.investigationContext;
   const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
     <div className="caseDetails">
@@ -55,26 +56,28 @@ export function CaseDetails({
 
       <CaseSignalPanel caseFile={caseFile} />
 
-      <section className="satelliteBox">
-        <div>
-          <Satellite size={18} aria-hidden />
-          <h2>Sentinel-2</h2>
-        </div>
-        <div className="satelliteGrid">
+      {satelliteCandidate && (
+        <section className="satelliteBox">
           <div>
-            <span>Antes del contrato</span>
-            <strong>{caseFile.year ? caseFile.year - 1 : "pendiente"}</strong>
+            <Satellite size={18} aria-hidden />
+            <h2>Sentinel-2</h2>
           </div>
-          <div>
-            <span>Ultima escena</span>
-            <strong>consulta lista</strong>
+          <div className="satelliteGrid">
+            <div>
+              <span>Antes del contrato</span>
+              <strong>{caseFile.year ? caseFile.year - 1 : "pendiente"}</strong>
+            </div>
+            <div>
+              <span>Ultima escena</span>
+              <strong>consulta lista</strong>
+            </div>
           </div>
-        </div>
-        <p>
-          La capa satelital sirve para contexto visual. No prueba pagos ni avance sin controles
-          de nubes, fecha y resolucion.
-        </p>
-      </section>
+          <p>
+            La capa satelital sirve para contexto visual. No prueba pagos ni avance sin controles
+            de nubes, fecha y resolucion.
+          </p>
+        </section>
+      )}
 
       <section className="receiptBox">
         <h2>Rastro oficial</h2>
@@ -114,17 +117,16 @@ export function CaseDetails({
       <section className="traceBox">
         <button
           type="button"
-          className={traceMode ? "active" : ""}
-          onClick={() => onTraceModeChange(!traceMode)}
+          className={hasOfficialGeometry && traceMode ? "active" : ""}
+          disabled={!hasOfficialGeometry}
+          onClick={() => {
+            if (hasOfficialGeometry) onTraceModeChange(!traceMode);
+          }}
         >
           <Route size={17} aria-hidden />
           Rastro visual
         </button>
-        <p>
-          {isContract
-            ? "El punto se dibuja porque el contrato cruza contra una obra con coordenada oficial. El domicilio del proveedor no se usa como ubicacion de ejecucion."
-            : "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra."}
-        </p>
+        <p>{describeTraceContext({ hasOfficialGeometry, isContract })}</p>
       </section>
 
       <section className="nextStepsBox">
@@ -251,6 +253,22 @@ function formatSupplier(caseFile: CrossCountryCaseFile): string {
 
 function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {
   return "caseType" in caseFile;
+}
+
+function describeTraceContext({
+  hasOfficialGeometry,
+  isContract,
+}: {
+  hasOfficialGeometry: boolean;
+  isContract: boolean;
+}): string {
+  if (!hasOfficialGeometry) {
+    return "Faro no dibuja este caso en el mapa hasta tener geometria oficial confiable. La fuente es verificable, pero no hay punto ni rastro visual habilitado.";
+  }
+  if (isContract) {
+    return "El punto se dibuja porque el contrato cruza contra una obra con coordenada oficial. El domicilio del proveedor no se usa como ubicacion de ejecucion.";
+  }
+  return "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra.";
 }
 
 function formatAmount(caseFile: CrossCountryCaseFile): string {
