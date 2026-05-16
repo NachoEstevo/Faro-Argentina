@@ -1,4 +1,4 @@
-import { Download, ExternalLink, FileSearch, Route, Satellite, ShieldCheck } from "lucide-react";
+import { Download, ExternalLink, FileSearch, Route, ShieldCheck } from "lucide-react";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
@@ -21,7 +21,7 @@ export function CaseDetails({
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile);
-  const { hasOfficialGeometry, satelliteCandidate } = expediente.investigationContext;
+  const { hasOfficialGeometry } = expediente.investigationContext;
   const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
     <div className="caseDetails">
@@ -55,29 +55,6 @@ export function CaseDetails({
       </section>
 
       <CaseSignalPanel caseFile={caseFile} />
-
-      {satelliteCandidate && (
-        <section className="satelliteBox">
-          <div>
-            <Satellite size={18} aria-hidden />
-            <h2>Sentinel-2</h2>
-          </div>
-          <div className="satelliteGrid">
-            <div>
-              <span>Antes del contrato</span>
-              <strong>{caseFile.year ? caseFile.year - 1 : "pendiente"}</strong>
-            </div>
-            <div>
-              <span>Ultima escena</span>
-              <strong>consulta lista</strong>
-            </div>
-          </div>
-          <p>
-            La capa satelital sirve para contexto visual. No prueba pagos ni avance sin controles
-            de nubes, fecha y resolucion.
-          </p>
-        </section>
-      )}
 
       <section className="receiptBox">
         <h2>Rastro oficial</h2>
