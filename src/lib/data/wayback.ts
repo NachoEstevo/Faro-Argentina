@@ -16,17 +16,19 @@ export async function loadYearlyReleases(): Promise<WaybackRelease[]> {
   if (releasesCache) return releasesCache;
   if (releasesPromise) return releasesPromise;
   releasesPromise = (async () => {
-    const response = await fetch(CONFIG_URL);
-    if (!response.ok) {
+    try {
+      const response = await fetch(CONFIG_URL);
+      if (!response.ok) {
+        throw new Error(`Wayback config request failed: ${response.status}`);
+      }
+      const raw = (await response.json()) as Record<string, unknown>;
+      const all = mapConfigRawToReleases(raw);
+      const yearly = pickYearlyReleases(all);
+      releasesCache = yearly;
+      return yearly;
+    } finally {
       releasesPromise = null;
-      throw new Error(`Wayback config request failed: ${response.status}`);
     }
-    const raw = (await response.json()) as Record<string, unknown>;
-    const all = mapConfigRawToReleases(raw);
-    const yearly = pickYearlyReleases(all);
-    releasesCache = yearly;
-    releasesPromise = null;
-    return yearly;
   })();
   return releasesPromise;
 }
