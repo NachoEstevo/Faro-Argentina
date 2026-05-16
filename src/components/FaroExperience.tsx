@@ -14,7 +14,7 @@ import {
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
-import { filterExplorerCases } from "@/lib/data/explorerCases";
+import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import { CaseDetails, CountryExplorer } from "./CaseDetails";
 import EntryGate from "./EntryGate";
 import FaroMark from "./FaroMark";
@@ -43,7 +43,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
   const yearBounds = useMemo(() => getYearBounds(allCases), [allCases]);
   const [entryOpen, setEntryOpen] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">("AR");
-  const [selectedCaseId, setSelectedCaseId] = useState(dataset.cases[0]?.id ?? "");
+  const [selectedCaseId, setSelectedCaseId] = useState(() => selectDefaultCase(allCases));
   const [query, setQuery] = useState("");
   const [year, setYear] = useState(yearBounds.max);
   const [traceMode, setTraceMode] = useState(false);
@@ -73,7 +73,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
 
   useEffect(() => {
     if (!countryCases.some((caseFile) => caseFile.id === selectedCaseId)) {
-      setSelectedCaseId(countryCases[0]?.id ?? "");
+      setSelectedCaseId(selectDefaultCase(countryCases));
     }
   }, [countryCases, selectedCaseId]);
 
@@ -105,7 +105,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar obra, organismo, proveedor o numero"
+            placeholder="Buscar obra, organismo o proveedor"
           />
         </label>
 
@@ -181,4 +181,13 @@ function getYearBounds(cases: Array<{ year: number | null }>) {
     min: Math.min(...years, 2017),
     max: Math.max(...years, 2023),
   };
+}
+
+function selectDefaultCase(cases: ExplorerCase[]): string {
+  return cases.find((caseFile) =>
+    "caseType" in caseFile &&
+    caseFile.caseType === "procurement_contract" &&
+    caseFile.coordinates !== null &&
+    caseFile.bidderCount !== null
+  )?.id ?? cases[0]?.id ?? "";
 }

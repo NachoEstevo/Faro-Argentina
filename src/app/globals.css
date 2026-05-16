@@ -305,13 +305,20 @@ a {
   letter-spacing: 0.08em;
 }
 
-.caseDetails h1,
 .countryExplorer h1,
 .emptyState h1 {
   margin: 0;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.02;
   letter-spacing: 0;
+}
+
+.caseDetails h1 {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.08;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .caseMetaGrid {
@@ -471,6 +478,33 @@ a {
 
 .receiptBox dd {
   margin-left: 0;
+}
+
+.relatedReceiptList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: -2px 0 14px;
+}
+
+.relatedReceiptList span,
+.relatedReceiptList a {
+  min-height: 28px;
+  padding: 7px 9px;
+  border: 1px solid var(--faro-line);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 11px;
+}
+
+.relatedReceiptList span {
+  border-color: transparent;
+  padding-left: 0;
+}
+
+.relatedReceiptList a {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--faro-amber-strong);
+  text-decoration: none;
 }
 
 .actionRow {

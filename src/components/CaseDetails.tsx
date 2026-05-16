@@ -17,6 +17,7 @@ export function CaseDetails({
   onTraceModeChange: (next: boolean) => void;
 }) {
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
+  const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
   return (
     <div className="caseDetails">
       <div className="panelKicker">
@@ -32,6 +33,14 @@ export function CaseDetails({
           label={isContract ? "Proveedor" : "Plazo"}
           value={isContract ? formatSupplier(caseFile) : formatExecutionTerm(caseFile)}
         />
+        {isContract && (
+          <>
+            <Metric label="Monto" value={formatAmount(caseFile)} />
+            <Metric label="Oferentes" value={formatBidderCount(caseFile)} />
+            <Metric label="Estado" value={caseFile.procedureState ?? "Sin dato"} />
+            <Metric label="Ubicacion" value={formatWorkLocation(caseFile)} />
+          </>
+        )}
       </div>
 
       <section className="whyBox">
@@ -70,6 +79,16 @@ export function CaseDetails({
             value={new Date(caseFile.receipt.extractedAt).toLocaleString("es-AR")}
           />
         </dl>
+        {relatedReceipts.length ? (
+          <div className="relatedReceiptList">
+            <span>Evidencia cruzada</span>
+            {relatedReceipts.slice(0, 6).map((receipt) => (
+              <a key={receipt.receiptId} href={receipt.sourceUrl} target="_blank" rel="noreferrer">
+                {shortSource(receipt.sourceId)}
+              </a>
+            ))}
+          </div>
+        ) : null}
         <div className="actionRow">
           <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
             <ExternalLink size={16} aria-hidden />
@@ -157,6 +176,8 @@ export function CountryExplorer({
               <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />
               <ReceiptRow label="Proveedor" value={formatSupplier(caseFile)} />
               <ReceiptRow label="Monto" value={formatAmount(caseFile)} />
+              <ReceiptRow label="Fecha" value={formatCaseDate(caseFile)} />
+              <ReceiptRow label="Competencia" value={formatBidderCount(caseFile)} />
             </dl>
             <div className="actionRow">
               <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
@@ -210,7 +231,11 @@ function formatSupplier(caseFile: CrossCountryCaseFile): string {
 
 function formatWhy(caseFile: ExplorerCase): string {
   if (isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract") {
-    return "Es un contrato oficial enlazado a una obra con coordenada verificada. Faro muestra proveedor, organismo, monto, fuente y evidencia relacionada sin inferir pagos.";
+    const competition = formatBidderCount(caseFile);
+    const suffix = competition === "Sin dato"
+      ? "Falta medir competencia con ofertas o actas."
+      : `El cruce oficial muestra ${competition.toLowerCase()}.`;
+    return `Es un contrato oficial enlazado a una obra con coordenada verificada. ${suffix} Faro muestra evidencia relacionada sin inferir pagos.`;
   }
   return "Es una obra publica declarada con coordenadas oficiales. Faro la convierte en un punto investigable: ubicacion, expediente, organismo, fuente y descarga del caso.";
 }
@@ -224,8 +249,39 @@ function formatAmount(caseFile: CrossCountryCaseFile): string {
   return `${caseFile.amount.currency} ${Math.round(caseFile.amount.value).toLocaleString("es-AR")}`;
 }
 
+function formatBidderCount(
+  caseFile: Pick<CrossCountryCaseFile, "bidderCount" | "offerCount">,
+): string {
+  if (caseFile.bidderCount === null || caseFile.bidderCount === undefined) return "Sin dato";
+  const bidderLabel = caseFile.bidderCount === 1 ? "oferente" : "oferentes";
+  if (!caseFile.offerCount || caseFile.offerCount === caseFile.bidderCount) {
+    return `${caseFile.bidderCount} ${bidderLabel}`;
+  }
+  return `${caseFile.bidderCount} ${bidderLabel}, ${caseFile.offerCount} ofertas`;
+}
+
+function formatWorkLocation(
+  caseFile: Pick<CrossCountryCaseFile, "workLocality" | "workDepartment" | "workProvince" | "locationName">,
+): string {
+  const parts = [caseFile.workLocality, caseFile.workDepartment, caseFile.workProvince]
+    .filter((value): value is string => Boolean(value));
+  return parts.length > 0 ? parts.join(", ") : caseFile.locationName ?? "Sin dato";
+}
+
+function formatCaseDate(
+  caseFile: Pick<CrossCountryCaseFile, "awardedAt" | "publishedAt" | "year">,
+): string {
+  return caseFile.awardedAt ?? caseFile.publishedAt ?? String(caseFile.year ?? "Sin dato");
+}
+
 function shortSource(sourceId: string): string {
+  if (sourceId.includes("ACTAS")) return "Actas";
   if (sourceId.includes("CONTRATOS")) return "Contratos";
+  if (sourceId.includes("OFERTAS")) return "Ofertas";
+  if (sourceId.includes("PROCEDIMIENTOS")) return "Procedimiento";
+  if (sourceId.includes("UBICACION")) return "Ubicacion";
+  if (sourceId.includes("SIPRO")) return "SIPRO";
+  if (sourceId.includes("OCDS")) return "OCDS";
   if (sourceId.includes("GASTO")) return "Presupuesto";
   if (sourceId.includes("MERCADO")) return "Adjudicaciones";
   return "Fuente";
