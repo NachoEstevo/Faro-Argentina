@@ -166,7 +166,9 @@ State transitions:
 - `loading -> active`: fetch returns >= 1 release.
 - `loading -> no-changes`: fetch returns 0 releases.
 - `loading -> error`: fetch times out, returns 4xx/5xx, or throws.
-- `* -> off`: user deselects the case, or clicks `[x]` on the control.
+- `* -> off`: user clicks the `X` close button on the control (which calls
+  `onSelectCase("")` to clear selection), or the lead feed deselects the case
+  from any other source.
 
 ### Public API surface of `wayback.ts`
 
@@ -233,9 +235,9 @@ Floating control. Position: `absolute; bottom: 24px; left: 24px;`. Width:
 
 ```
 +------------------------------------------------+
-| Imagery Esri Wayback                       [x] |
+| Imagery Esri Wayback                       [X] |  <- [X] is the Lucide X icon button
 |                                                |
-| <  ago 2024                                  > |
+| <  ago 2024                                  > |  <- < > are Lucide ChevronLeft / ChevronRight buttons
 | -----.----------------------------------       |
 |                                                |
 | Maxar / Airbus . Click flechas o arrastra      |
@@ -323,14 +325,16 @@ Both must pass before merge.
 
 ### Manual checks at `127.0.0.1:3002/?demo=map`
 
-- Clicking an AR case with coordinates triggers a flyTo to roughly zoom 17,
-  the basemap swaps to Wayback imagery, and the floating control appears at
-  the bottom-left.
+- Clicking an AR case with coordinates triggers a flyTo to zoom 17, the
+  basemap swaps to Wayback imagery, and the floating control appears at the
+  bottom-left.
 - The control displays the most recent release that captured a change at that
   coordinate.
 - Moving the slider swaps the tile layer to the corresponding release.
-- Pressing `[x]` on the control or selecting empty space restores CartoDB and
-  fits all bounds.
+- Pressing the close icon on the control (Lucide `X`, top-right) restores
+  CartoDB, hides the control, and fits all bounds. Selecting a different
+  marker swaps the wayback target to that case; selecting nothing (e.g.
+  filtering the lead feed to empty) returns to `off`.
 - A case without coordinates does not trigger the control.
 - A rural coordinate with no Wayback changes shows "Sin cambios visibles" and
   the fallback release renders the basemap.
