@@ -30,6 +30,14 @@ export interface EvidenceReceipt {
   parserVersion: string;
 }
 
+export interface ReceiptLocatorPresentation {
+  locatorType: LocatorType;
+  label: string;
+  actionLabel: string;
+  note: string;
+  isDirectRecord: boolean;
+}
+
 export function createEvidenceReceipt(input: EvidenceReceiptInput): EvidenceReceipt {
   const receiptId = `${input.sourceId}-${input.recordId}`.replaceAll("/", "-");
   return {
@@ -50,6 +58,43 @@ export function createEvidenceReceipt(input: EvidenceReceiptInput): EvidenceRece
 
 export function shouldExposeReceiptInUi(receipt: EvidenceReceipt): boolean {
   return receipt.locatorType !== "missing" && receipt.snapshotHash.startsWith("sha256-");
+}
+
+const receiptLocatorPresentations = {
+  official_detail: {
+    locatorType: "official_detail",
+    label: "Detalle oficial",
+    actionLabel: "Abrir registro",
+    note: "Link al registro oficial especifico.",
+    isDirectRecord: true,
+  },
+  official_search: {
+    locatorType: "official_search",
+    label: "Busqueda oficial",
+    actionLabel: "Buscar registro",
+    note: "Link de busqueda oficial usando el identificador del registro.",
+    isDirectRecord: false,
+  },
+  official_dataset: {
+    locatorType: "official_dataset",
+    label: "Dataset oficial",
+    actionLabel: "Abrir fuente",
+    note: "Fuente oficial del dataset; no es un link directo al registro.",
+    isDirectRecord: false,
+  },
+  missing: {
+    locatorType: "missing",
+    label: "Sin URL exacta",
+    actionLabel: "Ver receipt",
+    note: "Faro conserva el registro y hash, pero no hay URL oficial exacta.",
+    isDirectRecord: false,
+  },
+} satisfies Record<LocatorType, ReceiptLocatorPresentation>;
+
+export function describeReceiptLocator(
+  locatorType: LocatorType,
+): ReceiptLocatorPresentation {
+  return receiptLocatorPresentations[locatorType];
 }
 
 function hashStableJson(value: Record<string, unknown>): string {
