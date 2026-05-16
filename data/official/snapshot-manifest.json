@@ -1,11 +1,33 @@
 {
-  "generatedAt": "2026-05-16T05:23:41.872Z",
+  "generatedAt": "2026-05-16T05:40:02.581Z",
   "snapshots": [
+    {
+      "sourceId": "AR-CONTRATAR-CONTRATOS",
+      "rawPath": "data/official/ar/onc-contratar-contratos.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+      "fetchedAt": "2026-05-16T05:39:48.281Z",
+      "contentType": "text/csv",
+      "contentLength": "157017",
+      "partial": false,
+      "fileHash": "sha256-6bc5a51f673835f9015feaefa456ef7fb539829a6c64ebb2ddfb2d812d2bcb56",
+      "byteSize": 157017
+    },
+    {
+      "sourceId": "AR-SIPRO-PROVEEDORES",
+      "rawPath": "data/official/ar/sipro-proveedores.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
+      "fetchedAt": "2026-05-16T05:39:48.638Z",
+      "contentType": "text/csv",
+      "contentLength": "4836030",
+      "partial": false,
+      "fileHash": "sha256-2c9f3e24983e1d1fd4a5c5c7165c1915afde57a5663da0e943745152521f5e17",
+      "byteSize": 4836030
+    },
     {
       "sourceId": "PE-MEF-GASTO-DIARIO",
       "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
       "fetchUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
-      "fetchedAt": "2026-05-16T05:23:34.162Z",
+      "fetchedAt": "2026-05-16T05:39:49.184Z",
       "contentType": "text/csv",
       "contentRange": "bytes 0-120000/4236445622",
       "partial": true,
@@ -16,7 +38,7 @@
       "sourceId": "PE-OECE-CONTRATOS",
       "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
       "fetchUrl": "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx",
-      "fetchedAt": "2026-05-16T05:23:41.740Z",
+      "fetchedAt": "2026-05-16T05:39:56.665Z",
       "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "contentLength": "15827272",
       "partial": false,
@@ -27,13 +49,12 @@
       "sourceId": "CL-MERCADO-PUBLICO-API",
       "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
       "fetchUrl": "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>",
-      "fetchedAt": "2026-05-16T05:23:41.872Z",
+      "fetchedAt": "2026-05-16T05:40:02.581Z",
       "contentType": "application/json",
       "recordCount": 3,
       "partial": true,
       "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
-      "byteSize": 16318,
-      "fetchWarning": "Fetch failed with 429: https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>"
+      "byteSize": 16318
     }
   ]
 }

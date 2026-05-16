@@ -6,6 +6,8 @@ export interface ExportableCaseFile {
   title: string;
   caveats: string[];
   caseType?: string;
+  supplierName?: string | null;
+  supplierDocument?: string | null;
   receipt: {
     receiptId: string;
     sourceId: string;

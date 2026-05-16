@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import {
+  buildArgentinaContractCases,
   buildChileCompraCases,
   buildPeruBudgetCases,
   buildPeruContractCases,
@@ -11,6 +12,7 @@ import { profileCsvSnapshot, profileJsonSnapshot } from "../src/lib/data/snapsho
 import { profileXlsxSnapshot, readXlsxRows } from "../src/lib/data/xlsx.ts";
 
 const pePath = new URL("../data/official/pe/mef-2026-gasto-diario.sample.csv", import.meta.url);
+const arContractsPath = new URL("../data/official/ar/onc-contratar-contratos.csv", import.meta.url);
 const peContractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
 const clPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
@@ -20,8 +22,15 @@ const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta
 
 const generatedAt = new Date().toISOString();
 const peText = await readFile(pePath, "utf8");
+const arContractsText = await readFile(arContractsPath, "utf8");
 const peContractsBuffer = await readFile(peContractsPath);
 const clText = await readFile(clPath, "utf8");
+const arContractsProfile = profileCsvSnapshot({
+  sourceId: "AR-CONTRATAR-CONTRATOS",
+  rawPath: "data/official/ar/onc-contratar-contratos.csv",
+  text: arContractsText,
+  keyColumns: ["contrato_numero", "procedimiento_numero", "contratista_cuit", "contrato_monto"],
+});
 const peProfile = profileCsvSnapshot({
   sourceId: "PE-MEF-GASTO-DIARIO",
   rawPath: "data/official/pe/mef-2026-gasto-diario.sample.csv",
@@ -49,6 +58,15 @@ const peCases = buildPeruBudgetCases(peText, {
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
 });
+const arContractCases = buildArgentinaContractCases(arContractsText, {
+  sourceId: "AR-CONTRATAR-CONTRATOS",
+  sourceName: "CONTRAT.AR contratos",
+  sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+  rawPath: "data/official/ar/onc-contratar-contratos.csv",
+  fileHash: arContractsProfile.fileHash,
+  extractedAt: generatedAt,
+  parserVersion: "cross-country@1",
+});
 const peContractRows = readXlsxRows(peContractsBuffer, { limit: 30 })
   .rows as unknown as PeruContractRow[];
 const peContractCases = buildPeruContractCases(peContractRows, {
@@ -73,6 +91,16 @@ const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot,
 const payload = {
   generatedAt,
   datasets: [
+    buildDataset({
+      sourceId: "AR-CONTRATAR-CONTRATOS",
+      sourceName: "CONTRAT.AR contratos",
+      sourceUrl: "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+      filePath: "data/official/ar/onc-contratar-contratos.csv",
+      fileHash: arContractsProfile.fileHash,
+      snapshotProfile: arContractsProfile,
+      rawRows: arContractsProfile.rowCount,
+      cases: arContractCases,
+    }),
     buildDataset({
       sourceId: "PE-MEF-GASTO-DIARIO",
       sourceName: "MEF presupuesto y ejecucion de gasto diario",
@@ -104,7 +132,7 @@ const payload = {
       cases: clCases,
     }),
   ],
-  cases: [...peCases, ...peContractCases, ...clCases],
+  cases: [...arContractCases, ...peCases, ...peContractCases, ...clCases],
 };
 
 await mkdir(new URL("../src/data/", import.meta.url), { recursive: true });

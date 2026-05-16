@@ -63,7 +63,7 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["numero_obra", "procedimiento_numero", "contratista_cuit", "importe_contrato"],
+    "keyFields": ["numero_obra", "procedimiento_numero", "contratista_cuit", "contrato_monto"],
     "caveats": ["Debe cruzarse con obras y ubicacion para lectura territorial."]
   },
   {

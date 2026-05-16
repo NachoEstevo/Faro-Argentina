@@ -41,3 +41,20 @@ test("buildCaseCollectionPack creates a country export with receipts and source 
   assert.equal(pack.receipts[0]?.sourceId.startsWith("PE-"), true);
   assert.match(pack.verificationSteps.join("\n"), /No publicar conclusiones/);
 });
+
+test("buildCaseCollectionPack exports Argentina contract cases by source and type", () => {
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "AR",
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    caseType: "procurement_contract",
+  });
+
+  assert.equal(pack.stats.caseFiles, 50);
+  assert.equal(pack.stats.receipts, 50);
+  assert.deepEqual(pack.sourceIds, ["AR-CONTRATAR-CONTRATOS"]);
+  assert.equal(pack.cases.every((caseFile) => caseFile.supplierDocument), true);
+  assert.equal(
+    pack.receipts.every((receipt) => receipt.sourceId === "AR-CONTRATAR-CONTRATOS"),
+    true,
+  );
+});

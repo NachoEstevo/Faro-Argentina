@@ -12,6 +12,14 @@ const peOutputPath = new URL(
   "../data/official/pe/mef-2026-gasto-diario.sample.csv",
   import.meta.url,
 );
+const arContractsOutputPath = new URL(
+  "../data/official/ar/onc-contratar-contratos.csv",
+  import.meta.url,
+);
+const arSuppliersOutputPath = new URL(
+  "../data/official/ar/sipro-proveedores.csv",
+  import.meta.url,
+);
 const peContractsOutputPath = new URL(
   "../data/official/pe/oece-contratos-2025.xlsx",
   import.meta.url,
@@ -23,20 +31,43 @@ const clOutputPath = new URL(
 const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
 const peMefUrl = "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv";
+const arContractsUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv";
+const arSuppliersUrl =
+  "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv";
 const peOeceContractsUrl =
   "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx";
 const clListUrl = `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=${chileCompraDate}&estado=${chileCompraState}&ticket=${chileCompraTicket}`;
 
 await mkdir(new URL("../data/official/pe/", import.meta.url), { recursive: true });
 await mkdir(new URL("../data/official/cl/", import.meta.url), { recursive: true });
+await mkdir(new URL("../data/official/ar/", import.meta.url), { recursive: true });
 
+const arContractsSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-CONTRATOS",
+  url: arContractsUrl,
+  outputPath: arContractsOutputPath,
+  rawPath: "data/official/ar/onc-contratar-contratos.csv",
+});
+const arSuppliersSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-SIPRO-PROVEEDORES",
+  url: arSuppliersUrl,
+  outputPath: arSuppliersOutputPath,
+  rawPath: "data/official/ar/sipro-proveedores.csv",
+});
 const peSnapshot = await fetchPeruMefSample();
 const peContractsSnapshot = await fetchPeruOeceContracts();
 const clSnapshot = await fetchChileCompraSample();
 
 await writeFile(manifestPath, `${JSON.stringify({
   generatedAt: new Date().toISOString(),
-  snapshots: [peSnapshot, peContractsSnapshot, clSnapshot],
+  snapshots: [
+    arContractsSnapshot,
+    arSuppliersSnapshot,
+    peSnapshot,
+    peContractsSnapshot,
+    clSnapshot,
+  ],
 }, null, 2)}\n`, "utf8");
 
 async function fetchPeruMefSample() {
@@ -59,6 +90,34 @@ async function fetchPeruMefSample() {
     contentType: response.headers.get("content-type") ?? "text/csv",
     contentRange: response.headers.get("content-range"),
     partial: true,
+    fileHash: hashText(text),
+    byteSize: Buffer.byteLength(text, "utf8"),
+  };
+}
+
+async function fetchTextSnapshot({
+  sourceId,
+  url,
+  outputPath,
+  rawPath,
+}: {
+  sourceId: string;
+  url: string;
+  outputPath: URL;
+  rawPath: string;
+}) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${sourceId} fetch failed with ${response.status}`);
+  const text = await response.text();
+  await writeFile(outputPath, text, "utf8");
+  return {
+    sourceId,
+    rawPath,
+    fetchUrl: url,
+    fetchedAt: new Date().toISOString(),
+    contentType: response.headers.get("content-type") ?? "text/csv",
+    contentLength: response.headers.get("content-length"),
+    partial: false,
     fileHash: hashText(text),
     byteSize: Buffer.byteLength(text, "utf8"),
   };

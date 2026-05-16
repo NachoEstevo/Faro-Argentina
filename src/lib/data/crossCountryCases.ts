@@ -1,7 +1,7 @@
 import { createEvidenceReceipt, type EvidenceReceipt } from "./evidenceReceipts.ts";
 import { parseCsv } from "./argentinaWorks.ts";
 
-export type CrossCountryCode = "PE" | "CL";
+export type CrossCountryCode = "AR" | "PE" | "CL";
 export type CrossCountryCaseType =
   | "budget_execution"
   | "procurement_process"
@@ -47,6 +47,24 @@ export interface PeruBudgetRow {
   ESPECIFICA_DET_NOMBRE: string;
   MONTO_DEVENGADO: string;
   MONTO_GIRADO: string;
+}
+
+export interface ArgentinaContractRow {
+  contrato_numero: string;
+  procedimiento_numero: string;
+  procedimiento_nombre: string;
+  uoc_codigo: string;
+  uoc_descripcion: string;
+  organismo_codigo_saf: string;
+  organismo_nombre: string;
+  expediente_procedimiento_numero: string;
+  numero_obra: string;
+  nombre_obra: string;
+  contrato_perfeccionamiento_fecha: string;
+  contratista_cuit: string;
+  contratista_razon_social: string;
+  contrato_monto: string;
+  contrato_moneda: string;
 }
 
 export interface PeruContractRow {
@@ -170,6 +188,55 @@ export function buildPeruBudgetCases(
         caveats: [
           "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
           "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final.",
+        ],
+      };
+    });
+}
+
+export function buildArgentinaContractCases(
+  text: string,
+  options: BuildOptions,
+  limit = 50,
+): CrossCountryCaseFile[] {
+  return parseCsv<ArgentinaContractRow>(text)
+    .filter((row) => clean(row.contrato_numero).length > 0)
+    .slice(0, limit)
+    .map((row) => {
+      const contractNumber = clean(row.contrato_numero);
+      const amount = parseMoney(row.contrato_monto);
+      return {
+        id: `AR-CONTRACT-${contractNumber}`,
+        countryCode: "AR",
+        caseType: "procurement_contract",
+        workNumber: contractNumber,
+        year: parseYear(clean(row.contrato_perfeccionamiento_fecha).slice(0, 4)),
+        title: clean(row.nombre_obra) || clean(row.procedimiento_nombre) || contractNumber,
+        procedureNumber: clean(row.procedimiento_numero),
+        agencyName: clean(row.organismo_nombre),
+        agencyCode: clean(row.organismo_codigo_saf),
+        contractingUnit: clean(row.uoc_descripcion),
+        executionTerm: null,
+        executionTermType: null,
+        coordinates: null,
+        evidenceLevel: "official_dataset",
+        amount: amount === null ? null : { value: amount, currency: clean(row.contrato_moneda) || "ARS", label: "monto_contrato" },
+        supplierName: clean(row.contratista_razon_social) || null,
+        supplierDocument: clean(row.contratista_cuit) || null,
+        receipt: createEvidenceReceipt({
+          sourceId: options.sourceId,
+          sourceName: options.sourceName,
+          sourceUrl: options.sourceUrl,
+          rawPath: options.rawPath,
+          snapshotHash: options.fileHash,
+          recordId: contractNumber,
+          locatorType: "official_dataset",
+          extractedAt: options.extractedAt,
+          parserVersion: options.parserVersion,
+          row: { ...row },
+        }),
+        caveats: [
+          "Contrato oficial de obra publica; no confirma pago ni avance fisico por si solo.",
+          "La ubicacion de obra debe cruzarse con fuente geografica oficial antes de dibujarse en mapa.",
         ],
       };
     });

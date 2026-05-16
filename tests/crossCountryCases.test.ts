@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildArgentinaContractCases,
   buildChileCompraCases,
   buildPeruBudgetCases,
   buildPeruContractCases,
@@ -30,6 +31,28 @@ test("buildPeruBudgetCases turns MEF rows into exportable evidence cases", () =>
   assert.equal(caseFile?.caseType, "budget_execution");
   assert.equal(caseFile?.agencyName, "REGION AMAZONAS-TRANSPORTES");
   assert.equal(caseFile?.amount?.currency, "PEN");
+  assert.equal(caseFile?.receipt.locatorType, "official_dataset");
+});
+
+test("buildArgentinaContractCases turns CONTRAT.AR contracts into supplier-aware cases", () => {
+  const csv = [
+    "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
+    "14-1002-CON21,14-0007-LPU20,Construccion cubierta,14,Compras CNEA,105,Comision Nacional de Energia Atomica,EX-2021,14-0001-OBR21,Construccion cubierta,2021-04-07T00:00:00,30-70043585-3,Warlet S.A,8694426.61,ARS",
+  ].join("\n");
+
+  const [caseFile] = buildArgentinaContractCases(csv, {
+    ...options,
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    sourceName: "CONTRAT.AR contratos",
+    sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+    rawPath: "data/official/ar/onc-contratar-contratos.csv",
+  });
+
+  assert.equal(caseFile?.countryCode, "AR");
+  assert.equal(caseFile?.caseType, "procurement_contract");
+  assert.equal(caseFile?.supplierName, "Warlet S.A");
+  assert.equal(caseFile?.supplierDocument, "30-70043585-3");
+  assert.equal(caseFile?.amount?.currency, "ARS");
   assert.equal(caseFile?.receipt.locatorType, "official_dataset");
 });
 
