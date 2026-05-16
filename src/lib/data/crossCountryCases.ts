@@ -32,6 +32,19 @@ export interface CrossCountryCaseFile {
   coordinates: { lat: number; lon: number } | null;
   locationName?: string | null;
   locationSource?: string | null;
+  publishedAt?: string | null;
+  closedAt?: string | null;
+  awardedAt?: string | null;
+  awardActUrl?: string | null;
+  awardNumber?: string | null;
+  bidderCount?: number | null;
+  claimCount?: number | null;
+  buyerUnitCode?: string | null;
+  buyerUnitRut?: string | null;
+  buyerRegion?: string | null;
+  buyerCommune?: string | null;
+  itemCount?: number | null;
+  awardedLineCount?: number | null;
   evidenceLevel: "official_dataset";
   amount: {
     value: number;
@@ -96,12 +109,15 @@ interface ChileTender {
   Nombre: string;
   CodigoEstado: number;
   Descripcion?: string;
+  FechaCierre?: string | null;
   Estado?: string;
   Moneda?: string;
   MontoEstimado?: number | null;
+  CantidadReclamos?: number | null;
   Comprador?: {
     CodigoOrganismo?: string;
     NombreOrganismo?: string;
+    RutUnidad?: string;
     CodigoUnidad?: string;
     NombreUnidad?: string;
     RegionUnidad?: string;
@@ -113,9 +129,13 @@ interface ChileTender {
     FechaCierre?: string | null;
   };
   Adjudicacion?: {
+    Fecha?: string | null;
+    Numero?: string;
     NumeroOferentes?: number;
+    UrlActa?: string;
   } | null;
   Items?: {
+    Cantidad?: number;
     Listado?: Array<{
       Cantidad?: number;
       Adjudicacion?: {
@@ -254,12 +274,17 @@ export function buildChileCompraCases(
     const buyer = tender.Comprador ?? {};
     const award = summarizeChileAward(tender);
     const amount = award.amount ?? (typeof tender.MontoEstimado === "number" ? tender.MontoEstimado : null);
+    const publishedAt = normalizeDate(tender.Fechas?.FechaPublicacion);
+    const closedAt = normalizeDate(tender.Fechas?.FechaCierre ?? tender.FechaCierre);
+    const awardedAt = normalizeDate(tender.Fechas?.FechaAdjudicacion ?? tender.Adjudicacion?.Fecha);
+    const awardActUrl = clean(tender.Adjudicacion?.UrlActa) || null;
+    const receiptUrl = awardActUrl ?? buildChileApiDetailUrl(recordId);
     return {
       id: `CL-TENDER-${recordId}`,
       countryCode: "CL",
       caseType: "procurement_process",
       workNumber: recordId,
-      year: parseYear(tender.Fechas?.FechaPublicacion?.slice(0, 4) ?? recordId.match(/(\d{2})$/)?.[1]),
+      year: parseYear(awardedAt?.slice(0, 4) ?? publishedAt?.slice(0, 4) ?? recordId.match(/(\d{2})$/)?.[1]),
       title: clean(tender.Nombre) || recordId,
       procedureNumber: recordId,
       agencyName: clean(buyer.NombreOrganismo),
@@ -268,14 +293,31 @@ export function buildChileCompraCases(
       executionTerm: null,
       executionTermType: null,
       coordinates: null,
+      publishedAt,
+      closedAt,
+      awardedAt,
+      awardActUrl,
+      awardNumber: clean(tender.Adjudicacion?.Numero) || null,
+      bidderCount: toNumber(tender.Adjudicacion?.NumeroOferentes),
+      claimCount: toNumber(tender.CantidadReclamos),
+      buyerUnitCode: clean(buyer.CodigoUnidad) || null,
+      buyerUnitRut: clean(buyer.RutUnidad) || null,
+      buyerRegion: clean(buyer.RegionUnidad) || null,
+      buyerCommune: clean(buyer.ComunaUnidad) || null,
+      itemCount: toNumber(tender.Items?.Cantidad ?? tender.Items?.Listado?.length),
+      awardedLineCount: award.awardedLineCount,
       evidenceLevel: "official_dataset",
-      amount: amount === null ? null : { value: amount, currency: tender.Moneda ?? "CLP", label: award.amount === null ? "monto_estimado" : "monto_adjudicado" },
+      amount: amount === null ? null : {
+        value: amount,
+        currency: tender.Moneda ?? "CLP",
+        label: award.amount === null ? "monto_estimado" : "monto_adjudicado_item_sum",
+      },
       supplierName: award.supplierName,
       supplierDocument: award.supplierDocument,
       receipt: createEvidenceReceipt({
         sourceId: options.sourceId,
         sourceName: options.sourceName,
-        sourceUrl: options.sourceUrl,
+        sourceUrl: receiptUrl,
         rawPath: options.rawPath,
         snapshotHash: options.fileHash,
         recordId,
@@ -286,6 +328,7 @@ export function buildChileCompraCases(
       }),
       caveats: [
         "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
         "La API puede requerir ticket para reproducir el detalle.",
       ],
     };
@@ -296,6 +339,7 @@ function summarizeChileAward(tender: ChileTender): {
   amount: number | null;
   supplierName: string | null;
   supplierDocument: string | null;
+  awardedLineCount: number;
 } {
   const awardedItems = (tender.Items?.Listado ?? [])
     .map((item) => ({
@@ -309,7 +353,7 @@ function summarizeChileAward(tender: ChileTender): {
     .filter((item) => item.supplierName.length > 0 || item.amount !== null);
 
   if (awardedItems.length === 0) {
-    return { amount: null, supplierName: null, supplierDocument: null };
+    return { amount: null, supplierName: null, supplierDocument: null, awardedLineCount: 0 };
   }
 
   const supplierName = Array.from(new Set(awardedItems.map((item) => item.supplierName).filter(Boolean))).join(", ");
@@ -319,6 +363,7 @@ function summarizeChileAward(tender: ChileTender): {
     amount: Number.isFinite(amount) ? amount : null,
     supplierName: supplierName || null,
     supplierDocument: supplierDocument || null,
+    awardedLineCount: awardedItems.length,
   };
 }
 
@@ -352,13 +397,24 @@ function buildValidityTerm(row: PeruContractRow): string | null {
   return start ?? end;
 }
 
-function normalizeDate(value: string | undefined): string | null {
+function normalizeDate(value: string | null | undefined): string | null {
   const cleaned = clean(value);
   if (/^\d{4}-\d{2}-\d{2}/.test(cleaned)) return cleaned.slice(0, 10);
   if (!/^\d+(\.\d+)?$/.test(cleaned)) return null;
   const serial = Number(cleaned);
   if (!Number.isFinite(serial) || serial < 20000 || serial > 80000) return null;
   return new Date(Math.round((serial - 25569) * 86_400_000)).toISOString().slice(0, 10);
+}
+
+function toNumber(value: string | number | null | undefined): number | null {
+  const cleaned = clean(value);
+  if (cleaned.length === 0) return null;
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function buildChileApiDetailUrl(recordId: string): string {
+  return `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?codigo=${encodeURIComponent(recordId)}&ticket=<redacted>`;
 }
 
 function clean(value: string | number | null | undefined): string {

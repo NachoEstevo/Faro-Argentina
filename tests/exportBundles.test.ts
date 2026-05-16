@@ -66,3 +66,19 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
     true,
   );
 });
+
+test("buildCaseCollectionPack exports Chile award evidence with official act context", () => {
+  const pack = buildCaseCollectionPack(cases, { countryCode: "CL" });
+  const [caseFile] = pack.cases as Array<ExportableCaseFile & {
+    awardedAt?: string | null;
+    awardActUrl?: string | null;
+    bidderCount?: number | null;
+  }>;
+
+  assert.equal(pack.stats.caseFiles, 3);
+  assert.equal(caseFile?.awardedAt, "2026-05-15");
+  assert.match(caseFile?.awardActUrl ?? "", /mercadopublico\.cl/);
+  assert.equal(caseFile?.bidderCount, 13);
+  assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
+  assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);
+});

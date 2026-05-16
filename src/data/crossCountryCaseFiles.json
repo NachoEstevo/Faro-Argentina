@@ -5801,11 +5801,24 @@
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
+          "publishedAt": "2026-03-25",
+          "closedAt": "2026-04-16",
+          "awardedAt": "2026-05-15",
+          "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=0GzXbotSnQn1MH80bsYUcuI46RArNzxLlsLttGCCjC4=",
+          "awardNumber": "511",
+          "bidderCount": 13,
+          "claimCount": 211,
+          "buyerUnitCode": "2155",
+          "buyerUnitRut": "61.308.000-7",
+          "buyerRegion": "Región de Coquimbo",
+          "buyerCommune": "La Serena",
+          "itemCount": 1,
+          "awardedLineCount": 1,
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 294,
             "currency": "CLP",
-            "label": "monto_adjudicado"
+            "label": "monto_adjudicado_item_sum"
           },
           "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
           "supplierDocument": "78.047.617-6",
@@ -5813,7 +5826,7 @@
             "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
             "sourceName": "API de Mercado Publico",
-            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=0GzXbotSnQn1MH80bsYUcuI46RArNzxLlsLttGCCjC4=",
             "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
             "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
             "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -5825,6 +5838,7 @@
           },
           "caveats": [
             "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
             "La API puede requerir ticket para reproducir el detalle."
           ]
         },
@@ -5842,11 +5856,24 @@
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
+          "publishedAt": "2026-04-27",
+          "closedAt": "2026-05-07",
+          "awardedAt": "2026-05-15",
+          "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=BkPYgOqWwNhN8vuGkV2OrwqKR99zBTgWPfFY3wQ4HlA=",
+          "awardNumber": "2512",
+          "bidderCount": 1,
+          "claimCount": 114,
+          "buyerUnitCode": "4415",
+          "buyerUnitRut": "69.190.800-3",
+          "buyerRegion": "Región de la Araucanía",
+          "buyerCommune": null,
+          "itemCount": 1,
+          "awardedLineCount": 1,
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 6722689,
             "currency": "CLP",
-            "label": "monto_adjudicado"
+            "label": "monto_adjudicado_item_sum"
           },
           "supplierName": "PABLO GALDAMES DIAZ SPA",
           "supplierDocument": "77.694.443-2",
@@ -5854,7 +5881,7 @@
             "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
             "sourceName": "API de Mercado Publico",
-            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=BkPYgOqWwNhN8vuGkV2OrwqKR99zBTgWPfFY3wQ4HlA=",
             "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
             "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
             "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -5866,6 +5893,7 @@
           },
           "caveats": [
             "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
             "La API puede requerir ticket para reproducir el detalle."
           ]
         },
@@ -5883,11 +5911,24 @@
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
+          "publishedAt": "2026-04-20",
+          "closedAt": "2026-04-30",
+          "awardedAt": "2026-05-15",
+          "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=ik0jCF0uAEPVwm5orhYOOnyWOq05q/4kdPKRC2QQbiU=",
+          "awardNumber": "652",
+          "bidderCount": 7,
+          "claimCount": 1547,
+          "buyerUnitCode": "3972",
+          "buyerUnitRut": "69.259.900-4",
+          "buyerRegion": "Región del Biobío",
+          "buyerCommune": "Lota",
+          "itemCount": 1,
+          "awardedLineCount": 1,
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 12586000,
             "currency": "CLP",
-            "label": "monto_adjudicado"
+            "label": "monto_adjudicado_item_sum"
           },
           "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
           "supplierDocument": "76.125.451-0",
@@ -5895,7 +5936,7 @@
             "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
             "sourceId": "CL-MERCADO-PUBLICO-API",
             "sourceName": "API de Mercado Publico",
-            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=ik0jCF0uAEPVwm5orhYOOnyWOq05q/4kdPKRC2QQbiU=",
             "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
             "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
             "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -5907,6 +5948,7 @@
           },
           "caveats": [
             "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
             "La API puede requerir ticket para reproducir el detalle."
           ]
         }
@@ -11462,11 +11504,24 @@
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
+      "publishedAt": "2026-03-25",
+      "closedAt": "2026-04-16",
+      "awardedAt": "2026-05-15",
+      "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=0GzXbotSnQn1MH80bsYUcuI46RArNzxLlsLttGCCjC4=",
+      "awardNumber": "511",
+      "bidderCount": 13,
+      "claimCount": 211,
+      "buyerUnitCode": "2155",
+      "buyerUnitRut": "61.308.000-7",
+      "buyerRegion": "Región de Coquimbo",
+      "buyerCommune": "La Serena",
+      "itemCount": 1,
+      "awardedLineCount": 1,
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 294,
         "currency": "CLP",
-        "label": "monto_adjudicado"
+        "label": "monto_adjudicado_item_sum"
       },
       "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
       "supplierDocument": "78.047.617-6",
@@ -11474,7 +11529,7 @@
         "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
         "sourceName": "API de Mercado Publico",
-        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=0GzXbotSnQn1MH80bsYUcuI46RArNzxLlsLttGCCjC4=",
         "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
         "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
         "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -11486,6 +11541,7 @@
       },
       "caveats": [
         "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
         "La API puede requerir ticket para reproducir el detalle."
       ]
     },
@@ -11503,11 +11559,24 @@
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
+      "publishedAt": "2026-04-27",
+      "closedAt": "2026-05-07",
+      "awardedAt": "2026-05-15",
+      "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=BkPYgOqWwNhN8vuGkV2OrwqKR99zBTgWPfFY3wQ4HlA=",
+      "awardNumber": "2512",
+      "bidderCount": 1,
+      "claimCount": 114,
+      "buyerUnitCode": "4415",
+      "buyerUnitRut": "69.190.800-3",
+      "buyerRegion": "Región de la Araucanía",
+      "buyerCommune": null,
+      "itemCount": 1,
+      "awardedLineCount": 1,
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 6722689,
         "currency": "CLP",
-        "label": "monto_adjudicado"
+        "label": "monto_adjudicado_item_sum"
       },
       "supplierName": "PABLO GALDAMES DIAZ SPA",
       "supplierDocument": "77.694.443-2",
@@ -11515,7 +11584,7 @@
         "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
         "sourceName": "API de Mercado Publico",
-        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=BkPYgOqWwNhN8vuGkV2OrwqKR99zBTgWPfFY3wQ4HlA=",
         "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
         "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
         "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -11527,6 +11596,7 @@
       },
       "caveats": [
         "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
         "La API puede requerir ticket para reproducir el detalle."
       ]
     },
@@ -11544,11 +11614,24 @@
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
+      "publishedAt": "2026-04-20",
+      "closedAt": "2026-04-30",
+      "awardedAt": "2026-05-15",
+      "awardActUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=ik0jCF0uAEPVwm5orhYOOnyWOq05q/4kdPKRC2QQbiU=",
+      "awardNumber": "652",
+      "bidderCount": 7,
+      "claimCount": 1547,
+      "buyerUnitCode": "3972",
+      "buyerUnitRut": "69.259.900-4",
+      "buyerRegion": "Región del Biobío",
+      "buyerCommune": "Lota",
+      "itemCount": 1,
+      "awardedLineCount": 1,
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 12586000,
         "currency": "CLP",
-        "label": "monto_adjudicado"
+        "label": "monto_adjudicado_item_sum"
       },
       "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
       "supplierDocument": "76.125.451-0",
@@ -11556,7 +11639,7 @@
         "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
         "sourceId": "CL-MERCADO-PUBLICO-API",
         "sourceName": "API de Mercado Publico",
-        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "sourceUrl": "http://www.mercadopublico.cl/Procurement/Modules/RFB/StepsProcessAward/PreviewAwardAct.aspx?qs=ik0jCF0uAEPVwm5orhYOOnyWOq05q/4kdPKRC2QQbiU=",
         "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
         "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
         "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
@@ -11568,6 +11651,7 @@
       },
       "caveats": [
         "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "El monto adjudicado se calcula desde lineas adjudicadas cuando la API no entrega total unico.",
         "La API puede requerir ticket para reproducir el detalle."
       ]
     }

@@ -194,6 +194,7 @@ test("buildPeruContractCases normalizes OECE Excel serial dates for filters and 
 });
 
 test("buildChileCompraCases turns API details into exportable procurement cases", () => {
+  const awardActUrl = "http://www.mercadopublico.cl/award-act";
   const snapshot: ChileCompraSnapshot = {
     details: [
       {
@@ -204,13 +205,26 @@ test("buildChileCompraCases turns API details into exportable procurement cases"
             CodigoEstado: 5,
             Moneda: "CLP",
             MontoEstimado: 1000,
+            CantidadReclamos: 211,
             Comprador: {
               CodigoOrganismo: "7248",
+              RutUnidad: "61.308.000-7",
+              CodigoUnidad: "2155",
               NombreOrganismo: "Ministerio de Obras Publicas",
               NombreUnidad: "Direccion de Vialidad",
               RegionUnidad: "Region de Los Lagos",
+              ComunaUnidad: "Puerto Montt",
             },
-            Fechas: { FechaPublicacion: "2026-05-15T16:56:09.203" },
+            Fechas: {
+              FechaPublicacion: "2026-05-15T16:56:09.203",
+              FechaCierre: "2026-05-20T15:00:00",
+              FechaAdjudicacion: "2026-05-25T00:00:00",
+            },
+            Adjudicacion: {
+              Numero: "511",
+              NumeroOferentes: 13,
+              UrlActa: awardActUrl,
+            },
             Items: {
               Listado: [
                 {
@@ -241,8 +255,75 @@ test("buildChileCompraCases turns API details into exportable procurement cases"
   assert.equal(caseFile?.caseType, "procurement_process");
   assert.equal(caseFile?.agencyCode, "7248");
   assert.equal(caseFile?.amount?.value, 1000);
-  assert.equal(caseFile?.amount?.label, "monto_adjudicado");
+  assert.equal(caseFile?.amount?.label, "monto_adjudicado_item_sum");
   assert.equal(caseFile?.supplierName, "Proveedor adjudicado");
   assert.equal(caseFile?.supplierDocument, "78.047.617-6");
   assert.equal(caseFile?.receipt.locatorType, "official_detail");
+  const chileCase = caseFile as typeof caseFile & {
+    publishedAt: string | null;
+    closedAt: string | null;
+    awardedAt: string | null;
+    awardActUrl: string | null;
+    awardNumber: string | null;
+    bidderCount: number | null;
+    claimCount: number | null;
+    buyerUnitCode: string | null;
+    buyerUnitRut: string | null;
+    buyerRegion: string | null;
+    buyerCommune: string | null;
+    itemCount: number | null;
+    awardedLineCount: number | null;
+  };
+  assert.equal(chileCase?.publishedAt, "2026-05-15");
+  assert.equal(chileCase?.closedAt, "2026-05-20");
+  assert.equal(chileCase?.awardedAt, "2026-05-25");
+  assert.equal(chileCase?.awardActUrl, awardActUrl);
+  assert.equal(chileCase?.awardNumber, "511");
+  assert.equal(chileCase?.bidderCount, 13);
+  assert.equal(chileCase?.claimCount, 211);
+  assert.equal(chileCase?.buyerUnitCode, "2155");
+  assert.equal(chileCase?.buyerUnitRut, "61.308.000-7");
+  assert.equal(chileCase?.buyerRegion, "Region de Los Lagos");
+  assert.equal(chileCase?.buyerCommune, "Puerto Montt");
+  assert.equal(chileCase?.itemCount, 1);
+  assert.equal(chileCase?.awardedLineCount, 1);
+  assert.equal(chileCase?.receipt.sourceUrl, awardActUrl);
+});
+
+test("buildChileCompraCases keeps missing Chile numeric context as null", () => {
+  const [caseFile] = buildChileCompraCases(
+    {
+      details: [
+        {
+          Listado: [
+            {
+              CodigoExterno: "1002-54-LP26",
+              Nombre: "Convenio sin metricas",
+              CodigoEstado: 5,
+              Comprador: {},
+            },
+          ],
+        },
+      ],
+    },
+    {
+      ...options,
+      sourceId: "CL-MERCADO-PUBLICO-API",
+      sourceName: "API de Mercado Publico",
+      sourceUrl: "https://api.mercadopublico.cl/modules/api.aspx",
+      rawPath: "data/official/cl/sample.json",
+    },
+  );
+
+  const chileCase = caseFile as typeof caseFile & {
+    bidderCount: number | null;
+    claimCount: number | null;
+    itemCount: number | null;
+    awardedLineCount: number | null;
+  };
+
+  assert.equal(chileCase?.bidderCount, null);
+  assert.equal(chileCase?.claimCount, null);
+  assert.equal(chileCase?.itemCount, null);
+  assert.equal(chileCase?.awardedLineCount, 0);
 });
