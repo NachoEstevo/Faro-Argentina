@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Swap the Leaflet basemap to Esri World Imagery Wayback when a case is selected, with a floating control that lets the user step through the historical releases where Esri captured visible imagery changes at the case's coordinate.
+**Goal:** Swap the Leaflet basemap to Esri World Imagery Wayback when a case is selected, with a floating control that lets the user step through one Wayback release per year (yearly sampling).
 
-**Architecture:** Pure client-side. A new `wayback.ts` module wraps the three Esri endpoints (config, change-by-location, tile URL) with module-level caches. A new `WaybackControl.tsx` component renders the floating slider. `CaseMap.tsx` holds a `WaybackState` machine, fetches on selection change, and renders the Wayback `TileLayer` conditionally. `CaseDetails.tsx` loses the obsolete `satelliteBox` placeholder.
+**Architecture:** Pure client-side. A new `wayback.ts` module fetches the global Wayback config once, parses release dates out of `itemTitle`, derives yearly samples, and builds tile URLs. A new `WaybackControl.tsx` component renders the floating slider. `CaseMap.tsx` holds a `WaybackState` machine, triggers the config load on first selection, and renders the Wayback `TileLayer` conditionally. `CaseDetails.tsx` loses the obsolete `satelliteBox` placeholder.
 
 **Tech Stack:** Next.js 16 App Router, React 19, TypeScript, react-leaflet, native `fetch`, Lucide icons. No new npm packages. No unit tests (user-approved exception).
 
@@ -27,43 +27,15 @@ No tests, no data files, no scripts.
 
 ---
 
-### Task 1: Smoke check Esri endpoints
+### Task 1: Smoke check Esri endpoints (already completed 2026-05-16)
 
-**Files:** none changed; this is a manual verification step before coding.
+The pre-flight check was run during planning. Confirmed:
 
-- [ ] **Step 1: Hit the Wayback config endpoint**
+- `https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json` returns JSON; top-level keys are release-id strings; values include `itemID`, `itemTitle`, `itemURL`, `metadataLayerUrl`, `metadataLayerItemID`, `layerIdentifier`.
+- `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/49059/10/400/200` returns HTTP 301 then 200 image/jpeg (~13 KB) after redirect to a lowercased canonical id.
+- The endpoint originally written in the spec (`metadataqueryservice.maptiles.arcgis.com`) does NOT exist; per-coordinate change detection is not part of this iteration.
 
-Run:
-
-```bash
-curl -s "https://livingatlas.arcgis.com/wayback/config/waybackconfig.json" | head -c 400
-```
-
-Expected: a JSON object whose top-level keys are numeric strings (release ids) and values are objects with `releaseNum`, `releaseDateLabel`, `itemTitle`, etc. If the response is HTML or 404, STOP and report — the spec must be re-evaluated.
-
-- [ ] **Step 2: Hit the changes-by-location endpoint with an Argentine coordinate**
-
-Run:
-
-```bash
-curl -s "https://metadataqueryservice.maptiles.arcgis.com/arcgis/rest/services/MetadataQueryService/MapServer/exts/MetadataQueryServer/queryRecentChangesByLocation?location=-58.39,-34.59&inSR=4326"
-```
-
-Expected: a JSON array of release id integers, e.g. `[10, 23, 41, 87]` (the exact ids vary). If empty `[]` is returned, that location simply has no captured changes — still valid. If the response is HTML or an error envelope, STOP and report.
-
-- [ ] **Step 3: Confirm a tile URL renders**
-
-Pick one release id from Step 2's array (e.g. `41`). Open in browser:
-
-```
-https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery_41/MapServer/tile/16/22000/40000
-```
-
-(The `16/22000/40000` is a placeholder z/y/x; the response should be either a PNG image or a 200 OK with imagery for some tile.) If the response is 4xx/5xx, STOP and report.
-
-- [ ] **Step 4: Record findings**
-
-In the chat / PR description, paste a one-line confirmation: "Esri endpoints respond as expected: config returned N releases, changes endpoint returned X ids for AR sample point, tile URL serves PNG." No commit; this is a pre-flight check only.
+No commit. Move to Task 2.
 
 ---
 
@@ -74,109 +46,16 @@ In the chat / PR description, paste a one-line confirmation: "Esri endpoints res
 
 - [ ] **Step 1: Write the module**
 
-Create `src/lib/data/wayback.ts`:
+Create `src/lib/data/wayback.ts` with the contents documented in the spec's Data Contract section. Required exports:
 
-```ts
-export interface WaybackRelease {
-  releaseId: number;
-  releaseDate: string;
-  releaseLabel: string;
-}
+- `interface WaybackRelease { releaseId, releaseDate, releaseLabel, year }`
+- `async function loadYearlyReleases(): Promise<WaybackRelease[]>` — single GET against `https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json`, cached at module scope with request-deduping Promise.
+- `function tileUrlForRelease(releaseId: number): string` — returns `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${releaseId}/{z}/{y}/{x}`.
+- `function formatReleaseYear(release: WaybackRelease): string` — returns `String(release.year)`.
+- `function mapConfigRawToReleases(raw): WaybackRelease[]` — parses the config object, extracts date from `itemTitle` via the regex `\((\d{4})-(\d{2})-(\d{2})\)`, skips entries that do not match, sorts ascending by `releaseDate`.
+- `function pickYearlyReleases(releases): WaybackRelease[]` — keeps the latest entry per year, sorts ascending by year.
 
-const CONFIG_URL = "https://livingatlas.arcgis.com/wayback/config/waybackconfig.json";
-const CHANGES_URL =
-  "https://metadataqueryservice.maptiles.arcgis.com/arcgis/rest/services/MetadataQueryService/MapServer/exts/MetadataQueryServer/queryRecentChangesByLocation";
-
-let configCache: WaybackRelease[] | null = null;
-let configPromise: Promise<WaybackRelease[]> | null = null;
-const changesCache = new Map<string, WaybackRelease[]>();
-
-export async function loadWaybackConfig(): Promise<WaybackRelease[]> {
-  if (configCache) return configCache;
-  if (configPromise) return configPromise;
-  configPromise = (async () => {
-    const response = await fetch(CONFIG_URL);
-    if (!response.ok) {
-      configPromise = null;
-      throw new Error(`Wayback config request failed: ${response.status}`);
-    }
-    const raw = (await response.json()) as Record<string, unknown>;
-    const releases = mapConfigRawToReleases(raw);
-    configCache = releases;
-    configPromise = null;
-    return releases;
-  })();
-  return configPromise;
-}
-
-export async function fetchChangesForPoint(
-  caseId: string,
-  lat: number,
-  lon: number,
-): Promise<WaybackRelease[]> {
-  const cached = changesCache.get(caseId);
-  if (cached) return cached;
-  const [config, ids] = await Promise.all([loadWaybackConfig(), fetchChangesIds(lat, lon)]);
-  const releases = mapChangesRawToReleases(config, ids);
-  changesCache.set(caseId, releases);
-  return releases;
-}
-
-async function fetchChangesIds(lat: number, lon: number): Promise<number[]> {
-  const url = `${CHANGES_URL}?location=${lon},${lat}&inSR=4326&f=json`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Wayback changes request failed: ${response.status}`);
-  }
-  const parsed = (await response.json()) as unknown;
-  if (!Array.isArray(parsed)) {
-    throw new Error("Wayback changes response is not an array");
-  }
-  return parsed.filter((value): value is number => typeof value === "number");
-}
-
-export function tileUrlForRelease(releaseId: number): string {
-  return `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery_${releaseId}/MapServer/tile/{z}/{y}/{x}`;
-}
-
-const SHORT_MONTH_LABELS = [
-  "ene", "feb", "mar", "abr", "may", "jun",
-  "jul", "ago", "sep", "oct", "nov", "dic",
-];
-
-export function formatReleaseDate(release: WaybackRelease): string {
-  const date = new Date(`${release.releaseDate}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return release.releaseDate;
-  const month = SHORT_MONTH_LABELS[date.getUTCMonth()];
-  const year = date.getUTCFullYear();
-  return `${month} ${year}`;
-}
-
-export function mapConfigRawToReleases(raw: Record<string, unknown>): WaybackRelease[] {
-  const releases: WaybackRelease[] = [];
-  for (const [key, value] of Object.entries(raw)) {
-    if (!value || typeof value !== "object") continue;
-    const entry = value as Record<string, unknown>;
-    const releaseId = Number.parseInt(key, 10);
-    const releaseDate = typeof entry.releaseDateLabel === "string" ? entry.releaseDateLabel : null;
-    const releaseLabel = typeof entry.itemTitle === "string" ? entry.itemTitle : null;
-    if (!Number.isFinite(releaseId) || !releaseDate || !releaseLabel) continue;
-    releases.push({ releaseId, releaseDate, releaseLabel });
-  }
-  releases.sort((left, right) => left.releaseDate.localeCompare(right.releaseDate));
-  return releases;
-}
-
-export function mapChangesRawToReleases(
-  config: WaybackRelease[],
-  raw: number[],
-): WaybackRelease[] {
-  const wanted = new Set(raw);
-  return config
-    .filter((release) => wanted.has(release.releaseId))
-    .sort((left, right) => left.releaseDate.localeCompare(right.releaseDate));
-}
-```
+Use the full code from the spec section "Data Contract" verbatim. Module-level caches: `releasesCache: WaybackRelease[] | null` and `releasesPromise: Promise<WaybackRelease[]> | null`. Errors clear `releasesPromise` so the next call retries.
 
 - [ ] **Step 2: Run typecheck**
 
@@ -212,7 +91,7 @@ Create `src/components/WaybackControl.tsx`:
 import { ChevronLeft, ChevronRight, RefreshCw, X } from "lucide-react";
 
 import {
-  formatReleaseDate,
+  formatReleaseYear,
   type WaybackRelease,
 } from "@/lib/data/wayback";
 
@@ -220,7 +99,6 @@ export type WaybackState =
   | { status: "off" }
   | { status: "loading"; caseId: string }
   | { status: "active"; caseId: string; releases: WaybackRelease[]; activeReleaseId: number }
-  | { status: "no-changes"; caseId: string; latestRelease: WaybackRelease }
   | { status: "error"; caseId: string; message: string };
 
 interface Props {
@@ -274,14 +152,6 @@ function Body({
       </div>
     );
   }
-  if (state.status === "no-changes") {
-    return (
-      <div>
-        <p className="waybackEmpty">Sin cambios visibles en esta coordenada.</p>
-        <p className="waybackMeta">Mostrando release mas reciente: {formatReleaseDate(state.latestRelease)}</p>
-      </div>
-    );
-  }
   const { releases, activeReleaseId } = state;
   const activeIndex = releases.findIndex((release) => release.releaseId === activeReleaseId);
   const safeIndex = activeIndex >= 0 ? activeIndex : releases.length - 1;
@@ -291,7 +161,7 @@ function Body({
 
   return (
     <div>
-      <div className="waybackDate">{formatReleaseDate(activeRelease)}</div>
+      <div className="waybackDate">{formatReleaseYear(activeRelease)}</div>
       <div className="waybackSlider">
         <button
           type="button"
@@ -367,11 +237,7 @@ import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, us
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildCaseMarkerKey } from "@/lib/data/mapMarkers";
-import {
-  fetchChangesForPoint,
-  loadWaybackConfig,
-  tileUrlForRelease,
-} from "@/lib/data/wayback";
+import { loadYearlyReleases, tileUrlForRelease } from "@/lib/data/wayback";
 import WaybackControl, { type WaybackState } from "./WaybackControl";
 
 interface Props {
@@ -401,22 +267,15 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
       return;
     }
     setWaybackState({ status: "loading", caseId });
-    fetchChangesForPoint(caseId, coordinates.lat, coordinates.lon)
-      .then(async (releases) => {
+    loadYearlyReleases()
+      .then((releases) => {
         if (cancelled) return;
         if (releases.length === 0) {
-          const config = await loadWaybackConfig();
-          if (cancelled) return;
-          const latest = config[config.length - 1];
-          if (!latest) {
-            setWaybackState({
-              status: "error",
-              caseId,
-              message: "Wayback no devolvio releases disponibles.",
-            });
-            return;
-          }
-          setWaybackState({ status: "no-changes", caseId, latestRelease: latest });
+          setWaybackState({
+            status: "error",
+            caseId,
+            message: "Wayback no devolvio releases disponibles.",
+          });
           return;
         }
         const latest = releases[releases.length - 1];
@@ -456,11 +315,7 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
   }, []);
 
   const waybackTileUrl =
-    waybackState.status === "active"
-      ? tileUrlForRelease(waybackState.activeReleaseId)
-      : waybackState.status === "no-changes"
-        ? tileUrlForRelease(waybackState.latestRelease.releaseId)
-        : null;
+    waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
 
   return (
     <>
