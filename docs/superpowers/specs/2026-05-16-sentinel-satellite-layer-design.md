@@ -42,13 +42,16 @@ BUILD-TIME (Python script, on-demand)
   scripts/fetch-sentinel-scenes.py
     reads case datasets (AR/PE/CL) with coord + year
     per case:
-      bbox = 500 m around the point
-      window_before = [contractDate - 6 months, contractDate]
-      window_after  = [today - 6 months, today]
+      anchorDate = awardedAt || publishedAt || `${year}-01-01`
+      runDate = the moment the script executes (UTC)
+      bbox = square of side 500 m centered on the point
+      window_before = [anchorDate - 6 months, anchorDate]
+      window_after  = [runDate - 6 months, runDate]
       query Planetary Computer STAC, filter eo:cloud_cover < 10 %
-      if empty, expand: (12 months, < 30 %), (18 months, < 50 %)
-      sign url, fetch B04/B03/B02 clipped to bbox
-      normalize 8-bit, export WebP 512 x 512
+      if empty, expand to (12 months, < 30 %), then (18 months, < 50 %)
+      sign url, fetch B04/B03/B02 clipped to bbox via rasterio window read
+      stretch reflectance to 8-bit per band using 2nd/98th percentile clip
+      export WebP 512 x 512 (RGB, lossless)
       write receipt + manifest entry
     outputs:
       public/sentinel/<caseId>/{before,after}.webp
@@ -110,6 +113,7 @@ File: `data/sentinel/scene-manifest.json`. Follows the same shape pattern as
     {
       "caseId": "AR-CONTRACT-14-1002-CON21",
       "anchorDate": "2021-05-12",
+      "bbox": [-58.39161, -34.58797, -58.38711, -34.58347],
       "before": {
         "sceneId": "S2A_MSIL2A_20201108T140051_R067_T20JPN_20201108T185611",
         "datetime": "2020-11-08T14:00:51Z",
@@ -138,8 +142,12 @@ Rules:
 
 - `before` and `after` are independently nullable. A case can have one, both, or
   neither.
-- `windowExpandedTo` records which fallback step succeeded; the UI shows it as a
-  caveat when not equal to `6_months_lt_10pct`.
+- `windowExpandedTo` records which fallback step succeeded. Enum values, in
+  attempt order: `6_months_lt_10pct`, `12_months_lt_30pct`, `18_months_lt_50pct`.
+  The UI shows it as a caveat when not equal to `6_months_lt_10pct`.
+- `anchorDate` is `awardedAt || publishedAt || ${year}-01-01`, ISO-8601 date.
+- `bbox` is the same square used for both `before` and `after`, in
+  `[minLon, minLat, maxLon, maxLat]` order (GeoJSON convention).
 - `imageHash` is the sha256 of the final WebP, not of the source COG.
 - `stacItemUrl` lets anyone re-fetch the same scene from Planetary Computer.
 
@@ -162,7 +170,7 @@ createEvidenceReceipt({
   row: {
     sceneId: scene.sceneId,
     cloudCover: scene.cloudCover,
-    bbox: scene.bbox,
+    bbox: entry.bbox,
     windowExpandedTo: scene.windowExpandedTo
   }
 })
