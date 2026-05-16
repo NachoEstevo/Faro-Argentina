@@ -18,6 +18,26 @@ const arContractsOutputPath = new URL(
   "../data/official/ar/onc-contratar-contratos.csv",
   import.meta.url,
 );
+const arProceduresOutputPath = new URL(
+  "../data/official/ar/onc-contratar-procedimientos.csv",
+  import.meta.url,
+);
+const arOffersOutputPath = new URL(
+  "../data/official/ar/onc-contratar-ofertas.csv",
+  import.meta.url,
+);
+const arWorksOutputPath = new URL(
+  "../data/official/ar/onc-contratar-obras.csv",
+  import.meta.url,
+);
+const arLocationsOutputPath = new URL(
+  "../data/official/ar/onc-contratar-ubicacion-geografica.csv",
+  import.meta.url,
+);
+const arOpeningActsOutputPath = new URL(
+  "../data/official/ar/onc-contratar-actas-apertura.csv",
+  import.meta.url,
+);
 const arSuppliersOutputPath = new URL(
   "../data/official/ar/sipro-proveedores.csv",
   import.meta.url,
@@ -39,6 +59,16 @@ const manifestPath = new URL("../data/official/snapshot-manifest.json", import.m
 const peMefUrl = "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv";
 const arContractsUrl =
   "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv";
+const arProceduresUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv";
+const arOffersUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.3/download/onc-contratar-ofertas.csv";
+const arWorksUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv";
+const arLocationsUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv";
+const arOpeningActsUrl =
+  "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv";
 const arSuppliersUrl =
   "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv";
 const peOeceContractsUrl =
@@ -55,6 +85,36 @@ const arContractsSnapshot = await fetchTextSnapshot({
   outputPath: arContractsOutputPath,
   rawPath: "data/official/ar/onc-contratar-contratos.csv",
 });
+const arProceduresSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+  url: arProceduresUrl,
+  outputPath: arProceduresOutputPath,
+  rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
+});
+const arOffersSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-OFERTAS",
+  url: arOffersUrl,
+  outputPath: arOffersOutputPath,
+  rawPath: "data/official/ar/onc-contratar-ofertas.csv",
+});
+const arWorksSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-OBRAS",
+  url: arWorksUrl,
+  outputPath: arWorksOutputPath,
+  rawPath: "data/official/ar/onc-contratar-obras.csv",
+});
+const arLocationsSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-UBICACION",
+  url: arLocationsUrl,
+  outputPath: arLocationsOutputPath,
+  rawPath: "data/official/ar/onc-contratar-ubicacion-geografica.csv",
+});
+const arOpeningActsSnapshot = await fetchTextSnapshot({
+  sourceId: "AR-CONTRATAR-ACTAS-APERTURA",
+  url: arOpeningActsUrl,
+  outputPath: arOpeningActsOutputPath,
+  rawPath: "data/official/ar/onc-contratar-actas-apertura.csv",
+});
 const arSuppliersSnapshot = await fetchTextSnapshot({
   sourceId: "AR-SIPRO-PROVEEDORES",
   url: arSuppliersUrl,
@@ -70,6 +130,11 @@ await writeFile(manifestPath, `${JSON.stringify({
   generatedAt: new Date().toISOString(),
   snapshots: [
     arContractsSnapshot,
+    arProceduresSnapshot,
+    arOffersSnapshot,
+    arWorksSnapshot,
+    arLocationsSnapshot,
+    arOpeningActsSnapshot,
     arSuppliersSnapshot,
     peSnapshot,
     peContractsSnapshot,

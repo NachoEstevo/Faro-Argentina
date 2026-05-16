@@ -6,6 +6,10 @@ import {
   buildPeruBudgetCases,
   buildPeruContractCases,
   type ArgentinaSupplierRow,
+  type ArgentinaLocationRow,
+  type ArgentinaOfferRow,
+  type ArgentinaOpeningActRow,
+  type ArgentinaProcedureRow,
   type ChileCompraSnapshot,
   type PeruContractRow,
 } from "../src/lib/data/crossCountryCases.ts";
@@ -17,6 +21,19 @@ const pePath = new URL("../data/official/pe/mef-2026-gasto-diario.sample.csv", i
 const arWorksPath = new URL("../data/official/ar/onc-contratar-obras.csv", import.meta.url);
 const arContractsPath = new URL("../data/official/ar/onc-contratar-contratos.csv", import.meta.url);
 const arSuppliersPath = new URL("../data/official/ar/sipro-proveedores.csv", import.meta.url);
+const arProceduresPath = new URL(
+  "../data/official/ar/onc-contratar-procedimientos.csv",
+  import.meta.url,
+);
+const arOffersPath = new URL("../data/official/ar/onc-contratar-ofertas.csv", import.meta.url);
+const arLocationsPath = new URL(
+  "../data/official/ar/onc-contratar-ubicacion-geografica.csv",
+  import.meta.url,
+);
+const arOpeningActsPath = new URL(
+  "../data/official/ar/onc-contratar-actas-apertura.csv",
+  import.meta.url,
+);
 const peContractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
 const peOcdsPath = new URL(
   "../data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
@@ -33,6 +50,10 @@ const peText = await readFile(pePath, "utf8");
 const arWorksText = await readFile(arWorksPath, "utf8");
 const arContractsText = await readFile(arContractsPath, "utf8");
 const arSuppliersText = await readFile(arSuppliersPath, "utf8");
+const arProceduresText = await readFile(arProceduresPath, "utf8");
+const arOffersText = await readFile(arOffersPath, "utf8");
+const arLocationsText = await readFile(arLocationsPath, "utf8");
+const arOpeningActsText = await readFile(arOpeningActsPath, "utf8");
 const peContractsBuffer = await readFile(peContractsPath);
 const peOcdsText = await readFile(peOcdsPath, "utf8");
 const clText = await readFile(clPath, "utf8");
@@ -53,6 +74,35 @@ const arSuppliersProfile = profileCsvSnapshot({
   rawPath: "data/official/ar/sipro-proveedores.csv",
   text: arSuppliersText,
   keyColumns: ["cuit___nit", "razon_social", "provincia"],
+});
+const arProceduresProfile = profileCsvSnapshot({
+  sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+  rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
+  text: arProceduresText,
+  keyColumns: [
+    "procedimiento_numero",
+    "procedimiento_estado",
+    "procedimiento_tipo",
+    "presupuesto_oficial_monto",
+  ],
+});
+const arOffersProfile = profileCsvSnapshot({
+  sourceId: "AR-CONTRATAR-OFERTAS",
+  rawPath: "data/official/ar/onc-contratar-ofertas.csv",
+  text: arOffersText,
+  keyColumns: ["procedimiento_numero", "oferente_cuit", "oferente_razon_social", "oferta_monto"],
+});
+const arLocationsProfile = profileCsvSnapshot({
+  sourceId: "AR-CONTRATAR-UBICACION",
+  rawPath: "data/official/ar/onc-contratar-ubicacion-geografica.csv",
+  text: arLocationsText,
+  keyColumns: ["numero_obra", "provincia_nombre", "departamento_nombre", "localidad_nombre"],
+});
+const arOpeningActsProfile = profileCsvSnapshot({
+  sourceId: "AR-CONTRATAR-ACTAS-APERTURA",
+  rawPath: "data/official/ar/onc-contratar-actas-apertura.csv",
+  text: arOpeningActsText,
+  keyColumns: ["procedimiento_numero", "fecha_creacion", "cantidad_ofertas_confirmadas"],
 });
 const peProfile = profileCsvSnapshot({
   sourceId: "PE-MEF-GASTO-DIARIO",
@@ -119,6 +169,54 @@ const arContractCases = buildArgentinaContractCases(arContractsText, {
       fileHash: arSuppliersProfile.fileHash,
       extractedAt: generatedAt,
       parserVersion: "argentina-suppliers@1",
+    },
+  },
+  procedures: {
+    rows: parseCsv<ArgentinaProcedureRow>(arProceduresText),
+    source: {
+      sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+      sourceName: "CONTRAT.AR procedimientos",
+      sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv",
+      rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
+      fileHash: arProceduresProfile.fileHash,
+      extractedAt: generatedAt,
+      parserVersion: "argentina-procedures@1",
+    },
+  },
+  offers: {
+    rows: parseCsv<ArgentinaOfferRow>(arOffersText),
+    source: {
+      sourceId: "AR-CONTRATAR-OFERTAS",
+      sourceName: "CONTRAT.AR ofertas",
+      sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.3/download/onc-contratar-ofertas.csv",
+      rawPath: "data/official/ar/onc-contratar-ofertas.csv",
+      fileHash: arOffersProfile.fileHash,
+      extractedAt: generatedAt,
+      parserVersion: "argentina-offers@1",
+    },
+  },
+  locations: {
+    rows: parseCsv<ArgentinaLocationRow>(arLocationsText),
+    source: {
+      sourceId: "AR-CONTRATAR-UBICACION",
+      sourceName: "CONTRAT.AR ubicacion geografica",
+      sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv",
+      rawPath: "data/official/ar/onc-contratar-ubicacion-geografica.csv",
+      fileHash: arLocationsProfile.fileHash,
+      extractedAt: generatedAt,
+      parserVersion: "argentina-locations@1",
+    },
+  },
+  openingActs: {
+    rows: parseCsv<ArgentinaOpeningActRow>(arOpeningActsText),
+    source: {
+      sourceId: "AR-CONTRATAR-ACTAS-APERTURA",
+      sourceName: "CONTRAT.AR actas de apertura",
+      sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv",
+      rawPath: "data/official/ar/onc-contratar-actas-apertura.csv",
+      fileHash: arOpeningActsProfile.fileHash,
+      extractedAt: generatedAt,
+      parserVersion: "argentina-opening-acts@1",
     },
   },
 });

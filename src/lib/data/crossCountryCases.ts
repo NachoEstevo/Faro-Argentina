@@ -5,6 +5,10 @@ export {
   buildArgentinaContractCases,
   type ArgentinaContractBuildContext,
   type ArgentinaContractRow,
+  type ArgentinaLocationRow,
+  type ArgentinaOfferRow,
+  type ArgentinaOpeningActRow,
+  type ArgentinaProcedureRow,
   type ArgentinaSupplierRow,
   type ArgentinaWorkLookupRow,
 } from "./argentinaContracts.ts";
@@ -34,10 +38,13 @@ export interface CrossCountryCaseFile {
   locationSource?: string | null;
   publishedAt?: string | null;
   closedAt?: string | null;
+  openingAt?: string | null;
   awardedAt?: string | null;
   awardActUrl?: string | null;
   awardNumber?: string | null;
+  procedureState?: string | null;
   bidderCount?: number | null;
+  offerCount?: number | null;
   claimCount?: number | null;
   buyerUnitCode?: string | null;
   buyerUnitRut?: string | null;
@@ -47,8 +54,16 @@ export interface CrossCountryCaseFile {
   procurementMethodDetails?: string | null;
   itemCount?: number | null;
   awardedLineCount?: number | null;
+  workProvince?: string | null;
+  workDepartment?: string | null;
+  workLocality?: string | null;
   evidenceLevel: "official_dataset";
   amount: {
+    value: number;
+    currency: string;
+    label: string;
+  } | null;
+  officialBudget?: {
     value: number;
     currency: string;
     label: string;

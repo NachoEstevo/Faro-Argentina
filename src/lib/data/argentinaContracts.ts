@@ -1,6 +1,20 @@
 import { parseCsv } from "./argentinaWorks.ts";
-import { createEvidenceReceipt, type EvidenceReceipt } from "./evidenceReceipts.ts";
+import { createEvidenceReceipt } from "./evidenceReceipts.ts";
 import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import {
+  buildCaveats,
+  buildOfferStats,
+  buildOfficialBudget,
+  buildRelatedReceipts,
+  clean,
+  groupBy,
+  maxInteger,
+  normalizeDate,
+  normalizeDocument,
+  parseMoney,
+  summarizeLocation,
+  type OfferStats,
+} from "./argentinaContractEnrichment.ts";
 
 export interface ArgentinaContractRow {
   contrato_numero: string;
@@ -34,7 +48,44 @@ export interface ArgentinaSupplierRow {
   provincia: string;
 }
 
-interface BuildOptions {
+export interface ArgentinaProcedureRow {
+  procedimiento_numero: string;
+  procedimiento_estado?: string;
+  procedimiento_tipo?: string;
+  presupuesto_oficial_monto?: string;
+  publicacion_contratar_fecha?: string;
+  consultas_fin_fecha?: string;
+}
+
+export interface ArgentinaOfferRow {
+  procedimiento_numero: string;
+  oferente_cuit: string;
+  oferente_razon_social: string;
+  oferta_monto: string;
+  evaluada_si_no?: string;
+  desestimada_si_no?: string;
+  orden_merito?: string;
+}
+
+export interface ArgentinaLocationRow {
+  numero_obra: string;
+  provincia_nombre?: string;
+  departamento_nombre?: string;
+  localidad_nombre?: string;
+  renglon_numero?: string;
+}
+
+export interface ArgentinaOpeningActRow {
+  procedimiento_numero: string;
+  id_acta_apertura?: string;
+  fecha_creacion?: string;
+  cantidad_ofertas_confirmadas?: string;
+  id_oferta?: string;
+  id_proveedor?: string;
+  razon_social?: string;
+}
+
+export interface BuildOptions {
   sourceId: string;
   sourceName: string;
   sourceUrl: string;
@@ -44,7 +95,7 @@ interface BuildOptions {
   parserVersion: string;
 }
 
-interface RelatedSource<TRow> {
+export interface RelatedSource<TRow> {
   rows: TRow[];
   source: BuildOptions;
 }
@@ -53,6 +104,10 @@ export interface ArgentinaContractBuildContext {
   limit?: number;
   works?: RelatedSource<ArgentinaWorkLookupRow>;
   suppliers?: RelatedSource<ArgentinaSupplierRow>;
+  procedures?: RelatedSource<ArgentinaProcedureRow>;
+  offers?: RelatedSource<ArgentinaOfferRow>;
+  locations?: RelatedSource<ArgentinaLocationRow>;
+  openingActs?: RelatedSource<ArgentinaOpeningActRow>;
 }
 
 export function buildArgentinaContractCases(
@@ -66,27 +121,72 @@ export function buildArgentinaContractCases(
     context.suppliers?.rows ?? [],
     (row) => normalizeDocument(row.cuit___nit),
   );
+  const proceduresByNumber = indexBy(
+    context.procedures?.rows ?? [],
+    (row) => clean(row.procedimiento_numero),
+  );
+  const locationsByWork = groupBy(
+    context.locations?.rows ?? [],
+    (row) => clean(row.numero_obra),
+  );
+  const openingActsByProcedure = groupBy(
+    context.openingActs?.rows ?? [],
+    (row) => clean(row.procedimiento_numero),
+  );
+  const offerStatsByProcedure = buildOfferStats(context.offers?.rows ?? []);
 
   return parseCsv<ArgentinaContractRow>(text)
     .filter((row) => clean(row.contrato_numero).length > 0)
     .slice(0, context.limit)
-    .map((row) => buildCase(row, options, context, worksByNumber, suppliersByDocument));
+    .map((row) =>
+      buildCase({
+        row,
+        options,
+        context,
+        worksByNumber,
+        suppliersByDocument,
+        proceduresByNumber,
+        locationsByWork,
+        openingActsByProcedure,
+        offerStatsByProcedure,
+      })
+    );
 }
 
-function buildCase(
-  row: ArgentinaContractRow,
-  options: BuildOptions,
-  context: Required<Pick<ArgentinaContractBuildContext, "limit">> & ArgentinaContractBuildContext,
-  worksByNumber: Map<string, ArgentinaWorkLookupRow>,
-  suppliersByDocument: Map<string, ArgentinaSupplierRow>,
-): CrossCountryCaseFile {
+function buildCase({
+  row,
+  options,
+  context,
+  worksByNumber,
+  suppliersByDocument,
+  proceduresByNumber,
+  locationsByWork,
+  openingActsByProcedure,
+  offerStatsByProcedure,
+}: {
+  row: ArgentinaContractRow;
+  options: BuildOptions;
+  context: Required<Pick<ArgentinaContractBuildContext, "limit">> & ArgentinaContractBuildContext;
+  worksByNumber: Map<string, ArgentinaWorkLookupRow>;
+  suppliersByDocument: Map<string, ArgentinaSupplierRow>;
+  proceduresByNumber: Map<string, ArgentinaProcedureRow>;
+  locationsByWork: Map<string, ArgentinaLocationRow[]>;
+  openingActsByProcedure: Map<string, ArgentinaOpeningActRow[]>;
+  offerStatsByProcedure: Map<string, OfferStats>;
+}): CrossCountryCaseFile {
   const contractNumber = clean(row.contrato_numero);
   const workNumber = clean(row.numero_obra);
+  const procedureNumber = clean(row.procedimiento_numero);
   const work = worksByNumber.get(workNumber);
   const supplier = suppliersByDocument.get(normalizeDocument(row.contratista_cuit));
+  const procedure = proceduresByNumber.get(procedureNumber);
+  const locationRows = locationsByWork.get(workNumber) ?? [];
+  const location = summarizeLocation(locationRows);
+  const openingActs = openingActsByProcedure.get(procedureNumber) ?? [];
+  const offerStats = offerStatsByProcedure.get(procedureNumber);
+  const openingOfferCount = maxInteger(openingActs.map((act) => act.cantidad_ofertas_confirmadas));
   const amount = parseMoney(row.contrato_monto);
   const coordinates = work ? parseCoordinates(work.latitud_1, work.longitud_1) : null;
-  const relatedReceipts = buildRelatedReceipts({ work, supplier, context, options });
 
   return {
     id: `AR-CONTRACT-${contractNumber}`,
@@ -96,7 +196,7 @@ function buildCase(
     publicWorkNumber: workNumber || null,
     year: parseYear(clean(row.contrato_perfeccionamiento_fecha).slice(0, 4)),
     title: clean(row.nombre_obra) || clean(row.procedimiento_nombre) || contractNumber,
-    procedureNumber: clean(row.procedimiento_numero),
+    procedureNumber,
     agencyName: clean(row.organismo_nombre),
     agencyCode: clean(row.organismo_codigo_saf),
     contractingUnit: clean(row.uoc_descripcion),
@@ -105,10 +205,21 @@ function buildCase(
     coordinates,
     locationName: clean(work?.nombre_obra) || null,
     locationSource: coordinates ? context.works?.source.sourceId ?? null : null,
+    workProvince: location?.province ?? null,
+    workDepartment: location?.department ?? null,
+    workLocality: location?.locality ?? null,
+    publishedAt: normalizeDate(procedure?.publicacion_contratar_fecha),
+    closedAt: normalizeDate(procedure?.consultas_fin_fecha),
+    openingAt: normalizeDate(openingActs[0]?.fecha_creacion),
+    procedureState: clean(procedure?.procedimiento_estado) || null,
+    procurementMethodDetails: clean(procedure?.procedimiento_tipo) || null,
+    bidderCount: offerStats?.bidderCount ?? openingOfferCount,
+    offerCount: offerStats?.offerCount ?? openingOfferCount,
     evidenceLevel: "official_dataset",
     amount: amount === null
       ? null
       : { value: amount, currency: clean(row.contrato_moneda) || "ARS", label: "monto_contrato" },
+    officialBudget: buildOfficialBudget(procedure),
     supplierName: clean(supplier?.razon_social) || clean(row.contratista_razon_social) || null,
     supplierDocument: clean(row.contratista_cuit) || null,
     supplierLocality: clean(supplier?.localidad) || null,
@@ -125,58 +236,25 @@ function buildCase(
       parserVersion: options.parserVersion,
       row: { ...row },
     }),
-    relatedReceipts,
-    caveats: buildCaveats(Boolean(coordinates), Boolean(supplier)),
+    relatedReceipts: buildRelatedReceipts({
+      work,
+      supplier,
+      procedure,
+      locationRows,
+      openingActs,
+      offerStats,
+      context,
+      options,
+      procedureNumber,
+      workNumber,
+    }),
+    caveats: buildCaveats({
+      hasCoordinates: Boolean(coordinates),
+      hasSupplier: Boolean(supplier),
+      hasCompetitionStats: Boolean(offerStats || openingOfferCount !== null),
+      hasLocation: locationRows.length > 0,
+    }),
   };
-}
-
-function buildRelatedReceipts({
-  work,
-  supplier,
-  context,
-  options,
-}: {
-  work: ArgentinaWorkLookupRow | undefined;
-  supplier: ArgentinaSupplierRow | undefined;
-  context: ArgentinaContractBuildContext;
-  options: BuildOptions;
-}): EvidenceReceipt[] {
-  const receipts: EvidenceReceipt[] = [];
-  if (work && context.works) {
-    receipts.push(createEvidenceReceipt({
-      ...context.works.source,
-      snapshotHash: context.works.source.fileHash,
-      recordId: clean(work.numero_obra),
-      locatorType: "official_dataset",
-      extractedAt: options.extractedAt,
-      parserVersion: "argentina-contract-work-link@1",
-      row: { ...work },
-    }));
-  }
-  if (supplier && context.suppliers) {
-    receipts.push(createEvidenceReceipt({
-      ...context.suppliers.source,
-      snapshotHash: context.suppliers.source.fileHash,
-      recordId: clean(supplier.cuit___nit),
-      locatorType: "official_dataset",
-      extractedAt: options.extractedAt,
-      parserVersion: "argentina-contract-supplier-link@1",
-      row: { ...supplier },
-    }));
-  }
-  return receipts;
-}
-
-function buildCaveats(hasCoordinates: boolean, hasSupplier: boolean): string[] {
-  return [
-    "Contrato oficial de obra publica; no confirma pago ni avance fisico por si solo.",
-    hasCoordinates
-      ? "Ubicacion de obra cruzada con obra oficial por numero_obra; no se infiere desde el proveedor."
-      : "La ubicacion de obra debe cruzarse con fuente geografica oficial antes de dibujarse en mapa.",
-    hasSupplier
-      ? "Datos de proveedor cruzados contra SIPRO; provincia/localidad del proveedor no equivalen a lugar de ejecucion."
-      : "Proveedor tomado del contrato; falta cruce SIPRO para domicilio registrado.",
-  ];
 }
 
 function normalizeContext(
@@ -206,21 +284,8 @@ function indexBy<TRow>(rows: TRow[], keyFor: (row: TRow) => string): Map<string,
   return index;
 }
 
-function parseMoney(value: string): number | null {
-  const parsed = Number(clean(value));
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
 function parseYear(value: string | undefined): number | null {
   const cleaned = clean(value);
   if (/^\d{4}$/.test(cleaned)) return Number(cleaned);
   return null;
-}
-
-function normalizeDocument(value: string | undefined): string {
-  return clean(value).replace(/\D/g, "");
-}
-
-function clean(value: string | number | null | undefined): string {
-  return String(value ?? "").trim();
 }

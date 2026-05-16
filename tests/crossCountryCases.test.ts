@@ -55,6 +55,47 @@ test("buildArgentinaContractCases enriches contracts with official work geometry
       provincia: "Ciudad Autónoma de Buenos Aires",
     },
   ];
+  const procedureRows = [
+    {
+      procedimiento_numero: "14-0007-LPU20",
+      procedimiento_estado: "Adjudicado",
+      procedimiento_tipo: "Licitación Pública",
+      presupuesto_oficial_monto: "5500000.00",
+      publicacion_contratar_fecha: "2020-11-10 8:00:00",
+      consultas_fin_fecha: "2020-11-20 18:00:00",
+    },
+  ];
+  const offerRows = [
+    {
+      procedimiento_numero: "14-0007-LPU20",
+      oferente_cuit: "30-70043585-3",
+      oferente_razon_social: "Warlet S.A",
+      oferta_monto: "8694426.61",
+    },
+    {
+      procedimiento_numero: "14-0007-LPU20",
+      oferente_cuit: "33-66162872-9",
+      oferente_razon_social: "Instalectro S.A",
+      oferta_monto: "8222525.98",
+    },
+  ];
+  const locationRows = [
+    {
+      numero_obra: "14-0001-OBR21",
+      provincia_nombre: "CIUDAD DE BUENOS AIRES",
+      departamento_nombre: "CIUDAD DE BUENOS AIRES",
+      localidad_nombre: "CIUDAD DE BUENOS AIRES",
+      renglon_numero: "4.2.1-7003.2",
+    },
+  ];
+  const openingActRows = [
+    {
+      procedimiento_numero: "14-0007-LPU20",
+      id_acta_apertura: "7594",
+      fecha_creacion: "2020-12-01T16:00:00",
+      cantidad_ofertas_confirmadas: "2",
+    },
+  ];
 
   const [caseFile] = buildArgentinaContractCases(contractsCsv, {
     ...options,
@@ -84,15 +125,71 @@ test("buildArgentinaContractCases enriches contracts with official work geometry
         rawPath: "data/official/ar/sipro-proveedores.csv",
       },
     },
+    procedures: {
+      rows: procedureRows,
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+        sourceName: "CONTRAT.AR procedimientos",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv",
+        rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
+      },
+    },
+    offers: {
+      rows: offerRows,
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-OFERTAS",
+        sourceName: "CONTRAT.AR ofertas",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.3/download/onc-contratar-ofertas.csv",
+        rawPath: "data/official/ar/onc-contratar-ofertas.csv",
+      },
+    },
+    locations: {
+      rows: locationRows,
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-UBICACION",
+        sourceName: "CONTRAT.AR ubicacion geografica",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv",
+        rawPath: "data/official/ar/onc-contratar-ubicacion-geografica.csv",
+      },
+    },
+    openingActs: {
+      rows: openingActRows,
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-ACTAS-APERTURA",
+        sourceName: "CONTRAT.AR actas de apertura",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv",
+        rawPath: "data/official/ar/onc-contratar-actas-apertura.csv",
+      },
+    },
   });
 
   assert.deepEqual(caseFile?.coordinates, { lat: -34.585722, lon: -58.389361 });
   assert.equal(caseFile?.locationName, "Construccion cubierta");
+  assert.equal(caseFile?.workProvince, "CIUDAD DE BUENOS AIRES");
+  assert.equal(caseFile?.procedureState, "Adjudicado");
+  assert.equal(caseFile?.procurementMethodDetails, "Licitación Pública");
+  assert.equal(caseFile?.publishedAt, "2020-11-10");
+  assert.equal(caseFile?.closedAt, "2020-11-20");
+  assert.equal(caseFile?.openingAt, "2020-12-01");
+  assert.equal(caseFile?.bidderCount, 2);
+  assert.equal(caseFile?.offerCount, 2);
+  assert.equal(caseFile?.officialBudget?.value, 5500000);
   assert.equal(caseFile?.supplierProvince, "Ciudad Autónoma de Buenos Aires");
   assert.equal(caseFile?.supplierLocality, "Ciudad Autónoma de Buenos Aires");
   assert.deepEqual(
     caseFile?.relatedReceipts?.map((receipt) => receipt.sourceId).sort(),
-    ["AR-CONTRATAR-OBRAS", "AR-SIPRO-PROVEEDORES"],
+    [
+      "AR-CONTRATAR-ACTAS-APERTURA",
+      "AR-CONTRATAR-OBRAS",
+      "AR-CONTRATAR-OFERTAS",
+      "AR-CONTRATAR-PROCEDIMIENTOS",
+      "AR-CONTRATAR-UBICACION",
+      "AR-SIPRO-PROVEEDORES",
+    ],
   );
 });
 

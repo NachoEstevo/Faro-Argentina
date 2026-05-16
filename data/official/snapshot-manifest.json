@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-05-16T06:25:29.118Z",
+  "generatedAt": "2026-05-16T06:35:10.919Z",
   "snapshots": [
     {
       "sourceId": "AR-CONTRATAR-CONTRATOS",
       "rawPath": "data/official/ar/onc-contratar-contratos.csv",
       "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
-      "fetchedAt": "2026-05-16T05:39:48.281Z",
+      "fetchedAt": "2026-05-16T06:34:44.286Z",
       "contentType": "text/csv",
       "contentLength": "157017",
       "partial": false,
@@ -13,10 +13,65 @@
       "byteSize": 157017
     },
     {
+      "sourceId": "AR-CONTRATAR-PROCEDIMIENTOS",
+      "rawPath": "data/official/ar/onc-contratar-procedimientos.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv",
+      "fetchedAt": "2026-05-16T06:34:44.316Z",
+      "contentType": "text/csv",
+      "contentLength": "299921",
+      "partial": false,
+      "fileHash": "sha256-ac972baa62eb91269eb714c74ca6f630648e222b8facf73be5be0d7e7b7da42f",
+      "byteSize": 299921
+    },
+    {
+      "sourceId": "AR-CONTRATAR-OFERTAS",
+      "rawPath": "data/official/ar/onc-contratar-ofertas.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.3/download/onc-contratar-ofertas.csv",
+      "fetchedAt": "2026-05-16T06:34:44.349Z",
+      "contentType": "text/csv",
+      "contentLength": "263744",
+      "partial": false,
+      "fileHash": "sha256-aebcd420dd9819c8e496bad308b029b0c6d8cbc1dda8c29861ae37bbc39ae166",
+      "byteSize": 263744
+    },
+    {
+      "sourceId": "AR-CONTRATAR-OBRAS",
+      "rawPath": "data/official/ar/onc-contratar-obras.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
+      "fetchedAt": "2026-05-16T06:34:44.371Z",
+      "contentType": "text/csv",
+      "contentLength": "57600",
+      "partial": false,
+      "fileHash": "sha256-f64b10128d06b035b8f4ef132edcb4fb186b121e3fc5a63ea38e8317898fe5a6",
+      "byteSize": 57600
+    },
+    {
+      "sourceId": "AR-CONTRATAR-UBICACION",
+      "rawPath": "data/official/ar/onc-contratar-ubicacion-geografica.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv",
+      "fetchedAt": "2026-05-16T06:34:44.398Z",
+      "contentType": "text/csv",
+      "contentLength": "88174",
+      "partial": false,
+      "fileHash": "sha256-43b4055471bf6daa6b41054bd4cc0cc5b856d84f3df578e9e428414500577d91",
+      "byteSize": 88174
+    },
+    {
+      "sourceId": "AR-CONTRATAR-ACTAS-APERTURA",
+      "rawPath": "data/official/ar/onc-contratar-actas-apertura.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv",
+      "fetchedAt": "2026-05-16T06:34:44.410Z",
+      "contentType": "text/csv",
+      "contentLength": "105744",
+      "partial": false,
+      "fileHash": "sha256-41fe911881b0d748311338e23a5a5ccd7d18cdfb18c2a8660451893286c20377",
+      "byteSize": 105744
+    },
+    {
       "sourceId": "AR-SIPRO-PROVEEDORES",
       "rawPath": "data/official/ar/sipro-proveedores.csv",
       "fetchUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
-      "fetchedAt": "2026-05-16T05:39:48.638Z",
+      "fetchedAt": "2026-05-16T06:34:44.796Z",
       "contentType": "text/csv",
       "contentLength": "4836030",
       "partial": false,
@@ -27,7 +82,7 @@
       "sourceId": "PE-MEF-GASTO-DIARIO",
       "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
       "fetchUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
-      "fetchedAt": "2026-05-16T05:39:49.184Z",
+      "fetchedAt": "2026-05-16T06:34:45.319Z",
       "contentType": "text/csv",
       "contentRange": "bytes 0-120000/4236445622",
       "partial": true,
@@ -38,7 +93,7 @@
       "sourceId": "PE-OECE-CONTRATOS",
       "rawPath": "data/official/pe/oece-contratos-2025.xlsx",
       "fetchUrl": "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx",
-      "fetchedAt": "2026-05-16T05:39:56.665Z",
+      "fetchedAt": "2026-05-16T06:34:52.973Z",
       "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "contentLength": "15827272",
       "partial": false,
@@ -49,23 +104,23 @@
       "sourceId": "PE-OECE-OCDS",
       "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
       "fetchUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/{tenderId}",
-      "fetchedAt": "2026-05-16T06:25:29.118Z",
+      "fetchedAt": "2026-05-16T06:34:53.096Z",
       "contentType": "application/json",
       "recordCount": 25,
       "partial": true,
-      "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+      "fileHash": "sha256-1da58859a468a199b4f5ddecadb89e867ced7e78719253a00bb868d6d38ab20f",
       "byteSize": 1873629
     },
     {
       "sourceId": "CL-MERCADO-PUBLICO-API",
       "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
       "fetchUrl": "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>",
-      "fetchedAt": "2026-05-16T05:40:02.581Z",
+      "fetchedAt": "2026-05-16T06:35:10.919Z",
       "contentType": "application/json",
       "recordCount": 3,
       "partial": true,
-      "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
-      "byteSize": 16318
+      "fileHash": "sha256-c9e4a9bed3ededd88e6eaf1f6b63c1341831bd66effbcc2c07004a041d3ac1d5",
+      "byteSize": 11644
     }
   ]
 }

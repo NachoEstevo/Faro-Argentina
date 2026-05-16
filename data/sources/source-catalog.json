@@ -79,7 +79,7 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["numero_obra", "provincia", "departamento", "localidad", "renglon"],
+    "keyFields": ["numero_obra", "provincia_nombre", "departamento_nombre", "localidad_nombre", "renglon_numero"],
     "caveats": ["Una obra puede tener multiples ubicaciones; no colapsar sin conservar relacion 1:N."]
   },
   {
@@ -95,7 +95,7 @@
     "sourceUrl": "https://datos.gob.ar/dataset/modernizacion-sistema-informacion-proveedores-sipro",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["cuit", "razon_social", "provincia"],
+    "keyFields": ["cuit___nit", "razon_social", "provincia"],
     "caveats": ["La provincia del proveedor no equivale necesariamente al lugar de ejecucion de una obra."]
   },
   {
@@ -111,7 +111,7 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["procedimiento_numero", "acta_apertura_fecha"],
+    "keyFields": ["procedimiento_numero", "fecha_creacion", "cantidad_ofertas_confirmadas"],
     "caveats": ["Documento de proceso; no usar como prueba de ejecucion de obra."]
   },
   {
