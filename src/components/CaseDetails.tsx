@@ -131,6 +131,18 @@ export function CountryExplorer({
         Casos con fuente oficial, hash local y descarga. No se dibujan en mapa hasta tener
         geometria oficial suficiente.
       </p>
+      <div className="collectionDownloads">
+        <a href={`/api/export?country=${selectedCountry}`} download>
+          <Download size={16} aria-hidden />
+          Descargar pais
+        </a>
+        {Array.from(new Set(cases.map((caseFile) => caseFile.receipt.sourceId))).map((sourceId) => (
+          <a key={sourceId} href={`/api/export?country=${selectedCountry}&sourceId=${sourceId}`} download>
+            <Download size={16} aria-hidden />
+            {shortSource(sourceId)}
+          </a>
+        ))}
+      </div>
       <div className="caseRows">
         {cases.slice(0, 14).map((caseFile) => (
           <article key={caseFile.id} className="caseRow">
@@ -196,4 +208,11 @@ function formatSupplier(caseFile: CrossCountryCaseFile): string {
 function formatAmount(caseFile: CrossCountryCaseFile): string {
   if (!caseFile.amount) return "Sin dato";
   return `${caseFile.amount.currency} ${Math.round(caseFile.amount.value).toLocaleString("es-AR")}`;
+}
+
+function shortSource(sourceId: string): string {
+  if (sourceId.includes("CONTRATOS")) return "Contratos";
+  if (sourceId.includes("GASTO")) return "Presupuesto";
+  if (sourceId.includes("MERCADO")) return "Adjudicaciones";
+  return "Fuente";
 }

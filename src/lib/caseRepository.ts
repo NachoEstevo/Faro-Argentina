@@ -1,6 +1,12 @@
 import payload from "@/data/argentinaWorkCases.json";
 import crossCountryPayload from "@/data/crossCountryCaseFiles.json";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
+import {
+  buildCaseCollectionPack as buildCollectionPack,
+  filterCaseFiles as filterCollectionCases,
+  type CaseCollectionFilters,
+  type CaseCollectionPack,
+} from "@/lib/data/caseCollections";
 import { buildCoverageReport, type CoverageReport } from "@/lib/data/coverage";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import type { CsvSnapshotProfile, JsonSnapshotProfile } from "@/lib/data/snapshots";
@@ -65,6 +71,14 @@ export function getCaseById(id: string): FaroCaseFile | null {
 
 export function getCasesByCountry(countryCode: FaroCaseFile["countryCode"]): FaroCaseFile[] {
   return allCaseFiles().filter((caseFile) => caseFile.countryCode === countryCode);
+}
+
+export function filterCaseFiles(filters: CaseCollectionFilters): FaroCaseFile[] {
+  return filterCollectionCases(allCaseFiles(), filters) as FaroCaseFile[];
+}
+
+export function buildCaseCollectionPack(filters: CaseCollectionFilters): CaseCollectionPack {
+  return buildCollectionPack(allCaseFiles(), filters);
 }
 
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {

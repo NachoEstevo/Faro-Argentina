@@ -1,0 +1,98 @@
+import type { CountryCode } from "./sourceCatalog.ts";
+
+export interface ExportableCaseFile {
+  id: string;
+  countryCode: CountryCode;
+  title: string;
+  caveats: string[];
+  caseType?: string;
+  receipt: {
+    receiptId: string;
+    sourceId: string;
+    sourceName: string;
+    sourceUrl: string;
+    rawPath: string;
+    snapshotHash: string;
+    fileHash: string;
+    rowHash: string;
+    recordId: string;
+    locatorType: string;
+    extractedAt: string;
+    parserVersion: string;
+  };
+}
+
+export interface CaseCollectionFilters {
+  countryCode?: CountryCode;
+  sourceId?: string;
+  caseType?: string;
+  query?: string;
+}
+
+export interface CaseCollectionPack {
+  packType: "faro_case_collection";
+  generatedAt: string;
+  filters: CaseCollectionFilters;
+  stats: {
+    caseFiles: number;
+    receipts: number;
+    sources: number;
+  };
+  sourceIds: string[];
+  cases: ExportableCaseFile[];
+  receipts: ExportableCaseFile["receipt"][];
+  caveats: string[];
+  verificationSteps: string[];
+}
+
+export function filterCaseFiles(
+  cases: ExportableCaseFile[],
+  filters: CaseCollectionFilters,
+): ExportableCaseFile[] {
+  const query = clean(filters.query).toLowerCase();
+  return cases.filter((caseFile) => {
+    if (filters.countryCode && caseFile.countryCode !== filters.countryCode) return false;
+    if (filters.sourceId && caseFile.receipt.sourceId !== filters.sourceId) return false;
+    if (filters.caseType && caseFile.caseType !== filters.caseType) return false;
+    if (query.length === 0) return true;
+    return [
+      caseFile.id,
+      caseFile.title,
+      caseFile.receipt.recordId,
+      caseFile.receipt.sourceName,
+    ].join(" ").toLowerCase().includes(query);
+  });
+}
+
+export function buildCaseCollectionPack(
+  cases: ExportableCaseFile[],
+  filters: CaseCollectionFilters,
+): CaseCollectionPack {
+  const filteredCases = filterCaseFiles(cases, filters);
+  const receipts = filteredCases.map((caseFile) => caseFile.receipt);
+  const sourceIds = Array.from(new Set(receipts.map((receipt) => receipt.sourceId))).sort();
+  return {
+    packType: "faro_case_collection",
+    generatedAt: new Date().toISOString(),
+    filters,
+    stats: {
+      caseFiles: filteredCases.length,
+      receipts: receipts.length,
+      sources: sourceIds.length,
+    },
+    sourceIds,
+    cases: filteredCases,
+    receipts,
+    caveats: Array.from(new Set(filteredCases.flatMap((caseFile) => caseFile.caveats))).sort(),
+    verificationSteps: [
+      "Abrir cada fuente oficial indicada en los receipts.",
+      "Reproducir el snapshot usando rawPath, hash y parserVersion.",
+      "Cruzar contratos, presupuesto, pagos y avance antes de publicar conclusiones.",
+      "No publicar conclusiones de irregularidad sin revision documental adicional.",
+    ],
+  };
+}
+
+function clean(value: string | null | undefined): string {
+  return String(value ?? "").trim();
+}

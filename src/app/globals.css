@@ -375,6 +375,25 @@ a {
   gap: 10px;
 }
 
+.collectionDownloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.collectionDownloads a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  border: 1px solid var(--faro-line);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0 10px;
+  color: var(--faro-amber-strong);
+  font-size: 12px;
+  text-decoration: none;
+}
+
 .caseRow {
   display: grid;
   gap: 12px;
