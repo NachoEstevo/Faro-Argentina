@@ -29,6 +29,8 @@ test("buildArgentinaWorkCases turns official work rows into map-ready case files
     sourceUrl: "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar/archivo/jgm_30.5",
     extractedAt: "2026-05-16T00:00:00.000Z",
     fileHash: "sha256-test",
+    rawPath: "data/official/ar/onc-contratar-obras.csv",
+    parserVersion: "argentina-works@1",
   });
 
   assert.equal(cases.length, 2);
@@ -37,6 +39,10 @@ test("buildArgentinaWorkCases turns official work rows into map-ready case files
   assert.equal(cases[0]?.year, 2017);
   assert.deepEqual(cases[0]?.coordinates, { lat: -34.585722, lon: -58.389361 });
   assert.equal(cases[0]?.receipt.sourceId, "AR-CONTRATAR-OBRAS");
+  assert.equal(cases[0]?.receipt.locatorType, "official_dataset");
+  assert.equal(cases[0]?.receipt.rawPath, "data/official/ar/onc-contratar-obras.csv");
+  assert.equal(cases[0]?.receipt.parserVersion, "argentina-works@1");
+  assert.match(cases[0]?.receipt.rowHash ?? "", /^sha256-/);
   assert.equal(cases[0]?.evidenceLevel, "official_dataset");
   assert.match(cases[0]?.caveats[0] ?? "", /No confirma pagos/);
 });

@@ -1,3 +1,8 @@
+import {
+  createEvidenceReceipt,
+  type EvidenceReceipt,
+} from "./evidenceReceipts.ts";
+
 export interface RawArgentinaWorkRow {
   procedimiento_numero: string;
   uoc_codigo: string;
@@ -16,15 +21,7 @@ export interface RawArgentinaWorkRow {
   longitud_2: string;
 }
 
-export interface SourceReceipt {
-  receiptId: string;
-  sourceId: string;
-  sourceName: string;
-  sourceUrl: string;
-  extractedAt: string;
-  fileHash: string;
-  recordId: string;
-}
+export type SourceReceipt = EvidenceReceipt;
 
 export interface ArgentinaWorkCase {
   id: string;
@@ -50,6 +47,8 @@ interface BuildOptions {
   sourceUrl: string;
   extractedAt: string;
   fileHash: string;
+  rawPath: string;
+  parserVersion: string;
 }
 
 export function parseCsv<T extends object = Record<string, string>>(text: string): T[] {
@@ -74,7 +73,6 @@ export function buildArgentinaWorkCases(
     .filter((row) => clean(row.numero_obra).length > 0)
     .map((row) => {
       const workNumber = clean(row.numero_obra);
-      const receiptId = `${options.sourceId}-${workNumber}`.replaceAll("/", "-");
       return {
         id: `AR-WORK-${workNumber}`,
         countryCode: "AR",
@@ -89,15 +87,18 @@ export function buildArgentinaWorkCases(
         executionTermType: nullable(row.plazo_ejecucion_obra_tipo),
         coordinates: parseCoordinates(row.latitud_1, row.longitud_1),
         evidenceLevel: "official_dataset",
-        receipt: {
-          receiptId,
+        receipt: createEvidenceReceipt({
           sourceId: options.sourceId,
           sourceName: options.sourceName,
           sourceUrl: options.sourceUrl,
+          rawPath: options.rawPath,
+          snapshotHash: options.fileHash,
           extractedAt: options.extractedAt,
-          fileHash: options.fileHash,
           recordId: workNumber,
-        },
+          locatorType: "official_dataset",
+          parserVersion: options.parserVersion,
+          row: { ...row },
+        }),
         caveats: [
           "No confirma pagos ni avance físico por sí solo; muestra una obra declarada en fuente oficial.",
           "Las coordenadas corresponden al dataset oficial cuando están presentes.",

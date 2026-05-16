@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start -H 127.0.0.1 -p 3002",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/argentinaWorks.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts"
   },
   "dependencies": {
