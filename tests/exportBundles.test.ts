@@ -153,6 +153,30 @@ test("getExpedienteById returns an expediente view for lead cases", () => {
   assert.equal((expediente?.whyItAppeared.length ?? 0) > 0, true);
 });
 
+test("getCaseById keeps invalid-geometry official records available as data gaps", () => {
+  const sourceCaseFile = getCaseById("AR-WORK-279-0003-OBR19");
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(pack.caseFile.id, "AR-WORK-279-0003-OBR19");
+  assert.equal(pack.signals.some((signal) => signal.code === "geometry_needs_review"), true);
+  assert.equal(pack.signals.some((signal) => signal.code === "official_geometry"), false);
+  assert.equal(pack.signals.some((signal) => signal.code === "sentinel_candidate"), false);
+});
+
+test("getCaseById exposes duplicate official rows with stable runtime ids", () => {
+  const sourceCaseFile = getCaseById("AR-WORK-501-0003-OBR22--row-2");
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(pack.caseFile.id, "AR-WORK-501-0003-OBR22--row-2");
+  assert.equal(pack.receipt.recordId, "501-0003-OBR22");
+  assert.equal(pack.signals.some((signal) => signal.code === "geometry_needs_review"), true);
+  assert.equal(pack.signals.some((signal) => signal.code === "official_geometry"), false);
+});
+
 test("buildEvidencePack includes receipts, signals and official-source verification steps", () => {
   const caseFile = buildLeadFeed({ countryCode: "AR", limit: 1 }).leads[0];
   assert.ok(caseFile);

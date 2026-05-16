@@ -84,14 +84,19 @@ interface CrossCountryPayload {
 
 const rawArgentinaWorkDataset = payload as CaseDataset<ArgentinaWorkCase>;
 const crossCountryCasePayload = crossCountryPayload as CrossCountryPayload;
+const argentinaWorkCaseFiles = withStableDuplicateCaseIds(rawArgentinaWorkDataset.cases);
+const normalizedArgentinaWorkDataset: CaseDataset<ArgentinaWorkCase> = {
+  ...rawArgentinaWorkDataset,
+  cases: argentinaWorkCaseFiles,
+};
 
 export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[];
 
-export const argentinaWorkDataset = buildExplorerDataset(rawArgentinaWorkDataset);
+export const argentinaWorkDataset = buildExplorerDataset(normalizedArgentinaWorkDataset);
 export const crossCountryDatasets = crossCountryCasePayload.datasets;
 export const crossCountryCaseFiles = crossCountryCasePayload.cases;
 export const investigatorCaseFiles: FaroCaseFile[] = [
-  ...rawArgentinaWorkDataset.cases,
+  ...argentinaWorkCaseFiles,
   ...crossCountryCaseFiles,
 ];
 
@@ -166,7 +171,28 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
 }
 
 function allCaseFiles(): FaroCaseFile[] {
-  return [...argentinaWorkDataset.cases, ...crossCountryCaseFiles];
+  return investigatorCaseFiles;
+}
+
+function withStableDuplicateCaseIds<TCase extends FaroCaseFile>(cases: TCase[]): TCase[] {
+  const totals = new Map<string, number>();
+  cases.forEach((caseFile) => {
+    totals.set(caseFile.id, (totals.get(caseFile.id) ?? 0) + 1);
+  });
+
+  const seen = new Map<string, number>();
+  return cases.map((caseFile) => {
+    const total = totals.get(caseFile.id) ?? 0;
+    if (total <= 1) return caseFile;
+
+    const index = (seen.get(caseFile.id) ?? 0) + 1;
+    seen.set(caseFile.id, index);
+    if (index === 1) return caseFile;
+    return {
+      ...caseFile,
+      id: `${caseFile.id}--row-${index}`,
+    };
+  });
 }
 
 function getRelatedReceipts(caseFile: FaroCaseFile): EvidenceReceipt[] {

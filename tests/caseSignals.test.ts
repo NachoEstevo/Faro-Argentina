@@ -81,6 +81,32 @@ test("buildCaseSignals surfaces evidence gaps instead of inventing map context",
   assert.equal(signals.some((signal) => signal.code === "payment_verification_gap"), true);
 });
 
+test("buildCaseSignals does not treat invalid coordinates as official geometry", () => {
+  const signals = buildCaseSignals({
+    id: "AR-WORK-BAD-GEO",
+    countryCode: "AR",
+    caseType: "public_work",
+    title: "Obra con coordenada sospechosa",
+    workNumber: "46/8-0004-OBR20",
+    year: 2020,
+    procedureNumber: "46/8-0072-LPU19",
+    agencyName: "Direccion Nacional de Vialidad",
+    agencyCode: "604",
+    contractingUnit: "8 La Rioja - DNV",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: 30.6297222, lon: 66.2694444 },
+    evidenceLevel: "official_dataset",
+    receipt,
+    caveats: ["Coordenada declarada por fuente oficial; requiere QA geografico."],
+  });
+
+  assert.equal(signals.some((signal) => signal.code === "official_geometry"), false);
+  assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), false);
+  assert.equal(signals.some((signal) => signal.code === "geometry_needs_review"), true);
+  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable/i);
+});
+
 test("buildCaseSignalFeed ranks concrete review leads across cases", () => {
   const feed = buildCaseSignalFeed([
     {

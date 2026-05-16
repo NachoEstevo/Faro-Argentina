@@ -1,3 +1,5 @@
+import { assessCoordinateQuality } from "./coordinateQuality.ts";
+
 export type CaseSignalKind = "watch" | "ready" | "gap" | "context";
 
 export interface CaseSignal {
@@ -220,12 +222,18 @@ function addTraceabilitySignals(signals: CaseSignal[], caseFile: SignalCaseFile)
 }
 
 function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
-  if (caseFile.coordinates) {
+  const coordinateQuality = assessCoordinateQuality({
+    caseId: caseFile.id,
+    countryCode: caseFile.countryCode,
+    coordinates: caseFile.coordinates ?? null,
+  });
+
+  if (coordinateQuality.status === "valid_official_geometry" && caseFile.coordinates) {
     signals.push({
       code: "official_geometry",
       kind: "ready",
       priority: 58,
-      label: "Ubicacion oficial",
+      label: "Ubicacion oficial validada",
       summary: "El caso tiene coordenadas declaradas por fuente oficial y puede aparecer en el mapa.",
       evidence: `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`,
       caveat: "La coordenada ubica el caso, no prueba avance fisico ni pagos.",
@@ -247,15 +255,29 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
     return;
   }
 
+  if (coordinateQuality.status === "missing_geometry") {
+    signals.push({
+      code: "missing_official_geometry",
+      kind: "gap",
+      priority: 52,
+      label: "Sin geometria oficial",
+      summary: "El caso es verificable por fuente, pero no se dibuja en mapa porque falta una coordenada oficial confiable.",
+      evidence: `Fuente principal: ${caseFile.receipt.sourceId}.`,
+      caveat: "Faro no infiere ubicaciones desde nombres cuando no hay geometria oficial suficiente.",
+      action: "Cruzar con catastro, UBIGEO, comuna o dataset territorial oficial antes de mapear.",
+    });
+    return;
+  }
+
   signals.push({
-    code: "missing_official_geometry",
+    code: "geometry_needs_review",
     kind: "gap",
-    priority: 52,
-    label: "Sin geometria oficial",
-    summary: "El caso es verificable por fuente, pero no se dibuja en mapa porque falta una coordenada oficial confiable.",
-    evidence: `Fuente principal: ${caseFile.receipt.sourceId}.`,
-    caveat: "Faro no infiere ubicaciones desde nombres cuando no hay geometria oficial suficiente.",
-    action: "Cruzar con catastro, UBIGEO, comuna o dataset territorial oficial antes de mapear.",
+    priority: 56,
+    label: "Geometria requiere revision",
+    summary: "La fuente incluye coordenadas, pero no pasan los controles geograficos para dibujarlas como ubicacion oficial validada.",
+    evidence: `${coordinateQuality.summary} Fuente principal: ${caseFile.receipt.sourceId}.`,
+    caveat: "Faro preserva la coordenada como dato de fuente, pero no la dibuja ni la corrige sin verificacion oficial.",
+    action: "Revisar fuente, expediente o dataset territorial oficial antes de usar la coordenada en mapa.",
   });
 }
 

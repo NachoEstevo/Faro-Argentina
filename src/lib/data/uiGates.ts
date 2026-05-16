@@ -1,6 +1,8 @@
 import { shouldExposeReceiptInUi, type EvidenceReceipt } from "./evidenceReceipts.ts";
+import { assessCoordinateQuality } from "./coordinateQuality.ts";
 
 interface MapCandidate {
+  countryCode: string;
   coordinates: { lat: number; lon: number } | null;
   evidenceLevel: string;
   receipt: EvidenceReceipt;
@@ -14,8 +16,12 @@ export interface UiExposureStatus {
 
 export function getMapExposureStatus(caseFile: MapCandidate): UiExposureStatus {
   const reasons: string[] = [];
+  const coordinateQuality = assessCoordinateQuality({
+    countryCode: caseFile.countryCode,
+    coordinates: caseFile.coordinates,
+  });
 
-  if (!caseFile.coordinates) reasons.push("missing_coordinates");
+  if (!coordinateQuality.exposeOnMap) reasons.push(...coordinateQuality.reasons);
   if (!shouldExposeReceiptInUi(caseFile.receipt)) reasons.push("missing_receipt");
   if (caseFile.caveats.length === 0) reasons.push("missing_caveats");
   if (caseFile.evidenceLevel !== "official_dataset") reasons.push("unsupported_evidence_level");

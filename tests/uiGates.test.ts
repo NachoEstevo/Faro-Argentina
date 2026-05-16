@@ -20,8 +20,9 @@ const receipt = createEvidenceReceipt({
   row: { numero_obra: "81-0009-OBR18" },
 });
 
-test("shouldExposeCaseOnMap only exposes cases with coordinates, receipt and caveats", () => {
+test("shouldExposeCaseOnMap only exposes cases with validated coordinates, receipt and caveats", () => {
   const caseFile = {
+    countryCode: "AR",
     coordinates: { lat: -34.585722, lon: -58.389361 },
     evidenceLevel: "official_dataset",
     receipt,
@@ -33,6 +34,7 @@ test("shouldExposeCaseOnMap only exposes cases with coordinates, receipt and cav
 
 test("getMapExposureStatus explains why a case is not map-ready", () => {
   const status = getMapExposureStatus({
+    countryCode: "AR",
     coordinates: null,
     evidenceLevel: "official_dataset",
     receipt: { ...receipt, locatorType: "missing" },
@@ -41,8 +43,21 @@ test("getMapExposureStatus explains why a case is not map-ready", () => {
 
   assert.equal(status.expose, false);
   assert.deepEqual(status.reasons, [
-    "missing_coordinates",
+    "missing_geometry",
     "missing_receipt",
     "missing_caveats",
   ]);
+});
+
+test("getMapExposureStatus blocks Argentina coordinates with suspicious signs", () => {
+  const status = getMapExposureStatus({
+    countryCode: "AR",
+    coordinates: { lat: 30.6297222, lon: 66.2694444 },
+    evidenceLevel: "official_dataset",
+    receipt,
+    caveats: ["Coordenada declarada por fuente oficial."],
+  });
+
+  assert.equal(status.expose, false);
+  assert.deepEqual(status.reasons, ["sign_suspect"]);
 });
