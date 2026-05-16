@@ -11,6 +11,7 @@ interface VerifyDataset {
   };
   snapshotProfile?: {
     fileHash?: string;
+    columns?: string[];
   };
   cases: Array<{
     id: string;
@@ -48,7 +49,8 @@ export async function verifyDataSpine({
   datasets: VerifyDataset[];
 }): Promise<DataSpineVerificationReport> {
   const errors: string[] = [];
-  const sourceIds = new Set(sources.map((source) => source.sourceId));
+  const sourceById = new Map(sources.map((source) => [source.sourceId, source]));
+  const sourceIds = new Set(sourceById.keys());
   const rawFileHashes = new Map<string, string>();
   let checkedCases = 0;
   let checkedReceipts = 0;
@@ -61,6 +63,7 @@ export async function verifyDataSpine({
     if (dataset.snapshotProfile?.fileHash !== dataset.source.fileHash) {
       errors.push(`${dataset.source.sourceId}: snapshot hash mismatch`);
     }
+    validateCatalogKeyFields(dataset, sourceById.get(dataset.source.sourceId), errors);
 
     const rawHash = await hashRawFile(rootDir, dataset.source.filePath, errors);
     if (rawHash) {
@@ -119,6 +122,20 @@ export async function verifyDataSpine({
     checkedRawFiles: rawFileHashes.size,
     errors,
   };
+}
+
+function validateCatalogKeyFields(
+  dataset: VerifyDataset,
+  source: SourceCatalogEntry | undefined,
+  errors: string[],
+) {
+  if (!source || !dataset.snapshotProfile?.columns) return;
+  const columns = new Set(dataset.snapshotProfile.columns);
+  source.keyFields.forEach((keyField) => {
+    if (!columns.has(keyField)) {
+      errors.push(`${dataset.source.sourceId}: catalog keyField ${keyField} missing from snapshot`);
+    }
+  });
 }
 
 function validateReceipt({

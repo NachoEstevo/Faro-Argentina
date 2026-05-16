@@ -59,3 +59,19 @@ test("verifyDataSpine validates related receipts against their raw source files"
 
   assert.match(report.errors.join("\n"), /related receipt hash mismatch/);
 });
+
+test("verifyDataSpine reports catalog key fields missing from snapshot schemas", async () => {
+  const brokenCatalog = (catalog as SourceCatalogEntry[]).map((source) =>
+    source.sourceId === "AR-CONTRATAR-OBRAS"
+      ? { ...source, keyFields: ["numero_obra", "missing_key"] }
+      : source,
+  );
+
+  const report = await verifyDataSpine({
+    rootDir: new URL("../", import.meta.url),
+    sources: brokenCatalog,
+    datasets: [argentinaDataset],
+  });
+
+  assert.match(report.errors.join("\n"), /catalog keyField missing_key missing from snapshot/);
+});
