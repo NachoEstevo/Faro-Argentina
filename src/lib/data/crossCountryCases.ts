@@ -41,8 +41,10 @@ export interface CrossCountryCaseFile {
   claimCount?: number | null;
   buyerUnitCode?: string | null;
   buyerUnitRut?: string | null;
+  buyerDepartment?: string | null;
   buyerRegion?: string | null;
   buyerCommune?: string | null;
+  procurementMethodDetails?: string | null;
   itemCount?: number | null;
   awardedLineCount?: number | null;
   evidenceLevel: "official_dataset";
@@ -95,6 +97,64 @@ export interface PeruContractRow {
   fecha_vigencia_inicial?: string;
   fecha_vigencia_final?: string;
   fecha_vigencia_fin_actualizada?: string;
+}
+
+interface PeruOcdsBuildContext {
+  source: BuildOptions;
+  releases: PeruOcdsReleaseEntry[];
+}
+
+interface PeruOcdsReleaseEntry {
+  tenderId: string;
+  fetchUrl: string;
+  package: {
+    records?: Array<{
+      ocid?: string;
+      compiledRelease?: PeruOcdsCompiledRelease;
+    }>;
+    releases?: PeruOcdsCompiledRelease[];
+  };
+}
+
+interface PeruOcdsCompiledRelease {
+  id?: string;
+  ocid?: string;
+  buyer?: {
+    id?: string;
+    name?: string;
+  };
+  tender?: {
+    id?: string;
+    procurementMethodDetails?: string;
+    numberOfTenderers?: number | string | null;
+    procuringEntity?: {
+      id?: string;
+      name?: string;
+    };
+    tenderers?: Array<{
+      id?: string;
+      name?: string;
+    }>;
+  };
+  parties?: Array<{
+    id?: string;
+    name?: string;
+    roles?: string[];
+    address?: {
+      locality?: string;
+      region?: string;
+      department?: string;
+    };
+  }>;
+  awards?: Array<{
+    id?: string;
+    date?: string | null;
+    suppliers?: Array<{
+      id?: string;
+      name?: string;
+    }>;
+  }>;
+  contracts?: unknown[];
 }
 
 export interface ChileCompraSnapshot {
@@ -216,7 +276,9 @@ export function buildPeruContractCases(
   rows: PeruContractRow[],
   options: BuildOptions,
   limit = 25,
+  ocdsContext?: PeruOcdsBuildContext,
 ): CrossCountryCaseFile[] {
+  const ocdsByTenderId = indexPeruOcdsReleases(ocdsContext?.releases ?? []);
   return rows
     .filter((row) => clean(row.codigo_contrato).length > 0)
     .slice(0, limit)
@@ -227,6 +289,9 @@ export function buildPeruContractCases(
       const detailUrl = clean(row.urlcontrato);
       const signedDate = normalizeDate(row.fecha_suscripcion_contrato);
       const validity = buildValidityTerm(row);
+      const ocdsRelease = ocdsByTenderId.get(clean(row.codigoconvocatoria));
+      const ocdsInfo = extractPeruOcdsInfo(ocdsRelease, row);
+      const relatedReceipts = buildPeruOcdsReceipts(ocdsRelease, ocdsInfo, ocdsContext);
       return {
         id: `PE-CONTRACT-${recordId}`,
         countryCode: "PE",
@@ -235,15 +300,21 @@ export function buildPeruContractCases(
         year: parseYear(signedDate?.slice(0, 4)),
         title: clean(row.descripcion_proceso) || clean(row.num_contrato) || contractCode,
         procedureNumber: clean(row.codigoconvocatoria),
-        agencyName: `Entidad OECE ${clean(row.codigoentidad)}`,
+        agencyName: ocdsInfo?.buyerName ?? `Entidad OECE ${clean(row.codigoentidad)}`,
         agencyCode: clean(row.codigoentidad),
         contractingUnit: clean(row.num_contrato),
         executionTerm: validity,
         executionTermType: validity ? "vigencia_contractual" : null,
         coordinates: null,
+        awardedAt: ocdsInfo?.awardedAt ?? null,
+        bidderCount: ocdsInfo?.bidderCount ?? null,
+        procurementMethodDetails: ocdsInfo?.procurementMethodDetails ?? null,
+        buyerDepartment: ocdsInfo?.buyerDepartment ?? null,
+        buyerRegion: ocdsInfo?.buyerRegion ?? null,
+        buyerCommune: ocdsInfo?.buyerCommune ?? null,
         evidenceLevel: "official_dataset",
         amount: amount === null ? null : { value: amount, currency: normalizePeruCurrency(row.moneda), label: "monto_contratado" },
-        supplierName: null,
+        supplierName: ocdsInfo?.supplierName ?? null,
         supplierDocument: clean(row.ruc_contratista) || null,
         receipt: createEvidenceReceipt({
           sourceId: options.sourceId,
@@ -257,12 +328,117 @@ export function buildPeruContractCases(
           parserVersion: options.parserVersion,
           row: { ...row },
         }),
+        relatedReceipts,
         caveats: [
           "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+          ...(ocdsInfo ? ["Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar."] : []),
           "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada.",
         ],
       };
     });
+}
+
+function indexPeruOcdsReleases(releases: PeruOcdsReleaseEntry[]): Map<string, PeruOcdsReleaseEntry> {
+  return new Map(releases.map((release) => [clean(release.tenderId), release]));
+}
+
+function extractPeruOcdsInfo(
+  release: PeruOcdsReleaseEntry | undefined,
+  row: PeruContractRow,
+): {
+  buyerName: string | null;
+  supplierName: string | null;
+  awardedAt: string | null;
+  bidderCount: number | null;
+  procurementMethodDetails: string | null;
+  buyerDepartment: string | null;
+  buyerRegion: string | null;
+  buyerCommune: string | null;
+  receiptRow: Record<string, unknown>;
+} | null {
+  const record = release?.package.records?.[0];
+  const compiled = record?.compiledRelease ?? release?.package.releases?.at(-1);
+  if (!release || !compiled) return null;
+  const buyerId = clean(compiled.buyer?.id) || clean(compiled.tender?.procuringEntity?.id);
+  const buyerParty = findPeruParty(compiled.parties ?? [], buyerId, "buyer");
+  const supplier = findPeruSupplier(compiled, row.ruc_contratista);
+  const award = findPeruAward(compiled, row.ruc_contratista);
+  return {
+    buyerName: clean(compiled.buyer?.name) || clean(compiled.tender?.procuringEntity?.name) || null,
+    supplierName: clean(supplier?.name) || null,
+    awardedAt: normalizeDate(award?.date),
+    bidderCount: toNumber(compiled.tender?.numberOfTenderers),
+    procurementMethodDetails: clean(compiled.tender?.procurementMethodDetails) || null,
+    buyerDepartment: clean(buyerParty?.address?.department) || null,
+    buyerRegion: clean(buyerParty?.address?.region) || null,
+    buyerCommune: clean(buyerParty?.address?.locality) || null,
+    receiptRow: {
+      tenderId: release.tenderId,
+      ocid: record?.ocid ?? compiled.ocid,
+      releaseId: compiled.id,
+      buyer: compiled.buyer,
+      tender: compiled.tender,
+      awards: compiled.awards,
+      contracts: compiled.contracts,
+    },
+  };
+}
+
+function buildPeruOcdsReceipts(
+  release: PeruOcdsReleaseEntry | undefined,
+  info: ReturnType<typeof extractPeruOcdsInfo>,
+  context: PeruOcdsBuildContext | undefined,
+): EvidenceReceipt[] | undefined {
+  if (!release || !info || !context) return undefined;
+  return [
+    createEvidenceReceipt({
+      ...context.source,
+      sourceUrl: release.fetchUrl,
+      snapshotHash: context.source.fileHash,
+      recordId: release.tenderId,
+      locatorType: "official_detail",
+      parserVersion: "peru-ocds-release-link@1",
+      row: info.receiptRow,
+    }),
+  ];
+}
+
+function findPeruSupplier(
+  compiled: PeruOcdsCompiledRelease,
+  document: string,
+): { id?: string; name?: string } | undefined {
+  const normalizedDocument = normalizePeruPartyId(document);
+  const awardSupplier = (compiled.awards ?? [])
+    .flatMap((award) => award.suppliers ?? [])
+    .find((supplier) => normalizePeruPartyId(supplier.id) === normalizedDocument);
+  if (awardSupplier) return awardSupplier;
+  const tenderer = (compiled.tender?.tenderers ?? [])
+    .find((supplier) => normalizePeruPartyId(supplier.id) === normalizedDocument);
+  if (tenderer) return tenderer;
+  return (compiled.parties ?? []).find((party) => normalizePeruPartyId(party.id) === normalizedDocument);
+}
+
+function findPeruAward(
+  compiled: PeruOcdsCompiledRelease,
+  document: string,
+): NonNullable<PeruOcdsCompiledRelease["awards"]>[number] | undefined {
+  const normalizedDocument = normalizePeruPartyId(document);
+  return (compiled.awards ?? []).find((award) =>
+    (award.suppliers ?? []).some((supplier) => normalizePeruPartyId(supplier.id) === normalizedDocument),
+  ) ?? compiled.awards?.[0];
+}
+
+function findPeruParty(
+  parties: NonNullable<PeruOcdsCompiledRelease["parties"]>,
+  id: string,
+  role: string,
+) {
+  return parties.find((party) => clean(party.id) === id)
+    ?? parties.find((party) => party.roles?.includes(role));
+}
+
+function normalizePeruPartyId(value: string | null | undefined): string {
+  return clean(value).toLowerCase().replace(/^pe-ruc-/, "");
 }
 
 export function buildChileCompraCases(

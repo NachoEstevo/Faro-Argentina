@@ -4738,19 +4738,25 @@
           "year": 2025,
           "title": "CONTRATACION DEL SERVICIO DE ALQUILER DE MAQUINARIA PESADA PARA LA EJECUCION DE LA FICHA TECNICA PARA INTERVENCION POR EMERGENCIA DENOMINADA:\"LIMPIEZA DE CUNETAS Y ESTABILIZACION DE TALUDES EN LA VIA QUE UNE EL CASERIO EL ARENAL - SAN JOSE, DISTRITO DE LA PECA, PROVINCIA DE BAGUA, AMAZONAS",
           "procedureNumber": "1122118",
-          "agencyName": "Entidad OECE 010373",
+          "agencyName": "GOBIERNO REGIONAL DE AMAZONAS - GERENCIA SUBREGIONAL BAGUA",
           "agencyCode": "010373",
           "contractingUnit": "ORDEN DE SERVICIO N. 373",
           "executionTerm": "2025-06-03 - 2025-06-11",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-06-03",
+          "bidderCount": 1,
+          "procurementMethodDetails": "Contratación Directa",
+          "buyerDepartment": "AMAZONAS",
+          "buyerRegion": "BAGUA",
+          "buyerCommune": "BAGUA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 113868.79,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "INVERSIONES Y SERVICIOS MULTIPLES \"J&F RUAR\" E.I.R.L.",
           "supplierDocument": "20487924050",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2328678-1",
@@ -4766,8 +4772,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1122118",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1122118",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-9e3745925a023f03d2f001da1e1b5f408bfbae7185587ed1e50fa2874489ed19",
+              "recordId": "1122118",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4779,12 +4802,18 @@
           "year": 2025,
           "title": "ADQUISICION DE SUMINISTRO PETROLEO DIESEL B5 S-50",
           "procedureNumber": "1087217",
-          "agencyName": "Entidad OECE 002371",
+          "agencyName": "ENTIDAD PRESTADORA DE SERVICIO DE SANEAMIENTO DE MOYOBAMBA  SRLTDA.",
           "agencyCode": "002371",
           "contractingUnit": "001-2025-EPS-M/GG",
           "executionTerm": "2025-02-20 - 2026-02-18",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Subasta Inversa Electrónica",
+          "buyerDepartment": "SAN MARTIN",
+          "buyerRegion": "MOYOBAMBA",
+          "buyerCommune": "MOYOBAMBA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 112500,
@@ -4807,8 +4836,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1087217",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1087217",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-99ac90032e82c5ceb84c9827596f1b2f04f1295d89e551822ed1a145da88ae26",
+              "recordId": "1087217",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4820,12 +4866,18 @@
           "year": 2025,
           "title": "ADQUISICIÓN DE EQUIPAMIENTO BIOMEDICO (REFRIGERADORAS Y CAMARA DE CONSERVACION DE CADAVER) PARA LA OBRA: ¿REEMPLAZO DE LA INFRAESTRUCTURA E IMPLEMENTACIÓN DEL CENTRO DE SALUD SAN JUAN BAUTISTA ¿ MICRO RED SAN JUAN BAUTISTA DE LA RED DE SALUD HUAMANGA ¿ DIRESA - AYACUCHO¿",
           "procedureNumber": "1147593",
-          "agencyName": "Entidad OECE 000035",
+          "agencyName": "GOBIERNO REGIONAL DE AYACUCHO SEDE CENTRAL",
           "agencyCode": "000035",
           "contractingUnit": "N°3678-2025",
           "executionTerm": "2025-09-24 - 2025-09-30",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Comparación de Precios",
+          "buyerDepartment": "AYACUCHO",
+          "buyerRegion": "HUAMANGA",
+          "buyerCommune": "AYACUCHO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 92000,
@@ -4848,8 +4900,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1147593",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1147593",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-e87dc4b2f9b6f624ef690861bc359c43856bcd7ecffe30fb3eea7c06ae59b362",
+              "recordId": "1147593",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4861,12 +4930,18 @@
           "year": 2025,
           "title": "ADQUISICIÓN DE UNA (1) BISELADORA DE LENTES OFTÁLMICOS COMPUTARIZADA PARA LA UNIDAD FUNCIONAL DE ÓPTICA POR OPTIMIZACIÓN",
           "procedureNumber": "1166863",
-          "agencyName": "Entidad OECE 010196",
+          "agencyName": "INSTITUTO NACIONAL DE OFTALMOLOGIA",
           "agencyCode": "010196",
           "contractingUnit": "084-2025-OLOG-OEA-INO",
           "executionTerm": "2025-11-21 - 2028-12-18",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Licitación Pública Abreviada",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "LIMA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 198000,
@@ -4889,8 +4964,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1166863",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1166863",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-2bc3c2038bf669f858a880e2bacca5d8c661c482c234fbf2458d929c480d7bfa",
+              "recordId": "1166863",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4902,12 +4994,18 @@
           "year": 2025,
           "title": "ADQUISICION DE PRODUCTOS FARMACEUTICOS SIN FICHA TECNICA APROBADA GRUPO I PARA BENEFICIARIOS DE LA IAFAS EP",
           "procedureNumber": "1117933",
-          "agencyName": "Entidad OECE 200683",
+          "agencyName": "IAFAS DEL EJERCITO DEL PERU (FOSPEME)",
           "agencyCode": "200683",
           "contractingUnit": "133",
           "executionTerm": "2025-07-01 - 2027-06-30",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Licitación Pública",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "JESUS MARIA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 93408,
@@ -4930,8 +5028,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1117933",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1117933",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-2b8f0350e1efddc3780c233649ce69565d4006102162e57fa188d8f390868a3b",
+              "recordId": "1117933",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4943,19 +5058,25 @@
           "year": 2025,
           "title": "ADQUISICIÓN DE ACCESORIOS Y MATERIALES PARA EL TALLER DE PARCHADO, ENLLANTE Y DESENLLANTE DE NEUMATICOS PARA LA DISTINTAS UNIDADES VEHICULARES PERTENECIENTES A LA MUNICIPALIDAD DISTRITAL VEINTISÉIS DE OCTUBRE",
           "procedureNumber": "1098333",
-          "agencyName": "Entidad OECE 201043",
+          "agencyName": "MUNICIPALIDAD DISTRITAL VEINTISEIS DE OCTUBRE",
           "agencyCode": "201043",
           "contractingUnit": "142",
           "executionTerm": "2025-04-03 - 2025-04-07",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-03-25",
+          "bidderCount": 3,
+          "procurementMethodDetails": "Comparación de Precios",
+          "buyerDepartment": "PIURA",
+          "buyerRegion": "PIURA",
+          "buyerCommune": "VEINTISEIS DE OCTUBRE",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 63570,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "GALVEZ PINTADO MEXSAR",
           "supplierDocument": "10709045933",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2316821-1",
@@ -4971,8 +5092,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1098333",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1098333",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-ea989bb722716111460f100b0dac6d5df36465f1c19c7c4e950a9a9234e7e25b",
+              "recordId": "1098333",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -4984,12 +5122,18 @@
           "year": 2025,
           "title": "SUMINISTRO DE MATERIAL GRANULAR PARA AFIRMADO A - 1, SEGUN ESPECIFICACIONES TÉCNICAS, DERIVADA DE SIE N° 19 PARA EL MEJORAMIENTO DEL SERVICIO DE FORMACION DE PREGRADO EN EDUCACION SUPERIOR UNIVERSITARIA EN LA ESCUELA PROFESIONAL DE CIENCIAS DE LA COMUNICACION SOCIAL DE LA UNIVERSIDAD NACIONAL",
           "procedureNumber": "1153007",
-          "agencyName": "Entidad OECE 001897",
+          "agencyName": "UNIVERSIDAD NACIONAL DEL ALTIPLANO",
           "agencyCode": "001897",
           "contractingUnit": "CONTRATO N° 088-2025-UA/DGA-UNA-PUNO",
           "executionTerm": "2025-11-08 - 2025-12-17",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Adjudicación Simplificada",
+          "buyerDepartment": "PUNO",
+          "buyerRegion": "PUNO",
+          "buyerCommune": "PUNO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 159408,
@@ -5012,8 +5156,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1153007",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1153007",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-0b72805238a951ca1e3099c8d5f3455bf4669237f86c17546a0fed86cb8a1e14",
+              "recordId": "1153007",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5025,19 +5186,25 @@
           "year": 2025,
           "title": "SERVICIO DE PUBLICIDAD DIGITAL EN FACEBOOK E INSTAGRAM PARA LA CAMPAÑA ¿REACTIVACIÓN NORTE 2DA ETAPA¿",
           "procedureNumber": "1142800",
-          "agencyName": "Entidad OECE 001947",
+          "agencyName": "COMISION DE PROMOCION DEL PERU PARA LA EXPORTACION Y EL TURISMO - PROMPERU",
           "agencyCode": "001947",
           "contractingUnit": "OS25080194",
           "executionTerm": "2025-08-20 - 2025-09-19",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-08-19",
+          "bidderCount": 1,
+          "procurementMethodDetails": "Contratación Internacional",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "SAN ISIDRO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 6000,
             "currency": "USD",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "META PLATFORMS IRELAND LIMITED",
           "supplierDocument": "L0606465503",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2342406-1",
@@ -5053,8 +5220,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1142800",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1142800",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-22a8cbfbaa82d444d3706c9f9b3087cf833395d425122384e8537f47e42a0859",
+              "recordId": "1142800",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5066,12 +5250,18 @@
           "year": 2025,
           "title": "SERVICIO DE RENOVACIÓN DE GARANTÍA, SOPORTE TÉCNICO Y MANTENIMIENTO PREVENTIVO DE LA PLATAFORMA HPE O EQUIVALENTE DEL CENTRO DE DATOS DEL MTPE",
           "procedureNumber": "1137648",
-          "agencyName": "Entidad OECE 000023",
+          "agencyName": "MINISTERIO DE TRABAJO Y PROMOCION DEL EMPLEO",
           "agencyCode": "000023",
           "contractingUnit": "023-2025-MTPE",
           "executionTerm": "2025-11-05 - 2027-11-24",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Concurso Público de Servicios",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "JESUS MARIA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 1452000,
@@ -5094,8 +5284,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1137648",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1137648",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-62e02d3c1ca267884a285691c59713da7ff99e74332ee855f737968f7a1e1a43",
+              "recordId": "1137648",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5107,12 +5314,18 @@
           "year": 2025,
           "title": "CONTRATACION DEL SERVICIO PARA LA ELABORACION DEL ESTUDIO DE PREINVERSION DEL PROYECTO: MEJORAMIENTO DE LOS SERVICIOSOPERATIVOS O MISIONALES INSTITUCIONALES EN LA RED INTEGRAL DE SALUD JAEN",
           "procedureNumber": "1146808",
-          "agencyName": "Entidad OECE 010433",
+          "agencyName": "GOBIERNO REGIONAL DE CAJAMARCA - GERENCIA SUB REGIONAL JAEN",
           "agencyCode": "010433",
           "contractingUnit": "6",
           "executionTerm": "2025-09-26 - 2025-12-30",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Concurso Público Abreviado",
+          "buyerDepartment": "CAJAMARCA",
+          "buyerRegion": "JAEN",
+          "buyerCommune": "JAEN",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 129960,
@@ -5135,8 +5348,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1146808",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1146808",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-bd74ba4d4eaba449eb09595ac26117779303d57894e844e61ce79ec1ea0ab44e",
+              "recordId": "1146808",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5148,12 +5378,18 @@
           "year": 2025,
           "title": "SERVICIO DE UNA CONSULTA SOCIAL PARA LA PROPUESTA DE LINEAMIENTOS CONCEPTUALES Y PLAN MUSEOLOGICO DEL PROYECTO:MEJORAMIENTO Y AMPLIACIÓNDE LOS SERVICIOS DEL SANTUARIO DE LA MEMORIA LA HOYADA EN EL DISTRITO DE ANDRES AVELINO CACERES - PROVINCIA DE HUAMANGA - DEPARTAMENTO DE AYACUCHO",
           "procedureNumber": "1126429",
-          "agencyName": "Entidad OECE 000035",
+          "agencyName": "GOBIERNO REGIONAL DE AYACUCHO SEDE CENTRAL",
           "agencyCode": "000035",
           "contractingUnit": "136-2025-GRA-SEDECENTRAL-OAPF",
           "executionTerm": "2025-08-22 - 2025-11-28",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Adjudicación Simplificada",
+          "buyerDepartment": "AYACUCHO",
+          "buyerRegion": "HUAMANGA",
+          "buyerCommune": "AYACUCHO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 190000,
@@ -5176,8 +5412,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1126429",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1126429",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-1dd3ec3d44134cf3c06790f9f9b9488ca39db8e8eebd89791e042452c998c440",
+              "recordId": "1126429",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5189,19 +5442,25 @@
           "year": 2025,
           "title": "ADQUISICION DE TACHOS DE METAL CON INSTALACIÓN A TODO COSTO PARA LA IOAR: ¿REMODELACIÓN DE BERMA; EN EL (LA) ALAMEDA AV. COLONIZADORES, DISTRITO DE MAJES, PROVINCIA CAYLLOMA, DEPARTAMENTO DE AREQUIPA¿",
           "procedureNumber": "1164567",
-          "agencyName": "Entidad OECE 002606",
+          "agencyName": "MUNICIPALIDAD DISTRITAL DE MAJES - VILLA EL PEDREGAL",
           "agencyCode": "002606",
           "contractingUnit": "1085",
           "executionTerm": "2025-11-14 - 2026-03-31",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-11-04",
+          "bidderCount": 4,
+          "procurementMethodDetails": "Comparación de Precios",
+          "buyerDepartment": "AREQUIPA",
+          "buyerRegion": "CAYLLOMA",
+          "buyerCommune": "MAJES",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 74880,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "PRODCAT E.I.R.L.",
           "supplierDocument": "20614103842",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2360398-1",
@@ -5217,8 +5476,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1164567",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1164567",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-cf6e24b52f7ce80d3a94c85ee2340a68ec5f8d81b0373b2795dc216da0bb5283",
+              "recordId": "1164567",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5230,19 +5506,25 @@
           "year": 2025,
           "title": "AQUISICION DE ASFALTO LIQUIDO CUT BACK MC-30(CURADO MEDIO GRADO MC-30)SEGÚN ESPECIFICACIONES TECNICAS PARA LA META MEJORAMIENTO DE LA CARRETERA PU 146; EMP PE - 34 I (HUANCANÉ) - HUERTAPATA - VISCACHANI - QUELLAHUYO - EMP PE - 34 (CACUÑA), DISTRITO DE HUANCANE - PROVINCIA DE HUANCANE - DEPARTAMENTO",
           "procedureNumber": "1132181",
-          "agencyName": "Entidad OECE 000049",
+          "agencyName": "GOBIERNO REGIONAL DE PUNO SEDE CENTRAL",
           "agencyCode": "000049",
           "contractingUnit": "CONTRATO N° 111-2025-SIE-GR PUNO",
           "executionTerm": "2025-10-22 - 2026-02-18",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-08-18",
+          "bidderCount": 13,
+          "procurementMethodDetails": "Subasta Inversa Electrónica",
+          "buyerDepartment": "PUNO",
+          "buyerRegion": "PUNO",
+          "buyerCommune": "PUNO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 482220,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "CONSORCIO NILS SOCIEDAD ANONIMA CERRADA",
           "supplierDocument": "20574690219",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2355815-1",
@@ -5258,8 +5540,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1132181",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1132181",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-10090ee4b9a69b3db411208e8b1a892d6c7e1768214b6d684f911fa3fe570d24",
+              "recordId": "1132181",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5271,19 +5570,25 @@
           "year": 2025,
           "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LA EFICIENCIA DEL SISTEMA HIDRÁULICO DE CONDUCCIÓN Y DISTRIBUCIÓN DE PAMPA GRANDE - SECTOR RIEGO CHONGOYAPE\" CUI 2360385",
           "procedureNumber": "1136235",
-          "agencyName": "Entidad OECE 010353",
+          "agencyName": "GOBIERNO REGIONAL DE LAMBAYEQUE - PROYECTO ESPECIAL OLMOS - TINAJONES",
           "agencyCode": "010353",
           "contractingUnit": "CONTRATO N° 000021-2025-GR.LAMB/PEOT-GG [515617519 - 46]",
           "executionTerm": "2025-11-21 - 2027-11-20",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-08-18",
+          "bidderCount": 61,
+          "procurementMethodDetails": "Concurso Público",
+          "buyerDepartment": "LAMBAYEQUE",
+          "buyerRegion": "CHICLAYO",
+          "buyerCommune": "CHICLAYO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 2304694.59,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "CONSORCIO VM INGENIEROS",
           "supplierDocument": "1704847",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2351399-1",
@@ -5299,8 +5604,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1136235",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1136235",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-9c078e515b22c7a05ea0f28636143ccd24b0ec81f78b119a04329c4c1352aec8",
+              "recordId": "1136235",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5312,12 +5634,18 @@
           "year": 2025,
           "title": "ADQUISICION DE SEIS (06) CAMIONETAS PICK - UP DOBLE CABINA Y TRACCION 4X4 DEBIDAMENTE EQUIPADAS  PARA PATRULLAJE DE SERENAZGO EN EL DISTRITO DE LA ESPERANZA PROVINCIA DE TRUJILLO DEPARTAMENTO DE LA LIBERTAD",
           "procedureNumber": "1139903",
-          "agencyName": "Entidad OECE 001194",
+          "agencyName": "MUNICIPALIDAD DISTRITAL DE LA ESPERANZA - TRUJILLO",
           "agencyCode": "001194",
           "contractingUnit": "CONTRATO N°013-2025",
           "executionTerm": "2025-09-11 - 2025-09-26",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Licitación Pública Abreviada",
+          "buyerDepartment": "LA LIBERTAD",
+          "buyerRegion": "TRUJILLO",
+          "buyerCommune": "LA ESPERANZA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 990000,
@@ -5340,8 +5668,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1139903",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1139903",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-636da6538742abfee34519433a878fa72b5a05124f15bf463282a356d2e2f06d",
+              "recordId": "1139903",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5353,12 +5698,18 @@
           "year": 2025,
           "title": "Mantenimiento Rutinario del Camino Vecinal No Pavimentado, Tramo: EMP. AP-100 (CCORIPACCHA) - EMP. AP-584 (ROSASPATA), longitud de 8.385Km, Distrito(s) de KISHUARA, Provincia de ANDAHUAYLAS, Región de APURIMAC.",
           "procedureNumber": "1092314",
-          "agencyName": "Entidad OECE 200252",
+          "agencyName": "INSTITUTO VIAL PROVINCIAL DE ANDAHUAYLAS",
           "agencyCode": "200252",
           "contractingUnit": "CONTRATO GERENCIAL N° 29-2025-MPA/IVP-GG",
           "executionTerm": "2025-04-10 - 2025-12-09",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Adjudicación Simplificada",
+          "buyerDepartment": "APURIMAC",
+          "buyerRegion": "ANDAHUAYLAS",
+          "buyerCommune": "ANDAHUAYLAS",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 41589.6,
@@ -5381,8 +5732,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1092314",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1092314",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-47915c06949bbf632d3cce8cd2f594f2c854b84ca1727753f0e09016222caccc",
+              "recordId": "1092314",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5394,12 +5762,18 @@
           "year": 2025,
           "title": "ADQUISICION DE CEMENTO PORTLAND TIPO I",
           "procedureNumber": "1134317",
-          "agencyName": "Entidad OECE 000645",
+          "agencyName": "MUNICIPALIDAD DISTRITAL DE CHILETE",
           "agencyCode": "000645",
           "contractingUnit": "N° 006-2025-MDCH/GM-OAyCP",
           "executionTerm": "2025-09-01 - 2025-09-30",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Subasta Inversa Electrónica",
+          "buyerDepartment": "CAJAMARCA",
+          "buyerRegion": "CONTUMAZA",
+          "buyerCommune": "CHILETE",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 177192.4,
@@ -5422,8 +5796,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1134317",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1134317",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-42326e915f6f269e19e06ab84ecd33ac42eeb2408f6824df67b1b0e3fe65360d",
+              "recordId": "1134317",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5435,12 +5826,18 @@
           "year": 2025,
           "title": "CONTRATACION PARA LA EJECUCION DE OBRA: RENOVACION DE PUENTE; EN EL (LA) CAMINO VECINAL PU-1103 (PUENTE CHILA), TRAMO: EMP. 36B - EMP 665 , DISTRITO DE PICHACANI, PROVINCIA PUNO, DEPARTAMENTO PUNO",
           "procedureNumber": "1157076",
-          "agencyName": "Entidad OECE 001648",
+          "agencyName": "MUNICIPALIDAD PROVINCIAL DE PUNO",
           "agencyCode": "001648",
           "contractingUnit": "055-2025-MPP/GA",
           "executionTerm": "2025-11-19 - 2026-02-28",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Licitación Pública Abreviada",
+          "buyerDepartment": "PUNO",
+          "buyerRegion": "PUNO",
+          "buyerCommune": "PUNO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 423441.6,
@@ -5463,8 +5860,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1157076",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1157076",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-b187a0537cf785fe61b2b4c2d2a63ebcb0be6c03c5b525c921635136811befcc",
+              "recordId": "1157076",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5476,19 +5890,25 @@
           "year": 2025,
           "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA EJECUCIÓN DE IOARR: ¿RENOVACIÓN DE PUENTE: EN EL (LA) LUPUCHE, PUENTE SALITRE EN EL TRAMO EMP. PE-1N (NUEVO PIEDRAL) ¿ PIEDRAL ANTIGUO ¿ EMP. PI-1034 (DV. EL TALLAN) DISTRITO DE EL TALLAN, PROVINCIA DE PIURA, DEPARTAMENTO DE",
           "procedureNumber": "1134700",
-          "agencyName": "Entidad OECE 001584",
+          "agencyName": "MUNICIPALIDAD PROVINCIAL DE PIURA",
           "agencyCode": "001584",
           "contractingUnit": "N°54-2025-OA/MPP",
           "executionTerm": "2025-08-27 - 2025-11-10",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-08-15",
+          "bidderCount": 13,
+          "procurementMethodDetails": "Concurso Público Abreviado",
+          "buyerDepartment": "PIURA",
+          "buyerRegion": "PIURA",
+          "buyerCommune": "PIURA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 112464,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "CONSORCIO LUPUCHE",
           "supplierDocument": "1709475",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2343822-1",
@@ -5504,8 +5924,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1134700",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1134700",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-51b71a78ff724125e7435135c839faaa145211a293a7a67232afd602c5ca4e46",
+              "recordId": "1134700",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5517,12 +5954,18 @@
           "year": 2025,
           "title": "CONTRATACIÓN DE LA CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LOS SERVICIO EDUCATIVOS EN LA INSTITUCIÓN EDUCATIVA N° 40199 CIUDAD MI TRABAJO EN LA URBANIZACIÓN CIUDAD MI TRABAJO DEL DISTRITO DE SOCABAYA - PROVINCIA DE AREQUIPA - DEPARTAMENTO DE AREQUIPA\" - I ETAPA - CUI N° 2493448",
           "procedureNumber": "1123318",
-          "agencyName": "Entidad OECE 000416",
+          "agencyName": "MUNICIPALIDAD DISTRITAL DE SOCABAYA",
           "agencyCode": "000416",
           "contractingUnit": "CONTRATO N° 051-2025-MDS-GM",
           "executionTerm": "2025-07-23 - 2025-12-19",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Adjudicación Simplificada",
+          "buyerDepartment": "AREQUIPA",
+          "buyerRegion": "AREQUIPA",
+          "buyerCommune": "SOCABAYA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 82968.71,
@@ -5545,8 +5988,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1123318",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1123318",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-7b2e5a6e3a1a3f0407e1b329a814eb5f7087f95ad715ec4879be0e5f08ada1ea",
+              "recordId": "1123318",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5558,12 +6018,18 @@
           "year": 2025,
           "title": "CONTRATACION DEL SERVICIO A TODO COSTO DE FABRICACION, INSTALACION Y PINTADO DE JUEGOS INFANTILES PARA LA OBRA CREACION DEL PARQUE RECREATIVO INFANTIL EN LA ASOC PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO MZ E-6 LT 1, AOCIACION PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO DEL DISTRITO DE CERRO COL",
           "procedureNumber": "1142722",
-          "agencyName": "Entidad OECE 000399",
+          "agencyName": "MUNICIPALIDAD DISTRITAL DE CERRO COLORADO",
           "agencyCode": "000399",
           "contractingUnit": "CONTRATO N° 47-2025-MDCC",
           "executionTerm": "2025-10-14 - 2025-11-04",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Concurso Público Abreviado",
+          "buyerDepartment": "AREQUIPA",
+          "buyerRegion": "AREQUIPA",
+          "buyerCommune": "CERRO COLORADO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 55500,
@@ -5586,8 +6052,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1142722",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1142722",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-28b1cff0b718cd81403f9c417a52e071ddd7387dc0686e3d169e6c03355acc1a",
+              "recordId": "1142722",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5599,12 +6082,18 @@
           "year": 2025,
           "title": "CONTRATACION DEL SERVICIO DE ESPECIALISTA EN GESTION AMBIENTAL, SEGURIDAD Y SALUD OCUPACIONAL PARA EL PROYECTO: \"MEJORAMIENTO DE LA INFRAESTRUCTURA EDUCATIVA Y COMPLEMENTARIA DE LA ESCUELA SUPERIOR DE FORMACION ARTISTICA PUBLICA EDUARDO MEZA SARAVIA - YARINACOCHA - CORONEL PORTILLO - UCAYALI\". CUI N° 2424348.",
           "procedureNumber": "1112914",
-          "agencyName": "Entidad OECE 000053",
+          "agencyName": "GOBIERNO REGIONAL DE UCAYALI SEDE CENTRAL",
           "agencyCode": "000053",
           "contractingUnit": "036-2025-GRU-GGR-ORA",
           "executionTerm": "2025-05-09 - 2026-08-07",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Adjudicación Simplificada",
+          "buyerDepartment": "UCAYALI",
+          "buyerRegion": "CORONEL PORTILLO",
+          "buyerCommune": "CALLERIA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 148680,
@@ -5627,8 +6116,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1112914",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1112914",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-61708eb2d61cc41a6f608ee6bde5a39a360869f03d73114ecb409b60705513a9",
+              "recordId": "1112914",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5640,19 +6146,25 @@
           "year": 2026,
           "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORIA DE OBRA PARA LA ELABORACION DE EXPEDIENTE TECNICO DEL PROYECTO: MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE AGUA POTABLE RURAL Y MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE ALCANTARILLADO U OTRAS FORMAS DE DISPOSICIÓN SANITARIA DE EXCRETAS EN EL CASERIO MAZARAY D",
           "procedureNumber": "1186506",
-          "agencyName": "Entidad OECE 001871",
+          "agencyName": "MUNICIPALIDAD PROVINCIAL DE CORONEL PORTILLO",
           "agencyCode": "001871",
           "contractingUnit": "000001-2026-MPCP/ALC-GM",
           "executionTerm": "2026-03-04 - 2026-07-01",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2026-02-09",
+          "bidderCount": 15,
+          "procurementMethodDetails": "Concurso Público Abreviado",
+          "buyerDepartment": "UCAYALI",
+          "buyerRegion": "CORONEL PORTILLO",
+          "buyerCommune": "CALLERIA",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 318168,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "CONSORCIO GRUPO ELOHIM",
           "supplierDocument": "1763739",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2379625-1",
@@ -5668,8 +6180,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1186506",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1186506",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-86d2e50f740c28e0140d951c4d20d0a75997eb3fcaa9ec56057376d3067348c1",
+              "recordId": "1186506",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5681,12 +6210,18 @@
           "year": 2025,
           "title": "SERVICIO DE OPERADOR TURÍSTICO PARA VIAJE DE INFLUENCERS ESPAÑA 2025",
           "procedureNumber": "1165169",
-          "agencyName": "Entidad OECE 001947",
+          "agencyName": "COMISION DE PROMOCION DEL PERU PARA LA EXPORTACION Y EL TURISMO - PROMPERU",
           "agencyCode": "001947",
           "contractingUnit": "OS25110303",
           "executionTerm": "2025-11-25 - 2025-12-17",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": null,
+          "bidderCount": null,
+          "procurementMethodDetails": "Concurso Público Abreviado",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "SAN ISIDRO",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 45000,
@@ -5709,8 +6244,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1165169",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1165169",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-314340fe454d2939a1f6867e460636eb65e7868debc70bd8ae6eb7815cab1824",
+              "recordId": "1165169",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         },
@@ -5722,19 +6274,25 @@
           "year": 2025,
           "title": "SERVICIO DE ALIMENTACION PARA PACIENTES Y PERSONAL CON 12 HORAS CONTINUAS DEL HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR POR UN PERÍODO DE 03 MESES",
           "procedureNumber": "1109454",
-          "agencyName": "Entidad OECE 203086",
+          "agencyName": "HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR",
           "agencyCode": "203086",
           "contractingUnit": "18-2025",
           "executionTerm": "2025-04-22 - 2025-06-23",
           "executionTermType": "vigencia_contractual",
           "coordinates": null,
+          "awardedAt": "2025-04-14",
+          "bidderCount": 1,
+          "procurementMethodDetails": "Contratación Directa",
+          "buyerDepartment": "LIMA",
+          "buyerRegion": "LIMA",
+          "buyerCommune": "VILLA EL SALVADOR",
           "evidenceLevel": "official_dataset",
           "amount": {
             "value": 1398886,
             "currency": "PEN",
             "label": "monto_contratado"
           },
-          "supplierName": null,
+          "supplierName": "CORPORACION NET COM PERU DRY CLEANERS SOCIEDAD ANONIMA CERRADA",
           "supplierDocument": "20547662203",
           "receipt": {
             "receiptId": "PE-OECE-CONTRATOS-2320371-1",
@@ -5750,8 +6308,25 @@
             "extractedAt": "2026-05-16T06:04:40.538Z",
             "parserVersion": "cross-country@1"
           },
+          "relatedReceipts": [
+            {
+              "receiptId": "PE-OECE-OCDS-1109454",
+              "sourceId": "PE-OECE-OCDS",
+              "sourceName": "Portal de contrataciones abiertas OCDS",
+              "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1109454",
+              "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+              "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+              "rowHash": "sha256-7b3735f12e338fdfeeb2e3c8a472bc47a52899f670d4753a615d095f49d4f072",
+              "recordId": "1109454",
+              "locatorType": "official_detail",
+              "extractedAt": "2026-05-16T06:04:40.538Z",
+              "parserVersion": "peru-ocds-release-link@1"
+            }
+          ],
           "caveats": [
             "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+            "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
             "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
           ]
         }
@@ -10473,19 +11048,25 @@
       "year": 2025,
       "title": "CONTRATACION DEL SERVICIO DE ALQUILER DE MAQUINARIA PESADA PARA LA EJECUCION DE LA FICHA TECNICA PARA INTERVENCION POR EMERGENCIA DENOMINADA:\"LIMPIEZA DE CUNETAS Y ESTABILIZACION DE TALUDES EN LA VIA QUE UNE EL CASERIO EL ARENAL - SAN JOSE, DISTRITO DE LA PECA, PROVINCIA DE BAGUA, AMAZONAS",
       "procedureNumber": "1122118",
-      "agencyName": "Entidad OECE 010373",
+      "agencyName": "GOBIERNO REGIONAL DE AMAZONAS - GERENCIA SUBREGIONAL BAGUA",
       "agencyCode": "010373",
       "contractingUnit": "ORDEN DE SERVICIO N. 373",
       "executionTerm": "2025-06-03 - 2025-06-11",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-06-03",
+      "bidderCount": 1,
+      "procurementMethodDetails": "Contratación Directa",
+      "buyerDepartment": "AMAZONAS",
+      "buyerRegion": "BAGUA",
+      "buyerCommune": "BAGUA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 113868.79,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "INVERSIONES Y SERVICIOS MULTIPLES \"J&F RUAR\" E.I.R.L.",
       "supplierDocument": "20487924050",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2328678-1",
@@ -10501,8 +11082,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1122118",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1122118",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-9e3745925a023f03d2f001da1e1b5f408bfbae7185587ed1e50fa2874489ed19",
+          "recordId": "1122118",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10514,12 +11112,18 @@
       "year": 2025,
       "title": "ADQUISICION DE SUMINISTRO PETROLEO DIESEL B5 S-50",
       "procedureNumber": "1087217",
-      "agencyName": "Entidad OECE 002371",
+      "agencyName": "ENTIDAD PRESTADORA DE SERVICIO DE SANEAMIENTO DE MOYOBAMBA  SRLTDA.",
       "agencyCode": "002371",
       "contractingUnit": "001-2025-EPS-M/GG",
       "executionTerm": "2025-02-20 - 2026-02-18",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Subasta Inversa Electrónica",
+      "buyerDepartment": "SAN MARTIN",
+      "buyerRegion": "MOYOBAMBA",
+      "buyerCommune": "MOYOBAMBA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 112500,
@@ -10542,8 +11146,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1087217",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1087217",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-99ac90032e82c5ceb84c9827596f1b2f04f1295d89e551822ed1a145da88ae26",
+          "recordId": "1087217",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10555,12 +11176,18 @@
       "year": 2025,
       "title": "ADQUISICIÓN DE EQUIPAMIENTO BIOMEDICO (REFRIGERADORAS Y CAMARA DE CONSERVACION DE CADAVER) PARA LA OBRA: ¿REEMPLAZO DE LA INFRAESTRUCTURA E IMPLEMENTACIÓN DEL CENTRO DE SALUD SAN JUAN BAUTISTA ¿ MICRO RED SAN JUAN BAUTISTA DE LA RED DE SALUD HUAMANGA ¿ DIRESA - AYACUCHO¿",
       "procedureNumber": "1147593",
-      "agencyName": "Entidad OECE 000035",
+      "agencyName": "GOBIERNO REGIONAL DE AYACUCHO SEDE CENTRAL",
       "agencyCode": "000035",
       "contractingUnit": "N°3678-2025",
       "executionTerm": "2025-09-24 - 2025-09-30",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Comparación de Precios",
+      "buyerDepartment": "AYACUCHO",
+      "buyerRegion": "HUAMANGA",
+      "buyerCommune": "AYACUCHO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 92000,
@@ -10583,8 +11210,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1147593",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1147593",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-e87dc4b2f9b6f624ef690861bc359c43856bcd7ecffe30fb3eea7c06ae59b362",
+          "recordId": "1147593",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10596,12 +11240,18 @@
       "year": 2025,
       "title": "ADQUISICIÓN DE UNA (1) BISELADORA DE LENTES OFTÁLMICOS COMPUTARIZADA PARA LA UNIDAD FUNCIONAL DE ÓPTICA POR OPTIMIZACIÓN",
       "procedureNumber": "1166863",
-      "agencyName": "Entidad OECE 010196",
+      "agencyName": "INSTITUTO NACIONAL DE OFTALMOLOGIA",
       "agencyCode": "010196",
       "contractingUnit": "084-2025-OLOG-OEA-INO",
       "executionTerm": "2025-11-21 - 2028-12-18",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Licitación Pública Abreviada",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "LIMA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 198000,
@@ -10624,8 +11274,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1166863",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1166863",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-2bc3c2038bf669f858a880e2bacca5d8c661c482c234fbf2458d929c480d7bfa",
+          "recordId": "1166863",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10637,12 +11304,18 @@
       "year": 2025,
       "title": "ADQUISICION DE PRODUCTOS FARMACEUTICOS SIN FICHA TECNICA APROBADA GRUPO I PARA BENEFICIARIOS DE LA IAFAS EP",
       "procedureNumber": "1117933",
-      "agencyName": "Entidad OECE 200683",
+      "agencyName": "IAFAS DEL EJERCITO DEL PERU (FOSPEME)",
       "agencyCode": "200683",
       "contractingUnit": "133",
       "executionTerm": "2025-07-01 - 2027-06-30",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Licitación Pública",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "JESUS MARIA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 93408,
@@ -10665,8 +11338,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1117933",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1117933",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-2b8f0350e1efddc3780c233649ce69565d4006102162e57fa188d8f390868a3b",
+          "recordId": "1117933",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10678,19 +11368,25 @@
       "year": 2025,
       "title": "ADQUISICIÓN DE ACCESORIOS Y MATERIALES PARA EL TALLER DE PARCHADO, ENLLANTE Y DESENLLANTE DE NEUMATICOS PARA LA DISTINTAS UNIDADES VEHICULARES PERTENECIENTES A LA MUNICIPALIDAD DISTRITAL VEINTISÉIS DE OCTUBRE",
       "procedureNumber": "1098333",
-      "agencyName": "Entidad OECE 201043",
+      "agencyName": "MUNICIPALIDAD DISTRITAL VEINTISEIS DE OCTUBRE",
       "agencyCode": "201043",
       "contractingUnit": "142",
       "executionTerm": "2025-04-03 - 2025-04-07",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-03-25",
+      "bidderCount": 3,
+      "procurementMethodDetails": "Comparación de Precios",
+      "buyerDepartment": "PIURA",
+      "buyerRegion": "PIURA",
+      "buyerCommune": "VEINTISEIS DE OCTUBRE",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 63570,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "GALVEZ PINTADO MEXSAR",
       "supplierDocument": "10709045933",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2316821-1",
@@ -10706,8 +11402,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1098333",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1098333",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-ea989bb722716111460f100b0dac6d5df36465f1c19c7c4e950a9a9234e7e25b",
+          "recordId": "1098333",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10719,12 +11432,18 @@
       "year": 2025,
       "title": "SUMINISTRO DE MATERIAL GRANULAR PARA AFIRMADO A - 1, SEGUN ESPECIFICACIONES TÉCNICAS, DERIVADA DE SIE N° 19 PARA EL MEJORAMIENTO DEL SERVICIO DE FORMACION DE PREGRADO EN EDUCACION SUPERIOR UNIVERSITARIA EN LA ESCUELA PROFESIONAL DE CIENCIAS DE LA COMUNICACION SOCIAL DE LA UNIVERSIDAD NACIONAL",
       "procedureNumber": "1153007",
-      "agencyName": "Entidad OECE 001897",
+      "agencyName": "UNIVERSIDAD NACIONAL DEL ALTIPLANO",
       "agencyCode": "001897",
       "contractingUnit": "CONTRATO N° 088-2025-UA/DGA-UNA-PUNO",
       "executionTerm": "2025-11-08 - 2025-12-17",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Adjudicación Simplificada",
+      "buyerDepartment": "PUNO",
+      "buyerRegion": "PUNO",
+      "buyerCommune": "PUNO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 159408,
@@ -10747,8 +11466,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1153007",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1153007",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-0b72805238a951ca1e3099c8d5f3455bf4669237f86c17546a0fed86cb8a1e14",
+          "recordId": "1153007",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10760,19 +11496,25 @@
       "year": 2025,
       "title": "SERVICIO DE PUBLICIDAD DIGITAL EN FACEBOOK E INSTAGRAM PARA LA CAMPAÑA ¿REACTIVACIÓN NORTE 2DA ETAPA¿",
       "procedureNumber": "1142800",
-      "agencyName": "Entidad OECE 001947",
+      "agencyName": "COMISION DE PROMOCION DEL PERU PARA LA EXPORTACION Y EL TURISMO - PROMPERU",
       "agencyCode": "001947",
       "contractingUnit": "OS25080194",
       "executionTerm": "2025-08-20 - 2025-09-19",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-08-19",
+      "bidderCount": 1,
+      "procurementMethodDetails": "Contratación Internacional",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "SAN ISIDRO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 6000,
         "currency": "USD",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "META PLATFORMS IRELAND LIMITED",
       "supplierDocument": "L0606465503",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2342406-1",
@@ -10788,8 +11530,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1142800",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1142800",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-22a8cbfbaa82d444d3706c9f9b3087cf833395d425122384e8537f47e42a0859",
+          "recordId": "1142800",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10801,12 +11560,18 @@
       "year": 2025,
       "title": "SERVICIO DE RENOVACIÓN DE GARANTÍA, SOPORTE TÉCNICO Y MANTENIMIENTO PREVENTIVO DE LA PLATAFORMA HPE O EQUIVALENTE DEL CENTRO DE DATOS DEL MTPE",
       "procedureNumber": "1137648",
-      "agencyName": "Entidad OECE 000023",
+      "agencyName": "MINISTERIO DE TRABAJO Y PROMOCION DEL EMPLEO",
       "agencyCode": "000023",
       "contractingUnit": "023-2025-MTPE",
       "executionTerm": "2025-11-05 - 2027-11-24",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Concurso Público de Servicios",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "JESUS MARIA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 1452000,
@@ -10829,8 +11594,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1137648",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1137648",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-62e02d3c1ca267884a285691c59713da7ff99e74332ee855f737968f7a1e1a43",
+          "recordId": "1137648",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10842,12 +11624,18 @@
       "year": 2025,
       "title": "CONTRATACION DEL SERVICIO PARA LA ELABORACION DEL ESTUDIO DE PREINVERSION DEL PROYECTO: MEJORAMIENTO DE LOS SERVICIOSOPERATIVOS O MISIONALES INSTITUCIONALES EN LA RED INTEGRAL DE SALUD JAEN",
       "procedureNumber": "1146808",
-      "agencyName": "Entidad OECE 010433",
+      "agencyName": "GOBIERNO REGIONAL DE CAJAMARCA - GERENCIA SUB REGIONAL JAEN",
       "agencyCode": "010433",
       "contractingUnit": "6",
       "executionTerm": "2025-09-26 - 2025-12-30",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Concurso Público Abreviado",
+      "buyerDepartment": "CAJAMARCA",
+      "buyerRegion": "JAEN",
+      "buyerCommune": "JAEN",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 129960,
@@ -10870,8 +11658,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1146808",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1146808",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-bd74ba4d4eaba449eb09595ac26117779303d57894e844e61ce79ec1ea0ab44e",
+          "recordId": "1146808",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10883,12 +11688,18 @@
       "year": 2025,
       "title": "SERVICIO DE UNA CONSULTA SOCIAL PARA LA PROPUESTA DE LINEAMIENTOS CONCEPTUALES Y PLAN MUSEOLOGICO DEL PROYECTO:MEJORAMIENTO Y AMPLIACIÓNDE LOS SERVICIOS DEL SANTUARIO DE LA MEMORIA LA HOYADA EN EL DISTRITO DE ANDRES AVELINO CACERES - PROVINCIA DE HUAMANGA - DEPARTAMENTO DE AYACUCHO",
       "procedureNumber": "1126429",
-      "agencyName": "Entidad OECE 000035",
+      "agencyName": "GOBIERNO REGIONAL DE AYACUCHO SEDE CENTRAL",
       "agencyCode": "000035",
       "contractingUnit": "136-2025-GRA-SEDECENTRAL-OAPF",
       "executionTerm": "2025-08-22 - 2025-11-28",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Adjudicación Simplificada",
+      "buyerDepartment": "AYACUCHO",
+      "buyerRegion": "HUAMANGA",
+      "buyerCommune": "AYACUCHO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 190000,
@@ -10911,8 +11722,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1126429",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1126429",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-1dd3ec3d44134cf3c06790f9f9b9488ca39db8e8eebd89791e042452c998c440",
+          "recordId": "1126429",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10924,19 +11752,25 @@
       "year": 2025,
       "title": "ADQUISICION DE TACHOS DE METAL CON INSTALACIÓN A TODO COSTO PARA LA IOAR: ¿REMODELACIÓN DE BERMA; EN EL (LA) ALAMEDA AV. COLONIZADORES, DISTRITO DE MAJES, PROVINCIA CAYLLOMA, DEPARTAMENTO DE AREQUIPA¿",
       "procedureNumber": "1164567",
-      "agencyName": "Entidad OECE 002606",
+      "agencyName": "MUNICIPALIDAD DISTRITAL DE MAJES - VILLA EL PEDREGAL",
       "agencyCode": "002606",
       "contractingUnit": "1085",
       "executionTerm": "2025-11-14 - 2026-03-31",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-11-04",
+      "bidderCount": 4,
+      "procurementMethodDetails": "Comparación de Precios",
+      "buyerDepartment": "AREQUIPA",
+      "buyerRegion": "CAYLLOMA",
+      "buyerCommune": "MAJES",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 74880,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "PRODCAT E.I.R.L.",
       "supplierDocument": "20614103842",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2360398-1",
@@ -10952,8 +11786,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1164567",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1164567",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-cf6e24b52f7ce80d3a94c85ee2340a68ec5f8d81b0373b2795dc216da0bb5283",
+          "recordId": "1164567",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -10965,19 +11816,25 @@
       "year": 2025,
       "title": "AQUISICION DE ASFALTO LIQUIDO CUT BACK MC-30(CURADO MEDIO GRADO MC-30)SEGÚN ESPECIFICACIONES TECNICAS PARA LA META MEJORAMIENTO DE LA CARRETERA PU 146; EMP PE - 34 I (HUANCANÉ) - HUERTAPATA - VISCACHANI - QUELLAHUYO - EMP PE - 34 (CACUÑA), DISTRITO DE HUANCANE - PROVINCIA DE HUANCANE - DEPARTAMENTO",
       "procedureNumber": "1132181",
-      "agencyName": "Entidad OECE 000049",
+      "agencyName": "GOBIERNO REGIONAL DE PUNO SEDE CENTRAL",
       "agencyCode": "000049",
       "contractingUnit": "CONTRATO N° 111-2025-SIE-GR PUNO",
       "executionTerm": "2025-10-22 - 2026-02-18",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-08-18",
+      "bidderCount": 13,
+      "procurementMethodDetails": "Subasta Inversa Electrónica",
+      "buyerDepartment": "PUNO",
+      "buyerRegion": "PUNO",
+      "buyerCommune": "PUNO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 482220,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "CONSORCIO NILS SOCIEDAD ANONIMA CERRADA",
       "supplierDocument": "20574690219",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2355815-1",
@@ -10993,8 +11850,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1132181",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1132181",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-10090ee4b9a69b3db411208e8b1a892d6c7e1768214b6d684f911fa3fe570d24",
+          "recordId": "1132181",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11006,19 +11880,25 @@
       "year": 2025,
       "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LA EFICIENCIA DEL SISTEMA HIDRÁULICO DE CONDUCCIÓN Y DISTRIBUCIÓN DE PAMPA GRANDE - SECTOR RIEGO CHONGOYAPE\" CUI 2360385",
       "procedureNumber": "1136235",
-      "agencyName": "Entidad OECE 010353",
+      "agencyName": "GOBIERNO REGIONAL DE LAMBAYEQUE - PROYECTO ESPECIAL OLMOS - TINAJONES",
       "agencyCode": "010353",
       "contractingUnit": "CONTRATO N° 000021-2025-GR.LAMB/PEOT-GG [515617519 - 46]",
       "executionTerm": "2025-11-21 - 2027-11-20",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-08-18",
+      "bidderCount": 61,
+      "procurementMethodDetails": "Concurso Público",
+      "buyerDepartment": "LAMBAYEQUE",
+      "buyerRegion": "CHICLAYO",
+      "buyerCommune": "CHICLAYO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 2304694.59,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "CONSORCIO VM INGENIEROS",
       "supplierDocument": "1704847",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2351399-1",
@@ -11034,8 +11914,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1136235",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1136235",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-9c078e515b22c7a05ea0f28636143ccd24b0ec81f78b119a04329c4c1352aec8",
+          "recordId": "1136235",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11047,12 +11944,18 @@
       "year": 2025,
       "title": "ADQUISICION DE SEIS (06) CAMIONETAS PICK - UP DOBLE CABINA Y TRACCION 4X4 DEBIDAMENTE EQUIPADAS  PARA PATRULLAJE DE SERENAZGO EN EL DISTRITO DE LA ESPERANZA PROVINCIA DE TRUJILLO DEPARTAMENTO DE LA LIBERTAD",
       "procedureNumber": "1139903",
-      "agencyName": "Entidad OECE 001194",
+      "agencyName": "MUNICIPALIDAD DISTRITAL DE LA ESPERANZA - TRUJILLO",
       "agencyCode": "001194",
       "contractingUnit": "CONTRATO N°013-2025",
       "executionTerm": "2025-09-11 - 2025-09-26",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Licitación Pública Abreviada",
+      "buyerDepartment": "LA LIBERTAD",
+      "buyerRegion": "TRUJILLO",
+      "buyerCommune": "LA ESPERANZA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 990000,
@@ -11075,8 +11978,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1139903",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1139903",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-636da6538742abfee34519433a878fa72b5a05124f15bf463282a356d2e2f06d",
+          "recordId": "1139903",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11088,12 +12008,18 @@
       "year": 2025,
       "title": "Mantenimiento Rutinario del Camino Vecinal No Pavimentado, Tramo: EMP. AP-100 (CCORIPACCHA) - EMP. AP-584 (ROSASPATA), longitud de 8.385Km, Distrito(s) de KISHUARA, Provincia de ANDAHUAYLAS, Región de APURIMAC.",
       "procedureNumber": "1092314",
-      "agencyName": "Entidad OECE 200252",
+      "agencyName": "INSTITUTO VIAL PROVINCIAL DE ANDAHUAYLAS",
       "agencyCode": "200252",
       "contractingUnit": "CONTRATO GERENCIAL N° 29-2025-MPA/IVP-GG",
       "executionTerm": "2025-04-10 - 2025-12-09",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Adjudicación Simplificada",
+      "buyerDepartment": "APURIMAC",
+      "buyerRegion": "ANDAHUAYLAS",
+      "buyerCommune": "ANDAHUAYLAS",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 41589.6,
@@ -11116,8 +12042,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1092314",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1092314",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-47915c06949bbf632d3cce8cd2f594f2c854b84ca1727753f0e09016222caccc",
+          "recordId": "1092314",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11129,12 +12072,18 @@
       "year": 2025,
       "title": "ADQUISICION DE CEMENTO PORTLAND TIPO I",
       "procedureNumber": "1134317",
-      "agencyName": "Entidad OECE 000645",
+      "agencyName": "MUNICIPALIDAD DISTRITAL DE CHILETE",
       "agencyCode": "000645",
       "contractingUnit": "N° 006-2025-MDCH/GM-OAyCP",
       "executionTerm": "2025-09-01 - 2025-09-30",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Subasta Inversa Electrónica",
+      "buyerDepartment": "CAJAMARCA",
+      "buyerRegion": "CONTUMAZA",
+      "buyerCommune": "CHILETE",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 177192.4,
@@ -11157,8 +12106,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1134317",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1134317",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-42326e915f6f269e19e06ab84ecd33ac42eeb2408f6824df67b1b0e3fe65360d",
+          "recordId": "1134317",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11170,12 +12136,18 @@
       "year": 2025,
       "title": "CONTRATACION PARA LA EJECUCION DE OBRA: RENOVACION DE PUENTE; EN EL (LA) CAMINO VECINAL PU-1103 (PUENTE CHILA), TRAMO: EMP. 36B - EMP 665 , DISTRITO DE PICHACANI, PROVINCIA PUNO, DEPARTAMENTO PUNO",
       "procedureNumber": "1157076",
-      "agencyName": "Entidad OECE 001648",
+      "agencyName": "MUNICIPALIDAD PROVINCIAL DE PUNO",
       "agencyCode": "001648",
       "contractingUnit": "055-2025-MPP/GA",
       "executionTerm": "2025-11-19 - 2026-02-28",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Licitación Pública Abreviada",
+      "buyerDepartment": "PUNO",
+      "buyerRegion": "PUNO",
+      "buyerCommune": "PUNO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 423441.6,
@@ -11198,8 +12170,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1157076",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1157076",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-b187a0537cf785fe61b2b4c2d2a63ebcb0be6c03c5b525c921635136811befcc",
+          "recordId": "1157076",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11211,19 +12200,25 @@
       "year": 2025,
       "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA EJECUCIÓN DE IOARR: ¿RENOVACIÓN DE PUENTE: EN EL (LA) LUPUCHE, PUENTE SALITRE EN EL TRAMO EMP. PE-1N (NUEVO PIEDRAL) ¿ PIEDRAL ANTIGUO ¿ EMP. PI-1034 (DV. EL TALLAN) DISTRITO DE EL TALLAN, PROVINCIA DE PIURA, DEPARTAMENTO DE",
       "procedureNumber": "1134700",
-      "agencyName": "Entidad OECE 001584",
+      "agencyName": "MUNICIPALIDAD PROVINCIAL DE PIURA",
       "agencyCode": "001584",
       "contractingUnit": "N°54-2025-OA/MPP",
       "executionTerm": "2025-08-27 - 2025-11-10",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-08-15",
+      "bidderCount": 13,
+      "procurementMethodDetails": "Concurso Público Abreviado",
+      "buyerDepartment": "PIURA",
+      "buyerRegion": "PIURA",
+      "buyerCommune": "PIURA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 112464,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "CONSORCIO LUPUCHE",
       "supplierDocument": "1709475",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2343822-1",
@@ -11239,8 +12234,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1134700",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1134700",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-51b71a78ff724125e7435135c839faaa145211a293a7a67232afd602c5ca4e46",
+          "recordId": "1134700",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11252,12 +12264,18 @@
       "year": 2025,
       "title": "CONTRATACIÓN DE LA CONSULTORÍA DE OBRA PARA LA SUPERVISIÓN DE LA OBRA: \"MEJORAMIENTO DE LOS SERVICIO EDUCATIVOS EN LA INSTITUCIÓN EDUCATIVA N° 40199 CIUDAD MI TRABAJO EN LA URBANIZACIÓN CIUDAD MI TRABAJO DEL DISTRITO DE SOCABAYA - PROVINCIA DE AREQUIPA - DEPARTAMENTO DE AREQUIPA\" - I ETAPA - CUI N° 2493448",
       "procedureNumber": "1123318",
-      "agencyName": "Entidad OECE 000416",
+      "agencyName": "MUNICIPALIDAD DISTRITAL DE SOCABAYA",
       "agencyCode": "000416",
       "contractingUnit": "CONTRATO N° 051-2025-MDS-GM",
       "executionTerm": "2025-07-23 - 2025-12-19",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Adjudicación Simplificada",
+      "buyerDepartment": "AREQUIPA",
+      "buyerRegion": "AREQUIPA",
+      "buyerCommune": "SOCABAYA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 82968.71,
@@ -11280,8 +12298,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1123318",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1123318",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-7b2e5a6e3a1a3f0407e1b329a814eb5f7087f95ad715ec4879be0e5f08ada1ea",
+          "recordId": "1123318",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11293,12 +12328,18 @@
       "year": 2025,
       "title": "CONTRATACION DEL SERVICIO A TODO COSTO DE FABRICACION, INSTALACION Y PINTADO DE JUEGOS INFANTILES PARA LA OBRA CREACION DEL PARQUE RECREATIVO INFANTIL EN LA ASOC PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO MZ E-6 LT 1, AOCIACION PRO VIVIENDA TALLER INDUSTRIAL VILLA PARAISO DEL DISTRITO DE CERRO COL",
       "procedureNumber": "1142722",
-      "agencyName": "Entidad OECE 000399",
+      "agencyName": "MUNICIPALIDAD DISTRITAL DE CERRO COLORADO",
       "agencyCode": "000399",
       "contractingUnit": "CONTRATO N° 47-2025-MDCC",
       "executionTerm": "2025-10-14 - 2025-11-04",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Concurso Público Abreviado",
+      "buyerDepartment": "AREQUIPA",
+      "buyerRegion": "AREQUIPA",
+      "buyerCommune": "CERRO COLORADO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 55500,
@@ -11321,8 +12362,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1142722",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1142722",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-28b1cff0b718cd81403f9c417a52e071ddd7387dc0686e3d169e6c03355acc1a",
+          "recordId": "1142722",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11334,12 +12392,18 @@
       "year": 2025,
       "title": "CONTRATACION DEL SERVICIO DE ESPECIALISTA EN GESTION AMBIENTAL, SEGURIDAD Y SALUD OCUPACIONAL PARA EL PROYECTO: \"MEJORAMIENTO DE LA INFRAESTRUCTURA EDUCATIVA Y COMPLEMENTARIA DE LA ESCUELA SUPERIOR DE FORMACION ARTISTICA PUBLICA EDUARDO MEZA SARAVIA - YARINACOCHA - CORONEL PORTILLO - UCAYALI\". CUI N° 2424348.",
       "procedureNumber": "1112914",
-      "agencyName": "Entidad OECE 000053",
+      "agencyName": "GOBIERNO REGIONAL DE UCAYALI SEDE CENTRAL",
       "agencyCode": "000053",
       "contractingUnit": "036-2025-GRU-GGR-ORA",
       "executionTerm": "2025-05-09 - 2026-08-07",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Adjudicación Simplificada",
+      "buyerDepartment": "UCAYALI",
+      "buyerRegion": "CORONEL PORTILLO",
+      "buyerCommune": "CALLERIA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 148680,
@@ -11362,8 +12426,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1112914",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1112914",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-61708eb2d61cc41a6f608ee6bde5a39a360869f03d73114ecb409b60705513a9",
+          "recordId": "1112914",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11375,19 +12456,25 @@
       "year": 2026,
       "title": "CONTRATACIÓN DEL SERVICIO DE CONSULTORIA DE OBRA PARA LA ELABORACION DE EXPEDIENTE TECNICO DEL PROYECTO: MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE AGUA POTABLE RURAL Y MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE ALCANTARILLADO U OTRAS FORMAS DE DISPOSICIÓN SANITARIA DE EXCRETAS EN EL CASERIO MAZARAY D",
       "procedureNumber": "1186506",
-      "agencyName": "Entidad OECE 001871",
+      "agencyName": "MUNICIPALIDAD PROVINCIAL DE CORONEL PORTILLO",
       "agencyCode": "001871",
       "contractingUnit": "000001-2026-MPCP/ALC-GM",
       "executionTerm": "2026-03-04 - 2026-07-01",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2026-02-09",
+      "bidderCount": 15,
+      "procurementMethodDetails": "Concurso Público Abreviado",
+      "buyerDepartment": "UCAYALI",
+      "buyerRegion": "CORONEL PORTILLO",
+      "buyerCommune": "CALLERIA",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 318168,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "CONSORCIO GRUPO ELOHIM",
       "supplierDocument": "1763739",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2379625-1",
@@ -11403,8 +12490,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1186506",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1186506",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-86d2e50f740c28e0140d951c4d20d0a75997eb3fcaa9ec56057376d3067348c1",
+          "recordId": "1186506",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11416,12 +12520,18 @@
       "year": 2025,
       "title": "SERVICIO DE OPERADOR TURÍSTICO PARA VIAJE DE INFLUENCERS ESPAÑA 2025",
       "procedureNumber": "1165169",
-      "agencyName": "Entidad OECE 001947",
+      "agencyName": "COMISION DE PROMOCION DEL PERU PARA LA EXPORTACION Y EL TURISMO - PROMPERU",
       "agencyCode": "001947",
       "contractingUnit": "OS25110303",
       "executionTerm": "2025-11-25 - 2025-12-17",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": null,
+      "bidderCount": null,
+      "procurementMethodDetails": "Concurso Público Abreviado",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "SAN ISIDRO",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 45000,
@@ -11444,8 +12554,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1165169",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1165169",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-314340fe454d2939a1f6867e460636eb65e7868debc70bd8ae6eb7815cab1824",
+          "recordId": "1165169",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },
@@ -11457,19 +12584,25 @@
       "year": 2025,
       "title": "SERVICIO DE ALIMENTACION PARA PACIENTES Y PERSONAL CON 12 HORAS CONTINUAS DEL HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR POR UN PERÍODO DE 03 MESES",
       "procedureNumber": "1109454",
-      "agencyName": "Entidad OECE 203086",
+      "agencyName": "HOSPITAL DE EMERGENCIAS VILLA EL SALVADOR",
       "agencyCode": "203086",
       "contractingUnit": "18-2025",
       "executionTerm": "2025-04-22 - 2025-06-23",
       "executionTermType": "vigencia_contractual",
       "coordinates": null,
+      "awardedAt": "2025-04-14",
+      "bidderCount": 1,
+      "procurementMethodDetails": "Contratación Directa",
+      "buyerDepartment": "LIMA",
+      "buyerRegion": "LIMA",
+      "buyerCommune": "VILLA EL SALVADOR",
       "evidenceLevel": "official_dataset",
       "amount": {
         "value": 1398886,
         "currency": "PEN",
         "label": "monto_contratado"
       },
-      "supplierName": null,
+      "supplierName": "CORPORACION NET COM PERU DRY CLEANERS SOCIEDAD ANONIMA CERRADA",
       "supplierDocument": "20547662203",
       "receipt": {
         "receiptId": "PE-OECE-CONTRATOS-2320371-1",
@@ -11485,8 +12618,25 @@
         "extractedAt": "2026-05-16T06:04:40.538Z",
         "parserVersion": "cross-country@1"
       },
+      "relatedReceipts": [
+        {
+          "receiptId": "PE-OECE-OCDS-1109454",
+          "sourceId": "PE-OECE-OCDS",
+          "sourceName": "Portal de contrataciones abiertas OCDS",
+          "sourceUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1109454",
+          "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+          "snapshotHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+          "rowHash": "sha256-7b3735f12e338fdfeeb2e3c8a472bc47a52899f670d4753a615d095f49d4f072",
+          "recordId": "1109454",
+          "locatorType": "official_detail",
+          "extractedAt": "2026-05-16T06:04:40.538Z",
+          "parserVersion": "peru-ocds-release-link@1"
+        }
+      ],
       "caveats": [
         "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
+        "Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar.",
         "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada."
       ]
     },

@@ -155,6 +155,119 @@ test("buildPeruContractCases turns OECE contract rows into supplier-aware cases"
   assert.equal(caseFile?.receipt.locatorType, "official_detail");
 });
 
+test("buildPeruContractCases enriches OECE contracts with OCDS release evidence", () => {
+  const releaseUrl = "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/1122118";
+  const [caseFile] = buildPeruContractCases(
+    [
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Contratacion de maquinaria pesada",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "1",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "113868.79",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "2025-06-03",
+        fecha_suscripcion_contrato: "2025-06-03",
+      },
+    ],
+    {
+      ...options,
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    },
+    25,
+    {
+      source: {
+        ...options,
+        sourceId: "PE-OECE-OCDS",
+        sourceName: "Portal de contrataciones abiertas OCDS",
+        sourceUrl: "https://contratacionesabiertas.oece.gob.pe/descargas",
+        rawPath: "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+      },
+      releases: [
+        {
+          tenderId: "1122118",
+          fetchUrl: releaseUrl,
+          package: {
+            records: [
+              {
+                ocid: "ocds-dgv273-seacev3-1122118",
+                compiledRelease: {
+                  buyer: {
+                    id: "PE-CONSUCODE-10373",
+                    name: "GOBIERNO REGIONAL DE AMAZONAS - GERENCIA SUBREGIONAL BAGUA",
+                  },
+                  tender: {
+                    id: "1122118",
+                    numberOfTenderers: 1,
+                    procurementMethodDetails: "Contratación Directa",
+                  },
+                  parties: [
+                    {
+                      id: "PE-CONSUCODE-10373",
+                      name: "GOBIERNO REGIONAL DE AMAZONAS - GERENCIA SUBREGIONAL BAGUA",
+                      address: {
+                        locality: "BAGUA",
+                        region: "BAGUA",
+                        department: "AMAZONAS",
+                      },
+                    },
+                    {
+                      id: "PE-RUC-20487924050",
+                      name: "INVERSIONES Y SERVICIOS MULTIPLES \"J&F RUAR\" E.I.R.L.",
+                    },
+                  ],
+                  awards: [
+                    {
+                      id: "1122118-20487924050",
+                      date: "2025-06-03T00:00:00-05:00",
+                      suppliers: [
+                        {
+                          id: "PE-RUC-20487924050",
+                          name: "INVERSIONES Y SERVICIOS MULTIPLES \"J&F RUAR\" E.I.R.L.",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  );
+
+  const peruCase = caseFile as typeof caseFile & {
+    awardedAt: string | null;
+    bidderCount: number | null;
+    procurementMethodDetails: string | null;
+    buyerDepartment: string | null;
+    buyerRegion: string | null;
+    buyerCommune: string | null;
+  };
+
+  assert.equal(caseFile?.agencyName, "GOBIERNO REGIONAL DE AMAZONAS - GERENCIA SUBREGIONAL BAGUA");
+  assert.equal(caseFile?.supplierName, "INVERSIONES Y SERVICIOS MULTIPLES \"J&F RUAR\" E.I.R.L.");
+  assert.equal(peruCase?.awardedAt, "2025-06-03");
+  assert.equal(peruCase?.bidderCount, 1);
+  assert.equal(peruCase?.procurementMethodDetails, "Contratación Directa");
+  assert.equal(peruCase?.buyerDepartment, "AMAZONAS");
+  assert.equal(peruCase?.buyerRegion, "BAGUA");
+  assert.equal(peruCase?.buyerCommune, "BAGUA");
+  assert.equal(caseFile?.relatedReceipts?.[0]?.sourceId, "PE-OECE-OCDS");
+  assert.equal(caseFile?.relatedReceipts?.[0]?.sourceUrl, releaseUrl);
+});
+
 test("buildPeruContractCases normalizes OECE Excel serial dates for filters and validity", () => {
   const [caseFile] = buildPeruContractCases(
     [

@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
+import { readXlsxRows } from "../src/lib/data/xlsx.ts";
+
 const chileCompraTicket =
   process.env.CHILECOMPRA_TICKET ?? "F8537A18-6766-4DEF-9E59-426B4FEE2844";
 const chileCompraDate = process.env.CHILECOMPRA_SAMPLE_DATE ?? "15052026";
@@ -22,6 +24,10 @@ const arSuppliersOutputPath = new URL(
 );
 const peContractsOutputPath = new URL(
   "../data/official/pe/oece-contratos-2025.xlsx",
+  import.meta.url,
+);
+const peOcdsOutputPath = new URL(
+  "../data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
   import.meta.url,
 );
 const clOutputPath = new URL(
@@ -57,6 +63,7 @@ const arSuppliersSnapshot = await fetchTextSnapshot({
 });
 const peSnapshot = await fetchPeruMefSample();
 const peContractsSnapshot = await fetchPeruOeceContracts();
+const peOcdsSnapshot = await fetchPeruOcdsContractReleases();
 const clSnapshot = await fetchChileCompraSample();
 
 await writeFile(manifestPath, `${JSON.stringify({
@@ -66,6 +73,7 @@ await writeFile(manifestPath, `${JSON.stringify({
     arSuppliersSnapshot,
     peSnapshot,
     peContractsSnapshot,
+    peOcdsSnapshot,
     clSnapshot,
   ],
 }, null, 2)}\n`, "utf8");
@@ -147,6 +155,56 @@ async function fetchPeruOeceContracts() {
   };
 }
 
+async function fetchPeruOcdsContractReleases() {
+  const buffer = await readFile(peContractsOutputPath);
+  const rows = readXlsxRows(buffer, { limit: 30 }).rows;
+  const tenderIds = Array.from(new Set(
+    rows.slice(0, 25)
+      .map((row) => String(row.codigoconvocatoria ?? "").trim())
+      .filter(Boolean),
+  ));
+  const fetchedAt = new Date().toISOString();
+  const releases = [];
+
+  for (const tenderId of tenderIds) {
+    const fetchUrl = buildPeruOcdsReleaseUrl(tenderId);
+    const response = await fetch(fetchUrl);
+    if (!response.ok) {
+      throw new Error(`PE OECE OCDS release ${tenderId} failed with ${response.status}`);
+    }
+    releases.push({ tenderId, fetchUrl, package: await response.json() });
+    await sleep(250);
+  }
+
+  const payload = {
+    sourceId: "PE-OECE-OCDS",
+    sourceName: "Portal de contrataciones abiertas OCDS",
+    sourceUrl: "https://contratacionesabiertas.oece.gob.pe/descargas",
+    apiPattern: "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/{tenderId}",
+    fetchedAt,
+    partial: true,
+    selection: {
+      basis: "First 25 PE-OECE-CONTRATOS rows used by the demo case builder",
+      tenderIds,
+    },
+    releases,
+  };
+  const text = `${JSON.stringify(payload)}\n`;
+  await writeFile(peOcdsOutputPath, text, "utf8");
+
+  return {
+    sourceId: "PE-OECE-OCDS",
+    rawPath: "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+    fetchUrl: payload.apiPattern,
+    fetchedAt,
+    contentType: "application/json",
+    recordCount: releases.length,
+    partial: true,
+    fileHash: hashText(text),
+    byteSize: Buffer.byteLength(text, "utf8"),
+  };
+}
+
 async function fetchChileCompraSample() {
   try {
     const list = await fetchJson<ChileListResponse>(clListUrl);
@@ -219,6 +277,10 @@ async function fetchChileDetail(item: ChileListItem): Promise<ChileDetailRespons
 
 function buildChileCompraDetailUrl(code: string): string {
   return `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?codigo=${encodeURIComponent(code)}&ticket=${chileCompraTicket}`;
+}
+
+function buildPeruOcdsReleaseUrl(tenderId: string): string {
+  return `https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/${encodeURIComponent(tenderId)}`;
 }
 
 function trimToCompleteRows(text: string): string {

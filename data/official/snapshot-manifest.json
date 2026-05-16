@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-16T05:40:02.581Z",
+  "generatedAt": "2026-05-16T06:25:29.118Z",
   "snapshots": [
     {
       "sourceId": "AR-CONTRATAR-CONTRATOS",
@@ -44,6 +44,17 @@
       "partial": false,
       "fileHash": "sha256-9041eaec88018edb5944d43a96ba2b25dc476cb235615ea85a2fa123d2c19fbb",
       "byteSize": 15827272
+    },
+    {
+      "sourceId": "PE-OECE-OCDS",
+      "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+      "fetchUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/{tenderId}",
+      "fetchedAt": "2026-05-16T06:25:29.118Z",
+      "contentType": "application/json",
+      "recordCount": 25,
+      "partial": true,
+      "fileHash": "sha256-e1b6f25473663f3c7c6e0459502a851debc58efb65c78bf2169ee590dcacbc74",
+      "byteSize": 1873629
     },
     {
       "sourceId": "CL-MERCADO-PUBLICO-API",

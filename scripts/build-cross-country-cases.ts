@@ -18,6 +18,10 @@ const arWorksPath = new URL("../data/official/ar/onc-contratar-obras.csv", impor
 const arContractsPath = new URL("../data/official/ar/onc-contratar-contratos.csv", import.meta.url);
 const arSuppliersPath = new URL("../data/official/ar/sipro-proveedores.csv", import.meta.url);
 const peContractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
+const peOcdsPath = new URL(
+  "../data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+  import.meta.url,
+);
 const clPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
   import.meta.url,
@@ -30,6 +34,7 @@ const arWorksText = await readFile(arWorksPath, "utf8");
 const arContractsText = await readFile(arContractsPath, "utf8");
 const arSuppliersText = await readFile(arSuppliersPath, "utf8");
 const peContractsBuffer = await readFile(peContractsPath);
+const peOcdsText = await readFile(peOcdsPath, "utf8");
 const clText = await readFile(clPath, "utf8");
 const arWorksProfile = profileCsvSnapshot({
   sourceId: "AR-CONTRATAR-OBRAS",
@@ -65,6 +70,12 @@ const peContractsProfile = profileXlsxSnapshot({
   sourceId: "PE-OECE-CONTRATOS",
   rawPath: "data/official/pe/oece-contratos-2025.xlsx",
   buffer: peContractsBuffer,
+});
+const peOcdsProfile = profileJsonSnapshot({
+  sourceId: "PE-OECE-OCDS",
+  rawPath: "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+  text: peOcdsText,
+  recordPath: ["releases"],
 });
 
 const peCases = buildPeruBudgetCases(peText, {
@@ -121,6 +132,17 @@ const peContractCases = buildPeruContractCases(peContractRows, {
   fileHash: peContractsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+}, 25, {
+  releases: (JSON.parse(peOcdsText) as { releases: [] }).releases,
+  source: {
+    sourceId: "PE-OECE-OCDS",
+    sourceName: "Portal de contrataciones abiertas OCDS",
+    sourceUrl: "https://contratacionesabiertas.oece.gob.pe/descargas",
+    rawPath: "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+    fileHash: peOcdsProfile.fileHash,
+    extractedAt: generatedAt,
+    parserVersion: "peru-ocds@1",
+  },
 });
 const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot, {
   sourceId: "CL-MERCADO-PUBLICO-API",
