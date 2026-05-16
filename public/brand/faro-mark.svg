@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Faro</title>
+  <desc id="desc">Marca de Faro: un faro de líneas terminales ilumina evidencia.</desc>
+  <rect width="96" height="96" fill="#030303"/>
+  <path d="M14 47h23M59 47h23" stroke="#f3c969" stroke-width="2" stroke-linecap="square" opacity=".95"/>
+  <path d="M9 42h27M60 42h27M20 52h16M60 52h16" stroke="#f3c969" stroke-width="1.5" stroke-linecap="square" opacity=".62"/>
+  <path d="M24 37h13M59 37h13M27 57h10M59 57h10" stroke="#f3c969" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+  <path d="M42 28h12l5 50H37l5-50Z" fill="#030303" stroke="#f5f0df" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M34 78h28l5 8H29l5-8Z" fill="#030303" stroke="#f5f0df" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M38 28h20M41 21h14M44 15h8M47 9h2" stroke="#f5f0df" stroke-width="3" stroke-linecap="square"/>
+  <path d="M43 35h10M42 43h12M41 51h14M40 59h5M51 59h5M39 67h6M51 67h6" stroke="#f5f0df" stroke-width="3" stroke-linecap="square"/>
+  <path d="M47 31v44" stroke="#f5f0df" stroke-width="1.5" stroke-linecap="square" opacity=".72"/>
+  <path d="M43 44h10v8H43z" fill="#f3c969"/>
+  <path d="M9 48h78" stroke="#f3c969" stroke-width="2.5" stroke-linecap="square"/>
+  <path d="M16 82h9M33 88h8M53 88h8M71 82h9M21 88h5M66 88h5" stroke="#f5f0df" stroke-width="2" stroke-linecap="square" opacity=".72"/>
+  <path d="M18 43h3M25 43h3M68 43h3M75 43h3M22 53h3M71 53h3" stroke="#f5f0df" stroke-width="1.5" stroke-linecap="square" opacity=".52"/>
+</svg>

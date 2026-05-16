@@ -1,0 +1,29 @@
+{
+  "name": "faro-indies",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1 -p 3002",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 3002",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/argentinaWorks.test.ts",
+    "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.16.0",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
+  }
+}
