@@ -1,13 +1,17 @@
 import payload from "@/data/argentinaWorkCases.json";
+import crossCountryPayload from "@/data/crossCountryCaseFiles.json";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCoverageReport, type CoverageReport } from "@/lib/data/coverage";
-import type { CsvSnapshotProfile } from "@/lib/data/snapshots";
+import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import type { CsvSnapshotProfile, JsonSnapshotProfile } from "@/lib/data/snapshots";
 import type { SourceCatalogEntry } from "@/lib/data/sourceCatalog";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 
 import sourceCatalogPayload from "../../data/sources/source-catalog.json";
 
-export interface CaseDataset {
+export type FaroCaseFile = ArgentinaWorkCase | CrossCountryCaseFile;
+
+export interface CaseDataset<TCase extends FaroCaseFile = FaroCaseFile> {
   generatedAt: string;
   source: {
     sourceId: string;
@@ -16,40 +20,52 @@ export interface CaseDataset {
     filePath: string;
     fileHash: string;
   };
-  snapshotProfile: CsvSnapshotProfile;
+  snapshotProfile: CsvSnapshotProfile | JsonSnapshotProfile;
   stats: {
     rawRows: number;
     caseFiles: number;
     mapReadyCases: number;
   };
-  cases: ArgentinaWorkCase[];
+  cases: TCase[];
 }
 
 export interface EvidencePack {
   packType: "faro_evidence_pack";
   generatedAt: string;
-  caseFile: ArgentinaWorkCase;
-  receipt: ArgentinaWorkCase["receipt"];
+  caseFile: FaroCaseFile;
+  receipt: FaroCaseFile["receipt"];
   caveats: string[];
   verificationSteps: string[];
 }
 
-const rawArgentinaWorkDataset = payload as CaseDataset;
+interface CrossCountryPayload {
+  generatedAt: string;
+  datasets: Array<CaseDataset<CrossCountryCaseFile>>;
+  cases: CrossCountryCaseFile[];
+}
+
+const rawArgentinaWorkDataset = payload as CaseDataset<ArgentinaWorkCase>;
+const crossCountryCasePayload = crossCountryPayload as CrossCountryPayload;
 
 export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[];
 
 export const argentinaWorkDataset = buildExplorerDataset(rawArgentinaWorkDataset);
+export const crossCountryDatasets = crossCountryCasePayload.datasets;
 
 export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   sources: sourceCatalogEntries,
-  caseDatasets: [rawArgentinaWorkDataset],
+  caseDatasets: [rawArgentinaWorkDataset, ...crossCountryDatasets],
 });
 
-export function getCaseById(id: string): ArgentinaWorkCase | null {
-  return argentinaWorkDataset.cases.find((caseFile) => caseFile.id === id) ?? null;
+export function getCaseById(id: string): FaroCaseFile | null {
+  return allCaseFiles().find((caseFile) => caseFile.id === id) ?? null;
 }
 
-export function buildEvidencePack(caseFile: ArgentinaWorkCase): EvidencePack {
+export function getCasesByCountry(countryCode: FaroCaseFile["countryCode"]): FaroCaseFile[] {
+  return allCaseFiles().filter((caseFile) => caseFile.countryCode === countryCode);
+}
+
+export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
   return {
     packType: "faro_evidence_pack",
     generatedAt: new Date().toISOString(),
@@ -65,7 +81,13 @@ export function buildEvidencePack(caseFile: ArgentinaWorkCase): EvidencePack {
   };
 }
 
-function buildExplorerDataset(dataset: CaseDataset): CaseDataset {
+function allCaseFiles(): FaroCaseFile[] {
+  return [...argentinaWorkDataset.cases, ...crossCountryCasePayload.cases];
+}
+
+function buildExplorerDataset(
+  dataset: CaseDataset<ArgentinaWorkCase>,
+): CaseDataset<ArgentinaWorkCase> {
   const cases = dataset.cases.filter(shouldExposeCaseOnMap);
   return {
     ...dataset,

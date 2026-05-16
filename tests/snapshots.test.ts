@@ -1,7 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { profileCsvSnapshot } from "../src/lib/data/snapshots.ts";
+import {
+  profileCsvSnapshot,
+  profileJsonSnapshot,
+} from "../src/lib/data/snapshots.ts";
 
 const csv = [
   "numero_obra,nombre_obra,latitud_1,longitud_1",
@@ -25,4 +28,24 @@ test("profileCsvSnapshot computes hash, row count and schema profile", () => {
   assert.equal(profile.keyColumnProfiles.numero_obra.emptyCount, 0);
   assert.equal(profile.keyColumnProfiles.latitud_1.emptyCount, 1);
   assert.equal(profile.keyColumnProfiles.latitud_1.emptyRatio, 0.5);
+});
+
+test("profileJsonSnapshot computes hash, keys and nested record count", () => {
+  const json = JSON.stringify({
+    sourceId: "CL-MERCADO-PUBLICO-API",
+    details: [{ id: "a" }, { id: "b" }],
+  });
+
+  const profile = profileJsonSnapshot({
+    sourceId: "CL-MERCADO-PUBLICO-API",
+    rawPath: "data/official/cl/sample.json",
+    text: json,
+    recordPath: ["details"],
+  });
+
+  assert.equal(profile.sourceId, "CL-MERCADO-PUBLICO-API");
+  assert.match(profile.fileHash, /^sha256-/);
+  assert.equal(profile.topLevelType, "object");
+  assert.deepEqual(profile.keys, ["sourceId", "details"]);
+  assert.equal(profile.recordCount, 2);
 });

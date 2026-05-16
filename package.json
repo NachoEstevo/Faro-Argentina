@@ -9,7 +9,8 @@
     "start": "next start -H 127.0.0.1 -p 3002",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts"
+    "data:fetch": "node --experimental-strip-types scripts/fetch-official-snapshots.ts",
+    "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts && node --experimental-strip-types scripts/build-cross-country-cases.ts"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

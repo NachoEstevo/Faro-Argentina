@@ -23,7 +23,7 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
 });
 
 interface Props {
-  dataset: CaseDataset;
+  dataset: CaseDataset<ArgentinaWorkCase>;
 }
 
 const countries = [

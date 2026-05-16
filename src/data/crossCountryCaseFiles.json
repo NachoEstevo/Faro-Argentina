@@ -1,0 +1,2386 @@
+{
+  "generatedAt": "2026-05-16T05:15:51.294Z",
+  "datasets": [
+    {
+      "generatedAt": "2026-05-16T05:15:51.294Z",
+      "source": {
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://www.datosabiertos.gob.pe/dataset/presupuesto-y-ejecuci%C3%B3n-de-gasto",
+        "filePath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864"
+      },
+      "snapshotProfile": {
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "byteSize": 119669,
+        "rowCount": 127,
+        "columns": [
+          "ANO_EJE",
+          "MES_EJE",
+          "NIVEL_GOBIERNO",
+          "NIVEL_GOBIERNO_NOMBRE",
+          "SECTOR",
+          "SECTOR_NOMBRE",
+          "PLIEGO",
+          "PLIEGO_NOMBRE",
+          "SEC_EJEC",
+          "EJECUTORA",
+          "EJECUTORA_NOMBRE",
+          "DEPARTAMENTO_EJECUTORA",
+          "DEPARTAMENTO_EJECUTORA_NOMBRE",
+          "PROVINCIA_EJECUTORA",
+          "PROVINCIA_EJECUTORA_NOMBRE",
+          "DISTRITO_EJECUTORA",
+          "DISTRITO_EJECUTORA_NOMBRE",
+          "SEC_FUNC",
+          "PROGRAMA_PPTO",
+          "PROGRAMA_PPTO_NOMBRE",
+          "TIPO_ACT_PROY",
+          "TIPO_ACT_PROY_NOMBRE",
+          "PRODUCTO_PROYECTO",
+          "PRODUCTO_PROYECTO_NOMBRE",
+          "ACTIVIDAD_ACCION_OBRA",
+          "ACTIVIDAD_ACCION_OBRA_NOMBRE",
+          "FUNCION",
+          "FUNCION_NOMBRE",
+          "DIVISION_FUNCIONAL",
+          "DIVISION_FUNCIONAL_NOMBRE",
+          "GRUPO_FUNCIONAL",
+          "GRUPO_FUNCIONAL_NOMBRE",
+          "META",
+          "FINALIDAD",
+          "META_NOMBRE",
+          "DEPARTAMENTO_META",
+          "DEPARTAMENTO_META_NOMBRE",
+          "FUENTE_FINANCIAMIENTO",
+          "FUENTE_FINANCIAMIENTO_NOMBRE",
+          "RUBRO",
+          "RUBRO_NOMBRE",
+          "TIPO_RECURSO",
+          "TIPO_RECURSO_NOMBRE",
+          "CATEGORIA_GASTO",
+          "CATEGORIA_GASTO_NOMBRE",
+          "TIPO_TRANSACCION",
+          "GENERICA",
+          "GENERICA_NOMBRE",
+          "SUBGENERICA",
+          "SUBGENERICA_NOMBRE",
+          "SUBGENERICA_DET",
+          "SUBGENERICA_DET_NOMBRE",
+          "ESPECIFICA",
+          "ESPECIFICA_NOMBRE",
+          "ESPECIFICA_DET",
+          "ESPECIFICA_DET_NOMBRE",
+          "MONTO_PIA",
+          "MONTO_PIM",
+          "MONTO_CERTIFICADO",
+          "MONTO_COMPROMETIDO_ANUAL",
+          "MONTO_COMPROMETIDO",
+          "MONTO_DEVENGADO",
+          "MONTO_GIRADO"
+        ],
+        "keyColumnProfiles": {
+          "ANO_EJE": {
+            "emptyCount": 0,
+            "emptyRatio": 0
+          },
+          "SEC_EJEC": {
+            "emptyCount": 0,
+            "emptyRatio": 0
+          },
+          "PRODUCTO_PROYECTO": {
+            "emptyCount": 0,
+            "emptyRatio": 0
+          },
+          "MONTO_DEVENGADO": {
+            "emptyCount": 0,
+            "emptyRatio": 0
+          }
+        }
+      },
+      "stats": {
+        "rawRows": 127,
+        "caseFiles": 25,
+        "mapReadyCases": 0
+      },
+      "cases": [
+        {
+          "id": "PE-BUDGET-2026-725-3000001-5004430-1",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000001-5004430-1",
+          "year": 2026,
+          "title": "MONITOREO, SUPERVISION, EVALUACION Y CONTROL DE LA SALUD MATERNO NEONATAL / BONIFICACIONES O ENTREGAS ECONOMICAS AL PUESTO DE PROFESIONALES DE LA SALUD",
+          "procedureNumber": "3000001",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": -1141.3,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004430-1",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-a33801ba8c99e7555522688913aea0f5b234a424af54edfe94b50f45aa191465",
+            "recordId": "2026-725-3000001-5004430-1",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-723-3999999-5000616-2",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-723-3999999-5000616-2",
+          "year": 2026,
+          "title": "CONTROL DEL TRANSPORTE Y ACTIVIDADES PORTUARIAS MARITIMAS, FLUVIALES Y LACUSTRES / VIATICOS Y ASIGNACIONES POR COMISION DE SERVICIO",
+          "procedureNumber": "3999999",
+          "agencyName": "REGION AMAZONAS-TRANSPORTES",
+          "agencyCode": "723",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 645,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-723-3999999-5000616-2",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-ecbde015193c4d6b44a2786f09aab181e115ecb0a5692f2397fc6cff163b5a13",
+            "recordId": "2026-723-3999999-5000616-2",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3999999-5001566-3",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3999999-5001566-3",
+          "year": 2026,
+          "title": "OTRAS ATENCIONES DE SALUD ESPECIALIZADAS / MEDICAMENTOS",
+          "procedureNumber": "3999999",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 64814,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3999999-5001566-3",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-a330a796711a93b8da045c1acf1b7c0294fbb12f7338b56894ea14ca683e789d",
+            "recordId": "2026-998-3999999-5001566-3",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3000016-5000114-4",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3000016-5000114-4",
+          "year": 2026,
+          "title": "BRINDAR TRATAMIENTO A PERSONAS CON DIAGNOSTICO DE HIPERTENSION ARTERIAL / MEDICAMENTOS",
+          "procedureNumber": "3000016",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000016-5000114-4",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-ddf874f88f01651ce1fe9d495f680ed534c5a446ed36492511a41d28357fb24d",
+            "recordId": "2026-998-3000016-5000114-4",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3000691-5005157-5",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3000691-5005157-5",
+          "year": 2026,
+          "title": "MEDIDAS DE CONTROL DE INFECCIONES Y BIOSEGURIDAD EN LOS SERVICIOS DE ATENCION DE TUBERCULOSIS / ASEO, LIMPIEZA Y TOCADOR",
+          "procedureNumber": "3000691",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000691-5005157-5",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-55d2eac51c29dcadba84388ee59c4d7f57955e21361ebd406ac02f765d7e28de",
+            "recordId": "2026-998-3000691-5005157-5",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000691-5005157-6",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000691-5005157-6",
+          "year": 2026,
+          "title": "MEDIDAS DE CONTROL DE INFECCIONES Y BIOSEGURIDAD EN LOS SERVICIOS DE ATENCION DE TUBERCULOSIS / ASEO, LIMPIEZA Y TOCADOR",
+          "procedureNumber": "3000691",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000691-5005157-6",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-a8e5a7045b49866a52377d766d355353a52964f8fdea98c95bb0f6a7058412d6",
+            "recordId": "2026-725-3000691-5005157-6",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3043960-5000070-7",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3043960-5000070-7",
+          "year": 2026,
+          "title": "ENTREGAR A POBLACION ADOLESCENTE INFORMACION SOBRE INFECCIONES DE TRANSMISION SEXUAL Y VIH/SIDA / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+          "procedureNumber": "3043960",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3043960-5000070-7",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-f468e3444dd2114c5613f3612a2b84247f41a29ff86af13e626ec2ad00d784e9",
+            "recordId": "2026-725-3043960-5000070-7",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-721-3000384-5005177-8",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-721-3000384-5005177-8",
+          "year": 2026,
+          "title": "PREVENCION, CONTROL Y VIGILANCIA SOBRE ACTIVIDADES QUE ATENTEN CONTRA LOS RECURSOS FORESTALES Y DE FAUNA SILVESTRE / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+          "procedureNumber": "3000384",
+          "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+          "agencyCode": "721",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000384-5005177-8",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-a70485d4841257a3b58e8e9d866fbf152e5ef106a3140a2799ad8825a429ceb8",
+            "recordId": "2026-721-3000384-5005177-8",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000699-5005189-9",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000699-5005189-9",
+          "year": 2026,
+          "title": "TRATAMIENTO DE PERSONAS CON PROBLEMAS PSICOSOCIALES / COMBUSTIBLES Y CARBURANTES",
+          "procedureNumber": "3000699",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000699-5005189-9",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-8e58550541d9b700d79212e9b4ea268aaf1809cefe72eeb53c4b16dbb8688f18",
+            "recordId": "2026-725-3000699-5005189-9",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000881-5005193-10",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000881-5005193-10",
+          "year": 2026,
+          "title": "TRATAMIENTO CON INTERNAMIENTO DE PACIENTES CON TRASTORNO DEL COMPORTAMIENTO DEBIDO AL CONSUMO DE ALCOHOL / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+          "procedureNumber": "3000881",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000881-5005193-10",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-6e361409df01c4743268b6891a02318ecc88505141bc4e7a6d1d7e2bbe8071ec",
+            "recordId": "2026-725-3000881-5005193-10",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000702-5005196-11",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000702-5005196-11",
+          "year": 2026,
+          "title": "TRATAMIENTO CON INTERNAMIENTO DE PERSONAS CON SINDROME O TRASTORNO PSICOTICO / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+          "procedureNumber": "3000702",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000702-5005196-11",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-6efbcfb8a9bd8b52cf9820f6170a9687a16df5e4e7a7e581dfbaf20577b55079",
+            "recordId": "2026-725-3000702-5005196-11",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000705-5005201-12",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000705-5005201-12",
+          "year": 2026,
+          "title": "SESIONES DE ENTRENAMIENTO EN HABILIDADES SOCIALES PARA ADOLESCENTES, JOVENES Y ADULTOS / VESTUARIO, ACCESORIOS Y PRENDAS DIVERSAS",
+          "procedureNumber": "3000705",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000705-5005201-12",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-d3ef6253005b5cbf64d9a9b444e88d841c17f7acfe87053adfd869da5a03f4e3",
+            "recordId": "2026-725-3000705-5005201-12",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3000001-5004279-13",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3000001-5004279-13",
+          "year": 2026,
+          "title": "MONITOREO,SUPERVISION Y EVALUACION DE PRODUCTOS Y ACTIVIDADES EN GESTION DE RIESGO DE DESASTRES / VIATICOS Y ASIGNACIONES POR COMISION DE SERVICIO",
+          "procedureNumber": "3000001",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004279-13",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-31333e9f332e81685cde04ee7f7cdf35bf8b8da2cbc115a4f92802551cb514cf",
+            "recordId": "2026-725-3000001-5004279-13",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-721-3999999-5000004-14",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-721-3999999-5000004-14",
+          "year": 2026,
+          "title": "ASESORAMIENTO TECNICO Y JURIDICO / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+          "procedureNumber": "3999999",
+          "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+          "agencyCode": "721",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3999999-5000004-14",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-545db768568e5bb4cbd23f33f9875542bc4eae09ababd0d01b0016f3b12be982",
+            "recordId": "2026-721-3999999-5000004-14",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-721-3000734-5005560-15",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-721-3000734-5005560-15",
+          "year": 2026,
+          "title": "DESARROLLO DE SIMULACROS EN GESTION REACTIVA / SERVICIO DE IMPRESIONES, ENCUADERNACION Y EMPASTADO",
+          "procedureNumber": "3000734",
+          "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+          "agencyCode": "721",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 368,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005560-15",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-0162a2df565f5ddb229124165eb907e844a5ee9fa8722ef0b5b8c62a5e3d35fe",
+            "recordId": "2026-721-3000734-5005560-15",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-721-3000734-5005561-16",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-721-3000734-5005561-16",
+          "year": 2026,
+          "title": "IMPLEMENTACION DE BRIGADAS PARA LA ATENCION FRENTE A EMERGENCIAS Y DESASTRES / LOCACIÓN DE SERVICIOS REALIZADOS POR PERSONA NATURAL",
+          "procedureNumber": "3000734",
+          "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+          "agencyCode": "721",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005561-16",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-55a0f629a1fa8aa626bd01b1df0573dd3fbaeb0607ed8e806410e63193054bbb",
+            "recordId": "2026-721-3000734-5005561-16",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3033172-5000037-17",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3033172-5000037-17",
+          "year": 2026,
+          "title": "BRINDAR ATENCION PRENATAL REENFOCADA / ELECTRICIDAD, ILUMINACION Y ELECTRONICA",
+          "procedureNumber": "3033172",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 1662.5,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033172-5000037-17",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-aedea2f216ae4055abe8ac98977003fa04a1b3f9edc0571762abe6a9640648fd",
+            "recordId": "2026-998-3033172-5000037-17",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033172-5000037-18",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033172-5000037-18",
+          "year": 2026,
+          "title": "BRINDAR ATENCION PRENATAL REENFOCADA / PERSONAL NOMBRADO",
+          "procedureNumber": "3033172",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": -1992.99,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033172-5000037-18",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-85299172385df9801e1f617d8f8c54dffb1cb074204a6cdb68680df75a23c54f",
+            "recordId": "2026-725-3033172-5000037-18",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033254-5000017-19",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033254-5000017-19",
+          "year": 2026,
+          "title": "APLICACION DE VACUNAS COMPLETAS / ELECTRICIDAD, ILUMINACION Y ELECTRONICA",
+          "procedureNumber": "3033254",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-19",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-64b1b4dd034c55ac5947439738572801ebce1dc5879ab9682113bf0b50e2dd32",
+            "recordId": "2026-725-3033254-5000017-19",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033254-5000017-20",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033254-5000017-20",
+          "year": 2026,
+          "title": "APLICACION DE VACUNAS COMPLETAS / PASAJES Y GASTOS DE TRANSPORTE",
+          "procedureNumber": "3033254",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 320,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-20",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-808363a2ee9bdd45a1a50b41ef68daf60a98af1f80b6fb454bbcfd2ffea46efa",
+            "recordId": "2026-725-3033254-5000017-20",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033254-5000017-21",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033254-5000017-21",
+          "year": 2026,
+          "title": "APLICACION DE VACUNAS COMPLETAS / COMBUSTIBLES Y CARBURANTES",
+          "procedureNumber": "3033254",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-21",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-ef4b6107c64828feeaf1cd4795608c542d7d44c59efc0b2ed0b131c211a4c3c6",
+            "recordId": "2026-725-3033254-5000017-21",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033254-5000017-22",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033254-5000017-22",
+          "year": 2026,
+          "title": "APLICACION DE VACUNAS COMPLETAS / CONTRATO ADMINISTRATIVO DE SERVICIOS - INDETERMINADO",
+          "procedureNumber": "3033254",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-22",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-cc85f7323dee063f60161abc5645181d9f2184c20f6eee9fa9d5ea63bf9fcd7b",
+            "recordId": "2026-725-3033254-5000017-22",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-725-3033255-5000018-23",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-725-3033255-5000018-23",
+          "year": 2026,
+          "title": "ATENCION A NIÑOS CON CRECIMIENTO Y DESARROLLO - CRED COMPLETO PARA SU EDAD / MATERIAL DIDACTICO, ACCESORIOS Y UTILES DE ENSEÑANZA",
+          "procedureNumber": "3033255",
+          "agencyName": "REGION AMAZONAS-SALUD",
+          "agencyCode": "725",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033255-5000018-23",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-318164d0e1baa04d04f23c9a6723288aff05ce6d26671503f28fa2c473a2f771",
+            "recordId": "2026-725-3033255-5000018-23",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3033292-5000043-24",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3033292-5000043-24",
+          "year": 2026,
+          "title": "MEJORAMIENTO DEL ACCESO DE LA POBLACION A SERVICIOS DE CONSEJERIA EN SALUD SEXUAL Y REPRODUCTIVA / SERVICIO DE IMPRESIONES, ENCUADERNACION Y EMPASTADO",
+          "procedureNumber": "3033292",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 3660,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033292-5000043-24",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-867844a25cb0a5a1c28f2bc899ba840003bd7cc4c9a4f8effe72d9df3100b320",
+            "recordId": "2026-998-3033292-5000043-24",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        },
+        {
+          "id": "PE-BUDGET-2026-998-3033307-5000055-25",
+          "countryCode": "PE",
+          "caseType": "budget_execution",
+          "workNumber": "2026-998-3033307-5000055-25",
+          "year": 2026,
+          "title": "ATENDER AL RECIEN NACIDO CON COMPLICACIONES QUE REQUIERE UNIDAD DE CUIDADOS INTENSIVOS NEONATALES - UCIN / MEDICAMENTOS",
+          "procedureNumber": "3033307",
+          "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+          "agencyCode": "998",
+          "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 0,
+            "currency": "PEN",
+            "label": "devengado"
+          },
+          "supplierName": null,
+          "receipt": {
+            "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033307-5000055-25",
+            "sourceId": "PE-MEF-GASTO-DIARIO",
+            "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+            "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+            "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+            "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+            "rowHash": "sha256-e54919a8deda0e7fb78321da6492162aea1f689dd795bce98d8e7fa82669344f",
+            "recordId": "2026-998-3033307-5000055-25",
+            "locatorType": "official_dataset",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+            "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+          ]
+        }
+      ]
+    },
+    {
+      "generatedAt": "2026-05-16T05:15:51.294Z",
+      "source": {
+        "sourceId": "CL-MERCADO-PUBLICO-API",
+        "sourceName": "API de Mercado Publico",
+        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "filePath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+        "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c"
+      },
+      "snapshotProfile": {
+        "sourceId": "CL-MERCADO-PUBLICO-API",
+        "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+        "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "byteSize": 16318,
+        "topLevelType": "object",
+        "keys": [
+          "sourceId",
+          "sampleDate",
+          "sampleState",
+          "list",
+          "details"
+        ],
+        "recordCount": 3
+      },
+      "stats": {
+        "rawRows": 3,
+        "caseFiles": 3,
+        "mapReadyCases": 0
+      },
+      "cases": [
+        {
+          "id": "CL-TENDER-1159-2-LP26",
+          "countryCode": "CL",
+          "caseType": "procurement_process",
+          "workNumber": "1159-2-LP26",
+          "year": 2026,
+          "title": "Bolsas de Carga Pesada SAG Región de Coquimbo",
+          "procedureNumber": "1159-2-LP26",
+          "agencyName": "SERVICIO AGRICOLA Y GANADERO",
+          "agencyCode": "6919",
+          "contractingUnit": "SAG - Coquimbo / Región de Coquimbo / La Serena",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 294,
+            "currency": "CLP",
+            "label": "monto_adjudicado"
+          },
+          "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
+          "receipt": {
+            "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
+            "sourceId": "CL-MERCADO-PUBLICO-API",
+            "sourceName": "API de Mercado Publico",
+            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+            "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "rowHash": "sha256-2a227354adf8ce4206e3094ef8599c0ff897bb8156f6cfa904a0d5124716db59",
+            "recordId": "1159-2-LP26",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "La API puede requerir ticket para reproducir el detalle."
+          ]
+        },
+        {
+          "id": "CL-TENDER-3494-14-LE26",
+          "countryCode": "CL",
+          "caseType": "procurement_process",
+          "workNumber": "3494-14-LE26",
+          "year": 2026,
+          "title": "CONTRATACION ESCUELA DE FUTBOL ESTABLECIMIENTOS",
+          "procedureNumber": "3494-14-LE26",
+          "agencyName": "I MUNICIPALIDAD DE VILCUN",
+          "agencyCode": "115009",
+          "contractingUnit": "Departamento Educación / Región de la Araucanía",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 6722689,
+            "currency": "CLP",
+            "label": "monto_adjudicado"
+          },
+          "supplierName": "PABLO GALDAMES DIAZ SPA",
+          "receipt": {
+            "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
+            "sourceId": "CL-MERCADO-PUBLICO-API",
+            "sourceName": "API de Mercado Publico",
+            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+            "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "rowHash": "sha256-f00c946a846ef46492b6c5745d81368354b9678f89deca45e9843597bc98e271",
+            "recordId": "3494-14-LE26",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "La API puede requerir ticket para reproducir el detalle."
+          ]
+        },
+        {
+          "id": "CL-TENDER-3019-7-LE26",
+          "countryCode": "CL",
+          "caseType": "procurement_process",
+          "workNumber": "3019-7-LE26",
+          "year": 2026,
+          "title": "LENTES UAPO AÑO 2026",
+          "procedureNumber": "3019-7-LE26",
+          "agencyName": "I MUNICIPALIDAD DE LOTA",
+          "agencyCode": "113259",
+          "contractingUnit": "Departamento de Salud / Región del Biobío / Lota",
+          "executionTerm": null,
+          "executionTermType": null,
+          "coordinates": null,
+          "evidenceLevel": "official_dataset",
+          "amount": {
+            "value": 12586000,
+            "currency": "CLP",
+            "label": "monto_adjudicado"
+          },
+          "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
+          "receipt": {
+            "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
+            "sourceId": "CL-MERCADO-PUBLICO-API",
+            "sourceName": "API de Mercado Publico",
+            "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+            "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+            "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+            "rowHash": "sha256-98d94a9bc3eb331ced8e6e446bbdadff836f426cd0eb8a05577fc5851abc65d0",
+            "recordId": "3019-7-LE26",
+            "locatorType": "official_detail",
+            "extractedAt": "2026-05-16T05:15:51.294Z",
+            "parserVersion": "cross-country@1"
+          },
+          "caveats": [
+            "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+            "La API puede requerir ticket para reproducir el detalle."
+          ]
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "PE-BUDGET-2026-725-3000001-5004430-1",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000001-5004430-1",
+      "year": 2026,
+      "title": "MONITOREO, SUPERVISION, EVALUACION Y CONTROL DE LA SALUD MATERNO NEONATAL / BONIFICACIONES O ENTREGAS ECONOMICAS AL PUESTO DE PROFESIONALES DE LA SALUD",
+      "procedureNumber": "3000001",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": -1141.3,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004430-1",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-a33801ba8c99e7555522688913aea0f5b234a424af54edfe94b50f45aa191465",
+        "recordId": "2026-725-3000001-5004430-1",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-723-3999999-5000616-2",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-723-3999999-5000616-2",
+      "year": 2026,
+      "title": "CONTROL DEL TRANSPORTE Y ACTIVIDADES PORTUARIAS MARITIMAS, FLUVIALES Y LACUSTRES / VIATICOS Y ASIGNACIONES POR COMISION DE SERVICIO",
+      "procedureNumber": "3999999",
+      "agencyName": "REGION AMAZONAS-TRANSPORTES",
+      "agencyCode": "723",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 645,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-723-3999999-5000616-2",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-ecbde015193c4d6b44a2786f09aab181e115ecb0a5692f2397fc6cff163b5a13",
+        "recordId": "2026-723-3999999-5000616-2",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3999999-5001566-3",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3999999-5001566-3",
+      "year": 2026,
+      "title": "OTRAS ATENCIONES DE SALUD ESPECIALIZADAS / MEDICAMENTOS",
+      "procedureNumber": "3999999",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 64814,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3999999-5001566-3",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-a330a796711a93b8da045c1acf1b7c0294fbb12f7338b56894ea14ca683e789d",
+        "recordId": "2026-998-3999999-5001566-3",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3000016-5000114-4",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3000016-5000114-4",
+      "year": 2026,
+      "title": "BRINDAR TRATAMIENTO A PERSONAS CON DIAGNOSTICO DE HIPERTENSION ARTERIAL / MEDICAMENTOS",
+      "procedureNumber": "3000016",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000016-5000114-4",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-ddf874f88f01651ce1fe9d495f680ed534c5a446ed36492511a41d28357fb24d",
+        "recordId": "2026-998-3000016-5000114-4",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3000691-5005157-5",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3000691-5005157-5",
+      "year": 2026,
+      "title": "MEDIDAS DE CONTROL DE INFECCIONES Y BIOSEGURIDAD EN LOS SERVICIOS DE ATENCION DE TUBERCULOSIS / ASEO, LIMPIEZA Y TOCADOR",
+      "procedureNumber": "3000691",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3000691-5005157-5",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-55d2eac51c29dcadba84388ee59c4d7f57955e21361ebd406ac02f765d7e28de",
+        "recordId": "2026-998-3000691-5005157-5",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000691-5005157-6",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000691-5005157-6",
+      "year": 2026,
+      "title": "MEDIDAS DE CONTROL DE INFECCIONES Y BIOSEGURIDAD EN LOS SERVICIOS DE ATENCION DE TUBERCULOSIS / ASEO, LIMPIEZA Y TOCADOR",
+      "procedureNumber": "3000691",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000691-5005157-6",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-a8e5a7045b49866a52377d766d355353a52964f8fdea98c95bb0f6a7058412d6",
+        "recordId": "2026-725-3000691-5005157-6",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3043960-5000070-7",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3043960-5000070-7",
+      "year": 2026,
+      "title": "ENTREGAR A POBLACION ADOLESCENTE INFORMACION SOBRE INFECCIONES DE TRANSMISION SEXUAL Y VIH/SIDA / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+      "procedureNumber": "3043960",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3043960-5000070-7",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-f468e3444dd2114c5613f3612a2b84247f41a29ff86af13e626ec2ad00d784e9",
+        "recordId": "2026-725-3043960-5000070-7",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-721-3000384-5005177-8",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-721-3000384-5005177-8",
+      "year": 2026,
+      "title": "PREVENCION, CONTROL Y VIGILANCIA SOBRE ACTIVIDADES QUE ATENTEN CONTRA LOS RECURSOS FORESTALES Y DE FAUNA SILVESTRE / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+      "procedureNumber": "3000384",
+      "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+      "agencyCode": "721",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000384-5005177-8",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-a70485d4841257a3b58e8e9d866fbf152e5ef106a3140a2799ad8825a429ceb8",
+        "recordId": "2026-721-3000384-5005177-8",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000699-5005189-9",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000699-5005189-9",
+      "year": 2026,
+      "title": "TRATAMIENTO DE PERSONAS CON PROBLEMAS PSICOSOCIALES / COMBUSTIBLES Y CARBURANTES",
+      "procedureNumber": "3000699",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000699-5005189-9",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-8e58550541d9b700d79212e9b4ea268aaf1809cefe72eeb53c4b16dbb8688f18",
+        "recordId": "2026-725-3000699-5005189-9",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000881-5005193-10",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000881-5005193-10",
+      "year": 2026,
+      "title": "TRATAMIENTO CON INTERNAMIENTO DE PACIENTES CON TRASTORNO DEL COMPORTAMIENTO DEBIDO AL CONSUMO DE ALCOHOL / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+      "procedureNumber": "3000881",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000881-5005193-10",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-6e361409df01c4743268b6891a02318ecc88505141bc4e7a6d1d7e2bbe8071ec",
+        "recordId": "2026-725-3000881-5005193-10",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000702-5005196-11",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000702-5005196-11",
+      "year": 2026,
+      "title": "TRATAMIENTO CON INTERNAMIENTO DE PERSONAS CON SINDROME O TRASTORNO PSICOTICO / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+      "procedureNumber": "3000702",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000702-5005196-11",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-6efbcfb8a9bd8b52cf9820f6170a9687a16df5e4e7a7e581dfbaf20577b55079",
+        "recordId": "2026-725-3000702-5005196-11",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000705-5005201-12",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000705-5005201-12",
+      "year": 2026,
+      "title": "SESIONES DE ENTRENAMIENTO EN HABILIDADES SOCIALES PARA ADOLESCENTES, JOVENES Y ADULTOS / VESTUARIO, ACCESORIOS Y PRENDAS DIVERSAS",
+      "procedureNumber": "3000705",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000705-5005201-12",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-d3ef6253005b5cbf64d9a9b444e88d841c17f7acfe87053adfd869da5a03f4e3",
+        "recordId": "2026-725-3000705-5005201-12",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3000001-5004279-13",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3000001-5004279-13",
+      "year": 2026,
+      "title": "MONITOREO,SUPERVISION Y EVALUACION DE PRODUCTOS Y ACTIVIDADES EN GESTION DE RIESGO DE DESASTRES / VIATICOS Y ASIGNACIONES POR COMISION DE SERVICIO",
+      "procedureNumber": "3000001",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3000001-5004279-13",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-31333e9f332e81685cde04ee7f7cdf35bf8b8da2cbc115a4f92802551cb514cf",
+        "recordId": "2026-725-3000001-5004279-13",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-721-3999999-5000004-14",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-721-3999999-5000004-14",
+      "year": 2026,
+      "title": "ASESORAMIENTO TECNICO Y JURIDICO / PAPELERIA EN GENERAL, UTILES Y MATERIALES DE OFICINA",
+      "procedureNumber": "3999999",
+      "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+      "agencyCode": "721",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3999999-5000004-14",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-545db768568e5bb4cbd23f33f9875542bc4eae09ababd0d01b0016f3b12be982",
+        "recordId": "2026-721-3999999-5000004-14",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-721-3000734-5005560-15",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-721-3000734-5005560-15",
+      "year": 2026,
+      "title": "DESARROLLO DE SIMULACROS EN GESTION REACTIVA / SERVICIO DE IMPRESIONES, ENCUADERNACION Y EMPASTADO",
+      "procedureNumber": "3000734",
+      "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+      "agencyCode": "721",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 368,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005560-15",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-0162a2df565f5ddb229124165eb907e844a5ee9fa8722ef0b5b8c62a5e3d35fe",
+        "recordId": "2026-721-3000734-5005560-15",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-721-3000734-5005561-16",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-721-3000734-5005561-16",
+      "year": 2026,
+      "title": "IMPLEMENTACION DE BRIGADAS PARA LA ATENCION FRENTE A EMERGENCIAS Y DESASTRES / LOCACIÓN DE SERVICIOS REALIZADOS POR PERSONA NATURAL",
+      "procedureNumber": "3000734",
+      "agencyName": "REGION AMAZONAS-SEDE CENTRAL",
+      "agencyCode": "721",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-721-3000734-5005561-16",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-55a0f629a1fa8aa626bd01b1df0573dd3fbaeb0607ed8e806410e63193054bbb",
+        "recordId": "2026-721-3000734-5005561-16",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3033172-5000037-17",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3033172-5000037-17",
+      "year": 2026,
+      "title": "BRINDAR ATENCION PRENATAL REENFOCADA / ELECTRICIDAD, ILUMINACION Y ELECTRONICA",
+      "procedureNumber": "3033172",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 1662.5,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033172-5000037-17",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-aedea2f216ae4055abe8ac98977003fa04a1b3f9edc0571762abe6a9640648fd",
+        "recordId": "2026-998-3033172-5000037-17",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033172-5000037-18",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033172-5000037-18",
+      "year": 2026,
+      "title": "BRINDAR ATENCION PRENATAL REENFOCADA / PERSONAL NOMBRADO",
+      "procedureNumber": "3033172",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": -1992.99,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033172-5000037-18",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-85299172385df9801e1f617d8f8c54dffb1cb074204a6cdb68680df75a23c54f",
+        "recordId": "2026-725-3033172-5000037-18",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033254-5000017-19",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033254-5000017-19",
+      "year": 2026,
+      "title": "APLICACION DE VACUNAS COMPLETAS / ELECTRICIDAD, ILUMINACION Y ELECTRONICA",
+      "procedureNumber": "3033254",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-19",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-64b1b4dd034c55ac5947439738572801ebce1dc5879ab9682113bf0b50e2dd32",
+        "recordId": "2026-725-3033254-5000017-19",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033254-5000017-20",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033254-5000017-20",
+      "year": 2026,
+      "title": "APLICACION DE VACUNAS COMPLETAS / PASAJES Y GASTOS DE TRANSPORTE",
+      "procedureNumber": "3033254",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 320,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-20",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-808363a2ee9bdd45a1a50b41ef68daf60a98af1f80b6fb454bbcfd2ffea46efa",
+        "recordId": "2026-725-3033254-5000017-20",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033254-5000017-21",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033254-5000017-21",
+      "year": 2026,
+      "title": "APLICACION DE VACUNAS COMPLETAS / COMBUSTIBLES Y CARBURANTES",
+      "procedureNumber": "3033254",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-21",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-ef4b6107c64828feeaf1cd4795608c542d7d44c59efc0b2ed0b131c211a4c3c6",
+        "recordId": "2026-725-3033254-5000017-21",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033254-5000017-22",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033254-5000017-22",
+      "year": 2026,
+      "title": "APLICACION DE VACUNAS COMPLETAS / CONTRATO ADMINISTRATIVO DE SERVICIOS - INDETERMINADO",
+      "procedureNumber": "3033254",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / PERSONAL Y OBLIGACIONES SOCIALES",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033254-5000017-22",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-cc85f7323dee063f60161abc5645181d9f2184c20f6eee9fa9d5ea63bf9fcd7b",
+        "recordId": "2026-725-3033254-5000017-22",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-725-3033255-5000018-23",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-725-3033255-5000018-23",
+      "year": 2026,
+      "title": "ATENCION A NIÑOS CON CRECIMIENTO Y DESARROLLO - CRED COMPLETO PARA SU EDAD / MATERIAL DIDACTICO, ACCESORIOS Y UTILES DE ENSEÑANZA",
+      "procedureNumber": "3033255",
+      "agencyName": "REGION AMAZONAS-SALUD",
+      "agencyCode": "725",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-725-3033255-5000018-23",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-318164d0e1baa04d04f23c9a6723288aff05ce6d26671503f28fa2c473a2f771",
+        "recordId": "2026-725-3033255-5000018-23",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3033292-5000043-24",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3033292-5000043-24",
+      "year": 2026,
+      "title": "MEJORAMIENTO DEL ACCESO DE LA POBLACION A SERVICIOS DE CONSEJERIA EN SALUD SEXUAL Y REPRODUCTIVA / SERVICIO DE IMPRESIONES, ENCUADERNACION Y EMPASTADO",
+      "procedureNumber": "3033292",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 3660,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033292-5000043-24",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-867844a25cb0a5a1c28f2bc899ba840003bd7cc4c9a4f8effe72d9df3100b320",
+        "recordId": "2026-998-3033292-5000043-24",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "PE-BUDGET-2026-998-3033307-5000055-25",
+      "countryCode": "PE",
+      "caseType": "budget_execution",
+      "workNumber": "2026-998-3033307-5000055-25",
+      "year": 2026,
+      "title": "ATENDER AL RECIEN NACIDO CON COMPLICACIONES QUE REQUIERE UNIDAD DE CUIDADOS INTENSIVOS NEONATALES - UCIN / MEDICAMENTOS",
+      "procedureNumber": "3033307",
+      "agencyName": "REGION AMAZONAS-HOSPITAL DE APOYO CHACHAPOYAS",
+      "agencyCode": "998",
+      "contractingUnit": "AMAZONAS / BIENES Y SERVICIOS",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 0,
+        "currency": "PEN",
+        "label": "devengado"
+      },
+      "supplierName": null,
+      "receipt": {
+        "receiptId": "PE-MEF-GASTO-DIARIO-2026-998-3033307-5000055-25",
+        "sourceId": "PE-MEF-GASTO-DIARIO",
+        "sourceName": "MEF presupuesto y ejecucion de gasto diario",
+        "sourceUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+        "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+        "snapshotHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+        "rowHash": "sha256-e54919a8deda0e7fb78321da6492162aea1f689dd795bce98d8e7fa82669344f",
+        "recordId": "2026-998-3033307-5000055-25",
+        "locatorType": "official_dataset",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Muestra ejecucion presupuestaria oficial, no un contrato ni pago a proveedor especifico.",
+        "Snapshot parcial preparado con rango de bytes reproducible; usar bulk completo para investigacion final."
+      ]
+    },
+    {
+      "id": "CL-TENDER-1159-2-LP26",
+      "countryCode": "CL",
+      "caseType": "procurement_process",
+      "workNumber": "1159-2-LP26",
+      "year": 2026,
+      "title": "Bolsas de Carga Pesada SAG Región de Coquimbo",
+      "procedureNumber": "1159-2-LP26",
+      "agencyName": "SERVICIO AGRICOLA Y GANADERO",
+      "agencyCode": "6919",
+      "contractingUnit": "SAG - Coquimbo / Región de Coquimbo / La Serena",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 294,
+        "currency": "CLP",
+        "label": "monto_adjudicado"
+      },
+      "supplierName": "SOCIEDAD DE GESTION E INVERSIONES JULFIOR SPA",
+      "receipt": {
+        "receiptId": "CL-MERCADO-PUBLICO-API-1159-2-LP26",
+        "sourceId": "CL-MERCADO-PUBLICO-API",
+        "sourceName": "API de Mercado Publico",
+        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+        "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "rowHash": "sha256-2a227354adf8ce4206e3094ef8599c0ff897bb8156f6cfa904a0d5124716db59",
+        "recordId": "1159-2-LP26",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "La API puede requerir ticket para reproducir el detalle."
+      ]
+    },
+    {
+      "id": "CL-TENDER-3494-14-LE26",
+      "countryCode": "CL",
+      "caseType": "procurement_process",
+      "workNumber": "3494-14-LE26",
+      "year": 2026,
+      "title": "CONTRATACION ESCUELA DE FUTBOL ESTABLECIMIENTOS",
+      "procedureNumber": "3494-14-LE26",
+      "agencyName": "I MUNICIPALIDAD DE VILCUN",
+      "agencyCode": "115009",
+      "contractingUnit": "Departamento Educación / Región de la Araucanía",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 6722689,
+        "currency": "CLP",
+        "label": "monto_adjudicado"
+      },
+      "supplierName": "PABLO GALDAMES DIAZ SPA",
+      "receipt": {
+        "receiptId": "CL-MERCADO-PUBLICO-API-3494-14-LE26",
+        "sourceId": "CL-MERCADO-PUBLICO-API",
+        "sourceName": "API de Mercado Publico",
+        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+        "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "rowHash": "sha256-f00c946a846ef46492b6c5745d81368354b9678f89deca45e9843597bc98e271",
+        "recordId": "3494-14-LE26",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "La API puede requerir ticket para reproducir el detalle."
+      ]
+    },
+    {
+      "id": "CL-TENDER-3019-7-LE26",
+      "countryCode": "CL",
+      "caseType": "procurement_process",
+      "workNumber": "3019-7-LE26",
+      "year": 2026,
+      "title": "LENTES UAPO AÑO 2026",
+      "procedureNumber": "3019-7-LE26",
+      "agencyName": "I MUNICIPALIDAD DE LOTA",
+      "agencyCode": "113259",
+      "contractingUnit": "Departamento de Salud / Región del Biobío / Lota",
+      "executionTerm": null,
+      "executionTermType": null,
+      "coordinates": null,
+      "evidenceLevel": "official_dataset",
+      "amount": {
+        "value": 12586000,
+        "currency": "CLP",
+        "label": "monto_adjudicado"
+      },
+      "supplierName": "MASTER TECNOLOGIA OPTICA LIMITADA",
+      "receipt": {
+        "receiptId": "CL-MERCADO-PUBLICO-API-3019-7-LE26",
+        "sourceId": "CL-MERCADO-PUBLICO-API",
+        "sourceName": "API de Mercado Publico",
+        "sourceUrl": "https://api.mercadopublico.cl/modules/api.aspx",
+        "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+        "snapshotHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+        "rowHash": "sha256-98d94a9bc3eb331ced8e6e446bbdadff836f426cd0eb8a05577fc5851abc65d0",
+        "recordId": "3019-7-LE26",
+        "locatorType": "official_detail",
+        "extractedAt": "2026-05-16T05:15:51.294Z",
+        "parserVersion": "cross-country@1"
+      },
+      "caveats": [
+        "Licitacion oficial de Mercado Publico; la adjudicacion no prueba pago efectivo.",
+        "La API puede requerir ticket para reproducir el detalle."
+      ]
+    }
+  ]
+}

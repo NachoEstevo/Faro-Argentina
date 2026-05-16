@@ -24,9 +24,19 @@ export interface CsvSnapshotProfile {
   keyColumnProfiles: Record<string, KeyColumnProfile>;
 }
 
+export interface JsonSnapshotProfile {
+  sourceId: string;
+  rawPath: string;
+  fileHash: string;
+  byteSize: number;
+  topLevelType: "array" | "object";
+  keys: string[];
+  recordCount: number;
+}
+
 export function profileCsvSnapshot(input: CsvSnapshotInput): CsvSnapshotProfile {
   const rows = parseCsv<Record<string, string>>(input.text);
-  const columns = readHeader(input.text);
+  const columns = rows[0] ? Object.keys(rows[0]) : readHeader(input.text);
   const rowCount = rows.length;
   const keyColumnProfiles = Object.fromEntries(
     input.keyColumns.map((column) => [column, profileKeyColumn(rows, column)]),
@@ -43,6 +53,31 @@ export function profileCsvSnapshot(input: CsvSnapshotInput): CsvSnapshotProfile 
   };
 }
 
+export function profileJsonSnapshot({
+  sourceId,
+  rawPath,
+  text,
+  recordPath,
+}: {
+  sourceId: string;
+  rawPath: string;
+  text: string;
+  recordPath?: string[];
+}): JsonSnapshotProfile {
+  const parsed = JSON.parse(text) as unknown;
+  const records = recordPath ? readPath(parsed, recordPath) : parsed;
+  const recordCount = Array.isArray(records) ? records.length : parsed === null ? 0 : 1;
+  return {
+    sourceId,
+    rawPath,
+    fileHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
+    byteSize: Buffer.byteLength(text, "utf8"),
+    topLevelType: Array.isArray(parsed) ? "array" : "object",
+    keys: parsed && typeof parsed === "object" && !Array.isArray(parsed) ? Object.keys(parsed) : [],
+    recordCount,
+  };
+}
+
 function profileKeyColumn(
   rows: Array<Record<string, string>>,
   column: string,
@@ -55,6 +90,13 @@ function profileKeyColumn(
 function readHeader(text: string): string[] {
   const firstLine = text.split(/\r?\n/, 1)[0] ?? "";
   return firstLine.split(",").map((column) => column.trim());
+}
+
+function readPath(value: unknown, path: string[]): unknown {
+  return path.reduce<unknown>((current, key) => {
+    if (!current || typeof current !== "object") return undefined;
+    return (current as Record<string, unknown>)[key];
+  }, value);
 }
 
 function clean(value: string | null | undefined): string {

@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-05-16T05:15:38.777Z",
+  "snapshots": [
+    {
+      "sourceId": "PE-MEF-GASTO-DIARIO",
+      "rawPath": "data/official/pe/mef-2026-gasto-diario.sample.csv",
+      "fetchUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
+      "fetchedAt": "2026-05-16T05:15:32.633Z",
+      "contentType": "text/csv",
+      "contentRange": "bytes 0-120000/4236445622",
+      "partial": true,
+      "fileHash": "sha256-2914265bbe2682c6c25645c5cdbeabba67e28ac9cb252fb9b0e51bfcab7a8864",
+      "byteSize": 119669
+    },
+    {
+      "sourceId": "CL-MERCADO-PUBLICO-API",
+      "rawPath": "data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+      "fetchUrl": "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>",
+      "fetchedAt": "2026-05-16T05:15:38.777Z",
+      "contentType": "application/json",
+      "recordCount": 3,
+      "partial": true,
+      "fileHash": "sha256-86d8629e7fb6639778976a20905f064daf8410195095ebb59eea024944ebca1c",
+      "byteSize": 16318
+    }
+  ]
+}
