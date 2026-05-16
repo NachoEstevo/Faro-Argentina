@@ -6,7 +6,7 @@ interface RouteContext {
 
 export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
-  const caseFile = getCaseById(id);
+  const caseFile = getCaseById(decodeURIComponent(id));
   if (!caseFile) {
     return Response.json({ error: "case_not_found" }, { status: 404 });
   }

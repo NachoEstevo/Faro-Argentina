@@ -21,6 +21,7 @@ export function CaseDetails({
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile);
+  const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
     <div className="caseDetails">
       <div className="panelKicker">
@@ -103,7 +104,7 @@ export function CaseDetails({
             <ExternalLink size={16} aria-hidden />
             Fuente oficial
           </a>
-          <a href={`/api/export/${caseFile.id}`} download>
+          <a href={`/api/export/${encodedCaseId}`} download>
             <Download size={16} aria-hidden />
             Descargar JSON
           </a>
@@ -203,7 +204,7 @@ export function CountryExplorer({
                 <ExternalLink size={16} aria-hidden />
                 Fuente oficial
               </a>
-              <a href={`/api/export/${caseFile.id}`} download>
+              <a href={`/api/export/${encodeURIComponent(caseFile.id)}`} download>
                 <Download size={16} aria-hidden />
                 Descargar JSON
               </a>

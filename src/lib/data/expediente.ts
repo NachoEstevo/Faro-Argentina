@@ -65,6 +65,7 @@ export function buildExpediente(caseFile: ExpedienteCaseFile): ExpedienteView {
   const relatedReceipts = (caseFile.relatedReceipts ?? []).map((receipt) =>
     toExpedienteReceipt(receipt),
   );
+  const encodedCaseId = encodeURIComponent(caseFile.id);
   const sourceIds = new Set([
     primaryReceipt.sourceId,
     ...relatedReceipts.map((receipt) => receipt.sourceId),
@@ -99,8 +100,8 @@ export function buildExpediente(caseFile: ExpedienteCaseFile): ExpedienteView {
     },
     actions: {
       officialSourceHref: primaryReceipt.sourceUrl,
-      downloadEvidenceHref: `/api/export/${caseFile.id}`,
-      caseJsonHref: `/api/cases/${caseFile.id}`,
+      downloadEvidenceHref: `/api/export/${encodedCaseId}`,
+      caseJsonHref: `/api/cases/${encodedCaseId}`,
     },
     caveats: uniqueStrings([
       ...(caseFile.caveats ?? []),

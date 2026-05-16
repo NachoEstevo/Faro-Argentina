@@ -163,7 +163,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
       </section>
 
       <aside className="casePanel" aria-label="Expediente Faro">
-        {selectedCountry === "AR" && selectedCase ? (
+        {selectedCase ? (
           <CaseDetails
             caseFile={selectedCase}
             dataset={dataset}

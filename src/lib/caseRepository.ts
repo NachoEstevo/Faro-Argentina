@@ -117,14 +117,18 @@ export function buildSignalFeed(filters: CaseCollectionFilters): CaseSignalFeed 
 }
 
 export function buildLeadFeed(filters: CaseLeadFilters = {}): CaseLeadFeed {
-  const filteredCases = filterCaseFiles(filters);
-  const leads = buildCaseLeads(filteredCases as SignalCaseFile[], filters);
+  const prefilteredCases = filterCaseFiles({
+    countryCode: filters.countryCode,
+    sourceId: filters.sourceId,
+    caseType: filters.caseType,
+  });
+  const leads = buildCaseLeads(prefilteredCases as SignalCaseFile[], filters);
 
   return {
     feedType: "faro_case_lead_feed",
     generatedAt: new Date().toISOString(),
     stats: {
-      cases: filteredCases.length,
+      cases: prefilteredCases.length,
       leads: leads.length,
     },
     filters,

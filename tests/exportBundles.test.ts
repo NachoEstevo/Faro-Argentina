@@ -129,6 +129,19 @@ test("buildLeadFeed exposes ranked Argentina case leads", () => {
   assert.deepEqual([...priorities].sort((left, right) => right - left), priorities);
 });
 
+test("buildLeadFeed lets lead query matching find cases beyond collection query fields", () => {
+  const feed = buildLeadFeed({
+    countryCode: "AR",
+    query: "ANSAL CONSTRUCCIONES SRL",
+    limit: 10,
+  });
+
+  assert.equal(
+    feed.leads.some((lead) => lead.caseId === "AR-CONTRACT-40/31-1003-CON21"),
+    true,
+  );
+});
+
 test("getExpedienteById returns an expediente view for lead cases", () => {
   const lead = buildLeadFeed({ countryCode: "AR", limit: 1 }).leads[0];
   assert.ok(lead);
@@ -155,4 +168,15 @@ test("buildEvidencePack includes receipts, signals and official-source verificat
   assert.equal(pack.signals.length > 0, true);
   assert.equal(Array.isArray(pack.verificationSteps), true);
   assert.match(pack.verificationSteps.join("\n"), /fuente oficial/i);
+});
+
+test("buildEvidencePack handles decoded slash-containing case ids", () => {
+  const decodedCaseId = decodeURIComponent("AR-CONTRACT-40%2F31-1003-CON21");
+  const sourceCaseFile = getCaseById(decodedCaseId);
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(pack.caseFile.id, "AR-CONTRACT-40/31-1003-CON21");
+  assert.equal(pack.receipt.recordId, "40/31-1003-CON21");
 });

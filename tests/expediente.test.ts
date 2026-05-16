@@ -72,6 +72,45 @@ test("buildExpediente creates a procurement contract expediente from official re
   assert.equal(expediente.nextVerification.length > 0, true);
 });
 
+test("buildExpediente encodes slash-containing case ids in API hrefs", () => {
+  const caseFile: ExpedienteCaseFile = {
+    id: "AR-CONTRACT-40/31-1003-CON21",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: "Reparacion parcial edificio",
+    workNumber: "40/31-1003-CON21",
+    year: 2021,
+    procedureNumber: "40/31-0054-LPU21",
+    agencyName: "Estado Mayor General de La Fuerza Aerea",
+    agencyCode: "381",
+    contractingUnit: "OUC INFRA",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -31.4201, lon: -64.1888 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 4014549.87, currency: "ARS", label: "ARS 4.014.549,87" },
+    officialBudget: null,
+    bidderCount: 1,
+    offerCount: 1,
+    supplierName: "ANSAL CONSTRUCCIONES SRL",
+    supplierDocument: "30-64071769-2",
+    relatedReceipts: [relatedReceipt],
+    receipt: primaryReceipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+
+  const expediente = buildExpediente(caseFile);
+
+  assert.equal(
+    expediente.actions.downloadEvidenceHref,
+    "/api/export/AR-CONTRACT-40%2F31-1003-CON21",
+  );
+  assert.equal(
+    expediente.actions.caseJsonHref,
+    "/api/cases/AR-CONTRACT-40%2F31-1003-CON21",
+  );
+});
+
 test("buildExpediente marks cases without coordinates as missing official geometry", () => {
   const expediente = buildExpediente({
     id: "PE-CONTRACT-2328678-1",
