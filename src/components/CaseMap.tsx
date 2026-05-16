@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import { buildCaseMarkerKey } from "@/lib/data/mapMarkers";
 
 interface Props {
   cases: ExplorerCase[];
@@ -45,13 +46,13 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           }}
         />
       )}
-      {mapCases.map((caseFile) => {
+      {mapCases.map((caseFile, index) => {
         const isSelected = caseFile.id === selectedCaseId;
         const coordinates = caseFile.coordinates;
         if (!coordinates) return null;
         return (
           <CircleMarker
-            key={caseFile.id}
+            key={buildCaseMarkerKey(caseFile, index)}
             center={[coordinates.lat, coordinates.lon]}
             radius={isSelected ? 9 : 6}
             eventHandlers={{ click: () => onSelectCase(caseFile.id) }}

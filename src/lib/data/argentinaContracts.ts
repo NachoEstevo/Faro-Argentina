@@ -195,7 +195,7 @@ function buildCase({
     workNumber: contractNumber,
     publicWorkNumber: workNumber || null,
     year: parseYear(clean(row.contrato_perfeccionamiento_fecha).slice(0, 4)),
-    title: clean(row.nombre_obra) || clean(row.procedimiento_nombre) || contractNumber,
+    title: clean(work?.nombre_obra) || clean(row.nombre_obra) || clean(row.procedimiento_nombre) || contractNumber,
     procedureNumber,
     agencyName: clean(row.organismo_nombre),
     agencyCode: clean(row.organismo_codigo_saf),

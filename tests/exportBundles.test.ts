@@ -93,12 +93,17 @@ test("buildCaseCollectionPack exports Chile award evidence with official act con
     awardedAt?: string | null;
     awardActUrl?: string | null;
     bidderCount?: number | null;
+    signals?: Array<{ code: string }>;
   }>;
 
   assert.equal(pack.stats.caseFiles, 25);
+  assert.equal(pack.stats.signals > 0, true);
   assert.equal(caseFile?.awardedAt, "2026-05-15");
   assert.match(caseFile?.awardActUrl ?? "", /mercadopublico\.cl/);
   assert.equal(caseFile?.bidderCount, 13);
+  assert.equal(Array.isArray(caseFile?.signals), true);
+  assert.equal(pack.signals.some((signal) => signal.code === "official_award_act"), true);
+  assert.equal(pack.signals.some((signal) => signal.code === "missing_official_geometry"), true);
   assert.equal(pack.cases.every((caseFile) => Boolean(caseFile.supplierName)), true);
   assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
   assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);

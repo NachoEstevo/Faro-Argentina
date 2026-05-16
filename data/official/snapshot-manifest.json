@@ -108,8 +108,8 @@
       "contentType": "application/json",
       "recordCount": 25,
       "partial": true,
-      "fileHash": "sha256-f9f06a03d8f41f480fb2e35d9d9d7eee4cf4e8639c22f1d7418f476b321d2151",
-      "byteSize": 1873590
+      "fileHash": "sha256-2339931c44b256966e1c5650b6221598d470dae52d517ab99f3598eda59492c2",
+      "byteSize": 1873591
     },
     {
       "sourceId": "CL-MERCADO-PUBLICO-API",
@@ -119,9 +119,8 @@
       "contentType": "application/json",
       "recordCount": 25,
       "partial": true,
-      "fileHash": "sha256-7d107f4cfbc24bf69110b8c5cfcac80df89a7bff00418fc597f03ab5b9cc5957",
-      "byteSize": 144870,
-      "fetchWarning": "Fetch failed with 429: https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=15052026&estado=adjudicada&ticket=<redacted>"
+      "fileHash": "sha256-697e522ade5530ef485be64eb91e2234e8d72b49e5eac11dc0d2c6b38d51ba62",
+      "byteSize": 148256
     }
   ]
 }

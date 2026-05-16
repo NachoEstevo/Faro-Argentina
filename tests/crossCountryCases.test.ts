@@ -37,12 +37,12 @@ test("buildPeruBudgetCases turns MEF rows into exportable evidence cases", () =>
 test("buildArgentinaContractCases enriches contracts with official work geometry and SIPRO supplier data", () => {
   const contractsCsv = [
     "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
-    "14-1002-CON21,14-0007-LPU20,Construccion cubierta,14,Compras CNEA,105,Comision Nacional de Energia Atomica,EX-2021,14-0001-OBR21,Construccion cubierta,2021-04-07T00:00:00,30-70043585-3,Warlet S.A,8694426.61,ARS",
+    "14-1002-CON21,14-0007-LPU20,Construccion cubierta,14,Compras CNEA,105,Comision Nacional de Energia Atomica,EX-2021,14-0001-OBR21,Construccion cubierta METæLICA,2021-04-07T00:00:00,30-70043585-3,Warlet S.A,8694426.61,ARS",
   ].join("\n");
   const workRows = [
     {
       numero_obra: "14-0001-OBR21",
-      nombre_obra: "Construccion cubierta",
+      nombre_obra: "Construccion cubierta METÁLICA",
       latitud_1: "-34.585722",
       longitud_1: "-58.389361",
     },
@@ -168,7 +168,8 @@ test("buildArgentinaContractCases enriches contracts with official work geometry
   });
 
   assert.deepEqual(caseFile?.coordinates, { lat: -34.585722, lon: -58.389361 });
-  assert.equal(caseFile?.locationName, "Construccion cubierta");
+  assert.equal(caseFile?.title, "Construccion cubierta METÁLICA");
+  assert.equal(caseFile?.locationName, "Construccion cubierta METÁLICA");
   assert.equal(caseFile?.workProvince, "CIUDAD DE BUENOS AIRES");
   assert.equal(caseFile?.procedureState, "Adjudicado");
   assert.equal(caseFile?.procurementMethodDetails, "Licitación Pública");

@@ -4,6 +4,7 @@ import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
 
 export function CaseDetails({
   caseFile,
@@ -25,6 +26,7 @@ export function CaseDetails({
         Expediente verificable
       </div>
       <h1>{caseFile.title}</h1>
+      <CaseSignalChips caseFile={caseFile} limit={4} />
       <div className="caseMetaGrid">
         <Metric label={isContract ? "Contrato" : "Obra"} value={caseFile.workNumber} />
         <Metric label="Procedimiento" value={caseFile.procedureNumber || "Sin dato"} />
@@ -47,6 +49,8 @@ export function CaseDetails({
         <h2>Por que mirar</h2>
         <p>{formatWhy(caseFile)}</p>
       </section>
+
+      <CaseSignalPanel caseFile={caseFile} />
 
       <section className="satelliteBox">
         <div>
@@ -171,6 +175,7 @@ export function CountryExplorer({
             <div>
               <span>{labelCaseType(caseFile.caseType)}</span>
               <h2>{caseFile.title}</h2>
+              <CaseSignalChips caseFile={caseFile} />
             </div>
             <dl>
               <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />

@@ -9,6 +9,13 @@ import {
 } from "@/lib/data/caseCollections";
 import { buildCoverageReport, type CoverageReport } from "@/lib/data/coverage";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import {
+  buildCaseSignalFeed,
+  buildCaseSignals,
+  type CaseSignal,
+  type CaseSignalFeed,
+  type SignalCaseFile,
+} from "@/lib/data/caseSignals";
 import type { CsvSnapshotProfile, JsonSnapshotProfile } from "@/lib/data/snapshots";
 import type { SourceCatalogEntry } from "@/lib/data/sourceCatalog";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
@@ -41,6 +48,7 @@ export interface EvidencePack {
   generatedAt: string;
   caseFile: FaroCaseFile;
   receipt: FaroCaseFile["receipt"];
+  signals: CaseSignal[];
   caveats: string[];
   verificationSteps: string[];
 }
@@ -81,12 +89,17 @@ export function buildCaseCollectionPack(filters: CaseCollectionFilters): CaseCol
   return buildCollectionPack(allCaseFiles(), filters);
 }
 
+export function buildSignalFeed(filters: CaseCollectionFilters): CaseSignalFeed {
+  return buildCaseSignalFeed(filterCaseFiles(filters) as SignalCaseFile[]);
+}
+
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
   return {
     packType: "faro_evidence_pack",
     generatedAt: new Date().toISOString(),
     caseFile,
     receipt: caseFile.receipt,
+    signals: buildCaseSignals(caseFile as SignalCaseFile),
     caveats: caseFile.caveats,
     verificationSteps: [
       "Abrir la fuente oficial indicada en el receipt.",

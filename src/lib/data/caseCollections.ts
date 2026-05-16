@@ -1,4 +1,9 @@
 import type { CountryCode } from "./sourceCatalog.ts";
+import {
+  buildCaseSignals,
+  type CaseSignal,
+  type SignalCaseFile,
+} from "./caseSignals.ts";
 
 export interface ExportableCaseFile {
   id: string;
@@ -25,6 +30,10 @@ export interface ExportableCaseFile {
   };
 }
 
+export type ExportableCaseFileWithSignals = ExportableCaseFile & {
+  signals: CaseSignal[];
+};
+
 export interface CaseCollectionFilters {
   countryCode?: CountryCode;
   sourceId?: string;
@@ -40,10 +49,17 @@ export interface CaseCollectionPack {
     caseFiles: number;
     receipts: number;
     sources: number;
+    signals: number;
   };
   sourceIds: string[];
-  cases: ExportableCaseFile[];
+  cases: ExportableCaseFileWithSignals[];
   receipts: ExportableCaseFile["receipt"][];
+  signals: Array<CaseSignal & {
+    caseId: string;
+    countryCode: CountryCode;
+    caseTitle: string;
+    sourceId: string;
+  }>;
   caveats: string[];
   verificationSteps: string[];
 }
@@ -72,6 +88,19 @@ export function buildCaseCollectionPack(
   filters: CaseCollectionFilters,
 ): CaseCollectionPack {
   const filteredCases = filterCaseFiles(cases, filters);
+  const casesWithSignals = filteredCases.map((caseFile) => ({
+    ...caseFile,
+    signals: buildCaseSignals(caseFile as SignalCaseFile),
+  }));
+  const signals = casesWithSignals.flatMap((caseFile) =>
+    caseFile.signals.map((signal) => ({
+      ...signal,
+      caseId: caseFile.id,
+      countryCode: caseFile.countryCode,
+      caseTitle: caseFile.title,
+      sourceId: caseFile.receipt.sourceId,
+    })),
+  );
   const receipts = filteredCases.flatMap((caseFile) => [
     caseFile.receipt,
     ...(caseFile.relatedReceipts ?? []),
@@ -85,10 +114,14 @@ export function buildCaseCollectionPack(
       caseFiles: filteredCases.length,
       receipts: receipts.length,
       sources: sourceIds.length,
+      signals: signals.length,
     },
     sourceIds,
-    cases: filteredCases,
+    cases: casesWithSignals,
     receipts,
+    signals: signals.sort((left, right) =>
+      right.priority - left.priority || left.caseId.localeCompare(right.caseId),
+    ),
     caveats: Array.from(new Set(filteredCases.flatMap((caseFile) => caseFile.caveats))).sort(),
     verificationSteps: [
       "Abrir cada fuente oficial indicada en los receipts.",
