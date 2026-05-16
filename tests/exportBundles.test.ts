@@ -95,10 +95,11 @@ test("buildCaseCollectionPack exports Chile award evidence with official act con
     bidderCount?: number | null;
   }>;
 
-  assert.equal(pack.stats.caseFiles, 3);
+  assert.equal(pack.stats.caseFiles, 25);
   assert.equal(caseFile?.awardedAt, "2026-05-15");
   assert.match(caseFile?.awardActUrl ?? "", /mercadopublico\.cl/);
   assert.equal(caseFile?.bidderCount, 13);
+  assert.equal(pack.cases.every((caseFile) => Boolean(caseFile.supplierName)), true);
   assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
   assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);
 });

@@ -7,7 +7,8 @@ const chileCompraTicket =
   process.env.CHILECOMPRA_TICKET ?? "F8537A18-6766-4DEF-9E59-426B4FEE2844";
 const chileCompraDate = process.env.CHILECOMPRA_SAMPLE_DATE ?? "15052026";
 const chileCompraState = process.env.CHILECOMPRA_STATE ?? "adjudicada";
-const chileCompraDetailLimit = Number(process.env.CHILECOMPRA_DETAIL_LIMIT ?? "3");
+const chileCompraDetailLimit = Number(process.env.CHILECOMPRA_DETAIL_LIMIT ?? "25");
+const chileCompraDetailDelayMs = Number(process.env.CHILECOMPRA_DETAIL_DELAY_MS ?? "1500");
 const peruRange = process.env.PERU_MEF_RANGE ?? "bytes=0-120000";
 
 const peOutputPath = new URL(
@@ -246,7 +247,6 @@ async function fetchPeruOcdsContractReleases() {
     sourceName: "Portal de contrataciones abiertas OCDS",
     sourceUrl: "https://contratacionesabiertas.oece.gob.pe/descargas",
     apiPattern: "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/{tenderId}",
-    fetchedAt,
     partial: true,
     selection: {
       basis: "First 25 PE-OECE-CONTRATOS rows used by the demo case builder",
@@ -277,7 +277,7 @@ async function fetchChileCompraSample() {
     const details: ChileDetailResponse[] = [];
     for (const item of listing) {
       details.push(await fetchChileDetail(item));
-      await sleep(750);
+      await sleep(chileCompraDetailDelayMs);
     }
     const payload = {
       sourceId: "CL-MERCADO-PUBLICO-API",
@@ -320,15 +320,29 @@ function buildChileSnapshotEntry(text: string, recordCount: number) {
   };
 }
 
-async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Fetch failed with ${response.status}: ${redactTicket(url)}`);
-  return response.json() as Promise<T>;
+async function fetchJson<T>(
+  url: string,
+  options: { retries?: number; retryDelayMs?: number } = {},
+): Promise<T> {
+  const retries = options.retries ?? 0;
+  const retryDelayMs = options.retryDelayMs ?? 0;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const response = await fetch(url);
+    if (response.ok) return response.json() as Promise<T>;
+    if (response.status !== 429 || attempt === retries) {
+      throw new Error(`Fetch failed with ${response.status}: ${redactTicket(url)}`);
+    }
+    await sleep(retryDelayMsFor(response, retryDelayMs, attempt));
+  }
+  throw new Error(`Fetch failed: ${redactTicket(url)}`);
 }
 
 async function fetchChileDetail(item: ChileListItem): Promise<ChileDetailResponse> {
   try {
-    return await fetchJson<ChileDetailResponse>(buildChileCompraDetailUrl(item.CodigoExterno));
+    return await fetchJson<ChileDetailResponse>(buildChileCompraDetailUrl(item.CodigoExterno), {
+      retries: 3,
+      retryDelayMs: 10_000,
+    });
   } catch (error) {
     return {
       Cantidad: 1,
@@ -364,6 +378,15 @@ function hashBuffer(buffer: Buffer): string {
 
 function redactTicket(url: string): string {
   return url.replace(/ticket=[^&]+/i, "ticket=<redacted>");
+}
+
+function retryDelayMsFor(response: Response, fallbackMs: number, attempt: number): number {
+  const retryAfter = response.headers.get("retry-after");
+  const retryAfterSeconds = retryAfter ? Number(retryAfter) : null;
+  if (retryAfterSeconds && Number.isFinite(retryAfterSeconds)) {
+    return Math.max(retryAfterSeconds * 1000, fallbackMs);
+  }
+  return fallbackMs * (attempt + 1);
 }
 
 function sleep(ms: number): Promise<void> {
