@@ -58,6 +58,7 @@ export interface ProcurementProcess extends CanonicalRecordBase {
   };
   publicEntityId: string | null;
   supplierId: string | null;
+  publicWorkId?: string | null;
   amount: CrossCountryCaseFile["amount"];
 }
 
@@ -70,6 +71,7 @@ export interface ProcurementContract extends CanonicalRecordBase {
   };
   publicEntityId: string | null;
   supplierId: string | null;
+  publicWorkId?: string | null;
   amount: CrossCountryCaseFile["amount"];
 }
 
@@ -167,13 +169,22 @@ export function buildCanonicalRecordsFromCrossCountryCase(
   caseFile: CrossCountryCaseFile,
 ): CanonicalRecord[] {
   const records: CanonicalRecord[] = [];
-  const receiptIds = [caseFile.receipt.receiptId];
+  const receiptIds = [
+    caseFile.receipt.receiptId,
+    ...(caseFile.relatedReceipts ?? []).map((receipt) => receipt.receiptId),
+  ];
   const publicEntityId = caseFile.agencyCode
     ? `public_entity:${caseFile.countryCode}:${caseFile.agencyCode}`
     : null;
   const supplierKey = caseFile.supplierDocument ?? caseFile.supplierName;
   const supplierId = supplierKey
     ? `supplier:${caseFile.countryCode}:${slug(supplierKey)}`
+    : null;
+  const publicWorkId = caseFile.publicWorkNumber
+    ? `public_work:${caseFile.countryCode}:${caseFile.publicWorkNumber}`
+    : null;
+  const geoPointId = caseFile.publicWorkNumber && caseFile.coordinates
+    ? `geo_point:${caseFile.countryCode}:${caseFile.publicWorkNumber}`
     : null;
 
   if (publicEntityId) {
@@ -207,6 +218,40 @@ export function buildCanonicalRecordsFromCrossCountryCase(
     });
   }
 
+  if (publicWorkId && caseFile.publicWorkNumber) {
+    records.push({
+      canonicalId: publicWorkId,
+      type: "public_work",
+      countryCode: caseFile.countryCode,
+      receiptIds,
+      confidence: "official_dataset",
+      caveats: ["Obra publica enlazada desde identificador oficial relacionado."],
+      title: caseFile.locationName ?? caseFile.title,
+      officialIds: {
+        workNumber: caseFile.publicWorkNumber,
+        procedureNumber: caseFile.procedureNumber,
+      },
+      publicEntityId,
+      geoPointId,
+    });
+  }
+
+  if (geoPointId && caseFile.coordinates && caseFile.publicWorkNumber) {
+    records.push({
+      canonicalId: geoPointId,
+      type: "geo_point",
+      countryCode: caseFile.countryCode,
+      receiptIds,
+      confidence: "official_dataset",
+      caveats: ["Coordenada cruzada desde fuente oficial relacionada."],
+      label: caseFile.locationName ?? caseFile.title,
+      coordinates: caseFile.coordinates,
+      officialIds: {
+        workNumber: caseFile.publicWorkNumber,
+      },
+    });
+  }
+
   if (caseFile.caseType === "procurement_process") {
     records.push({
       canonicalId: `procurement_process:${caseFile.countryCode}:${caseFile.procedureNumber}`,
@@ -221,6 +266,7 @@ export function buildCanonicalRecordsFromCrossCountryCase(
       },
       publicEntityId,
       supplierId,
+      publicWorkId,
       amount: caseFile.amount,
     });
     return records;
@@ -241,6 +287,7 @@ export function buildCanonicalRecordsFromCrossCountryCase(
       },
       publicEntityId,
       supplierId,
+      publicWorkId,
       amount: caseFile.amount,
     });
     return records;

@@ -34,6 +34,68 @@ test("buildPeruBudgetCases turns MEF rows into exportable evidence cases", () =>
   assert.equal(caseFile?.receipt.locatorType, "official_dataset");
 });
 
+test("buildArgentinaContractCases enriches contracts with official work geometry and SIPRO supplier data", () => {
+  const contractsCsv = [
+    "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
+    "14-1002-CON21,14-0007-LPU20,Construccion cubierta,14,Compras CNEA,105,Comision Nacional de Energia Atomica,EX-2021,14-0001-OBR21,Construccion cubierta,2021-04-07T00:00:00,30-70043585-3,Warlet S.A,8694426.61,ARS",
+  ].join("\n");
+  const workRows = [
+    {
+      numero_obra: "14-0001-OBR21",
+      nombre_obra: "Construccion cubierta",
+      latitud_1: "-34.585722",
+      longitud_1: "-58.389361",
+    },
+  ];
+  const supplierRows = [
+    {
+      cuit___nit: "30700435853",
+      razon_social: "WARLET S.A.",
+      localidad: "Ciudad Autónoma de Buenos Aires",
+      provincia: "Ciudad Autónoma de Buenos Aires",
+    },
+  ];
+
+  const [caseFile] = buildArgentinaContractCases(contractsCsv, {
+    ...options,
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    sourceName: "CONTRAT.AR contratos",
+    sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+    rawPath: "data/official/ar/onc-contratar-contratos.csv",
+  }, {
+    limit: 1,
+    works: {
+      rows: workRows,
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-OBRAS",
+        sourceName: "CONTRAT.AR obras",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
+        rawPath: "data/official/ar/onc-contratar-obras.csv",
+      },
+    },
+    suppliers: {
+      rows: supplierRows,
+      source: {
+        ...options,
+        sourceId: "AR-SIPRO-PROVEEDORES",
+        sourceName: "SIPRO proveedores",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
+        rawPath: "data/official/ar/sipro-proveedores.csv",
+      },
+    },
+  });
+
+  assert.deepEqual(caseFile?.coordinates, { lat: -34.585722, lon: -58.389361 });
+  assert.equal(caseFile?.locationName, "Construccion cubierta");
+  assert.equal(caseFile?.supplierProvince, "Ciudad Autónoma de Buenos Aires");
+  assert.equal(caseFile?.supplierLocality, "Ciudad Autónoma de Buenos Aires");
+  assert.deepEqual(
+    caseFile?.relatedReceipts?.map((receipt) => receipt.sourceId).sort(),
+    ["AR-CONTRATAR-OBRAS", "AR-SIPRO-PROVEEDORES"],
+  );
+});
+
 test("buildArgentinaContractCases turns CONTRAT.AR contracts into supplier-aware cases", () => {
   const csv = [
     "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",

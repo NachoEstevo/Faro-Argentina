@@ -20,8 +20,8 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
   assert.deepEqual(report.errors, []);
   assert.equal(report.checkedDatasets, 5);
   assert.equal(report.checkedCases, 349);
-  assert.equal(report.checkedReceipts, 349);
-  assert.equal(report.checkedRawFiles, 5);
+  assert.equal(report.checkedReceipts, 416);
+  assert.equal(report.checkedRawFiles, 6);
 });
 
 test("verifyDataSpine reports a receipt hash mismatch", async () => {
@@ -35,4 +35,27 @@ test("verifyDataSpine reports a receipt hash mismatch", async () => {
   });
 
   assert.match(report.errors.join("\n"), /receipt hash mismatch/);
+});
+
+test("verifyDataSpine validates related receipts against their raw source files", async () => {
+  const brokenDataset = structuredClone(crossCountryDataset.datasets[0]);
+  const brokenCase = brokenDataset.cases[0] as typeof brokenDataset.cases[number] & {
+    relatedReceipts: Array<typeof brokenDataset.cases[number]["receipt"]>;
+  };
+  brokenCase.relatedReceipts = [
+    {
+      ...brokenCase.receipt,
+      sourceId: "AR-SIPRO-PROVEEDORES",
+      rawPath: "data/official/ar/sipro-proveedores.csv",
+      snapshotHash: "sha256-bad",
+    },
+  ];
+
+  const report = await verifyDataSpine({
+    rootDir: new URL("../", import.meta.url),
+    sources: catalog as SourceCatalogEntry[],
+    datasets: [brokenDataset],
+  });
+
+  assert.match(report.errors.join("\n"), /related receipt hash mismatch/);
 });

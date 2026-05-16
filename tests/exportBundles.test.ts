@@ -50,11 +50,19 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
   });
 
   assert.equal(pack.stats.caseFiles, 50);
-  assert.equal(pack.stats.receipts, 50);
-  assert.deepEqual(pack.sourceIds, ["AR-CONTRATAR-CONTRATOS"]);
+  assert.equal(pack.stats.receipts > pack.stats.caseFiles, true);
+  assert.deepEqual(pack.sourceIds, [
+    "AR-CONTRATAR-CONTRATOS",
+    "AR-CONTRATAR-OBRAS",
+    "AR-SIPRO-PROVEEDORES",
+  ]);
   assert.equal(pack.cases.every((caseFile) => caseFile.supplierDocument), true);
   assert.equal(
-    pack.receipts.every((receipt) => receipt.sourceId === "AR-CONTRATAR-CONTRATOS"),
+    pack.receipts.some((receipt) => receipt.sourceId === "AR-CONTRATAR-OBRAS"),
+    true,
+  );
+  assert.equal(
+    pack.receipts.some((receipt) => receipt.sourceId === "AR-SIPRO-PROVEEDORES"),
     true,
   );
 });

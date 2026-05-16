@@ -8,6 +8,7 @@ export interface ExportableCaseFile {
   caseType?: string;
   supplierName?: string | null;
   supplierDocument?: string | null;
+  relatedReceipts?: Array<ExportableCaseFile["receipt"]>;
   receipt: {
     receiptId: string;
     sourceId: string;
@@ -71,7 +72,10 @@ export function buildCaseCollectionPack(
   filters: CaseCollectionFilters,
 ): CaseCollectionPack {
   const filteredCases = filterCaseFiles(cases, filters);
-  const receipts = filteredCases.map((caseFile) => caseFile.receipt);
+  const receipts = filteredCases.flatMap((caseFile) => [
+    caseFile.receipt,
+    ...(caseFile.relatedReceipts ?? []),
+  ]);
   const sourceIds = Array.from(new Set(receipts.map((receipt) => receipt.sourceId))).sort();
   return {
     packType: "faro_case_collection",

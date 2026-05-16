@@ -15,16 +15,19 @@ interface VerifyDataset {
   cases: Array<{
     id: string;
     caveats?: string[];
-    receipt?: {
-      sourceId: string;
-      rawPath: string;
-      snapshotHash: string;
-      fileHash: string;
-      rowHash: string;
-      locatorType: string;
-      parserVersion: string;
-    };
+    receipt?: VerifyReceipt;
+    relatedReceipts?: VerifyReceipt[];
   }>;
+}
+
+interface VerifyReceipt {
+  sourceId: string;
+  rawPath: string;
+  snapshotHash: string;
+  fileHash: string;
+  rowHash: string;
+  locatorType: string;
+  parserVersion: string;
 }
 
 export interface DataSpineVerificationReport {
@@ -78,23 +81,33 @@ export async function verifyDataSpine({
       }
 
       checkedReceipts += 1;
-      if (caseFile.receipt.sourceId !== dataset.source.sourceId) {
-        errors.push(`${caseFile.id}: receipt source mismatch`);
-      }
-      if (caseFile.receipt.rawPath !== dataset.source.filePath) {
-        errors.push(`${caseFile.id}: receipt raw path mismatch`);
-      }
-      if (caseFile.receipt.snapshotHash !== dataset.source.fileHash) {
-        errors.push(`${caseFile.id}: receipt hash mismatch`);
-      }
-      if (!caseFile.receipt.rowHash.startsWith("sha256-")) {
-        errors.push(`${caseFile.id}: missing row hash`);
-      }
-      if (caseFile.receipt.locatorType === "missing") {
-        errors.push(`${caseFile.id}: missing locator`);
-      }
-      if (caseFile.receipt.parserVersion.trim().length === 0) {
-        errors.push(`${caseFile.id}: missing parser version`);
+      validateReceipt({
+        caseId: caseFile.id,
+        receipt: caseFile.receipt,
+        label: "receipt",
+        sourceIds,
+        errors,
+        expectedSourceId: dataset.source.sourceId,
+        expectedRawPath: dataset.source.filePath,
+        expectedHash: dataset.source.fileHash,
+      });
+
+      for (const relatedReceipt of caseFile.relatedReceipts ?? []) {
+        checkedReceipts += 1;
+        const relatedRawHash = await getRawFileHash({
+          rootDir,
+          relativePath: relatedReceipt.rawPath,
+          rawFileHashes,
+          errors,
+        });
+        validateReceipt({
+          caseId: caseFile.id,
+          receipt: relatedReceipt,
+          label: "related receipt",
+          sourceIds,
+          errors,
+          expectedHash: relatedRawHash ?? undefined,
+        });
       }
     }
   }
@@ -106,6 +119,66 @@ export async function verifyDataSpine({
     checkedRawFiles: rawFileHashes.size,
     errors,
   };
+}
+
+function validateReceipt({
+  caseId,
+  receipt,
+  label,
+  sourceIds,
+  errors,
+  expectedSourceId,
+  expectedRawPath,
+  expectedHash,
+}: {
+  caseId: string;
+  receipt: VerifyReceipt;
+  label: string;
+  sourceIds: Set<string>;
+  errors: string[];
+  expectedSourceId?: string;
+  expectedRawPath?: string;
+  expectedHash?: string;
+}) {
+  if (!sourceIds.has(receipt.sourceId)) {
+    errors.push(`${caseId}: ${label} source missing from catalog`);
+  }
+  if (expectedSourceId && receipt.sourceId !== expectedSourceId) {
+    errors.push(`${caseId}: ${label} source mismatch`);
+  }
+  if (expectedRawPath && receipt.rawPath !== expectedRawPath) {
+    errors.push(`${caseId}: ${label} raw path mismatch`);
+  }
+  if (expectedHash && receipt.snapshotHash !== expectedHash) {
+    errors.push(`${caseId}: ${label} hash mismatch`);
+  }
+  if (!receipt.rowHash.startsWith("sha256-")) {
+    errors.push(`${caseId}: missing ${label} row hash`);
+  }
+  if (receipt.locatorType === "missing") {
+    errors.push(`${caseId}: missing ${label} locator`);
+  }
+  if (receipt.parserVersion.trim().length === 0) {
+    errors.push(`${caseId}: missing ${label} parser version`);
+  }
+}
+
+async function getRawFileHash({
+  rootDir,
+  relativePath,
+  rawFileHashes,
+  errors,
+}: {
+  rootDir: URL;
+  relativePath: string;
+  rawFileHashes: Map<string, string>;
+  errors: string[];
+}): Promise<string | null> {
+  const cached = rawFileHashes.get(relativePath);
+  if (cached) return cached;
+  const hash = await hashRawFile(rootDir, relativePath, errors);
+  if (hash) rawFileHashes.set(relativePath, hash);
+  return hash;
 }
 
 async function hashRawFile(

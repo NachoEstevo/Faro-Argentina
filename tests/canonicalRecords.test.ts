@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildCanonicalRecordsFromArgentinaWork,
   buildCanonicalRecordsFromCrossCountryCase,
+  type GeoPoint,
   type ProcurementContract,
   type ProcurementProcess,
   type PublicWork,
@@ -135,4 +136,90 @@ test("buildCanonicalRecordsFromCrossCountryCase emits contract records with supp
   assert.equal(contract?.supplierId, "supplier:PE:20487924050");
   assert.equal(contract?.officialIds.procedureNumber, "1122118");
   assert.equal(supplier?.officialIds.document, "20487924050");
+});
+
+test("buildCanonicalRecordsFromCrossCountryCase links Argentina contracts to official work geometry", () => {
+  const records = buildCanonicalRecordsFromCrossCountryCase({
+    id: "AR-CONTRACT-14-1002-CON21",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    workNumber: "14-1002-CON21",
+    publicWorkNumber: "14-0001-OBR21",
+    year: 2021,
+    title: "Construccion cubierta",
+    procedureNumber: "14-0007-LPU20",
+    agencyName: "Comision Nacional de Energia Atomica",
+    agencyCode: "105",
+    contractingUnit: "Compras CNEA",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -34.585722, lon: -58.389361 },
+    locationName: "Construccion cubierta",
+    locationSource: "AR-CONTRATAR-OBRAS",
+    evidenceLevel: "official_dataset",
+    amount: { value: 8694426.61, currency: "ARS", label: "monto_contrato" },
+    supplierName: "WARLET S.A.",
+    supplierDocument: "30-70043585-3",
+    supplierProvince: "Ciudad Autónoma de Buenos Aires",
+    supplierLocality: "Ciudad Autónoma de Buenos Aires",
+    receipt: {
+      receiptId: "AR-CONTRATAR-CONTRATOS-14-1002-CON21",
+      sourceId: "AR-CONTRATAR-CONTRATOS",
+      sourceName: "CONTRAT.AR contratos",
+      sourceUrl: "https://datos.gob.ar",
+      rawPath: "data/official/ar/onc-contratar-contratos.csv",
+      snapshotHash: "sha256-snapshot",
+      fileHash: "sha256-snapshot",
+      rowHash: "sha256-row",
+      recordId: "14-1002-CON21",
+      locatorType: "official_dataset",
+      extractedAt: "2026-05-16T00:00:00.000Z",
+      parserVersion: "cross-country@1",
+    },
+    relatedReceipts: [
+      {
+        receiptId: "AR-CONTRATAR-OBRAS-14-0001-OBR21",
+        sourceId: "AR-CONTRATAR-OBRAS",
+        sourceName: "CONTRAT.AR obras",
+        sourceUrl: "https://datos.gob.ar",
+        rawPath: "data/official/ar/onc-contratar-obras.csv",
+        snapshotHash: "sha256-work",
+        fileHash: "sha256-work",
+        rowHash: "sha256-row-work",
+        recordId: "14-0001-OBR21",
+        locatorType: "official_dataset",
+        extractedAt: "2026-05-16T00:00:00.000Z",
+        parserVersion: "argentina-contract-work-link@1",
+      },
+      {
+        receiptId: "AR-SIPRO-PROVEEDORES-30700435853",
+        sourceId: "AR-SIPRO-PROVEEDORES",
+        sourceName: "SIPRO proveedores",
+        sourceUrl: "https://datos.gob.ar",
+        rawPath: "data/official/ar/sipro-proveedores.csv",
+        snapshotHash: "sha256-sipro",
+        fileHash: "sha256-sipro",
+        rowHash: "sha256-row-sipro",
+        recordId: "30700435853",
+        locatorType: "official_dataset",
+        extractedAt: "2026-05-16T00:00:00.000Z",
+        parserVersion: "argentina-contract-supplier-link@1",
+      },
+    ],
+    caveats: ["Contrato no prueba pago."],
+  });
+
+  const contract = records.find(
+    (record): record is ProcurementContract => record.type === "procurement_contract",
+  );
+  const work = records.find((record): record is PublicWork => record.type === "public_work");
+  const geo = records.find((record): record is GeoPoint => record.type === "geo_point");
+  const supplier = records.find((record): record is Supplier => record.type === "supplier");
+
+  assert.equal(contract?.publicWorkId, "public_work:AR:14-0001-OBR21");
+  assert.equal(work?.canonicalId, "public_work:AR:14-0001-OBR21");
+  assert.equal(work?.receiptIds.includes("AR-CONTRATAR-OBRAS-14-0001-OBR21"), true);
+  assert.equal(work?.geoPointId, "geo_point:AR:14-0001-OBR21");
+  assert.deepEqual(geo?.coordinates, { lat: -34.585722, lon: -58.389361 });
+  assert.equal(supplier?.receiptIds.includes("AR-SIPRO-PROVEEDORES-30700435853"), true);
 });
