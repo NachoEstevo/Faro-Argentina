@@ -13,11 +13,14 @@ import {
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
+import { buildCaseLeads } from "@/lib/data/caseLeads";
+import type { SignalCaseFile } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import { CaseDetails, CountryExplorer } from "./CaseDetails";
 import EntryGate from "./EntryGate";
 import FaroMark from "./FaroMark";
+import LeadFeed from "./LeadFeed";
 
 const CaseMap = dynamic(() => import("./CaseMap"), {
   ssr: false,
@@ -71,6 +74,11 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
     });
   }, [crossCountryCases, dataset.cases, query, selectedCountry, year]);
 
+  const leads = useMemo(
+    () => buildCaseLeads(countryCases as SignalCaseFile[], { limit: 8 }),
+    [countryCases],
+  );
+
   useEffect(() => {
     if (!countryCases.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId(selectDefaultCase(countryCases));
@@ -79,6 +87,12 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
 
   const selectedCase =
     countryCases.find((caseFile) => caseFile.id === selectedCaseId) ?? countryCases[0] ?? null;
+  const countryExplorerCases = useMemo(
+    () => selectedCountry === "AR"
+      ? []
+      : orderSelectedCaseFirst(countryCases as CrossCountryCaseFile[], selectedCase?.id ?? null),
+    [countryCases, selectedCase?.id, selectedCountry],
+  );
 
   return (
     <main className="faroShell">
@@ -103,6 +117,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
         <label className="searchBox">
           <Search size={18} aria-hidden />
           <input
+            aria-label="Buscar obra, organismo o proveedor"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Buscar obra, organismo o proveedor"
@@ -115,6 +130,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
               key={country.code}
               type="button"
               className={selectedCountry === country.code ? "active" : ""}
+              aria-pressed={selectedCountry === country.code}
               onClick={() => setSelectedCountry(country.code)}
             >
               <Globe2 size={15} aria-hidden />
@@ -130,6 +146,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
             <span>Hasta {year}</span>
           </div>
           <input
+            aria-label="Filtrar por anio maximo"
             type="range"
             min={yearBounds.min}
             max={yearBounds.max}
@@ -137,6 +154,12 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
             onChange={(event) => setYear(Number(event.target.value))}
           />
         </div>
+
+        <LeadFeed
+          leads={leads}
+          selectedCaseId={selectedCase?.id ?? null}
+          onSelectCase={setSelectedCaseId}
+        />
       </section>
 
       <aside className="casePanel" aria-label="Expediente Faro">
@@ -150,7 +173,7 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
         ) : (
           <CountryExplorer
             selectedCountry={selectedCountry}
-            cases={selectedCountry === "AR" ? [] : countryCases as CrossCountryCaseFile[]}
+            cases={countryExplorerCases}
           />
         )}
       </aside>
@@ -190,4 +213,16 @@ function selectDefaultCase(cases: ExplorerCase[]): string {
     caseFile.coordinates !== null &&
     caseFile.bidderCount !== null
   )?.id ?? cases[0]?.id ?? "";
+}
+
+function orderSelectedCaseFirst(cases: CrossCountryCaseFile[], selectedCaseId: string | null): CrossCountryCaseFile[] {
+  if (!selectedCaseId) return cases;
+  const selectedIndex = cases.findIndex((caseFile) => caseFile.id === selectedCaseId);
+  if (selectedIndex <= 0) return cases;
+  const selectedCase = cases[selectedIndex];
+  return [
+    selectedCase,
+    ...cases.slice(0, selectedIndex),
+    ...cases.slice(selectedIndex + 1),
+  ];
 }
