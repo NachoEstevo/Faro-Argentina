@@ -3,6 +3,7 @@ import { Download, ExternalLink, FileSearch, Route, Satellite, ShieldCheck } fro
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import type { ExplorerCase } from "@/lib/data/explorerCases";
 
 export function CaseDetails({
   caseFile,
@@ -10,11 +11,12 @@ export function CaseDetails({
   traceMode,
   onTraceModeChange,
 }: {
-  caseFile: ArgentinaWorkCase;
+  caseFile: ExplorerCase;
   dataset: CaseDataset;
   traceMode: boolean;
   onTraceModeChange: (next: boolean) => void;
 }) {
+  const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   return (
     <div className="caseDetails">
       <div className="panelKicker">
@@ -23,18 +25,18 @@ export function CaseDetails({
       </div>
       <h1>{caseFile.title}</h1>
       <div className="caseMetaGrid">
-        <Metric label="Obra" value={caseFile.workNumber} />
+        <Metric label={isContract ? "Contrato" : "Obra"} value={caseFile.workNumber} />
         <Metric label="Procedimiento" value={caseFile.procedureNumber || "Sin dato"} />
         <Metric label="Organismo" value={caseFile.agencyName || "Sin dato"} />
-        <Metric label="Plazo" value={formatExecutionTerm(caseFile)} />
+        <Metric
+          label={isContract ? "Proveedor" : "Plazo"}
+          value={isContract ? formatSupplier(caseFile) : formatExecutionTerm(caseFile)}
+        />
       </div>
 
       <section className="whyBox">
         <h2>Por que mirar</h2>
-        <p>
-          Es una obra publica declarada con coordenadas oficiales. Faro la convierte en un
-          punto investigable: ubicacion, expediente, organismo, fuente y descarga del caso.
-        </p>
+        <p>{formatWhy(caseFile)}</p>
       </section>
 
       <section className="satelliteBox">
@@ -62,7 +64,7 @@ export function CaseDetails({
         <h2>Evidence receipt</h2>
         <dl>
           <ReceiptRow label="Fuente" value={caseFile.receipt.sourceName} />
-          <ReceiptRow label="Hash" value={`${dataset.source.fileHash.slice(0, 24)}...`} />
+          <ReceiptRow label="Hash" value={`${caseFile.receipt.fileHash.slice(0, 24)}...`} />
           <ReceiptRow
             label="Extraido"
             value={new Date(caseFile.receipt.extractedAt).toLocaleString("es-AR")}
@@ -90,8 +92,9 @@ export function CaseDetails({
           Rastro visual
         </button>
         <p>
-          En esta capa el rastro financiero no se dibuja hasta tener origen y destino
-          geograficos verificados. Por ahora se ilumina el punto oficial de la obra.
+          {isContract
+            ? "El punto se dibuja porque el contrato cruza contra una obra con coordenada oficial. El domicilio del proveedor no se usa como ubicacion de ejecucion."
+            : "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra."}
         </p>
       </section>
     </div>
@@ -190,7 +193,7 @@ function ReceiptRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function formatExecutionTerm(caseFile: ArgentinaWorkCase): string {
+function formatExecutionTerm(caseFile: Pick<ExplorerCase, "executionTerm" | "executionTermType">): string {
   if (!caseFile.executionTerm) return "Sin dato";
   return `${caseFile.executionTerm} ${caseFile.executionTermType ?? ""}`.trim();
 }
@@ -203,6 +206,17 @@ function labelCaseType(caseType: CrossCountryCaseFile["caseType"]): string {
 
 function formatSupplier(caseFile: CrossCountryCaseFile): string {
   return caseFile.supplierName ?? caseFile.supplierDocument ?? "Sin dato";
+}
+
+function formatWhy(caseFile: ExplorerCase): string {
+  if (isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract") {
+    return "Es un contrato oficial enlazado a una obra con coordenada verificada. Faro muestra proveedor, organismo, monto, fuente y evidencia relacionada sin inferir pagos.";
+  }
+  return "Es una obra publica declarada con coordenadas oficiales. Faro la convierte en un punto investigable: ubicacion, expediente, organismo, fuente y descarga del caso.";
+}
+
+function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {
+  return "caseType" in caseFile;
 }
 
 function formatAmount(caseFile: CrossCountryCaseFile): string {

@@ -3,10 +3,10 @@
 import { useEffect, useMemo } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 
-import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
+import type { ExplorerCase } from "@/lib/data/explorerCases";
 
 interface Props {
-  cases: ArgentinaWorkCase[];
+  cases: ExplorerCase[];
   selectedCaseId: string | null;
   traceMode: boolean;
   onSelectCase: (id: string) => void;
@@ -78,8 +78,8 @@ function MapFocus({
   cases,
   selectedCase,
 }: {
-  cases: ArgentinaWorkCase[];
-  selectedCase: ArgentinaWorkCase | null;
+  cases: ExplorerCase[];
+  selectedCase: ExplorerCase | null;
 }) {
   const map = useMap();
   const boundsKey = useMemo(
