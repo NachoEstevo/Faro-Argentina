@@ -210,7 +210,9 @@ Mapping rules:
 
 - `releaseId`: the JSON object key, parsed as integer.
 - `releaseDate`: extracted via regex from `itemTitle`. Pattern:
-  `\((\d{4})-(\d{2})-(\d{2})\)`. Entries whose title does not match are skipped.
+  `(\d{4})-(\d{2})-(\d{2})` (matches the first ISO date anywhere in the title;
+  real titles look like `World Imagery (Wayback 2024-08-15)` so the surrounding
+  text varies). Entries whose title does not contain a date are skipped.
 - `releaseLabel`: the `itemTitle` verbatim.
 - `year`: derived from `releaseDate`.
 
@@ -241,7 +243,7 @@ export interface WaybackRelease {
 
 const CONFIG_URL =
   "https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json";
-const TITLE_DATE_PATTERN = /\((\d{4})-(\d{2})-(\d{2})\)/;
+const TITLE_DATE_PATTERN = /(\d{4})-(\d{2})-(\d{2})/;
 
 let releasesCache: WaybackRelease[] | null = null;
 let releasesPromise: Promise<WaybackRelease[]> | null = null;

@@ -7,7 +7,7 @@ export interface WaybackRelease {
 
 const CONFIG_URL =
   "https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json";
-const TITLE_DATE_PATTERN = /\((\d{4})-(\d{2})-(\d{2})\)/;
+const TITLE_DATE_PATTERN = /(\d{4})-(\d{2})-(\d{2})/;
 
 let releasesCache: WaybackRelease[] | null = null;
 let releasesPromise: Promise<WaybackRelease[]> | null = null;
