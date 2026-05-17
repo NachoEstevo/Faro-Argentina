@@ -148,6 +148,9 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
               <Plus size={14} aria-hidden />
             </button>
           </div>
+          <p className={styles.savedEmpty}>
+            Aún no tenés búsquedas guardadas. Aplicá filtros y guardalos para volver más tarde.
+          </p>
         </section>
       </aside>
       <main className={styles.main}>
