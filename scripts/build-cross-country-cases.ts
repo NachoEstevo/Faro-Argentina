@@ -19,6 +19,7 @@ import { parseCsv, type RawArgentinaWorkRow } from "../src/lib/data/argentinaWor
 import { resolveDataBuildTimestamp } from "../src/lib/data/dataBuildTimestamps.ts";
 import { profileCsvSnapshot, profileJsonSnapshot } from "../src/lib/data/snapshots.ts";
 import { profileXlsxSnapshot, readXlsxRows } from "../src/lib/data/xlsx.ts";
+import { loadFxRegistryFromFiles } from "../src/lib/data/fxSeries.ts";
 
 const pePath = new URL("../data/official/pe/mef-2026-gasto-diario.sample.csv", import.meta.url);
 const arWorksPath = new URL("../data/official/ar/onc-contratar-obras.csv", import.meta.url);
@@ -61,8 +62,55 @@ const clCommuneCentroidsPath = new URL(
 const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta.url);
 const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
-const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
+const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
+  generatedAt?: string;
+  snapshots: Array<{ sourceId: string; fileHash: string; fetchUrl: string }>;
+};
 const argentinaContractCaseLimit = 300;
+
+function fxSnapshotMeta(sourceId: string) {
+  const entry = manifest.snapshots.find((s) => s.sourceId === sourceId);
+  if (!entry) throw new Error(`fx snapshot ${sourceId} missing from manifest`);
+  return {
+    sourceId,
+    sourceName: sourceId,
+    sourceUrl: entry.fetchUrl,
+    snapshotHash: entry.fileHash,
+  };
+}
+
+const fxRegistry = await loadFxRegistryFromFiles({
+  rootDir: new URL("../", import.meta.url),
+  profiles: [
+    {
+      currency: "ARS",
+      relativePath: "data/official/fx/ar-bcra-com-a3500.csv",
+      dateColumn: "indice_tiempo",
+      rateColumn: "dolar_referencia_com_3500",
+      dateFormat: "iso",
+      delimiter: ",",
+      sourceMeta: fxSnapshotMeta("AR-BCRA-COM-A3500"),
+    },
+    {
+      currency: "CLP",
+      relativePath: "data/official/fx/cl-bcch-dolar-observado.csv",
+      dateColumn: "fecha",
+      rateColumn: "dolar_observado",
+      dateFormat: "iso",
+      delimiter: ",",
+      sourceMeta: fxSnapshotMeta("CL-BCCH-DOLAR-OBSERVADO"),
+    },
+    {
+      currency: "PEN",
+      relativePath: "data/official/fx/pe-bcrp-sbs-venta.csv",
+      dateColumn: "fecha",
+      rateColumn: "tipo_cambio_sbs_venta",
+      dateFormat: "iso",
+      delimiter: ",",
+      sourceMeta: fxSnapshotMeta("PE-BCRP-SBS-VENTA"),
+    },
+  ],
+});
 const peruOeceContractLimit = Number(process.env.PERU_OECE_CONTRACT_LIMIT ?? "500");
 const generatedAt = resolveDataBuildTimestamp({
   envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
@@ -183,6 +231,7 @@ const peCases = buildPeruBudgetCases(peText, {
   fileHash: peProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+  fxRegistry,
 });
 const arContractCases = buildArgentinaContractCases(arContractsText, {
   sourceId: "AR-CONTRATAR-CONTRATOS",
@@ -192,6 +241,7 @@ const arContractCases = buildArgentinaContractCases(arContractsText, {
   fileHash: arContractsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+  fxRegistry,
 }, {
   limit: argentinaContractCaseLimit,
   works: {
@@ -277,6 +327,7 @@ const peContractCases = buildPeruContractCases(peContractRows, {
   fileHash: peContractsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+  fxRegistry,
 }, peruOeceContractLimit, {
   releases: (JSON.parse(peOcdsText) as { releases: [] }).releases,
   source: {
@@ -299,6 +350,7 @@ const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot,
   fileHash: clProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+  fxRegistry,
 }, {
   adminCentroids,
 });
@@ -310,6 +362,7 @@ const clOcdsCases = buildChileCompraOcdsCases(JSON.parse(clOcdsText) as ChileCom
   fileHash: clOcdsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "chilecompra-ocds@1",
+  fxRegistry,
 }, {
   adminCentroids,
 });
