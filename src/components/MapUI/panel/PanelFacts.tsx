@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { resolveCaseYear } from "@/lib/data/caseYear";
-import { formatAmountWithUsd, type AmountInput } from "@/lib/format/money";
+import { formatAmountUsdFirst, type AmountInput } from "@/lib/format/money";
 import styles from "../casePanel.module.css";
 
 interface Props {
@@ -24,7 +24,7 @@ function formatSupplier(caseFile: ExplorerCase): string {
 
 function renderAmount(amount: AmountInput | null): ReactNode {
   if (!amount) return "Sin dato";
-  const formatted = formatAmountWithUsd(amount);
+  const formatted = formatAmountUsdFirst(amount);
   return (
     <>
       <span>{formatted.primary}</span>
