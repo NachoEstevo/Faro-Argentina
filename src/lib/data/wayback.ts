@@ -8,6 +8,8 @@ export interface WaybackRelease {
 const CONFIG_URL =
   "https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json";
 const TITLE_DATE_PATTERN = /(\d{4})-(\d{2})-(\d{2})/;
+const ARCGIS_API_KEY = process.env.NEXT_PUBLIC_ARCGIS_API_KEY ?? "";
+const TOKEN_SUFFIX = ARCGIS_API_KEY ? `?token=${encodeURIComponent(ARCGIS_API_KEY)}` : "";
 
 let releasesCache: WaybackRelease[] | null = null;
 let releasesPromise: Promise<WaybackRelease[]> | null = null;
@@ -34,7 +36,7 @@ export async function loadYearlyReleases(): Promise<WaybackRelease[]> {
 }
 
 export function tileUrlForRelease(releaseId: number): string {
-  return `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${releaseId}/{z}/{y}/{x}`;
+  return `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${releaseId}/{z}/{y}/{x}${TOKEN_SUFFIX}`;
 }
 
 export function formatReleaseYear(release: WaybackRelease): string {
