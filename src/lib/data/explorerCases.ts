@@ -1,13 +1,14 @@
 import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
 import type { ArgentinaHistoricalJudicialCase } from "./argentinaHistoricalJudicial.ts";
+import type { ArticleCitation } from "./articleCitations.ts";
 import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 import { shouldExposeCaseOnMap } from "./uiGates.ts";
 
 export type ExplorerCase =
-  | ArgentinaWorkCase
-  | CrossCountryCaseFile
-  | ArgentinaHistoricalJudicialCase;
+  (ArgentinaWorkCase | CrossCountryCaseFile | ArgentinaHistoricalJudicialCase) & {
+    contextualCitations?: ArticleCitation[];
+  };
 
 export function filterExplorerCases({
   countryCode,

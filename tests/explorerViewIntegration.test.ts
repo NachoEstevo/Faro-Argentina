@@ -47,3 +47,11 @@ test("ExplorerView groups compact pivots by type and supports multiple active pi
   assert.doesNotMatch(source, /const \[activeEntity/);
   assert.doesNotMatch(source, /signalOptions/);
 });
+
+test("ExplorerView shows article citations as context, not as official trail", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /ContextualCitationsPanel/);
+  assert.match(source, /contextualCitations/);
+  assert.doesNotMatch(source, /contextualCitations.*officialTrail/s);
+});

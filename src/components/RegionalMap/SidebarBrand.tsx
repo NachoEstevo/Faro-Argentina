@@ -14,7 +14,7 @@ export default function SidebarBrand({ collapsed, onToggle, toggleVariant = "col
     <div className={styles.brand}>
       <Link href="/" className={styles.brandLink} aria-label="Volver a la home de Faro">
         <span className={styles.brandIcon} aria-hidden>
-          <img src="/brand/faro-mark.svg" alt="" width={44} height={44} decoding="async" />
+          <img src="/brand/faro-mark.png" alt="" width={44} height={44} decoding="async" />
         </span>
         <span className={styles.brandText}>
           <span className={styles.brandWordmark}>Faro</span>

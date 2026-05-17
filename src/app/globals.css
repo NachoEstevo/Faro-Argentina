@@ -1067,6 +1067,7 @@ a.faroMark:hover .faroMarkIcon {
 .whyBox,
 .signalsBox,
 .receiptBox,
+.contextCitations,
 .traceBox,
 .nextStepsBox {
   border: 1px solid var(--faro-line);
@@ -1124,6 +1125,7 @@ a.faroMark:hover .faroMarkIcon {
 .whyBox h2,
 .signalsBox h2,
 .receiptBox h2,
+.contextCitations h2,
 .nextStepsBox h2 {
   margin: 0 0 8px;
   font-size: 13px;
@@ -1357,6 +1359,148 @@ a.faroMark:hover .faroMarkIcon {
 .relatedReceiptList a {
   background: rgba(255, 255, 255, 0.04);
   color: var(--faro-amber-strong);
+  text-decoration: none;
+}
+
+.contextCitations {
+  display: grid;
+  gap: 10px;
+}
+
+.contextCitations.compact {
+  margin-top: 16px;
+}
+
+.contextCitationsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.contextCitationsHead span {
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contextCitationsHead h2 {
+  margin: 0;
+}
+
+.contextCitationsHead svg {
+  color: var(--faro-amber-strong);
+  flex: 0 0 auto;
+}
+
+.contextCitationsCaveat {
+  margin: 0;
+  color: var(--faro-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.contextCitationList {
+  display: grid;
+  gap: 8px;
+}
+
+.contextCitationItem {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  border-top: 1px solid var(--faro-line);
+  padding-top: 10px;
+}
+
+.contextCitationBadge {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(90, 169, 229, 0.35);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(90, 169, 229, 0.12);
+  color: var(--cf-accent-hi);
+}
+
+.contextCitationBadge svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.9;
+}
+
+.contextCitationBody {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.contextCitationMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 11px;
+}
+
+.contextCitationMeta strong {
+  color: var(--faro-text);
+}
+
+.contextCitationSourceCode {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 0 5px;
+  color: rgba(255, 255, 255, 0.64) !important;
+  font-family: var(--cf-font-data);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.contextCitationScope {
+  border: 1px solid rgba(243, 201, 105, 0.22);
+  border-radius: 999px;
+  padding: 2px 7px;
+  color: rgba(243, 201, 105, 0.82) !important;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.contextCitationBody p {
+  margin: 0;
+  color: var(--faro-text);
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.contextCitationBody p span {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.contextCitationMatch {
+  color: var(--faro-muted) !important;
+  font-size: 12px !important;
+}
+
+.contextCitationBody a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  color: var(--faro-amber-strong);
+  font-size: 12px;
   text-decoration: none;
 }
 

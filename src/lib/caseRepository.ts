@@ -1,8 +1,13 @@
 import payload from "../data/argentinaWorkCases.json" with { type: "json" };
 import historicalJudicialPayload from "../data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import crossCountryPayload from "../data/crossCountryCaseFiles.json" with { type: "json" };
+import articleCitationPayload from "../data/articleCitations.json" with { type: "json" };
 import type { ArgentinaHistoricalJudicialCase } from "./data/argentinaHistoricalJudicial.ts";
 import type { ArgentinaWorkCase } from "./data/argentinaWorks.ts";
+import {
+  getArticleCitationsForCase,
+  type ArticleCitation,
+} from "./data/articleCitations.ts";
 import {
   buildCaseCollectionPack as buildCollectionPack,
   filterCaseFiles as filterCollectionCases,
@@ -68,6 +73,7 @@ export interface EvidencePack {
   caseFile: FaroCaseFile;
   receipt: FaroCaseFile["receipt"];
   relatedReceipts: EvidenceReceipt[];
+  contextualCitations: ArticleCitation[];
   signals: CaseSignal[];
   caveats: string[];
   verificationSteps: string[];
@@ -99,6 +105,7 @@ interface ArgentinaHistoricalJudicialPayload {
 const rawArgentinaWorkDataset = payload as CaseDataset<ArgentinaWorkCase>;
 const crossCountryCasePayload = crossCountryPayload as CrossCountryPayload;
 const argentinaHistoricalJudicialPayload = historicalJudicialPayload as ArgentinaHistoricalJudicialPayload;
+const articleCitations = articleCitationPayload.citations as ArticleCitation[];
 const argentinaWorkCaseFiles = withStableDuplicateCaseIds(rawArgentinaWorkDataset.cases);
 const normalizedArgentinaWorkDataset: CaseDataset<ArgentinaWorkCase> = {
   ...rawArgentinaWorkDataset,
@@ -112,11 +119,11 @@ export const crossCountryDatasets = crossCountryCasePayload.datasets;
 export const crossCountryCaseFiles = crossCountryCasePayload.cases;
 export const argentinaHistoricalJudicialDatasets = argentinaHistoricalJudicialPayload.datasets;
 export const argentinaHistoricalJudicialCaseFiles = argentinaHistoricalJudicialPayload.cases;
-export const investigatorCaseFiles: FaroCaseFile[] = [
+export const investigatorCaseFiles: FaroCaseFile[] = withContextualCitations([
   ...argentinaWorkCaseFiles,
   ...crossCountryCaseFiles,
   ...argentinaHistoricalJudicialCaseFiles,
-];
+]);
 const investigatorSignalContext: CaseSignalContext = buildCaseSignalContext(
   investigatorCaseFiles as SignalCaseFile[],
 );
@@ -146,7 +153,7 @@ export function filterCaseFiles(filters: CaseCollectionFilters): FaroCaseFile[] 
 }
 
 export function buildCaseCollectionPack(filters: CaseCollectionFilters): CaseCollectionPack {
-  return buildCollectionPack(allCaseFiles(), filters);
+  return buildCollectionPack(allCaseFiles(), filters, articleCitations);
 }
 
 export function buildSignalFeed(filters: CaseCollectionFilters): CaseSignalFeed {
@@ -182,7 +189,11 @@ export function buildLeadFeed(filters: CaseLeadFilters = {}): CaseLeadFeed {
 export function getExpedienteById(id: string): ExpedienteView | null {
   const caseFile = getCaseById(id);
   if (!caseFile) return null;
-  return buildExpediente(caseFile as ExpedienteCaseFile, signalContextForCase(caseFile));
+  return buildExpediente(
+    caseFile as ExpedienteCaseFile,
+    signalContextForCase(caseFile),
+    getContextualCitationsForCase(caseFile.id),
+  );
 }
 
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
@@ -192,6 +203,7 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
     caseFile,
     receipt: caseFile.receipt,
     relatedReceipts: getRelatedReceipts(caseFile),
+    contextualCitations: getContextualCitationsForCase(caseFile.id),
     signals: buildCaseSignals(caseFile as SignalCaseFile, signalContextForCase(caseFile)),
     caveats: caseFile.caveats,
     verificationSteps: [
@@ -204,12 +216,27 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
   };
 }
 
+export function getContextualCitationsForCase(caseId: string): ArticleCitation[] {
+  return getArticleCitationsForCase(caseId, articleCitations);
+}
+
 function signalContextForCase(caseFile: FaroCaseFile): CaseSignalContext {
   return investigatorSignalContextsByCountry.get(caseFile.countryCode) ?? investigatorSignalContext;
 }
 
 function allCaseFiles(): FaroCaseFile[] {
   return investigatorCaseFiles;
+}
+
+function withContextualCitations<TCase extends FaroCaseFile>(cases: TCase[]): TCase[] {
+  return cases.map((caseFile) => {
+    const contextualCitations = getArticleCitationsForCase(caseFile.id, articleCitations);
+    if (contextualCitations.length === 0) return caseFile;
+    return {
+      ...caseFile,
+      contextualCitations,
+    };
+  });
 }
 
 function withStableDuplicateCaseIds<TCase extends FaroCaseFile>(cases: TCase[]): TCase[] {

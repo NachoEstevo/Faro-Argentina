@@ -6,6 +6,7 @@ import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { 
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import {
   buildEvidencePack,
+  buildCaseCollectionPack as buildRepositoryCaseCollectionPack,
   buildLeadFeed,
   buildSignalFeed,
   getCaseById,
@@ -176,6 +177,29 @@ test("buildCaseCollectionPack exports Argentina judicial context with related re
   assert.match(pack.verificationSteps.join("\n"), /fuentes? oficial/i);
 });
 
+test("buildCaseCollectionPack keeps contextual article citations separate from official receipts", () => {
+  const pack = buildRepositoryCaseCollectionPack({
+    countryCode: "AR",
+    caseType: "judicial_context",
+    query: "Vialidad",
+  });
+
+  assert.equal(pack.stats.caseFiles, 1);
+  assert.equal(pack.cases[0]?.id, "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME");
+  assert.equal(pack.contextualCitations.length >= 2, true);
+  assert.equal(pack.stats.contextualCitations, pack.contextualCitations.length);
+  assert.equal(
+    pack.contextualCitations.every((citation) => citation.contextRole === "journalism_context"),
+    true,
+  );
+  assert.equal(pack.sourceIds.includes("AP-NEWS"), false);
+  assert.equal(pack.sourceIds.includes("CHEQUEADO"), false);
+  assert.equal(
+    pack.receipts.some((receipt) => receipt.sourceId === "AP-NEWS" || receipt.sourceId === "CHEQUEADO"),
+    false,
+  );
+});
+
 test("buildLeadFeed exposes ranked Argentina case leads", () => {
   const feed = buildLeadFeed({ countryCode: "AR", limit: 5 });
 
@@ -226,6 +250,18 @@ test("getExpedienteById returns an expediente view for lead cases", () => {
   assert.equal((expediente?.whyItAppeared.length ?? 0) > 0, true);
 });
 
+test("getExpedienteById exposes article citations only as investigation context", () => {
+  const expediente = getExpedienteById("AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME");
+
+  assert.ok(expediente);
+  assert.equal(expediente.investigationContext.contextualCitations.length >= 2, true);
+  assert.equal(expediente.officialTrail.related.some((receipt) => receipt.sourceId === "AP-NEWS"), false);
+  assert.match(
+    expediente.investigationContext.contextualCitations[0]?.ui.caveat ?? "",
+    /no reemplaza la fuente oficial/i,
+  );
+});
+
 test("getCaseById keeps invalid-geometry official records available as data gaps", () => {
   const sourceCaseFile = getCaseById("AR-WORK-279-0003-OBR19");
   assert.ok(sourceCaseFile);
@@ -265,6 +301,22 @@ test("buildEvidencePack includes receipts, signals and official-source verificat
   assert.equal(pack.signals.length > 0, true);
   assert.equal(Array.isArray(pack.verificationSteps), true);
   assert.match(pack.verificationSteps.join("\n"), /fuente oficial/i);
+});
+
+test("buildEvidencePack appends contextual citations without changing receipt semantics", () => {
+  const sourceCaseFile = getCaseById("AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME");
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(pack.contextualCitations.length >= 2, true);
+  assert.equal(pack.relatedReceipts.some((receipt) => receipt.sourceId === "AP-NEWS"), false);
+  assert.equal(
+    pack.contextualCitations.every((citation) =>
+      citation.caveats.some((caveat) => /no reemplaza la fuente oficial/i.test(caveat))
+    ),
+    true,
+  );
 });
 
 test("buildEvidencePack handles decoded slash-containing case ids", () => {

@@ -6,6 +6,7 @@ import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import { CaseSignalPanel } from "@/components/CaseSignals";
+import { ContextualCitationsPanel } from "@/components/ContextualCitations";
 import styles from "../casePanel.module.css";
 
 interface Props {
@@ -31,7 +32,12 @@ function shortSource(sourceId: string): string {
 }
 
 export default function PanelTechDetails({ caseFile, signalContext }: Props) {
-  const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext);
+  const contextualCitations = caseFile.contextualCitations ?? [];
+  const expediente = buildExpediente(
+    caseFile as ExpedienteCaseFile,
+    signalContext,
+    contextualCitations,
+  );
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
   return (
     <details className={styles.accordion}>
@@ -70,6 +76,7 @@ export default function PanelTechDetails({ caseFile, signalContext }: Props) {
             </div>
           </div>
         )}
+        <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
       </div>
     </details>
   );

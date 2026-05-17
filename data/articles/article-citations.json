@@ -1,0 +1,1142 @@
+{
+  "citations": [
+    {
+      "citationId": "chequeado-vialidad-corte-2025-06-10",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "La Corte fallo contra Cristina Fernandez de Kirchner en la causa Vialidad",
+      "publisher": "Chequeado",
+      "publisherShortName": "Chequeado",
+      "authors": [
+        "Equipo Chequeado"
+      ],
+      "url": "https://chequeado.com/el-explicador/la-corte-fallo-contra-cristina-fernandez-de-kirchner-en-la-causa-vialidad-ira-presa-y-no-podra-ser-candidata/comment-page-1/",
+      "archiveUrl": null,
+      "publishedAt": "2025-06-10",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+        "AR-HIST-JUD-VIALIDAD-DNV-9067-2007-RP9",
+        "AR-HIST-JUD-VIALIDAD-DNV-12309-2007-RN288",
+        "AR-HIST-JUD-VIALIDAD-DNV-12328-2007-RP12",
+        "AR-HIST-JUD-VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
+        "AR-HIST-JUD-VIALIDAD-DNV-1615-2008-CANTERAS-RN3"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+      ],
+      "matchBasis": [
+        {
+          "field": "procedureNumber",
+          "value": "CFP 5048/2016/TO1",
+          "matchType": "exact"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Chequeado reporta que la Corte Suprema dejo firme la sentencia en la Causa Vialidad.",
+          "support": "official_receipt_confirms_field",
+          "officialReceiptIds": [
+            "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia periodistica; usar solo como contexto y abrir el receipt judicial oficial antes de citar el estado de la causa.",
+        "Contexto de causa madre para la familia de casos Vialidad; no es mencion individual de cada obra DNV."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "case_family"
+    },
+    {
+      "citationId": "ap-vialidad-supreme-court-2025-06-10",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Argentine Supreme Court upholds corruption conviction against former President Cristina Fernández",
+      "publisher": "AP News",
+      "publisherShortName": "AP",
+      "authors": [
+        "Isabel Debre"
+      ],
+      "url": "https://apnews.com/article/ef593f1f06cdc98ca084dad45d9e54e4",
+      "archiveUrl": null,
+      "publishedAt": "2025-06-10",
+      "retrievedAt": "2026-05-17",
+      "language": "en",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+        "AR-HIST-JUD-VIALIDAD-DNV-9067-2007-RP9",
+        "AR-HIST-JUD-VIALIDAD-DNV-12309-2007-RN288",
+        "AR-HIST-JUD-VIALIDAD-DNV-12328-2007-RP12",
+        "AR-HIST-JUD-VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
+        "AR-HIST-JUD-VIALIDAD-DNV-1615-2008-CANTERAS-RN3"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+        "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Vialidad",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "AP reporta la decision de la Corte Suprema y el contexto politico-judicial del caso.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia periodistica internacional; no sustituye el documento judicial oficial ni los expedientes administrativos.",
+        "Contexto de causa madre para la familia de casos Vialidad; no es mencion individual de cada obra DNV."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "case_family"
+    },
+    {
+      "citationId": "reuters-lanacion-vialidad-2025-06-10",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Corte suprema argentina confirma condena a prisión a expresidenta peronista Cristina Fernández",
+      "publisher": "Reuters via LA NACION",
+      "publisherShortName": "Reuters",
+      "authors": [
+        "Leila Miller",
+        "Lucila Sigal"
+      ],
+      "url": "https://www.lanacion.com.ar/agencias/corte-suprema-argentina-confirma-condena-a-prision-a-expresidenta-peronista-cristina-fernandez-nid10062025/",
+      "archiveUrl": null,
+      "publishedAt": "2025-06-10",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+        "AR-HIST-JUD-VIALIDAD-DNV-9067-2007-RP9",
+        "AR-HIST-JUD-VIALIDAD-DNV-12309-2007-RN288",
+        "AR-HIST-JUD-VIALIDAD-DNV-12328-2007-RP12",
+        "AR-HIST-JUD-VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
+        "AR-HIST-JUD-VIALIDAD-DNV-1615-2008-CANTERAS-RN3"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Vialidad",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Reuters reporta la confirmacion judicial y el marco politico del caso.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "El titular pertenece al medio; Faro lo muestra como referencia externa y no como afirmacion propia.",
+        "Contexto de causa madre para la familia de casos Vialidad; no es mencion individual de cada obra DNV."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "case_family"
+    },
+    {
+      "citationId": "dw-vialidad-corte-2025-06-10",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Corte confirma condena de prisión contra Cristina Fernández",
+      "publisher": "Deutsche Welle",
+      "publisherShortName": "DW",
+      "authors": [
+        "DW",
+        "EFE",
+        "AFP",
+        "Clarín"
+      ],
+      "url": "https://www.dw.com/es/corte-suprema-argentina-confirma-condena-a-seis-a%C3%B1os-de-prisi%C3%B3n-de-cristina-fern%C3%A1ndez/a-72863968",
+      "archiveUrl": null,
+      "publishedAt": "2025-06-10",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+        "AR-HIST-JUD-VIALIDAD-DNV-9067-2007-RP9",
+        "AR-HIST-JUD-VIALIDAD-DNV-12309-2007-RN288",
+        "AR-HIST-JUD-VIALIDAD-DNV-12328-2007-RP12",
+        "AR-HIST-JUD-VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
+        "AR-HIST-JUD-VIALIDAD-DNV-1615-2008-CANTERAS-RN3"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Vialidad",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "DW reporta la confirmacion de la Corte Suprema y resume que la Causa Vialidad trata 51 obras viales en Santa Cruz.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CIJ-VIALIDAD-VEREDICTO-VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia periodistica internacional basada en agencias; abrir el receipt judicial oficial antes de citar el estado procesal.",
+        "Contexto de causa madre para la familia de casos Vialidad; no es mencion individual de cada obra DNV."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "case_family"
+    },
+    {
+      "citationId": "chequeado-cuadernos-claves-tof7-2026-03-17",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Causa Cuadernos: las 5 claves del juicio contra Cristina Fernández de Kirchner, ex funcionarios y empresarios",
+      "publisher": "Chequeado",
+      "publisherShortName": "Chequeado",
+      "authors": [
+        "Manuel Tarricone"
+      ],
+      "url": "https://chequeado.com/el-explicador/causa-cuadernos-las-5-claves-del-juicio-contra-cristina-fernandez-de-kirchner-ex-funcionarios-y-empresarios/",
+      "archiveUrl": null,
+      "publishedAt": "2026-03-17",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Cuadernos / TOF 7",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Chequeado explica el juicio oral de Cuadernos ante el TOF 7, el origen del expediente y la cantidad de acusados reportada por fiscalia.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia explicativa; usar el MPF y el cronograma judicial como fuente oficial para el estado del debate."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "direct_case"
+    },
+    {
+      "citationId": "chequeado-cuadernos-ppp-obra-publica-2018-08-15",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Cuadernos y PPP: cuatro de los primeros seis proyectos seran construidos por grupos empresarios involucrados en la causa",
+      "publisher": "Chequeado",
+      "publisherShortName": "Chequeado",
+      "authors": [
+        "Matías Di Santi",
+        "Martín Slipczuk"
+      ],
+      "url": "https://chequeado.com/el-explicador/cuadernos-y-ppp-cuatro-de-los-primeros-seis-proyectos-seran-construidos-por-grupos-empresarios-involucrados-en-la-causa/",
+      "archiveUrl": null,
+      "publishedAt": "2018-08-15",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Cuadernos",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Chequeado contextualiza la relacion entre Cuadernos, obra publica vial y contratos PPP; Faro lo vincula solo al expediente general TOF 7.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "No vincular esta nota a proveedores especificos sin una mencion directa y otro receipt oficial; queda acotada al contexto general de Cuadernos/TOF 7."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "case_family"
+    },
+    {
+      "citationId": "lanacion-cuadernos-camarita-empresas-2018-09-18",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Los cuadernos de las coimas: una trama delictiva en la que los empresarios no fueron víctimas",
+      "publisher": "LA NACION",
+      "publisherShortName": "LN",
+      "authors": [
+        "Hugo Alconada Mon"
+      ],
+      "url": "https://www.lanacion.com.ar/politica/una-trama-delictiva-empresarios-no-fueron-victimas-nid2173018/",
+      "archiveUrl": null,
+      "publishedAt": "2018-09-18",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026",
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-MARCALBA",
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-COARCO"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-MARCALBA",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-COARCO"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Cuadernos / La Camarita",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "MARCALBA S.A.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "COARCO SA",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "LA NACION contextualiza La Camarita dentro de Cuadernos y menciona a Marcalba y Coarco entre empresas citadas en la investigacion.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019",
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-MARCALBA",
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-COARCO"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia periodistica nacional; usar solo como contexto y abrir los receipts MPF antes de citar proveedores.",
+        "Contexto de causa madre y proveedores mencionados; no prueba irregularidad en contratos Faro actuales."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "supplier_entity"
+    },
+    {
+      "citationId": "losandes-cuadernos-ruta82-proveedores-2020-02-06",
+      "citationType": "news_article",
+      "status": "active",
+      "title": "Trece empresas involucradas en la causa Cuadernos K, en la licitación de la ruta 82",
+      "publisher": "Los Andes",
+      "publisherShortName": "Los Andes",
+      "authors": [
+        "Redaccion Los Andes"
+      ],
+      "url": "https://www.losandes.com.ar/trece-empresas-de-los-cuadernos-en-la-licitacion-de-la-ruta-82",
+      "archiveUrl": null,
+      "publishedAt": "2020-02-06",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-CONSTRUMEX",
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-MARCALBA",
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-CONCRET-NOR"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-CONSTRUMEX",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-MARCALBA",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-CONCRET-NOR"
+      ],
+      "matchBasis": [
+        {
+          "field": "supplierName",
+          "value": "CONSTRUMEX S.A.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "MARCALBA S.A.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "CONCRET NOR S.A.",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Los Andes reporta una licitacion de ruta 82 y menciona a Construmex, Marcalba y Concret Nor entre empresas nombradas en Cuadernos.",
+          "support": "article_only",
+          "officialReceiptIds": [],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia regional secundaria; sirve para contexto de proveedor, no como prueba judicial ni administrativa.",
+        "Contexto de familia de casos Cuadernos/La Camarita; no prueba irregularidad individual en cada contrato Faro.",
+        "No usar esta nota para afirmar irregularidad en contratos Faro actuales sin receipts oficiales adicionales."
+      ],
+      "parserVersion": "article-citations@1",
+      "linkScope": "supplier_entity"
+    },
+    {
+      "citationId": "ellitoral-acueducto-san-javier-tostado-contrato-2023-03-17",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "direct_case",
+      "title": "El norte se ilusiona: se firmó el contrato de obra del Acueducto San Javier - Tostado",
+      "publisher": "El Litoral",
+      "publisherShortName": "El Litoral",
+      "authors": [
+        "Ignacio Andreychuk"
+      ],
+      "url": "https://www.ellitoral.com/politica/acueducto-san-javier-tostado-firma-contrato-santa-fe-inversion-obra_0_Sl0XYxQNki.html",
+      "archiveUrl": null,
+      "publishedAt": "2023-03-17",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-501-0833-CON23"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-501-0833-CON23",
+        "AR-CONTRATAR-PROCEDIMIENTOS-501-0004-LPU22",
+        "AR-CONTRATAR-ACTAS-APERTURA-501-0004-LPU22"
+      ],
+      "matchBasis": [
+        {
+          "field": "workNumber",
+          "value": "501-0833-CON23",
+          "matchType": "exact"
+        },
+        {
+          "field": "procedureNumber",
+          "value": "501-0004-LPU22",
+          "matchType": "exact"
+        },
+        {
+          "field": "supplierName",
+          "value": "Supercemento / Roggio / Rovella / Centro Construcciones UTE",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "El Litoral informa la firma del contrato del Acueducto San Javier-Tostado, la UTE adjudicataria y una inversión de $56.948 millones.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CONTRATAR-CONTRATOS-501-0833-CON23",
+            "AR-CONTRATAR-PROCEDIMIENTOS-501-0004-LPU22"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Nota periodistica de proyecto; usar el contrato y actas oficiales para monto, adjudicatario y estado administrativo."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "montevivo-ruta3-monte-gorchs-obra-frenada-2026-05-11",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "project_context",
+      "title": "El Gobierno de Milei frenó también la obra de la Ruta 3 en el tramo Monte-Gorchs",
+      "publisher": "Monte Vivo",
+      "publisherShortName": "Monte Vivo",
+      "authors": [
+        "Esteban Raies"
+      ],
+      "url": "https://montevivo.com.ar/el-gobierno-de-milei-freno-tambien-la-obra-de-la-ruta-3-en-el-tramo-monte-gorchs/",
+      "archiveUrl": null,
+      "publishedAt": "2026-05-11",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-46-0201-CON22"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-46-0201-CON22",
+        "AR-CONTRATAR-OBRAS-46-0017-OBR22",
+        "AR-CONTRATAR-PROCEDIMIENTOS-46-0138-LPU21",
+        "AR-CONTRATAR-UBICACION-46-0017-OBR22"
+      ],
+      "matchBasis": [
+        {
+          "field": "workNumber",
+          "value": "46-0201-CON22",
+          "matchType": "exact"
+        },
+        {
+          "field": "procedureNumber",
+          "value": "46-0138-LPU21",
+          "matchType": "exact"
+        },
+        {
+          "field": "supplierName",
+          "value": "SACDE",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Monte Vivo reporta la paralización del tramo San Miguel del Monte-Gorchs de la RN 3 y menciona a SACDE como ejecutora.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CONTRATAR-CONTRATOS-46-0201-CON22",
+            "AR-CONTRATAR-PROCEDIMIENTOS-46-0138-LPU21"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto local de avance/paralizacion; verificar certificados, redeterminaciones y actas oficiales antes de concluir estado de obra."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "infocanuelas-variante-canuelas-sacde-2022-04-17",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "project_context",
+      "title": "Autopista. Se inicia la variante desde el puente La Pérgola a Ruta 3",
+      "publisher": "InfoCañuelas",
+      "publisherShortName": "InfoCañuelas",
+      "authors": [
+        "Redacción InfoCañuelas"
+      ],
+      "url": "https://www.infocanuelas.com/informacion-general/autopista-se-inicia-la-variante-desde-el-puente-la-pergola-a-ruta-3",
+      "archiveUrl": null,
+      "publishedAt": "2022-04-17",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-46-0003-CON22"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-46-0003-CON22",
+        "AR-CONTRATAR-OBRAS-46-0003-OBR22",
+        "AR-CONTRATAR-PROCEDIMIENTOS-46-0134-LPU21",
+        "AR-CONTRATAR-UBICACION-46-0003-OBR22"
+      ],
+      "matchBasis": [
+        {
+          "field": "workNumber",
+          "value": "46-0003-CON22",
+          "matchType": "exact"
+        },
+        {
+          "field": "procedureNumber",
+          "value": "46-0134-LPU21",
+          "matchType": "exact"
+        },
+        {
+          "field": "supplierName",
+          "value": "SACDE",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "InfoCañuelas contextualiza la Variante Cañuelas, el obrador de SACDE, el trazado y la inversión informada para la obra.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CONTRATAR-CONTRATOS-46-0003-CON22",
+            "AR-CONTRATAR-PROCEDIMIENTOS-46-0134-LPU21"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto local de proyecto; usar receipts CONTRAT.AR para adjudicatario, procedimiento y monto contractual."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "radio3-rada-tilly-caleta-olivia-adjudicacion-2021-12-30",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "project_context",
+      "title": "Adjudicaron la autovía Rada Tilly - Caleta Olivia que costará casi 10 mil millones de pesos",
+      "publisher": "Radio 3 Cadena Patagonia",
+      "publisherShortName": "Radio 3",
+      "authors": [
+        "Redacción Radio 3"
+      ],
+      "url": "https://radio3cadenapatagonia.com.ar/adjudicaron-la-autovia-rada-tilly-caleta-olivia-que-costara-casi-10-mil-millones-de-pesos/",
+      "archiveUrl": null,
+      "publishedAt": "2021-12-30",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-46-1585-CON21",
+        "AR-CONTRACT-46-0131-CON22"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-46-1585-CON21",
+        "AR-CONTRATAR-CONTRATOS-46-0131-CON22",
+        "AR-CONTRATAR-OBRAS-46-0006-OBR22",
+        "AR-CONTRATAR-PROCEDIMIENTOS-46-0165-LPU21",
+        "AR-CONTRATAR-UBICACION-46-0006-OBR22",
+        "AR-CONTRATAR-OFERTAS-46-0165-LPU21",
+        "AR-CONTRATAR-ACTAS-APERTURA-46-0165-LPU21"
+      ],
+      "matchBasis": [
+        {
+          "field": "procedureNumber",
+          "value": "46-0165-LPU21",
+          "matchType": "exact"
+        },
+        {
+          "field": "supplierName",
+          "value": "CPC S.A.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "workNumber",
+          "value": "46-1585-CON21 / 46-0131-CON22",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Radio 3 reporta la adjudicación del tramo RN 3 km 1867-1908,60 a CPC S.A. y el monto anunciado por Vialidad.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-CONTRATAR-CONTRATOS-46-1585-CON21",
+            "AR-CONTRATAR-CONTRATOS-46-0131-CON22",
+            "AR-CONTRATAR-PROCEDIMIENTOS-46-0165-LPU21"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto de proyecto compartido por dos registros Faro del mismo procedimiento/tramo; no es prueba de avance ni pago efectivo."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "undiario-hemodialisis-chepen-fissal-2025-04-07",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "project_context",
+      "title": "Chepén: Con 9.5 Millones Contratan Servicio de Hemodiálisis para 60 Pacientes del SIS",
+      "publisher": "UNDiario",
+      "publisherShortName": "UNDiario",
+      "authors": [
+        "Prensa UNDiario"
+      ],
+      "url": "https://undiario.pe/2025/04/07/chepen-con-9-5-millones-contratan-servicio-de-hemodialisis-para-60-pacientes-del-sis",
+      "archiveUrl": null,
+      "publishedAt": "2025-04-07",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "PE-CONTRACT-2307811-1",
+        "PE-CONTRACT-2307816-2"
+      ],
+      "matchedOfficialReceiptIds": [
+        "PE-OECE-CONTRATOS-2307811-1",
+        "PE-OECE-CONTRATOS-2307816-2",
+        "PE-OECE-OCDS-1087323"
+      ],
+      "matchBasis": [
+        {
+          "field": "procedureNumber",
+          "value": "1087323",
+          "matchType": "exact"
+        },
+        {
+          "field": "supplierName",
+          "value": "SALUD RENAL CHEPEN S.A.C.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "agencyName",
+          "value": "FISSAL / SIS",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "UNDiario reporta la contratación FISSAL de hemodiálisis en Chepén, dos contratos y el monto total cercano a S/ 9,5 millones.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "PE-OECE-CONTRATOS-2307811-1",
+            "PE-OECE-CONTRATOS-2307816-2",
+            "PE-OECE-OCDS-1087323"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto periodistico sanitario; no prueba calidad del servicio, cumplimiento medico ni pago efectivo.",
+        "Contexto de proyecto compartido por dos registros OECE del mismo proceso."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "rpp-pataz-cupaz-contexto-territorial-2025-09-13",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "territorial_context",
+      "title": "La Libertad: operativos del Comando Unificado Pataz dejan pérdidas millonarias al crimen organizado y minería ilegal",
+      "publisher": "RPP",
+      "publisherShortName": "RPP",
+      "authors": [
+        "Redacción RPP"
+      ],
+      "url": "https://rpp.pe/peru/la-libertad/la-libertad-operativos-del-comando-unificado-pataz-dejan-perdidas-millonarias-al-crimen-organizado-y-mineria-ilegal-noticia-1654944",
+      "archiveUrl": null,
+      "publishedAt": "2025-09-13",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "PE-CONTRACT-2348763-1"
+      ],
+      "matchedOfficialReceiptIds": [
+        "PE-OECE-CONTRATOS-2348763-1",
+        "PE-OECE-OCDS-1152292"
+      ],
+      "matchBasis": [
+        {
+          "field": "agencyName",
+          "value": "Ejercito Peruano / operaciones militares en Pataz",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "PE-CONTRACT-2348763-1",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "RPP contextualiza los operativos del Comando Unificado Pataz; Faro lo usa solo como contexto territorial del contrato de traslado militar.",
+          "support": "article_only",
+          "officialReceiptIds": [],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto territorial: la nota no menciona el contrato ni el proveedor; no usarla para inferir cumplimiento, necesidad, pago o responsabilidad."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "thepuertovaras-semana-puertovarina-contrato-2026-02-23",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "event_context",
+      "title": "Alcalde solicitó a Américo no presentarse en la Semana Puertovarina, pero igual se presentó",
+      "publisher": "The Puerto Varas",
+      "publisherShortName": "The Puerto Varas",
+      "authors": [
+        "Redacción The Puerto Varas"
+      ],
+      "url": "https://thepuertovaras.cl/contenidos/alcalde-solicito-a-americo-no-presentarse-en-la-semana-puertovarina-pero-igual-se-presento/",
+      "archiveUrl": null,
+      "publishedAt": "2026-02-23",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "CL-OCDS-2852-6-LP26"
+      ],
+      "matchedOfficialReceiptIds": [
+        "CL-CHILECOMPRA-OCDS-PROCESOS-2852-6-LP26",
+        "CL-CHILECOMPRA-OCDS-PROCESOS-2852-6-LP26-award"
+      ],
+      "matchBasis": [
+        {
+          "field": "procedureNumber",
+          "value": "2852-6-LP26",
+          "matchType": "exact"
+        },
+        {
+          "field": "caseId",
+          "value": "CL-OCDS-2852-6-LP26",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "The Puerto Varas contextualiza una controversia pública de la Semana Puertovarina y menciona que la licitación y el contrato ya estaban firmados.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "CL-CHILECOMPRA-OCDS-PROCESOS-2852-6-LP26",
+            "CL-CHILECOMPRA-OCDS-PROCESOS-2852-6-LP26-award"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto de evento municipal; no prueba falla contractual, pago ni incumplimiento del proveedor."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "diarioeldia-festival-los-vilos-programacion-2026-02-11",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "event_context",
+      "title": "Revisa la parrilla del Festival de Los Vilos: Gepe, Los Jaivas y Leo Rey entre otros artistas",
+      "publisher": "Diario El Día",
+      "publisherShortName": "El Día",
+      "authors": [
+        "Equipo El Día"
+      ],
+      "url": "https://www.diarioeldia.cl/noticias/2026/02/11/132763-revisa-la-parrilla-del-festival-de-los-vilos-gepe-los-jaivas-y-leo-rey-entre-otros-artistas",
+      "archiveUrl": null,
+      "publishedAt": "2026-02-11",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "CL-OCDS-3712-1-LP26"
+      ],
+      "matchedOfficialReceiptIds": [
+        "CL-CHILECOMPRA-OCDS-PROCESOS-3712-1-LP26",
+        "CL-CHILECOMPRA-OCDS-PROCESOS-3712-1-LP26-award"
+      ],
+      "matchBasis": [
+        {
+          "field": "procedureNumber",
+          "value": "3712-1-LP26",
+          "matchType": "exact"
+        },
+        {
+          "field": "caseId",
+          "value": "CL-OCDS-3712-1-LP26",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Diario El Día contextualiza la programación pública del Festival de la Canción de Los Vilos 2026.",
+          "support": "article_only",
+          "officialReceiptIds": [],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto de evento: la nota no menciona la licitación ni el proveedor; usar ChileCompra para adjudicación, monto y contrato."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "reuters-investing-cuadernos-trial-2025-11-06",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "direct_case",
+      "title": "Argentina’s ex-President Kirchner on trial over public works bribery scandal",
+      "publisher": "Reuters via Investing.com",
+      "publisherShortName": "Reuters",
+      "authors": [
+        "Reuters"
+      ],
+      "url": "https://www.investing.com/news/world-news/argentinas-expresident-kirchner-on-trial-over-public-works-bribery-scandal-4338436",
+      "archiveUrl": null,
+      "publishedAt": "2025-11-06",
+      "retrievedAt": "2026-05-17",
+      "language": "en",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "Causa Cuadernos / TOF 7",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Reuters informa el inicio del juicio oral de Cuadernos y lo contextualiza como una causa por presuntos sobornos vinculados a contratos de obra pública.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia de agencia internacional; abrir MPF/TOF 7 para fechas, imputaciones y estado procesal."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "tn-cuadernos-camarita-lectura-acusacion-2025-12-11",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "direct_case",
+      "title": "Causa Cuadernos: avanza la lectura de la acusación del tramo conocido como La Camarita",
+      "publisher": "TN",
+      "publisherShortName": "TN",
+      "authors": [
+        "Redacción TN"
+      ],
+      "url": "https://tn.com.ar/politica/2025/12/11/causa-cuadernos-avanza-la-lectura-de-la-acusacion-del-tramo-conocido-como-la-camarita/",
+      "archiveUrl": null,
+      "publishedAt": "2025-12-11",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24",
+        "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019"
+      ],
+      "matchBasis": [
+        {
+          "field": "courtCaseNumber",
+          "value": "La Camarita / TOF 7",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "caseId",
+          "value": "AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "TN reporta la lectura de la acusación del tramo La Camarita dentro del juicio Cuadernos ante el TOF 7.",
+          "support": "official_identifier_match",
+          "officialReceiptIds": [
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026",
+            "AR-MPF-CUADERNOS-CAMARITA-CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019"
+          ],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Referencia periodistica de avance procesal; el requerimiento MPF y cronograma judicial siguen siendo las fuentes oficiales."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "lanacion-cuadernos-proveedor-contexto-contratos-2018-09-18",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "supplier_entity",
+      "title": "Los cuadernos de las coimas: una trama delictiva en la que los empresarios no fueron víctimas",
+      "publisher": "LA NACION",
+      "publisherShortName": "LN",
+      "authors": [
+        "Hugo Alconada Mon"
+      ],
+      "url": "https://www.lanacion.com.ar/politica/una-trama-delictiva-empresarios-no-fueron-victimas-nid2173018/",
+      "archiveUrl": null,
+      "publishedAt": "2018-09-18",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-451-1005-CON18",
+        "AR-CONTRACT-501-0739-CON22",
+        "AR-CONTRACT-451-1003-CON18",
+        "AR-CONTRACT-501-0469-CON20",
+        "AR-CONTRACT-46-0201-CON22",
+        "AR-CONTRACT-46-0190-CON22",
+        "AR-CONTRACT-46-0003-CON22",
+        "AR-CONTRACT-46-0646-CON22",
+        "AR-CONTRACT-46-0150-CON23"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-451-1005-CON18",
+        "AR-CONTRATAR-CONTRATOS-501-0739-CON22",
+        "AR-CONTRATAR-CONTRATOS-451-1003-CON18",
+        "AR-CONTRATAR-CONTRATOS-501-0469-CON20",
+        "AR-CONTRATAR-CONTRATOS-46-0201-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0190-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0003-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0646-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0150-CON23"
+      ],
+      "matchBasis": [
+        {
+          "field": "supplierName",
+          "value": "MARCALBA S.A.",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "COARCO SA",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "IECSA / SACDE continuadora de IECSA",
+          "matchType": "manual_reviewed"
+        },
+        {
+          "field": "supplierName",
+          "value": "VIAL AGRO S.A.",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "LA NACION menciona proveedores de obra pública dentro del contexto histórico de Cuadernos; Faro cruza solo el nombre del proveedor contra contratos oficiales actuales.",
+          "support": "article_only",
+          "officialReceiptIds": [],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto de proveedor, no de contrato: no prueba irregularidad en los contratos Faro vinculados.",
+        "El match se limita a nombre de proveedor en fuente periodistica y receipt oficial; requiere revision documental antes de publicar conclusiones."
+      ],
+      "parserVersion": "article-citations@1"
+    },
+    {
+      "citationId": "losandes-ruta82-proveedor-contexto-contratos-2020-02-06",
+      "citationType": "news_article",
+      "status": "active",
+      "linkScope": "supplier_entity",
+      "title": "Trece empresas involucradas en la causa Cuadernos K, en la licitación de la ruta 82",
+      "publisher": "Los Andes",
+      "publisherShortName": "Los Andes",
+      "authors": [
+        "Redaccion Los Andes"
+      ],
+      "url": "https://www.losandes.com.ar/trece-empresas-de-los-cuadernos-en-la-licitacion-de-la-ruta-82",
+      "archiveUrl": null,
+      "publishedAt": "2020-02-06",
+      "retrievedAt": "2026-05-17",
+      "language": "es",
+      "linkedCaseIds": [
+        "AR-CONTRACT-501-0833-CON23",
+        "AR-CONTRACT-501-2585-CON22",
+        "AR-CONTRACT-501-2589-CON22",
+        "AR-CONTRACT-46-0426-CON22",
+        "AR-CONTRACT-451-1001-CON18",
+        "AR-CONTRACT-501-0723-CON22",
+        "AR-CONTRACT-451-1005-CON18",
+        "AR-CONTRACT-501-0739-CON22",
+        "AR-CONTRACT-451-1002-CON18",
+        "AR-CONTRACT-501-0468-CON20",
+        "AR-CONTRACT-46-0646-CON22",
+        "AR-CONTRACT-46-0150-CON23",
+        "AR-CONTRACT-46-0183-CON22",
+        "AR-CONTRACT-46-0184-CON22",
+        "AR-CONTRACT-46-0126-CON22",
+        "AR-CONTRACT-46-1582-CON21"
+      ],
+      "matchedOfficialReceiptIds": [
+        "AR-CONTRATAR-CONTRATOS-501-0833-CON23",
+        "AR-CONTRATAR-CONTRATOS-501-2585-CON22",
+        "AR-CONTRATAR-CONTRATOS-501-2589-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0426-CON22",
+        "AR-CONTRATAR-CONTRATOS-451-1001-CON18",
+        "AR-CONTRATAR-CONTRATOS-501-0723-CON22",
+        "AR-CONTRATAR-CONTRATOS-451-1005-CON18",
+        "AR-CONTRATAR-CONTRATOS-501-0739-CON22",
+        "AR-CONTRATAR-CONTRATOS-451-1002-CON18",
+        "AR-CONTRATAR-CONTRATOS-501-0468-CON20",
+        "AR-CONTRATAR-CONTRATOS-46-0646-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0150-CON23",
+        "AR-CONTRATAR-CONTRATOS-46-0183-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0184-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-0126-CON22",
+        "AR-CONTRATAR-CONTRATOS-46-1582-CON21"
+      ],
+      "matchBasis": [
+        {
+          "field": "supplierName",
+          "value": "Construmex / Marcalba / Concret Nor / Pose / Rovella / Vial Agro / Decavial / Luciano / Paolini / Roggio",
+          "matchType": "manual_reviewed"
+        }
+      ],
+      "claimSummaries": [
+        {
+          "summary": "Los Andes lista empresas nombradas en Cuadernos que también ofertaron Ruta 82; Faro lo muestra solo como contexto de proveedor para contratos oficiales con nombre coincidente.",
+          "support": "article_only",
+          "officialReceiptIds": [],
+          "caveat": "Referencia externa; no reemplaza la fuente oficial ni prueba pagos, avance físico o responsabilidad."
+        }
+      ],
+      "caveats": [
+        "Contexto de proveedor, no de contrato: no prueba irregularidad individual en los contratos Faro actuales.",
+        "Referencia regional secundaria; requiere abrir receipts oficiales y fuentes judiciales antes de cualquier conclusion."
+      ],
+      "parserVersion": "article-citations@1"
+    }
+  ]
+}

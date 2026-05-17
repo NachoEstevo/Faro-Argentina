@@ -25,6 +25,7 @@ import {
 } from "@/lib/data/investigatorExplorer";
 import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
+import { ContextualCitationsPanel } from "../ContextualCitations";
 import FaroMark from "../FaroMark";
 import styles from "./Explorer.module.css";
 
@@ -644,6 +645,7 @@ function ExplorerDetail({
           />
         </article>
       )}
+      <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
       {similar.length > 0 && (
         <section className={styles.similarSection} aria-label="Casos similares">
           <p className={styles.similarHead}>Casos similares</p>

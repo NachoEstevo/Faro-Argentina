@@ -9,6 +9,7 @@ import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente"
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { formatAmountWithUsd, type AmountInput } from "@/lib/format/money";
 import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
+import { ContextualCitationsPanel } from "./ContextualCitations";
 
 export function CaseDetails({
   caseFile,
@@ -25,7 +26,8 @@ export function CaseDetails({
 }) {
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
-  const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext);
+  const contextualCitations = caseFile.contextualCitations ?? [];
+  const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext, contextualCitations);
   const { hasOfficialGeometry } = expediente.investigationContext;
   const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
@@ -95,6 +97,8 @@ export function CaseDetails({
           </a>
         </div>
       </section>
+
+      <ContextualCitationsPanel citations={expediente.investigationContext.contextualCitations} />
 
       <section className="traceBox">
         <button

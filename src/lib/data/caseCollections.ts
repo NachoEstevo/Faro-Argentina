@@ -1,4 +1,5 @@
 import type { CountryCode } from "./sourceCatalog.ts";
+import type { ArticleCitation } from "./articleCitations.ts";
 import {
   buildCaseSignalContextsByCountry,
   buildCaseSignals,
@@ -51,10 +52,12 @@ export interface CaseCollectionPack {
     receipts: number;
     sources: number;
     signals: number;
+    contextualCitations: number;
   };
   sourceIds: string[];
   cases: ExportableCaseFileWithSignals[];
   receipts: ExportableCaseFile["receipt"][];
+  contextualCitations: ArticleCitation[];
   signals: Array<CaseSignal & {
     caseId: string;
     countryCode: CountryCode;
@@ -87,6 +90,7 @@ export function filterCaseFiles(
 export function buildCaseCollectionPack(
   cases: ExportableCaseFile[],
   filters: CaseCollectionFilters,
+  contextualCitations: ArticleCitation[] = [],
 ): CaseCollectionPack {
   const filteredCases = filterCaseFiles(cases, filters);
   const signalContextCases = filterCaseFiles(cases, {
@@ -112,6 +116,11 @@ export function buildCaseCollectionPack(
     caseFile.receipt,
     ...(caseFile.relatedReceipts ?? []),
   ]);
+  const filteredCaseIds = new Set(filteredCases.map((caseFile) => caseFile.id));
+  const filteredContextualCitations = contextualCitations.filter((citation) =>
+    citation.status === "active" &&
+    citation.linkedCaseIds.some((caseId) => filteredCaseIds.has(caseId))
+  );
   const sourceIds = Array.from(new Set(receipts.map((receipt) => receipt.sourceId))).sort();
   return {
     packType: "faro_case_collection",
@@ -122,10 +131,12 @@ export function buildCaseCollectionPack(
       receipts: receipts.length,
       sources: sourceIds.length,
       signals: signals.length,
+      contextualCitations: filteredContextualCitations.length,
     },
     sourceIds,
     cases: casesWithSignals,
     receipts,
+    contextualCitations: filteredContextualCitations,
     signals: signals.sort((left, right) =>
       right.priority - left.priority || left.caseId.localeCompare(right.caseId),
     ),
@@ -134,6 +145,7 @@ export function buildCaseCollectionPack(
       "Abrir cada fuente oficial indicada en los receipts.",
       "Reproducir el snapshot usando rawPath, hash y parserVersion.",
       "Cruzar contratos, presupuesto, pagos y avance antes de publicar conclusiones.",
+      "Usar referencias periodisticas solo como contexto; no sustituyen receipts oficiales.",
       "No publicar conclusiones fuertes sin revision documental adicional.",
     ],
   };

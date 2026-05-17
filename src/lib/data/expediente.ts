@@ -10,6 +10,7 @@ import {
   type ReceiptLocatorPresentation,
 } from "./evidenceReceipts.ts";
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
+import type { ArticleCitation } from "./articleCitations.ts";
 import type { GeoEvidenceItem } from "./geoEvidence.ts";
 
 export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceipts"> & {
@@ -47,6 +48,7 @@ export interface ExpedienteView {
     relatedReceiptCount: number;
     sourceCount: number;
     geoEvidence: GeoEvidenceItem[];
+    contextualCitations: ArticleCitation[];
   };
   actions: {
     officialSourceHref: string;
@@ -62,7 +64,11 @@ const verificationSteps = [
   "Cruzar pagos, avance fisico y documentos antes de publicar conclusiones.",
 ];
 
-export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: CaseSignalContext): ExpedienteView {
+export function buildExpediente(
+  caseFile: ExpedienteCaseFile,
+  signalContext?: CaseSignalContext,
+  contextualCitations: ArticleCitation[] = [],
+): ExpedienteView {
   const signals = buildCaseSignals(caseFile, signalContext);
   const primaryReceipt = toExpedienteReceipt(caseFile.receipt);
   const relatedReceipts = (caseFile.relatedReceipts ?? []).map((receipt) =>
@@ -105,6 +111,7 @@ export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: Ca
       relatedReceiptCount: relatedReceipts.length,
       sourceCount: sourceIds.size,
       geoEvidence: caseFile.geoEvidence ?? [],
+      contextualCitations,
     },
     actions: {
       officialSourceHref: primaryReceipt.sourceUrl,

@@ -10,7 +10,7 @@ export default function FaroMark({ compact = false, className = "", href = "/" }
   const content = (
     <>
       <div className="faroMarkIcon" aria-hidden>
-        <img src="/brand/faro-mark.svg" alt="" width="44" height="44" decoding="async" />
+        <img src="/brand/faro-mark.png" alt="" width="44" height="44" decoding="async" />
       </div>
       {!compact && (
         <div>
