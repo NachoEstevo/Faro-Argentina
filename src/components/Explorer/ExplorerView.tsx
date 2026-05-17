@@ -73,6 +73,15 @@ export default function ExplorerView({
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
   const [query, setQuery] = useState("");
 
+  const supplierCount = useMemo(() => {
+    const set = new Set<string>();
+    for (const caseFile of countryCases) {
+      const name = "supplierName" in caseFile ? caseFile.supplierName : null;
+      if (name) set.add(name.trim().toLowerCase());
+    }
+    return set.size;
+  }, [countryCases]);
+
   const totalAmount = useMemo(() => {
     let totalArs = 0;
     let totalUsd = 0;
@@ -246,6 +255,7 @@ export default function ExplorerView({
           <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
           <StatCard label="Monto" value={formatAmount(totalAmount.ars, totalAmount.usd)} />
           <StatCard label="A revisar" value={stateCounts.review.toLocaleString("es-AR")} />
+          <StatCard label="Proveedores" value={supplierCount.toLocaleString("es-AR")} />
         </div>
       </main>
     </section>
