@@ -63,13 +63,13 @@ async function fetchArgentina(): Promise<void> {
 
 async function fetchPeru(): Promise<void> {
   const sourceId = "PE-BCRP-SBS-VENTA";
-  const fetchUrl = `https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04640PD/json/${startYear}-01-01/${endYear}-12-31`;
+  const fetchUrl = `https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04640PD/csv/${startYear}-01-01/${endYear}-12-31`;
   const outputName = "pe-bcrp-sbs-venta.csv";
   console.log(`Fetching ${sourceId} from ${fetchUrl}`);
   const response = await fetch(fetchUrl);
   if (!response.ok) throw new Error(`${sourceId}: ${response.status} ${response.statusText}`);
-  const payload = (await response.json()) as BcrpPayload;
-  const csv = bcrpToCsv(payload);
+  const rawText = await response.text();
+  const csv = bcrpRawToCsv(rawText);
   const buffer = Buffer.from(csv, "utf8");
   const outputPath = new URL(outputName, fxOutputDir);
   await writeFile(outputPath, buffer);
@@ -125,12 +125,7 @@ async function fetchChile(): Promise<void> {
   console.log(`  wrote ${buffer.byteLength} bytes, sha256-${hash.slice(0, 12)}...`);
 }
 
-interface BcrpPayload {
-  periods: Array<{ name: string; values: string[] }>;
-}
-
-function bcrpToCsv(payload: BcrpPayload): string {
-  const rows: string[] = ["fecha,tipo_cambio_sbs_venta"];
+function bcrpRawToCsv(rawText: string): string {
   const monthIndex: Record<string, string> = {
     ene: "01",
     feb: "02",
@@ -146,19 +141,24 @@ function bcrpToCsv(payload: BcrpPayload): string {
     nov: "11",
     dic: "12",
   };
-  for (const period of payload.periods) {
-    const parts = period.name.split(".");
-    if (parts.length !== 3) continue;
-    const [dd, monAbbr, yy] = parts;
+  const lines = rawText
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/&[a-z]+;/gi, "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  const rows: string[] = ["fecha,tipo_cambio_sbs_venta"];
+  for (const line of lines) {
+    const match = line.match(/^"?(\d{2})\.(\w{3})\.(\d{2})"?,"?([\d.]+)"?$/);
+    if (!match) continue;
+    const [, dd, monAbbr, yy, valueRaw] = match;
     const mm = monthIndex[monAbbr.toLowerCase()];
     if (!mm) continue;
     const yyNum = Number(yy);
     if (!Number.isFinite(yyNum)) continue;
-    const yyyy = yyNum >= 70 ? `19${yy.padStart(2, "0")}` : `20${yy.padStart(2, "0")}`;
-    const isoDate = `${yyyy}-${mm}-${dd}`;
-    const value = period.values[0];
-    if (!value) continue;
-    rows.push(`${isoDate},${value}`);
+    const yyyy = yyNum >= 70 ? `19${yy}` : `20${yy}`;
+    rows.push(`${yyyy}-${mm}-${dd},${valueRaw}`);
   }
   return rows.join("\n") + "\n";
 }

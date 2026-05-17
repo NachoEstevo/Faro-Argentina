@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-17T17:28:27.601Z",
+  "generatedAt": "2026-05-17T18:07:49.590Z",
   "snapshots": [
     {
       "sourceId": "AR-CONTRATAR-CONTRATOS",
@@ -162,6 +162,39 @@
       "partial": true,
       "fileHash": "sha256-697e522ade5530ef485be64eb91e2234e8d72b49e5eac11dc0d2c6b38d51ba62",
       "byteSize": 148256
+    },
+    {
+      "sourceId": "AR-BCRA-COM-A3500",
+      "rawPath": "data/official/fx/ar-bcra-com-a3500.csv",
+      "fetchUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+      "fetchedAt": "2026-05-17T18:07:38.684Z",
+      "contentType": "text/csv",
+      "contentLength": "646309",
+      "partial": false,
+      "fileHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef",
+      "byteSize": 646309
+    },
+    {
+      "sourceId": "PE-BCRP-SBS-VENTA",
+      "rawPath": "data/official/fx/pe-bcrp-sbs-venta.csv",
+      "fetchUrl": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04640PD/csv/2000-01-01/2026-12-31",
+      "fetchedAt": "2026-05-17T18:07:40.285Z",
+      "contentType": "text/csv",
+      "contentLength": "110959",
+      "partial": false,
+      "fileHash": "sha256-b86356370119fe728ef42c4c66aaf6233a8e3a6aacc6ea9ae1dbdba0957c74bd",
+      "byteSize": 110959
+    },
+    {
+      "sourceId": "CL-BCCH-DOLAR-OBSERVADO",
+      "rawPath": "data/official/fx/cl-bcch-dolar-observado.csv",
+      "fetchUrl": "https://mindicador.cl/api/dolar/{year}",
+      "fetchedAt": "2026-05-17T18:07:49.590Z",
+      "contentType": "text/csv",
+      "contentLength": "117654",
+      "partial": false,
+      "fileHash": "sha256-ea803d80d57362d899ae4ed7a5c0bcd68bc8034e2edbc07f79e5fcfe23f7db70",
+      "byteSize": 117654
     }
   ]
 }
