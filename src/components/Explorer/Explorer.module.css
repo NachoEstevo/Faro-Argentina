@@ -847,6 +847,9 @@
     font-size: 18px;
     letter-spacing: -0.2px;
   }
+  .modeToggle {
+    display: none;
+  }
   .countrySelector {
     width: 100%;
     overflow-x: auto;
