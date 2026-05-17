@@ -38,6 +38,20 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
     [cases, selectedCountry],
   );
 
+  const yearBounds = useMemo(() => {
+    const years = countryCases
+      .map((caseFile) => caseFile.year)
+      .filter((value): value is number => value !== null);
+    if (years.length === 0) {
+      const now = new Date().getFullYear();
+      return { min: now, max: now };
+    }
+    return { min: Math.min(...years), max: Math.max(...years) };
+  }, [countryCases]);
+
+  const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
+  const [yearTo, setYearTo] = useState<number>(yearBounds.max);
+
   const stateCounts = useMemo(() => {
     let verified = 0;
     let review = 0;
@@ -99,6 +113,29 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
                 </label>
               );
             })}
+          </div>
+          <div className={styles.filterGroup}>
+            <p className={styles.filterGroupLabel}>Período</p>
+            <div className={styles.yearRow}>
+              <input
+                type="number"
+                className={styles.yearInput}
+                value={yearFrom}
+                min={yearBounds.min}
+                max={yearTo}
+                onChange={(event) => setYearFrom(Number(event.target.value))}
+                aria-label="Año desde"
+              />
+              <input
+                type="number"
+                className={styles.yearInput}
+                value={yearTo}
+                min={yearFrom}
+                max={yearBounds.max}
+                onChange={(event) => setYearTo(Number(event.target.value))}
+                aria-label="Año hasta"
+              />
+            </div>
           </div>
         </section>
       </aside>
