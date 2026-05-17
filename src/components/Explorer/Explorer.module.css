@@ -1053,4 +1053,27 @@
   .detailReasonBody {
     font-size: 12.5px;
   }
+  .detailTopBar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: -16px -16px 0;
+    padding: 12px 16px;
+    background: var(--cf-bg);
+    border-bottom: 1px solid var(--cf-border);
+  }
+  .detailBack {
+    font-size: 13px;
+  }
+  .detailEyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .detailChips {
+    gap: 6px;
+  }
+  .detailChip {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
 }
