@@ -68,7 +68,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     caseId: "CL-TENDER-1057491-76-LP26",
     variant: "geo",
     marker: { lat: -33.430964, lon: -70.606399 },
-    callout: { lat: -22.0, lon: -88.0 },
+    callout: { lat: -22.0, lon: -105.0 },
     kicker: "SALUD · SANTIAGO",
     title: "Hospital Roberto del Río",
     blurb: "Servicios clínicos pediátricos",
