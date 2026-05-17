@@ -130,6 +130,13 @@ a {
   background: var(--cf-bg-surface) !important;
 }
 
+.leaflet-interactive:focus,
+.leaflet-interactive:focus-visible,
+.leaflet-container path:focus,
+.leaflet-container path:focus-visible {
+  outline: none !important;
+}
+
 .mapLoading {
   display: grid;
   place-items: center;
