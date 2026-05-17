@@ -32,13 +32,14 @@ test("AportesView does not surface raw JavaScript errors to users", async () => 
   assert.doesNotMatch(source, /setStatusText\(error instanceof Error \? error\.message/);
 });
 
-test("FaroExperience exposes Aportes beside Map and Explorer without treating it as a case mode", async () => {
+test("FaroExperience keeps Aportes routeable but hides the public Aportes tab", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
 
   assert.match(source, /AportesView/);
   assert.match(source, /"map" \| "explorer" \| "aportes"/);
-  assert.match(source, /setViewMode\("aportes"\)/);
-  assert.match(source, /Aportes/);
+  assert.match(source, /viewMode === "aportes"/);
+  assert.doesNotMatch(source, /MessageSquarePlus/);
+  assert.doesNotMatch(source, /aria-pressed=\{false\}[\s\S]*?Aportes[\s\S]*?<\/button>/);
 });
 
 test("country route can open the aportes mode directly", async () => {
@@ -48,10 +49,11 @@ test("country route can open the aportes mode directly", async () => {
   assert.match(source, /"aportes"/);
 });
 
-test("regional landing toggle links to Aportes without public-community language", async () => {
+test("regional landing toggle hides the Aportes entry point", async () => {
   const source = await readFile(floatingToggleUrl, "utf8");
 
-  assert.match(source, /mode=aportes/);
-  assert.match(source, /Aportes/);
+  assert.doesNotMatch(source, /mode=aportes/);
+  assert.doesNotMatch(source, /Aportes/);
+  assert.doesNotMatch(source, /MessageSquarePlus/);
   assert.doesNotMatch(source, /Comunidad|Denuncia/);
 });

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus } from "lucide-react";
+import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -449,24 +449,6 @@ export default function FaroExperience({
             >
               <FileSearch size={13} aria-hidden />
               Explorer
-            </button>
-            <button
-              type="button"
-              className={styles.floatingToggleButton}
-              onClick={() => setViewMode("aportes")}
-              aria-pressed={false}
-            >
-              <MessageSquarePlus size={13} aria-hidden />
-              Aportes
-            </button>
-            <button
-              type="button"
-              className={styles.floatingToggleButton}
-              onClick={() => setViewMode("investigations")}
-              aria-pressed={false}
-            >
-              <FolderOpen size={13} aria-hidden />
-              Investigaciones
             </button>
           </div>
           {viewMode === "map" && !selectedCase && (
