@@ -18,7 +18,7 @@ Este sprint convierte la base chica de Faro en una base verificable y medible. A
 
 - `npm run data:verify` pasa con `errors: []`.
 - `npm run data:quality-report` no muestra blockers.
-- La base actual tiene 8 datasets, 383 casos, 670 receipts y 14 raw files verificados.
+- La base actual tiene 8 datasets, 483 casos, 1208 receipts y 14 raw files verificados.
 - El reporte de calidad muestra cobertura por Argentina, Peru y Chile sin convertir gaps en acusaciones.
 
 ## Como Interpretar Proveedor Recurrente

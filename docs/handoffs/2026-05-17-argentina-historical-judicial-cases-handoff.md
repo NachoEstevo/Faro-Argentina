@@ -14,12 +14,12 @@ Faro now includes a curated Argentina historical-judicial context dataset:
 
 The total checked-in corpus is now:
 
-- 383 cases.
-- 308 Argentina cases.
+- 483 cases.
+- 408 Argentina cases.
 - 50 Peru cases.
 - 25 Chile cases.
 - 8 datasets.
-- 670 receipts.
+- 1208 receipts.
 - 14 raw files.
 
 ## Sources Added
@@ -80,7 +80,7 @@ Passing:
 - `npm run data:quality-report`
 - `npm run data:geo-report`
 
-`npm run data:geo-report` now reports 383 total cases and 247 map-eligible
+`npm run data:geo-report` now reports 483 total cases and 305 map-eligible
 cases. The new judicial/historical cases remain off-map because they do not have
 official validated geometry.
 

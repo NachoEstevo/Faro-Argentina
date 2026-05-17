@@ -64,7 +64,7 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
     caseType: "procurement_contract",
   });
 
-  assert.equal(pack.stats.caseFiles, 50);
+  assert.equal(pack.stats.caseFiles, 150);
   assert.equal(pack.stats.receipts > pack.stats.caseFiles, true);
   assert.deepEqual(pack.sourceIds, [
     "AR-CONTRATAR-ACTAS-APERTURA",

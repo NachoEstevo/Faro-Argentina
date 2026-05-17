@@ -21,8 +21,8 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
 
   assert.deepEqual(report.errors, []);
   assert.equal(report.checkedDatasets, 8);
-  assert.equal(report.checkedCases, 383);
-  assert.equal(report.checkedReceipts, 670);
+  assert.equal(report.checkedCases, 483);
+  assert.equal(report.checkedReceipts, 1208);
   assert.equal(report.checkedRawFiles, 14);
 });
 
