@@ -6,6 +6,15 @@ import RegionalMap from "@/components/RegionalMap/RegionalMap";
 import { totalCaseCount } from "@/lib/data/countries";
 import snapshotManifest from "../../data/official/snapshot-manifest.json" with { type: "json" };
 
+export const metadata = {
+  title: "Faro - No acusa, ilumina",
+  description:
+    "Mapa y scanner de expedientes verificables para seguir dinero público con fuentes oficiales.",
+  alternates: {
+    canonical: "/",
+  },
+};
+
 interface CountryProps {
   code: "AR" | "PE" | "CL";
   name: string;

@@ -73,6 +73,35 @@ test("buildExpediente creates a procurement contract expediente from official re
   assert.equal(expediente.nextVerification.length > 0, true);
 });
 
+test("buildExpediente summarizes technical amount labels as readable money", () => {
+  const expediente = buildExpediente({
+    id: "AR-CONTRACT-46-0620-CON22",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: "OBRA: CONSTRUCCION DE OBRA BASICA Y PAVIMENTO EN VARIANTE RUTA NACIONAL N 40",
+    workNumber: "46-0620-CON22",
+    year: 2022,
+    procedureNumber: "46-0262-LPU21",
+    agencyName: "604 - Direccion Nacional de Vialidad",
+    agencyCode: "604",
+    contractingUnit: "Direccion Nacional de Vialidad",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -27.7219, lon: -67.1324 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 455370328.95, currency: "ARS", label: "monto_contrato" },
+    supplierName: "TRANSREDES SA",
+    supplierDocument: "30-71079146-1",
+    receipt: primaryReceipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  });
+
+  assert.doesNotMatch(expediente.summary.plainSummary, /monto_contrato/);
+  assert.match(expediente.summary.plainSummary, /ARS 455\.370\.329/);
+  assert.match(expediente.summary.plainSummary, /Proveedor: TRANSREDES SA/);
+  assert.equal(expediente.summary.amountLabel, "ARS 455.370.329");
+});
+
 test("buildExpediente encodes slash-containing case ids in API hrefs", () => {
   const caseFile: ExpedienteCaseFile = {
     id: "AR-CONTRACT-40/31-1003-CON21",

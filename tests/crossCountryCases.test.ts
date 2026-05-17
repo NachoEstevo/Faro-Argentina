@@ -196,6 +196,65 @@ test("buildArgentinaContractCases enriches contracts with official work geometry
   );
 });
 
+test("buildArgentinaContractCases prefers procedure detail over generic work titles", () => {
+  const contractsCsv = [
+    "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
+    "46-0620-CON22,46-0262-LPU21,OBRA: CONSTRUCCION DE OBRA BASICA Y PAVIMENTO EN VARIANTE RUTA NACIONAL N 40,46,Vialidad,604,604 - Direccion Nacional de Vialidad,EX-2021,46-0053-OBR22,VIALIDAD,2022-08-18T00:00:00,30-71079146-1,TRANSREDES SA,455370328.95,ARS",
+  ].join("\n");
+
+  const [caseFile] = buildArgentinaContractCases(contractsCsv, {
+    ...options,
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    sourceName: "CONTRAT.AR contratos",
+    sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+    rawPath: "data/official/ar/onc-contratar-contratos.csv",
+  }, {
+    limit: 1,
+    works: {
+      rows: [
+        {
+          numero_obra: "46-0053-OBR22",
+          nombre_obra: "VIALIDAD",
+          latitud_1: "-27.7219",
+          longitud_1: "-67.1324",
+        },
+      ],
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-OBRAS",
+        sourceName: "CONTRAT.AR obras",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
+        rawPath: "data/official/ar/onc-contratar-obras.csv",
+      },
+    },
+    procedures: {
+      rows: [
+        {
+          procedimiento_numero: "46-0262-LPU21",
+          procedimiento_nombre:
+            "OBRA: CONSTRUCCION DE OBRA BASICA Y PAVIMENTO EN VARIANTE - RUTA NACIONAL N 40 Y OBRAS DE ARTES MENORES - PROVINCIA DE CATAMARCA",
+          procedimiento_objeto:
+            "OBRA: CONSTRUCCION DE OBRA BASICA Y PAVIMENTO EN VARIANTE - RUTA NACIONAL N 40 Y OBRAS DE ARTES MENORES - TRAMO: LTE. LA RIOJA/CATAMARCA-BELEN - SECCION: Km 4.072,91 - Km 4.078,21 PASO EXTERNO - POR LA LOCALIDAD DE LONDRES",
+          procedimiento_estado: "Adjudicado",
+        },
+      ],
+      source: {
+        ...options,
+        sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+        sourceName: "CONTRAT.AR procedimientos",
+        sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv",
+        rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
+      },
+    },
+  });
+
+  assert.equal(
+    caseFile?.title,
+    "OBRA: CONSTRUCCION DE OBRA BASICA Y PAVIMENTO EN VARIANTE - RUTA NACIONAL N 40 Y OBRAS DE ARTES MENORES - PROVINCIA DE CATAMARCA",
+  );
+  assert.equal(caseFile?.locationName, "VIALIDAD");
+});
+
 test("buildArgentinaContractCases turns CONTRAT.AR contracts into supplier-aware cases", () => {
   const csv = [
     "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",

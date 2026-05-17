@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Faro - No acusa, ilumina</title>
+  <desc id="desc">Imagen social de Faro con marca, promesa del producto y foco en evidencia oficial.</desc>
+  <rect width="1200" height="630" fill="#030303"/>
+  <path d="M0 456H1200" stroke="#f3c969" stroke-width="2" opacity=".34"/>
+  <path d="M0 458H1200" stroke="#f3c969" stroke-width="1" opacity=".18"/>
+  <rect x="86" y="92" width="160" height="160" rx="18" fill="#030303" stroke="#f5f0df" stroke-width="1.5"/>
+  <g transform="translate(110 116) scale(1.75)">
+    <rect width="64" height="64" fill="#030303"/>
+    <path d="M10 32h15M39 32h15" stroke="#f3c969" stroke-width="2" stroke-linecap="square"/>
+    <path d="M14 27h11M39 27h11M15 37h10M39 37h10" stroke="#f3c969" stroke-width="1.25" stroke-linecap="square" opacity=".58"/>
+    <path d="M28 19h8l4 34H24l4-34Z" fill="#030303" stroke="#f5f0df" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M22 53h20l4 6H18l4-6Z" fill="#030303" stroke="#f5f0df" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M25 19h14M28 14h8M31 9h2" stroke="#f5f0df" stroke-width="2.5" stroke-linecap="square"/>
+    <path d="M29 27h6M28 34h8M28 42h3M33 42h3M27 49h4M33 49h4" stroke="#f5f0df" stroke-width="2" stroke-linecap="square"/>
+    <path d="M32 21v31" stroke="#f5f0df" stroke-width="1.2" stroke-linecap="square" opacity=".7"/>
+    <path d="M28 31h8v6h-8z" fill="#f3c969"/>
+    <path d="M9 33h46" stroke="#f3c969" stroke-width="2" stroke-linecap="square"/>
+  </g>
+  <text x="286" y="155" fill="#f3c969" font-family="Arial, Helvetica, sans-serif" font-size="28" letter-spacing="8">FARO</text>
+  <text x="286" y="238" fill="#f5f0df" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="500">No acusa, ilumina.</text>
+  <text x="92" y="394" fill="#f5f0df" font-family="Arial, Helvetica, sans-serif" font-size="34" opacity=".84">Expedientes verificables para seguir dinero publico.</text>
+  <text x="92" y="446" fill="#9da3ad" font-family="Arial, Helvetica, sans-serif" font-size="26">Fuentes oficiales · receipts · caveats · contexto territorial</text>
+  <text x="92" y="536" fill="#f3c969" font-family="Arial, Helvetica, sans-serif" font-size="22" letter-spacing="3">faro</text>
+</svg>

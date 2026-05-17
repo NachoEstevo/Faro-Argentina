@@ -72,17 +72,21 @@
 .brandIcon {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--cf-accent-faint);
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid var(--cf-border-strong);
+  border-radius: var(--cf-radius-md);
+  background: #030303;
+  box-shadow: 0 0 38px rgba(243, 201, 105, 0.12);
   flex-shrink: 0;
 }
 
 .brandIcon img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brandText {
@@ -964,15 +968,17 @@
     place-items: center;
     width: 32px;
     height: 32px;
+    overflow: hidden;
     border-radius: 8px;
-    background: var(--cf-accent-faint);
     border: 1px solid var(--cf-border-strong);
+    background: #030303;
   }
 
   .mobileBrandIcon img {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .mobileBrandText {

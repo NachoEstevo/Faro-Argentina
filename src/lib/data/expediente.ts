@@ -88,7 +88,7 @@ export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: Ca
       caseType: caseFile.caseType ?? null,
       title: caseFile.title,
       plainSummary: buildPlainSummary(caseFile),
-      amountLabel: caseFile.amount?.label ?? "Sin monto oficial",
+      amountLabel: formatAmount(caseFile.amount),
       organismLabel: firstPresent(caseFile.agencyName, caseFile.contractingUnit, caseFile.agencyCode),
       supplierLabel: firstPresent(caseFile.supplierName, caseFile.supplierDocument, "Sin proveedor identificado"),
       dateLabel: buildDateLabel(caseFile),
@@ -128,11 +128,13 @@ function toExpedienteReceipt(receipt: EvidenceReceipt): ExpedienteReceipt {
 
 function buildPlainSummary(caseFile: ExpedienteCaseFile): string {
   const typeLabel = describeCaseType(caseFile.caseType);
-  const amount = caseFile.amount?.label ? ` por ${caseFile.amount.label}` : "";
+  const amount = caseFile.amount ? ` por ${formatAmount(caseFile.amount)}` : "";
   const organism = firstPresent(caseFile.agencyName, caseFile.contractingUnit);
   const procedure = firstPresent(caseFile.procedureNumber, caseFile.workNumber);
+  const supplier = optionalFirstPresent(caseFile.supplierName, caseFile.supplierDocument);
+  const supplierText = supplier ? ` Proveedor: ${supplier}.` : "";
 
-  return `${typeLabel}: ${caseFile.title}${amount}. Organismo: ${organism}. Identificador: ${procedure}.`;
+  return `${typeLabel}: ${caseFile.title}${amount}. Organismo: ${organism}.${supplierText} Identificador: ${procedure}.`;
 }
 
 function describeCaseType(caseType: string | undefined): string {
@@ -170,6 +172,16 @@ function buildNextVerification(signals: CaseSignal[]): string[] {
 
 function firstPresent(...values: Array<string | null | undefined>): string {
   return values.find((value) => value !== null && value !== undefined && value.trim().length > 0) ?? "Sin dato oficial";
+}
+
+function optionalFirstPresent(...values: Array<string | null | undefined>): string | null {
+  return values.find((value) => value !== null && value !== undefined && value.trim().length > 0) ?? null;
+}
+
+function formatAmount(amount: ExpedienteCaseFile["amount"]): string {
+  if (!amount) return "Sin monto oficial";
+  const rounded = Math.round(amount.value);
+  return `${amount.currency} ${rounded.toLocaleString("es-AR")}`;
 }
 
 function uniqueStrings(values: string[]): string[] {

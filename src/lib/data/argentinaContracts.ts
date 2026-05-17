@@ -51,6 +51,8 @@ export interface ArgentinaSupplierRow {
 
 export interface ArgentinaProcedureRow {
   procedimiento_numero: string;
+  procedimiento_nombre?: string;
+  procedimiento_objeto?: string;
   procedimiento_estado?: string;
   procedimiento_tipo?: string;
   presupuesto_oficial_monto?: string;
@@ -189,6 +191,15 @@ function buildCase({
   const openingOfferCount = maxInteger(openingActs.map((act) => act.cantidad_ofertas_confirmadas));
   const amount = parseMoney(row.contrato_monto);
   const coordinates = work ? parseCoordinates(work.latitud_1, work.longitud_1) : null;
+  const procedureTitle = clean(procedure?.procedimiento_nombre)
+    || clean(row.procedimiento_nombre)
+    || clean(procedure?.procedimiento_objeto);
+  const title = selectContractTitle({
+    workTitle: work?.nombre_obra,
+    contractWorkTitle: row.nombre_obra,
+    procedureTitle,
+    fallback: contractNumber,
+  });
 
   return {
     id: `AR-CONTRACT-${contractNumber}`,
@@ -197,7 +208,7 @@ function buildCase({
     workNumber: contractNumber,
     publicWorkNumber: workNumber || null,
     year: parseYear(clean(row.contrato_perfeccionamiento_fecha).slice(0, 4)),
-    title: clean(work?.nombre_obra) || clean(row.nombre_obra) || clean(row.procedimiento_nombre) || contractNumber,
+    title,
     procedureNumber,
     agencyName: clean(row.organismo_nombre),
     agencyCode: clean(row.organismo_codigo_saf),
@@ -293,6 +304,39 @@ function parseCoordinates(
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
   return { lat, lon };
+}
+
+function selectContractTitle({
+  workTitle,
+  contractWorkTitle,
+  procedureTitle,
+  fallback,
+}: {
+  workTitle?: string;
+  contractWorkTitle?: string;
+  procedureTitle?: string;
+  fallback: string;
+}): string {
+  const informativeWorkTitle = [workTitle, contractWorkTitle]
+    .map((value) => clean(value))
+    .find((value) => value.length > 0 && !isGenericWorkTitle(value));
+
+  return informativeWorkTitle
+    || clean(procedureTitle)
+    || clean(workTitle)
+    || clean(contractWorkTitle)
+    || fallback;
+}
+
+function isGenericWorkTitle(value: string): boolean {
+  const normalized = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+
+  return normalized === "VIALIDAD";
 }
 
 function indexBy<TRow>(rows: TRow[], keyFor: (row: TRow) => string): Map<string, TRow> {
