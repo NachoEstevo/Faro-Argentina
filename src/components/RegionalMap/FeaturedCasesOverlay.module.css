@@ -44,10 +44,10 @@
 .dot {
   display: block;
   position: absolute;
-  left: -9px;
-  top: -9px;
-  width: 18px;
-  height: 18px;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   pointer-events: auto;
   cursor: pointer;
@@ -59,20 +59,20 @@
 
 .dot_geo {
   background: #fbbf24;
-  border: 3px solid rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(0, 0, 0, 0.85);
   box-sizing: border-box;
   box-shadow:
-    0 0 0 2px rgba(251, 191, 36, 0.95),
-    0 0 18px 4px rgba(251, 191, 36, 0.55);
+    0 0 0 1.5px rgba(251, 191, 36, 0.95),
+    0 0 12px 2px rgba(251, 191, 36, 0.55);
 }
 
 .dot_documentary {
   background: #fef3c7;
-  border: 3px solid #fbbf24;
+  border: 2px solid #fbbf24;
   box-sizing: border-box;
   box-shadow:
-    0 0 0 2px rgba(0, 0, 0, 0.7),
-    0 0 14px 3px rgba(251, 191, 36, 0.45);
+    0 0 0 1.5px rgba(0, 0, 0, 0.7),
+    0 0 10px 2px rgba(251, 191, 36, 0.45);
 }
 
 .card {
