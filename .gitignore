@@ -7,3 +7,9 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Pencil design files (local design source, not tracked)
+*.pen
+
+# Local MCP server config (per-developer paths)
+.mcp.json

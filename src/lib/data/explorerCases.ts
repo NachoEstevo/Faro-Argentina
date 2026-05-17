@@ -20,7 +20,7 @@ export function filterExplorerCases({
   argentinaCases: ArgentinaWorkCase[];
   crossCountryCases: CrossCountryCaseFile[];
   query: string;
-  year: number;
+  year: number | null;
 }): ExplorerCase[] {
   const pool = countryCode === "AR"
     ? [
@@ -31,7 +31,8 @@ export function filterExplorerCases({
 
   const normalizedQuery = query.trim().toLowerCase();
   return pool.filter((caseFile) => {
-    const matchesYear = caseFile.year === null || caseFile.year <= year;
+    const matchesYear =
+      year === null || caseFile.year === null || caseFile.year <= year;
     if (!matchesYear) return false;
     if (normalizedQuery.length === 0) return true;
     return searchableText(caseFile).includes(normalizedQuery);

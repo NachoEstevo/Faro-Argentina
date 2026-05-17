@@ -1,13 +1,41 @@
 :root {
-  --faro-bg: #080705;
-  --faro-panel: rgba(19, 18, 15, 0.9);
-  --faro-panel-strong: rgba(12, 11, 9, 0.95);
-  --faro-line: rgba(255, 255, 255, 0.13);
-  --faro-line-strong: rgba(243, 201, 105, 0.45);
-  --faro-amber: #f3c969;
-  --faro-amber-strong: #ffd985;
-  --faro-muted: rgba(255, 255, 255, 0.62);
-  --faro-text: #f8f4ea;
+  --cf-bg: #0d0f13;
+  --cf-bg-elev: #161a22;
+  --cf-bg-map: #0d0f13;
+  --cf-bg-overlay: #222936;
+  --cf-bg-surface: #1c212c;
+  --cf-border: #242a36;
+  --cf-border-strong: #323a4a;
+  --cf-text: #eef2f7;
+  --cf-text-secondary: #a8b2c1;
+  --cf-text-muted: #6c7585;
+  --cf-accent: #5aa9e5;
+  --cf-accent-hi: #b8daf0;
+  --cf-accent-dim: #3577a8;
+  --cf-accent-faint: #162636;
+  --cf-on-accent: #0d0f13;
+  --cf-state-verified: #8cbf95;
+  --cf-state-caution: #d2b876;
+  --cf-state-flag: #d09279;
+  --cf-radius-sm: 6px;
+  --cf-radius-md: 10px;
+  --cf-radius-lg: 14px;
+  --cf-shadow-pop: 0 20px 40px rgba(0, 0, 0, 0.45);
+  --cf-shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.32);
+  --cf-font-heading: var(--cf-font-heading-src), "Funnel Sans", system-ui, sans-serif;
+  --cf-font-body: var(--cf-font-body-src), "Geist", system-ui, sans-serif;
+  --cf-font-data: var(--cf-font-data-src), "Geist Mono", ui-monospace, monospace;
+
+  /* Legacy Faro Amber aliases — used by FaroExperience and CaseDetails. */
+  --faro-bg: var(--cf-bg);
+  --faro-panel: rgba(22, 26, 34, 0.9);
+  --faro-panel-strong: rgba(13, 15, 19, 0.95);
+  --faro-line: var(--cf-border);
+  --faro-line-strong: rgba(90, 169, 229, 0.45);
+  --faro-amber: var(--cf-accent);
+  --faro-amber-strong: var(--cf-accent-hi);
+  --faro-muted: var(--cf-text-muted);
+  --faro-text: var(--cf-text);
   --faro-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
 }
 
@@ -22,9 +50,10 @@ body {
 }
 
 body {
-  background: var(--faro-bg);
-  color: var(--faro-text);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -56,6 +85,51 @@ a {
   width: 100%;
 }
 
+.leafletRoot {
+  background: #11151c;
+}
+
+.leafletRoot .leaflet-tile-pane {
+  filter: brightness(0.58) contrast(1.08) saturate(0.78) hue-rotate(-8deg);
+}
+
+.leafletRoot .leaflet-control-attribution {
+  background: rgba(13, 15, 19, 0.78) !important;
+  color: var(--cf-text-muted) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 6px 0 0 0 !important;
+  font-size: 10px !important;
+  padding: 2px 8px !important;
+}
+
+.leafletRoot .leaflet-control-attribution a {
+  color: var(--cf-accent) !important;
+}
+
+.leafletRoot .leaflet-control-zoom {
+  border: 1px solid var(--cf-border) !important;
+  background: rgba(13, 15, 19, 0.78) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--cf-radius-md) !important;
+  overflow: hidden;
+}
+
+.leafletRoot .leaflet-control-zoom a {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--cf-text) !important;
+  border-bottom: 1px solid var(--cf-border) !important;
+}
+
+.leafletRoot .leaflet-control-zoom a:last-child {
+  border-bottom: 0 !important;
+}
+
+.leafletRoot .leaflet-control-zoom a:hover {
+  background: var(--cf-bg-surface) !important;
+}
+
 .mapLoading {
   display: grid;
   place-items: center;
@@ -79,23 +153,53 @@ a {
 }
 
 .leaflet-tooltip {
-  display: grid;
+  display: grid !important;
   gap: 4px;
-  max-width: 260px;
-  border: 1px solid rgba(20, 20, 20, 0.12) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18) !important;
-  color: #1f2937 !important;
+  max-width: 280px !important;
+  width: max-content !important;
+  padding: 9px 12px !important;
+  background: rgba(13, 15, 19, 0.94) !important;
+  border: 1px solid var(--cf-border-strong) !important;
+  border-radius: var(--cf-radius-md) !important;
+  box-shadow: var(--cf-shadow-soft) !important;
+  color: var(--cf-text) !important;
+  font-family: var(--cf-font-body) !important;
+  white-space: normal !important;
 }
 
 .leaflet-tooltip strong,
 .leaflet-tooltip span {
-  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.leaflet-tooltip strong {
+  font-family: var(--cf-font-heading);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--cf-text);
 }
 
 .leaflet-tooltip span {
-  color: #6b5a2a;
+  color: var(--cf-text-muted);
   font-size: 11px;
+  -webkit-line-clamp: 1;
+  line-height: 1.4;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  border-top-color: rgba(13, 15, 19, 0.94) !important;
+  border-bottom-color: rgba(13, 15, 19, 0.94) !important;
+  border-left-color: rgba(13, 15, 19, 0.94) !important;
+  border-right-color: rgba(13, 15, 19, 0.94) !important;
 }
 
 .mapVignette {
@@ -138,8 +242,11 @@ a {
 .modeSwitch {
   display: flex;
   overflow: hidden;
-  border: 1px solid var(--faro-line);
-  background: rgba(0, 0, 0, 0.54);
+  border: 1px solid var(--cf-border);
+  background: rgba(13, 15, 19, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--cf-radius-md);
 }
 
 .modeSwitch button {
@@ -162,14 +269,21 @@ a {
 }
 
 .modeSwitch button.active {
-  background: rgba(243, 201, 105, 0.14);
-  color: var(--faro-amber-strong);
+  background: rgba(90, 169, 229, 0.16);
+  color: var(--cf-text);
 }
 
 .faroMark {
   display: flex;
   align-items: center;
   gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  pointer-events: auto;
+}
+
+a.faroMark:hover .faroMarkIcon {
+  border-color: var(--cf-accent-hi);
 }
 
 .faroMarkIcon {
@@ -191,42 +305,56 @@ a {
 
 .faroMark p {
   margin: 0;
-  color: var(--faro-amber);
-  font-family: "Courier New", monospace;
-  font-size: 12px;
-  letter-spacing: 0.16em;
+  color: var(--cf-text);
+  font-family: var(--cf-font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  line-height: 1;
 }
 
 .faroMark span {
   display: block;
   margin-top: 2px;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-body);
   font-size: 12px;
+}
+
+.faroMarkIcon {
+  border-radius: var(--cf-radius-md);
+  border-color: var(--cf-border-strong);
 }
 
 .topBarMeta {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--faro-line);
-  background: rgba(0, 0, 0, 0.54);
-  padding: 9px 12px;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 12px;
+  border: 1px solid var(--cf-border);
+  background: rgba(13, 15, 19, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--cf-radius-md);
+  padding: 9px 14px;
+  color: var(--cf-text-secondary);
+  font-family: var(--cf-font-body);
+  font-size: 12.5px;
   pointer-events: auto;
 }
 
 .topBarMeta strong {
-  color: var(--faro-amber-strong);
+  color: var(--cf-accent);
+  font-family: var(--cf-font-data);
   font-size: 16px;
+  font-weight: 700;
 }
 
 .searchDock {
   top: 88px;
   left: 18px;
   display: grid;
-  width: min(390px, calc(100vw - 36px));
-  gap: 10px;
+  width: min(360px, calc(100vw - 36px));
+  gap: 12px;
   pointer-events: auto;
 }
 
@@ -236,10 +364,12 @@ a {
 .leadFeed,
 .casePanel,
 .statusStrip {
-  border: 1px solid var(--faro-line);
-  background: var(--faro-panel);
-  box-shadow: var(--faro-shadow);
+  border: 1px solid var(--cf-border);
+  background: rgba(22, 26, 34, 0.88);
+  box-shadow: var(--cf-shadow-soft);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--cf-radius-md);
 }
 
 .searchBox {
@@ -255,7 +385,9 @@ a {
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--faro-text);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 14px;
 }
 
 .searchBox input::placeholder {
@@ -286,19 +418,23 @@ a {
 }
 
 .countryRail button.active {
-  background: rgba(243, 201, 105, 0.13);
-  color: var(--faro-text);
+  background: rgba(90, 169, 229, 0.14);
+  color: var(--cf-text);
 }
 
 .countryRail span {
+  font-family: var(--cf-font-heading);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
+  letter-spacing: -0.1px;
 }
 
 .countryRail small {
-  color: rgba(255, 255, 255, 0.48);
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-data);
   font-size: 10px;
-  line-height: 1.25;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
 }
 
 .dateControl {
@@ -340,8 +476,10 @@ a {
 }
 
 .leadFeedHeader strong {
-  color: var(--faro-amber-strong);
+  color: var(--cf-accent);
+  font-family: var(--cf-font-data);
   font-size: 13px;
+  font-weight: 700;
 }
 
 .leadList {
@@ -372,8 +510,8 @@ a {
 
 .leadCard:hover,
 .leadCard.active {
-  background: rgba(243, 201, 105, 0.11);
-  color: var(--faro-text);
+  background: rgba(90, 169, 229, 0.10);
+  color: var(--cf-text);
 }
 
 .leadIcon {
@@ -381,8 +519,9 @@ a {
   width: 28px;
   height: 28px;
   place-items: center;
-  border: 1px solid rgba(243, 201, 105, 0.24);
-  color: var(--faro-amber-strong);
+  border: 1px solid rgba(90, 169, 229, 0.32);
+  color: var(--cf-accent);
+  border-radius: var(--cf-radius-sm);
 }
 
 .leadBody {

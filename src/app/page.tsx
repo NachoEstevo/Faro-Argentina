@@ -1,31 +1,63 @@
-import FaroExperience from "@/components/FaroExperience";
-import {
-  argentinaWorkDataset,
-  crossCountryCaseFiles,
-  investigatorCaseFiles,
-} from "@/lib/caseRepository";
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import type { FeatureCollection, Geometry } from "geojson";
 
-type PageSearchParams = Promise<Record<string, string | string[] | undefined>>;
+import RegionalMap from "@/components/RegionalMap/RegionalMap";
+import { totalCaseCount } from "@/lib/data/countries";
+import snapshotManifest from "../../data/official/snapshot-manifest.json" with { type: "json" };
 
-export default async function Home({ searchParams }: { searchParams?: PageSearchParams }) {
-  const params = (await searchParams) ?? {};
-  const initialMode = readParam(params.mode) === "explorer" ? "explorer" : "map";
-  const country = readParam(params.country);
-  const initialCountry = country === "PE" || country === "CL" ? country : "AR";
-  const initialEntryOpen = initialMode !== "explorer" && readParam(params.demo) !== "map";
+interface CountryProps {
+  code: "AR" | "PE" | "CL";
+  name: string;
+}
+
+export default async function Home() {
+  const geojsonPath = path.join(process.cwd(), "public", "geo", "latam-countries.json");
+  const raw = await fs.readFile(geojsonPath, "utf8");
+  const geojson = JSON.parse(raw) as FeatureCollection<Geometry, CountryProps>;
+
+  const totalCases = totalCaseCount();
+  const lastUpdated = formatGeneratedAt((snapshotManifest as { generatedAt?: string }).generatedAt);
+  const syncLabel = `Datos hasta ${monthLabel((snapshotManifest as { generatedAt?: string }).generatedAt)}`;
 
   return (
-    <FaroExperience
-      dataset={argentinaWorkDataset}
-      crossCountryCases={crossCountryCaseFiles}
-      explorerCases={investigatorCaseFiles}
-      initialCountry={initialCountry}
-      initialEntryOpen={initialEntryOpen}
-      initialMode={initialMode}
+    <RegionalMap
+      geojson={geojson}
+      totalCases={totalCases}
+      lastUpdated={lastUpdated}
+      syncLabel={syncLabel}
     />
   );
 }
 
-function readParam(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
+const MONTHS_ES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
+function formatGeneratedAt(isoDate?: string): string {
+  if (!isoDate) return "—";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return "—";
+  const day = date.getUTCDate();
+  const month = MONTHS_ES[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+  return `${day} ${month} ${year}`;
+}
+
+function monthLabel(isoDate?: string): string {
+  if (!isoDate) return "diciembre 2025";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return "diciembre 2025";
+  return `${MONTHS_ES[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 }

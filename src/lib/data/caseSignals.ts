@@ -115,6 +115,28 @@ export function selectPrimaryCaseSignal(signals: CaseSignal[]): CaseSignal | nul
   return selectLeadCaseSignal(signals);
 }
 
+export function hasWatchSignal(caseFile: SignalCaseFile, context?: CaseSignalContext): boolean {
+  return buildCaseSignals(caseFile, context).some((signal) => signal.kind === "watch");
+}
+
+export type CaseAlertSeverity = "high" | "medium" | "low";
+
+export function getCaseAlertSeverity(
+  caseFile: SignalCaseFile,
+  context?: CaseSignalContext,
+): CaseAlertSeverity | null {
+  const rank: Record<CaseAlertSeverity, number> = { high: 3, medium: 2, low: 1 };
+  let best: CaseAlertSeverity | null = null;
+  for (const signal of buildCaseSignals(caseFile, context)) {
+    if (signal.kind !== "watch") continue;
+    const sev = signal.severity ?? "medium";
+    if (best === null || rank[sev] > rank[best]) {
+      best = sev;
+    }
+  }
+  return best;
+}
+
 export function buildCaseSignalFeed(
   cases: SignalCaseFile[],
   contextCases: SignalCaseFile[] = cases,

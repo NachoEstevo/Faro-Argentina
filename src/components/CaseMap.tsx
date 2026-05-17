@@ -5,6 +5,11 @@ import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, us
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildCaseMarkerKey } from "@/lib/data/mapMarkers";
+import {
+  getCaseAlertSeverity,
+  type CaseAlertSeverity,
+  type SignalCaseFile,
+} from "@/lib/data/caseSignals";
 import { loadYearlyReleases, tileUrlForRelease } from "@/lib/data/wayback";
 import WaybackControl, { type WaybackState } from "./WaybackControl";
 
@@ -22,6 +27,14 @@ const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GI
 export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase }: Props) {
   const selectedCase = cases.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const mapCases = cases.filter((caseFile) => caseFile.coordinates !== null);
+
+  const severityById = useMemo(() => {
+    const map = new Map<string, CaseAlertSeverity | null>();
+    for (const caseFile of mapCases) {
+      map.set(caseFile.id, getCaseAlertSeverity(caseFile as SignalCaseFile));
+    }
+    return map;
+  }, [mapCases]);
 
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [retryToken, setRetryToken] = useState(0);
@@ -114,8 +127,8 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
             center={[selectedCase.coordinates.lat, selectedCase.coordinates.lon]}
             radius={65000}
             pathOptions={{
-              color: "#d8a63d",
-              fillColor: "#f3c969",
+              color: "#5aa9e5",
+              fillColor: "#5aa9e5",
               fillOpacity: 0.08,
               opacity: 0.7,
               weight: 1,
@@ -124,25 +137,30 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
         )}
         {mapCases.map((caseFile, index) => {
           const isSelected = caseFile.id === selectedCaseId;
+          const severity = severityById.get(caseFile.id) ?? null;
           const coordinates = caseFile.coordinates;
           if (!coordinates) return null;
+          const colors = pickMarkerColors(isSelected, severity);
+          const radius = isSelected ? 9 : severity === "high" ? 8 : severity === "medium" ? 7 : 6;
+          const weight = isSelected ? 3 : severity === "high" ? 2.2 : severity === "medium" ? 1.8 : 1.5;
+          const fillOpacity = isSelected ? 0.95 : severity === "high" ? 0.88 : severity === "medium" ? 0.82 : 0.7;
           return (
             <CircleMarker
               key={buildCaseMarkerKey(caseFile, index)}
               center={[coordinates.lat, coordinates.lon]}
-              radius={isSelected ? 9 : 6}
+              radius={radius}
               eventHandlers={{ click: () => onSelectCase(caseFile.id) }}
               pathOptions={{
-                color: isSelected ? "#111827" : "#7c4a03",
-                fillColor: isSelected ? "#f3c969" : "#d8a63d",
-                fillOpacity: isSelected ? 0.95 : 0.72,
+                color: colors.stroke,
+                fillColor: colors.fill,
+                fillOpacity,
                 opacity: 0.95,
-                weight: isSelected ? 3 : 1.5,
+                weight,
               }}
             >
               <Tooltip direction="top" offset={[0, -8]}>
                 <strong>{caseFile.title}</strong>
-                <span>{caseFile.workNumber}</span>
+                <span>{buildCaseSubtitle(caseFile)}</span>
               </Tooltip>
             </CircleMarker>
           );
@@ -156,6 +174,35 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
       />
     </>
   );
+}
+
+function pickMarkerColors(
+  isSelected: boolean,
+  severity: CaseAlertSeverity | null,
+): { fill: string; stroke: string } {
+  if (isSelected) {
+    return { fill: "#b8daf0", stroke: "#0d0f13" };
+  }
+  if (severity === "high") {
+    return { fill: "#d94c3a", stroke: "#6a1e15" };
+  }
+  if (severity === "medium") {
+    return { fill: "#e07a5f", stroke: "#7a3520" };
+  }
+  if (severity === "low") {
+    return { fill: "#d4a04a", stroke: "#7a5820" };
+  }
+  return { fill: "#5aa9e5", stroke: "#3577a8" };
+}
+
+function buildCaseSubtitle(caseFile: ExplorerCase): string {
+  const parts: string[] = [];
+  if (caseFile.agencyName) parts.push(caseFile.agencyName);
+  if ("supplierName" in caseFile && caseFile.supplierName) {
+    parts.push(caseFile.supplierName);
+  }
+  if (caseFile.year) parts.push(String(caseFile.year));
+  return parts.length > 0 ? parts.join(" · ") : caseFile.workNumber;
 }
 
 function MapFocus({

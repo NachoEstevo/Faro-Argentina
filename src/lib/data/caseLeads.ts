@@ -47,6 +47,7 @@ export function buildCaseLeads(
       signalContexts.get(caseFile.countryCode) ?? buildCaseSignalContext([caseFile]),
     ))
     .filter((lead): lead is CaseLead => lead !== null)
+    .filter((lead) => lead.primarySignal.kind === "watch")
     .sort((left, right) => right.sortScore - left.sortScore || left.caseId.localeCompare(right.caseId))
     .slice(0, clampLimit(filters.limit));
 }

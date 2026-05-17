@@ -1,11 +1,14 @@
+import Link from "next/link";
+
 interface Props {
   compact?: boolean;
   className?: string;
+  href?: string | null;
 }
 
-export default function FaroMark({ compact = false, className = "" }: Props) {
-  return (
-    <div className={`faroMark ${className}`}>
+export default function FaroMark({ compact = false, className = "", href = "/" }: Props) {
+  const content = (
+    <>
       <div className="faroMarkIcon" aria-hidden>
         <img src="/brand/faro-mark.svg" alt="" width="44" height="44" decoding="async" />
       </div>
@@ -15,6 +18,16 @@ export default function FaroMark({ compact = false, className = "" }: Props) {
           <span>No acusa. Ilumina.</span>
         </div>
       )}
-    </div>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link className={`faroMark ${className}`} href={href} aria-label="Volver a la home de Faro">
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={`faroMark ${className}`}>{content}</div>;
 }
