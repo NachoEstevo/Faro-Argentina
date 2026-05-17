@@ -386,3 +386,31 @@
   gap: 12px;
   padding: 24px 40px 0;
 }
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-border);
+  border-radius: 10px;
+}
+
+.statLabel {
+  margin: 0;
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cf-text-muted);
+}
+
+.statValue {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--cf-text);
+  letter-spacing: -0.3px;
+}

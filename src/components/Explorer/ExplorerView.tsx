@@ -230,8 +230,18 @@ export default function ExplorerView({
           </label>
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
+          <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
         </div>
       </main>
     </section>
+  );
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className={styles.statCard}>
+      <p className={styles.statLabel}>{label}</p>
+      <p className={styles.statValue}>{value}</p>
+    </div>
   );
 }
