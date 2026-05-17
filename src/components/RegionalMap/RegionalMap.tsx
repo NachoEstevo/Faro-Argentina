@@ -110,6 +110,9 @@ export default function RegionalMap({ geojson, totalCases, lastUpdated, syncLabe
         <WelcomeOverlay dismissed={overlayDismissed} onCTA={handleCTA} />
         <TrustStrip totalCases={totalCases} lastUpdated={lastUpdated} />
       </div>
+      {/* Featured-cases overlay portals into here so its dots and cards
+          sit above the vignette layer instead of being dimmed by it. */}
+      <div id="faro-featured-host" className={styles.featuredHost} aria-hidden />
     </main>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useMap } from "react-leaflet";
 import { ArrowRight, MapPin, Scale } from "lucide-react";
@@ -16,6 +17,9 @@ interface Projection {
   dotY: number;
   cardX: number;
   cardY: number;
+  /** End of the leader line, snapped to the card corner closest to the dot. */
+  lineEndX: number;
+  lineEndY: number;
   visible: boolean;
 }
 
@@ -28,7 +32,16 @@ export default function FeaturedCasesOverlay() {
   const map = useMap();
   const [projections, setProjections] = useState<Record<string, Projection>>({});
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
   const rafRef = useRef<number | null>(null);
+
+  // Resolve the portal host on mount. Rendering through a portal puts the
+  // dots/cards into a sibling host (z-index above the vignette overlay) so
+  // they aren't dimmed by the dark gradients the landing draws on top of
+  // the leaflet container.
+  useEffect(() => {
+    setPortalEl(document.getElementById("faro-featured-host"));
+  }, []);
 
   useEffect(() => {
     const recompute = () => {
@@ -39,6 +52,11 @@ export default function FeaturedCasesOverlay() {
       for (const fc of FEATURED_CASES) {
         const dot = map.latLngToContainerPoint([fc.marker.lat, fc.marker.lon]);
         const card = map.latLngToContainerPoint([fc.callout.lat, fc.callout.lon]);
+        // Card translate places its top-left at (card.x, card.y). Pick the
+        // card corner that's closest to the dot so the leader line tucks
+        // into the card naturally instead of always biting the top-left.
+        const lineEndX = dot.x < card.x + CARD_WIDTH / 2 ? card.x : card.x + CARD_WIDTH;
+        const lineEndY = dot.y < card.y + CARD_HEIGHT / 2 ? card.y : card.y + CARD_HEIGHT;
         const visible =
           dot.x > -MARGIN &&
           dot.y > -MARGIN &&
@@ -53,6 +71,8 @@ export default function FeaturedCasesOverlay() {
           dotY: dot.y,
           cardX: card.x,
           cardY: card.y,
+          lineEndX,
+          lineEndY,
           visible,
         };
       }
@@ -92,7 +112,9 @@ export default function FeaturedCasesOverlay() {
     router.push(`/pais/${fc.countryCode}?${params.toString()}`);
   };
 
-  return (
+  if (!portalEl) return null;
+
+  return createPortal(
     <div className={styles.host} aria-hidden={containerSize.width === 0}>
       <svg
         className={styles.lines}
@@ -108,8 +130,8 @@ export default function FeaturedCasesOverlay() {
               key={`line-${fc.caseId}`}
               x1={p.dotX}
               y1={p.dotY}
-              x2={p.cardX}
-              y2={p.cardY}
+              x2={p.lineEndX}
+              y2={p.lineEndY}
               className={`${styles.line} ${styles[`line_${fc.variant}`]}`}
             />
           );
@@ -177,6 +199,7 @@ export default function FeaturedCasesOverlay() {
           </button>
         );
       })}
-    </div>
+    </div>,
+    portalEl,
   );
 }
