@@ -4,6 +4,7 @@ node_modules/
 *.tsbuildinfo
 *.log
 *-preview.png
+public/exports/
 .env
 .env.*
 !.env.example

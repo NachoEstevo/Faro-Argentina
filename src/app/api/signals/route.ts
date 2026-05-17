@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { buildSignalFeed } from "@/lib/caseRepository";
+import { paginateItems, parsePagination } from "@/lib/api/pagination";
 import type { CountryCode } from "@/lib/data/sourceCatalog";
 
 const countries: CountryCode[] = ["AR", "PE", "CL"];
+const defaultLimit = 100;
+const maxLimit = 200;
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -16,12 +19,24 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unsupported_country" }, { status: 400 });
   }
 
-  return NextResponse.json(
-    buildSignalFeed({
-      countryCode: country ?? undefined,
-      sourceId,
-      caseType,
-      query,
-    }),
+  const feed = buildSignalFeed({
+    countryCode: country ?? undefined,
+    sourceId,
+    caseType,
+    query,
+  });
+  const result = paginateItems(
+    feed.signals,
+    parsePagination(url.searchParams, { defaultLimit, maxLimit }),
   );
+
+  return NextResponse.json({
+    ...feed,
+    signals: result.items,
+    pagination: {
+      ...result.pagination,
+      defaultLimit,
+      maxLimit,
+    },
+  });
 }
