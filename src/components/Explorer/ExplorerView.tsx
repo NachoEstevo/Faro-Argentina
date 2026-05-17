@@ -257,6 +257,22 @@ export default function ExplorerView({
           <StatCard label="A revisar" value={stateCounts.review.toLocaleString("es-AR")} />
           <StatCard label="Proveedores" value={supplierCount.toLocaleString("es-AR")} />
         </div>
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Organismo</th>
+                <th>Proveedor</th>
+                <th className={styles.tableNumeric}>Monto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </main>
     </section>
   );
