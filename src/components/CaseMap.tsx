@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
@@ -25,6 +25,7 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
 
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [retryToken, setRetryToken] = useState(0);
+  const hasArmedWaybackRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,6 +33,11 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
     const caseId = selectedCase?.id;
     if (!caseId || !coordinates) {
       setWaybackState({ status: "off" });
+      hasArmedWaybackRef.current = true;
+      return;
+    }
+    if (!hasArmedWaybackRef.current) {
+      hasArmedWaybackRef.current = true;
       return;
     }
     setWaybackState({ status: "loading", caseId });

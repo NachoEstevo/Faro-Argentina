@@ -59,9 +59,12 @@ export default function FaroExperience({
     [crossCountryCases, dataset.cases, explorerCases],
   );
   const yearBounds = useMemo(() => getYearBounds(allCases), [allCases]);
+  const isDemoMode = !initialEntryOpen && initialMode === "map";
   const [entryOpen, setEntryOpen] = useState(initialEntryOpen);
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>("");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(() =>
+    isDemoMode ? selectDefaultDemoCase(allCases) : "",
+  );
   const [query, setQuery] = useState("");
   const [year, setYear] = useState(yearBounds.max);
   const [traceMode, setTraceMode] = useState(false);
@@ -284,6 +287,15 @@ function getYearBounds(cases: Array<{ year: number | null }>) {
     min: Math.min(...years, 2017),
     max: Math.max(...years, 2023),
   };
+}
+
+function selectDefaultDemoCase(cases: ExplorerCase[]): string {
+  return cases.find((caseFile) =>
+    "caseType" in caseFile &&
+    caseFile.caseType === "procurement_contract" &&
+    caseFile.coordinates !== null &&
+    caseFile.bidderCount !== null
+  )?.id ?? cases.find((caseFile) => caseFile.coordinates !== null)?.id ?? "";
 }
 
 function orderSelectedCaseFirst(cases: CrossCountryCaseFile[], selectedCaseId: string | null): CrossCountryCaseFile[] {
