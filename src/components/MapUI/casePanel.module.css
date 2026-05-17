@@ -283,3 +283,17 @@
   border-color: var(--cp-accent);
   color: var(--cp-accent);
 }
+
+.imageryWrap :global(.waybackControl) {
+  position: static;
+  margin: 0;
+  width: 100%;
+  background: var(--cp-fact-bg);
+  border: 1px solid var(--cp-border-soft);
+  border-radius: var(--cp-radius-sm);
+  box-shadow: none;
+}
+
+.imageryWrap :global(.waybackControl header button) {
+  display: none;
+}
