@@ -295,118 +295,206 @@
   color: var(--cp-accent);
 }
 
+/* ── Imagery scrubber ───────────────────────────────────────────── */
+
 .imageryCard {
-  background: var(--cp-fact-bg);
-  border: 1px solid var(--cp-border-soft);
-  border-radius: var(--cp-radius-sm);
-  padding: 16px;
+  padding: 18px 4px 4px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
-.imageryYear {
-  font-family: var(--cf-font-heading);
-  font-size: 32px;
-  font-weight: 600;
+/* The "stage" hosts the readout, the rail, and the end labels.
+   Everything aligns to a shared horizontal scrub axis driven by
+   the --cp-scrub custom property (a percentage). */
+.imageryStage {
+  position: relative;
+  padding-top: 44px;
+  padding-bottom: 22px;
+}
+
+/* Year readout — slides horizontally with the thumb. */
+.imageryReadout {
+  position: absolute;
+  top: 0;
+  left: var(--cp-scrub, 0%);
+  transform: translateX(-50%);
+  font-family: var(--cf-font-data);
+  font-size: 28px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--cp-text);
-  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: left 220ms var(--cp-ease);
+  pointer-events: none;
 }
 
-.imagerySliderRow {
-  display: grid;
-  grid-template-columns: 28px 1fr 28px;
-  align-items: center;
-  gap: 8px;
+/* Vertical hairline from the readout down to the rail — anchors the
+   year to the position visually. */
+.imageryTick {
+  position: absolute;
+  top: 30px;
+  left: var(--cp-scrub, 0%);
+  width: 1px;
+  height: 10px;
+  background: linear-gradient(to bottom, transparent, var(--cp-accent));
+  transform: translateX(-50%);
+  transition: left 220ms var(--cp-ease);
+  pointer-events: none;
 }
 
-.imageryStep {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 6px;
-  color: var(--cp-text-muted);
-  cursor: pointer;
-  transition: background-color 120ms var(--cp-ease), color 120ms var(--cp-ease);
-}
-
-.imageryStep:hover:not(:disabled) {
-  background: var(--cp-hover);
-  color: var(--cp-text);
-}
-
-.imageryStep:disabled {
-  color: var(--cp-text-faint);
-  cursor: not-allowed;
-}
-
+/* The slider itself sits on the rail line. */
 .imagerySlider {
+  position: relative;
+  z-index: 1;
   appearance: none;
   width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
   outline: none;
   cursor: pointer;
 }
 
-.imagerySlider::-webkit-slider-thumb {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--cp-accent);
-  border: 2px solid var(--cp-surface);
-  box-shadow: 0 0 0 1px var(--cp-accent);
-  cursor: grab;
-}
-
-.imagerySlider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--cp-accent);
-  border: 2px solid var(--cp-surface);
-  box-shadow: 0 0 0 1px var(--cp-accent);
-  cursor: grab;
-}
-
-.imagerySlider:focus-visible {
-  box-shadow: 0 0 0 2px var(--cp-accent);
+/* Webkit rail: a thin filled-progress line, accent for the
+   travelled portion, faint for the rest. */
+.imagerySlider::-webkit-slider-runnable-track {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--cp-accent) 0%,
+    var(--cp-accent) var(--cp-scrub, 0%),
+    rgba(255, 255, 255, 0.1) var(--cp-scrub, 0%),
+    rgba(255, 255, 255, 0.1) 100%
+  );
   border-radius: 999px;
 }
 
-.imageryRange {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--cp-text-faint);
-  padding: 0 36px;
+.imagerySlider::-moz-range-track {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
 }
 
-.imageryHint {
+.imagerySlider::-moz-range-progress {
+  height: 2px;
+  background: var(--cp-accent);
+  border-radius: 999px;
+}
+
+/* The thumb: a small dot, slightly elevated. */
+.imagerySlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--cp-text);
+  border: 0;
+  box-shadow:
+    0 0 0 4px rgba(90, 169, 229, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: grab;
+  transition: box-shadow 160ms var(--cp-ease), transform 160ms var(--cp-ease);
+}
+
+.imagerySlider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cp-text);
+  border: 0;
+  box-shadow:
+    0 0 0 4px rgba(90, 169, 229, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: grab;
+}
+
+.imagerySlider:hover::-webkit-slider-thumb,
+.imagerySlider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 6px rgba(90, 169, 229, 0.22),
+    0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.imagerySlider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.08);
+}
+
+.imagerySlider:hover::-moz-range-thumb,
+.imagerySlider:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 6px rgba(90, 169, 229, 0.22),
+    0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.imagerySlider:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* End labels — the available range as ambient context. */
+.imageryEnds {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--cf-font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--cp-text-faint);
+  letter-spacing: -0.01em;
+  pointer-events: none;
+}
+
+/* Single discreet attribution line under the stage. */
+.imageryAttribution {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cp-text-faint);
+}
+
+/* States: loading / error */
+
+.imageryLoadingBar {
+  position: relative;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.imageryLoadingBar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cp-accent),
+    transparent
+  );
+  animation: cpImageryShimmer 1.6s var(--cp-ease) infinite;
+}
+
+@keyframes cpImageryShimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+.imageryErrorMessage {
   margin: 0;
   font-size: 12px;
   color: var(--cp-text-muted);
   line-height: 1.5;
-}
-
-.imageryError {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.imageryError p {
-  margin: 0;
-  font-size: 12px;
-  color: var(--cp-text-muted);
 }
 
 .imageryRetry {
@@ -421,6 +509,7 @@
   color: var(--cp-text);
   font-size: 12px;
   cursor: pointer;
+  transition: background-color 120ms var(--cp-ease);
 }
 
 .imageryRetry:hover {
