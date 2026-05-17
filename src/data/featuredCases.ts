@@ -39,28 +39,4 @@ export const FEATURED_CASES: FeaturedCase[] = [
     blurb: "Las anotaciones que sacudieron la Argentina. Sentencia 2026 — leé el detalle.",
     tags: ["Coimas", "Sentencia 2026", "TOF 7"],
   },
-  // Peru
-  {
-    countryCode: "PE",
-    caseId: "PE-CONTRACT-2377518-1",
-    variant: "documentary",
-    marker: { lat: -15.2, lon: -75.2 },
-    callout: { lat: -6.0, lon: -100.0 },
-    kicker: "CONTRATO · ICA",
-    title: "Marcona — parque urbano",
-    blurb: "Una municipalidad chica gasta USD 1.8M en un parque. Seguí la trazabilidad.",
-    tags: ["Municipal", "USD 1.8M", "Obra urbana"],
-  },
-  // Chile
-  {
-    countryCode: "CL",
-    caseId: "CL-OCDS-608-282-I225",
-    variant: "documentary",
-    marker: { lat: -33.02, lon: -71.55 },
-    callout: { lat: -48.0, lon: -100.0 },
-    kicker: "SALUD · VIÑA DEL MAR",
-    title: "Marcapasos Hospital Fricke",
-    blurb: "USD 2.3M en cirugía cardíaca. Trazá proveedor, monto y receipt oficial.",
-    tags: ["Hospital", "USD 2.3M", "Salud"],
-  },
 ];
