@@ -87,6 +87,53 @@ test("buildCaseLeads supports country and query filters", () => {
   assert.equal(leads[0]?.caseId, "CL-TENDER-1002-53-LP26");
 });
 
+test("buildCaseLeads supports signal phrases and aliases in query filters", () => {
+  const singleBidderLeads = buildCaseLeads([highPriorityCase], {
+    query: "1 oferente",
+    limit: 10,
+  });
+  const dnvJudicialReceipt = createEvidenceReceipt({
+    sourceId: "AR-CIJ-VIALIDAD-VEREDICTO",
+    sourceName: "CIJ Causa Vialidad",
+    sourceUrl: "https://www.cij.gov.ar/login/d/sentencia.pdf",
+    rawPath: "data/official/ar/cij-vialidad-context.json",
+    snapshotHash: "sha256-judicial",
+    recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    locatorType: "official_detail",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "case-leads-test@1",
+    row: { recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME" },
+  });
+  const dnvJudicialCase = {
+    id: "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    countryCode: "AR",
+    caseType: "judicial_context",
+    title: "Causa Vialidad CFP 5048/2016/TO1",
+    workNumber: "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    year: 2025,
+    procedureNumber: "CFP 5048/2016/TO1",
+    agencyName: "Tribunal Oral en lo Criminal Federal Nro. 2",
+    agencyCode: "TOF2",
+    contractingUnit: "Poder Judicial de la Nacion",
+    coordinates: null,
+    evidenceLevel: "official_dataset",
+    amount: { value: 46_000_000_000, currency: "ARS", label: "monto contextual informado por MPF" },
+    supplierName: "Grupo Baez",
+    supplierDocument: null,
+    judicialStatus: "Sentencia firme desde 2025-06-10.",
+    contextSummary: "El Poder Judicial y el MPF documentan la Causa Vialidad.",
+    receipt: dnvJudicialReceipt,
+    caveats: ["Contexto judicial; abrir la fuente antes de citar."],
+  };
+  const aliasLeads = buildCaseLeads([dnvJudicialCase], {
+    query: "lazaro",
+    limit: 10,
+  });
+
+  assert.equal(singleBidderLeads[0]?.caseId, "AR-CONTRACT-14-1002-CON21");
+  assert.equal(aliasLeads[0]?.caseId, "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME");
+});
+
 test("buildCaseLeads does not match nullish optional fields as query text", () => {
   const sparseCase = {
     id: "AR-SPARSE-1",

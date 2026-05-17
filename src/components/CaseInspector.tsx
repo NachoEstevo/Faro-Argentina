@@ -85,13 +85,17 @@ export default function CaseInspector({ caseFile, signalContext, onOpenFull }: P
       </section>
 
       <div className="inspectorActions">
+        <a href={inspector.actions.reportHref}>
+          <FileText size={16} aria-hidden />
+          Informe
+        </a>
         <a href={inspector.actions.officialSourceHref} target="_blank" rel="noreferrer">
           <ExternalLink size={16} aria-hidden />
           Fuente
         </a>
         <a href={inspector.actions.downloadEvidenceHref} download>
           <Download size={16} aria-hidden />
-          Exportar
+          JSON
         </a>
         <button type="button" onClick={onOpenFull}>
           <FileText size={16} aria-hidden />

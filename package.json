@@ -14,6 +14,7 @@
     "data:geo-report": "node --experimental-strip-types scripts/report-coordinate-quality.ts",
     "data:quality-report": "node --experimental-strip-types scripts/report-data-quality.ts",
     "data:verify": "node --experimental-strip-types scripts/verify-data-spine.ts",
+    "verify:aportes-storage": "node --experimental-strip-types scripts/verify-aportes-storage.ts",
     "exports:build": "node --experimental-strip-types scripts/build-static-exports.ts"
   },
   "dependencies": {

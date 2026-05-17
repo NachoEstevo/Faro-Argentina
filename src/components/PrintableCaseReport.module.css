@@ -1,0 +1,296 @@
+.page {
+  min-height: 100vh;
+  background: #e9edf1;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 24px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 920px;
+  margin: 0 auto 18px;
+}
+
+.brand {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.toolbarActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #111827;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primaryAction {
+  background: #111827;
+  color: #ffffff;
+}
+
+.secondaryAction {
+  background: #ffffff;
+  color: #111827;
+}
+
+.sheet {
+  max-width: 920px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 18px 55px rgba(17, 24, 39, 0.12);
+  padding: 52px;
+}
+
+.header {
+  display: grid;
+  gap: 12px;
+  border-bottom: 2px solid #111827;
+  padding-bottom: 24px;
+}
+
+.kicker {
+  margin: 0;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 0;
+  max-width: 780px;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.subtitle,
+.disclaimer,
+.section p,
+.sectionNote {
+  margin: 0;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.disclaimer {
+  border-left: 3px solid #f0b429;
+  padding-left: 12px;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.section {
+  display: grid;
+  gap: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 24px 0;
+}
+
+.section h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fact,
+.officialBox,
+.signal,
+.citation {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.fact {
+  display: grid;
+  gap: 5px;
+}
+
+.fact span,
+.citation span,
+.techGrid dt,
+.signal dt {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fact strong,
+.officialBox strong {
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.signalList,
+.citationList {
+  display: grid;
+  gap: 10px;
+}
+
+.signal h3,
+.citation h3 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.signal dl,
+.techGrid {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.signal dd,
+.techGrid dd {
+  margin: 3px 0 0;
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.officialBox {
+  display: grid;
+  gap: 6px;
+}
+
+.officialBox span,
+.receiptList,
+.caveatList,
+.nextList {
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.officialBox a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  color: #075985;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.receiptList,
+.caveatList,
+.nextList {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.citation {
+  display: grid;
+  gap: 7px;
+}
+
+.citation small,
+.citation em {
+  color: #4b5563;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.appendix {
+  border-bottom: 0;
+}
+
+.techGrid {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 0;
+  }
+
+  .toolbar {
+    margin: 0;
+    padding: 14px;
+    background: #ffffff;
+    border-bottom: 1px solid #d1d5db;
+  }
+
+  .sheet {
+    border: 0;
+    box-shadow: none;
+    padding: 28px 18px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+  }
+
+  .factGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .page {
+    background: #ffffff;
+    padding: 0;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .sheet {
+    max-width: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .officialBox a {
+    color: #111827;
+  }
+}

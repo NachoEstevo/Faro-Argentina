@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, FileSearch, Map as MapIcon, MessageSquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -24,7 +24,13 @@ import {
 } from "./RegionalMap/SidebarFilters";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
+import {
+  buildSearchSuggestions,
+  caseMatchesSearch,
+  type SearchSuggestion,
+} from "@/lib/data/searchSuggestions";
 import CasePanel from "./MapUI/CasePanel";
+import AportesView from "./Aportes/AportesView";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
@@ -43,7 +49,7 @@ interface Props {
   explorerCases?: ExplorerCase[];
   initialCountry?: "AR" | "PE" | "CL";
   initialEntryOpen?: boolean;
-  initialMode?: "map" | "explorer";
+  initialMode?: "map" | "explorer" | "aportes";
   initialCaseId?: string;
 }
 
@@ -75,12 +81,13 @@ export default function FaroExperience({
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
   const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId ?? "");
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [yearFrom, setYearFrom] = useState<number | null>(null);
   const [yearTo, setYearTo] = useState<number | null>(null);
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
-  const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
+  const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
@@ -117,6 +124,13 @@ export default function FaroExperience({
   const effectiveYearFrom = yearFrom ?? yearBounds.min;
   const effectiveYearTo = yearTo ?? yearBounds.max;
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 250);
+    return () => window.clearTimeout(timeout);
+  }, [query]);
+
   // Country review pool: country-scoped, NOT yet filtered by the UI's
   // year / family / case-type / severity chips. Used to build the
   // signal context so chip filters don't reshape signal computation.
@@ -140,7 +154,7 @@ export default function FaroExperience({
     const base = filterCountryReviewCases({
       cases: allCases,
       countryCode: selectedCountry,
-      query,
+      query: debouncedQuery,
       year: null,
     }).filter((caseFile) => {
       if (
@@ -178,18 +192,29 @@ export default function FaroExperience({
   }, [
     allCases,
     countrySignalContext,
+    debouncedQuery,
     effectiveYearFrom,
     effectiveYearTo,
-    query,
     selectedCountry,
     selectedFindings,
     selectedSeverities,
   ]);
 
   const leads = useMemo(
-    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 1000 }),
-    [countryReviewCases, query],
+    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query: debouncedQuery, limit: 1000 }),
+    [countryReviewCases, debouncedQuery],
   );
+
+  const searchSuggestions = useMemo(
+    () => buildSearchSuggestions(countryReviewContextCases, query, { limit: 8 }),
+    [countryReviewContextCases, query],
+  );
+
+  const handleSelectSearchSuggestion = useCallback((suggestion: SearchSuggestion) => {
+    setQuery(suggestion.query);
+    setDebouncedQuery(suggestion.query);
+    if (suggestion.caseId) setSelectedCaseId(suggestion.caseId);
+  }, []);
 
   const severityCounts = useMemo(() => {
     let high = 0;
@@ -206,6 +231,10 @@ export default function FaroExperience({
   }, [countryReviewCases]);
 
   useEffect(() => {
+    if (viewMode === "aportes") {
+      setSelectedCaseId("");
+      return;
+    }
     const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
     if (selectedCaseId && !selectedPool.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId("");
@@ -343,6 +372,9 @@ export default function FaroExperience({
         visibleCount={countryReviewCases.length}
         query={query}
         onQueryChange={setQuery}
+        searchSuggestions={searchSuggestions}
+        searchPending={query.trim() !== debouncedQuery.trim()}
+        onSelectSearchSuggestion={handleSelectSearchSuggestion}
         filters={filtersValue}
         yearBounds={yearBounds}
         onYearFromChange={(value) =>
@@ -408,6 +440,15 @@ export default function FaroExperience({
             <FileSearch size={13} aria-hidden />
             Explorer
           </button>
+          <button
+            type="button"
+            className={`${styles.floatingToggleButton} ${viewMode === "aportes" ? styles.active : ""}`}
+            onClick={() => setViewMode("aportes")}
+            aria-pressed={viewMode === "aportes"}
+          >
+            <MessageSquarePlus size={13} aria-hidden />
+            Aportes
+          </button>
         </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
@@ -430,6 +471,14 @@ export default function FaroExperience({
           }}
           onClearSelection={() => setSelectedCaseId("")}
           onSwitchToMap={() => setViewMode("map")}
+        />
+      )}
+
+      {viewMode === "aportes" && (
+        <AportesView
+          selectedCountry={selectedCountry}
+          onSwitchToMap={() => setViewMode("map")}
+          onSwitchToExplorer={() => setViewMode("explorer")}
         />
       )}
 
@@ -499,29 +548,9 @@ function filterCountryReviewCases({
   query: string;
   year: number | null;
 }): ExplorerCase[] {
-  const normalizedQuery = query.trim().toLowerCase();
   return cases.filter((caseFile) => {
     if (caseFile.countryCode !== countryCode) return false;
     if (year !== null && caseFile.year !== year) return false;
-    if (normalizedQuery.length === 0) return true;
-    return searchableReviewText(caseFile).includes(normalizedQuery);
+    return caseMatchesSearch(caseFile, query);
   });
-}
-
-function searchableReviewText(caseFile: ExplorerCase): string {
-  return [
-    caseFile.id,
-    caseFile.title,
-    caseFile.workNumber,
-    caseFile.procedureNumber,
-    caseFile.agencyName,
-    caseFile.contractingUnit,
-    "supplierName" in caseFile ? caseFile.supplierName : undefined,
-    "supplierDocument" in caseFile ? caseFile.supplierDocument : undefined,
-    "judicialStatus" in caseFile ? caseFile.judicialStatus : undefined,
-    "contextSummary" in caseFile ? caseFile.contextSummary : undefined,
-  ]
-    .filter((value): value is string => value !== null && value !== undefined)
-    .join(" ")
-    .toLowerCase();
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileSearch, Map as MapIcon } from "lucide-react";
+import { FileSearch, Map as MapIcon, MessageSquarePlus } from "lucide-react";
 import styles from "./RegionalMap.module.css";
 
 export default function FloatingModeToggle() {
@@ -20,6 +20,14 @@ export default function FloatingModeToggle() {
       >
         <FileSearch size={13} aria-hidden />
         Explorer
+      </Link>
+      <Link
+        href="/pais/AR?mode=aportes"
+        className={styles.floatingToggleButton}
+        aria-label="Abrir Aportes"
+      >
+        <MessageSquarePlus size={13} aria-hidden />
+        Aportes
       </Link>
     </div>
   );

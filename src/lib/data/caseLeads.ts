@@ -7,6 +7,7 @@ import {
   type CaseSignal,
   type SignalCaseFile,
 } from "./caseSignals.ts";
+import { caseMatchesSearch } from "./searchSuggestions.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 
 export interface CaseLeadFilters {
@@ -78,25 +79,10 @@ function toCaseLead(caseFile: SignalCaseFile, signalContext: CaseSignalContext):
 function matchesFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters): boolean {
   if (!matchesScopeFilters(caseFile, filters)) return false;
 
-  const query = clean(filters.query).toLowerCase();
+  const query = clean(filters.query);
   if (query.length === 0) return true;
 
-  return [
-    caseFile.id,
-    caseFile.title,
-    caseFile.workNumber,
-    caseFile.procedureNumber,
-    caseFile.agencyName,
-    caseFile.contractingUnit,
-    caseFile.supplierName,
-    caseFile.supplierDocument,
-    caseFile.receipt.sourceId,
-    caseFile.receipt.sourceName,
-  ]
-    .filter((value): value is string => value !== null && value !== undefined)
-    .join(" ")
-    .toLowerCase()
-    .includes(query);
+  return caseMatchesSearch(caseFile, query);
 }
 
 function matchesScopeFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters): boolean {

@@ -842,6 +842,13 @@
   gap: 16px;
 }
 
+.detailActionGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .detailBack {
   display: inline-flex;
   align-items: center;
@@ -865,6 +872,7 @@
 .detailPrimaryAction {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   padding: 8px 14px;
   border-radius: 10px;
   background: var(--cf-accent);
@@ -879,6 +887,26 @@
 .detailPrimaryAction:hover {
   background: var(--cf-accent-hi);
   border-color: var(--cf-accent-hi);
+}
+
+.detailSecondaryAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: 10px;
+  background: var(--cf-bg-elev);
+  color: var(--cf-text-secondary);
+  font-family: var(--cf-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.detailSecondaryAction:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-text);
 }
 
 .detailEyebrow {

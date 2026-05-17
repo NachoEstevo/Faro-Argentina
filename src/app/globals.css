@@ -1031,7 +1031,7 @@ a.faroMark:hover .faroMarkIcon {
 
 .inspectorActions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
   gap: 8px;
 }
 
@@ -1506,7 +1506,7 @@ a.faroMark:hover .faroMarkIcon {
 
 .actionRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(142px, 1fr));
   gap: 8px;
 }
 

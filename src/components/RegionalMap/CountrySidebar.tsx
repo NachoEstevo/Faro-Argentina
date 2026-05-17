@@ -19,6 +19,7 @@ import {
 
 import type { CaseLead } from "@/lib/data/caseLeads";
 import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignals";
+import type { SearchSuggestion } from "@/lib/data/searchSuggestions";
 import styles from "./RegionalMap.module.css";
 import SidebarBrand from "./SidebarBrand";
 import SyncFooter from "./SyncFooter";
@@ -49,6 +50,9 @@ interface Props {
   visibleCount: number;
   query: string;
   onQueryChange: (value: string) => void;
+  searchSuggestions: SearchSuggestion[];
+  searchPending: boolean;
+  onSelectSearchSuggestion: (suggestion: SearchSuggestion) => void;
   filters: SidebarFiltersValue;
   yearBounds: { min: number; max: number };
   onYearFromChange: (year: number) => void;
@@ -72,6 +76,9 @@ export default function CountrySidebar({
   visibleCount,
   query,
   onQueryChange,
+  searchSuggestions,
+  searchPending,
+  onSelectSearchSuggestion,
   filters,
   yearBounds,
   onYearFromChange,
@@ -139,16 +146,56 @@ export default function CountrySidebar({
             <p className={styles.eyebrow} id="search-heading">
               Buscar
             </p>
-            <label className={styles.cpSearch}>
-              <Search size={15} aria-hidden />
-              <input
-                type="text"
-                value={query}
-                onChange={(event) => onQueryChange(event.target.value)}
-                placeholder="Obra, organismo o proveedor"
-                aria-label="Buscar"
-              />
-            </label>
+            <div className={styles.cpSearchWrap}>
+              <label className={styles.cpSearch}>
+                <Search size={15} aria-hidden />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(event) => onQueryChange(event.target.value)}
+                  placeholder="Baez, DNV, 1 oferente, 46-0262"
+                  aria-label="Buscar"
+                  aria-controls="country-search-suggestions"
+                  aria-expanded={query.trim().length >= 2 && searchSuggestions.length > 0}
+                />
+              </label>
+              {query.trim().length >= 2 && (
+                <div
+                  id="country-search-suggestions"
+                  className={styles.cpSearchSuggestions}
+                  role="listbox"
+                  aria-label="Sugerencias de búsqueda"
+                >
+                  {searchPending && (
+                    <span className={styles.cpSearchStatus}>Actualizando resultados</span>
+                  )}
+                  {searchSuggestions.length > 0 ? (
+                    searchSuggestions.map((suggestion) => (
+                      <button
+                        key={suggestion.id}
+                        type="button"
+                        className={styles.cpSuggestion}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => onSelectSearchSuggestion(suggestion)}
+                        role="option"
+                      >
+                        <span className={styles.cpSuggestionKind}>
+                          {labelSuggestionKind(suggestion.kind)}
+                        </span>
+                        <span className={styles.cpSuggestionBody}>
+                          <strong>{suggestion.label}</strong>
+                          <span>{suggestion.detail}</span>
+                        </span>
+                      </button>
+                    ))
+                  ) : (
+                    !searchPending && (
+                      <span className={styles.cpSearchStatus}>Sin sugerencias directas</span>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
           </section>
 
           <section className={styles.section} aria-labelledby="filter-heading">
@@ -234,4 +281,13 @@ export default function CountrySidebar({
       )}
     </aside>
   );
+}
+
+function labelSuggestionKind(kind: SearchSuggestion["kind"]): string {
+  if (kind === "case") return "Caso";
+  if (kind === "supplier") return "Proveedor";
+  if (kind === "agency") return "Organismo";
+  if (kind === "signal") return "Señal";
+  if (kind === "identifier") return "ID";
+  return "Fuente";
 }

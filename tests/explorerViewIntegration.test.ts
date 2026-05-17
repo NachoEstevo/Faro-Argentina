@@ -55,3 +55,11 @@ test("ExplorerView shows article citations as context, not as official trail", a
   assert.match(source, /contextualCitations/);
   assert.doesNotMatch(source, /contextualCitations.*officialTrail/s);
 });
+
+test("ExplorerView promotes a readable report before technical JSON export", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /Informe PDF/);
+  assert.match(source, /JSON técnico/);
+  assert.match(source, /buildReportHref/);
+});

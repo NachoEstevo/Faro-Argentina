@@ -324,6 +324,13 @@
   transition: border-color 160ms ease;
 }
 
+.cpSearchWrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .cpSearch:focus-within {
   border-color: var(--cf-accent-dim);
 }
@@ -341,6 +348,86 @@
 
 .cpSearch input::placeholder {
   color: var(--cf-text-muted);
+}
+
+.cpSearchSuggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: min(240px, 30vh);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: rgba(13, 15, 19, 0.98);
+  box-shadow: var(--cf-shadow-soft);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.cpSuggestion {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 9px;
+  border: 1px solid transparent;
+  border-radius: var(--cf-radius-sm);
+  background: transparent;
+  color: var(--cf-text-secondary);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.cpSuggestion:hover,
+.cpSuggestion:focus-visible {
+  outline: none;
+  background: var(--cf-bg-surface);
+  border-color: var(--cf-border);
+  color: var(--cf-text);
+}
+
+.cpSuggestionKind {
+  align-self: start;
+  padding-top: 2px;
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cf-accent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cpSuggestionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cpSuggestionBody strong {
+  font-family: var(--cf-font-heading);
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cpSuggestionBody span,
+.cpSearchStatus {
+  font-family: var(--cf-font-body);
+  font-size: 11px;
+  color: var(--cf-text-muted);
+  line-height: 1.35;
+}
+
+.cpSearchStatus {
+  padding: 6px 8px;
 }
 
 .cpYearSlider {

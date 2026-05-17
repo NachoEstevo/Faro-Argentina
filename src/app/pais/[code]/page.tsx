@@ -64,7 +64,12 @@ export default async function PaisPage({
   }
 
   const search = (await searchParams) ?? {};
-  const initialMode = readParam(search.mode) === "explorer" ? "explorer" : "map";
+  const initialMode =
+    readParam(search.mode) === "explorer"
+      ? "explorer"
+      : readParam(search.mode) === "aportes"
+        ? "aportes"
+        : "map";
   const initialCaseId = readParam(search.case);
 
   return (
