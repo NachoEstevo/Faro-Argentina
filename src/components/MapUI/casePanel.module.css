@@ -146,7 +146,17 @@
   color: var(--cp-text);
   cursor: pointer;
   user-select: none;
-  padding: 4px 0;
+  padding: 4px 6px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.accordionSummary:hover {
+  background: var(--cp-hover);
+}
+
+.accordionSummary:focus-visible {
+  box-shadow: 0 0 0 2px var(--cp-accent);
 }
 
 .accordionSummary::-webkit-details-marker { display: none; }
@@ -193,8 +203,9 @@
 .receiptRow dd {
   color: var(--cp-text);
   margin: 0;
-  word-break: break-all;
-  font-family: var(--cf-font-data);
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .relatedReceipts {
@@ -342,4 +353,63 @@
     opacity: 0;
     transform: translateX(20px);
   }
+}
+
+/* Override signal panel cards rendered inside the case panel */
+.scroll :global(.signalsBox) {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scroll :global(.signalsBox h2) {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cp-text-muted);
+  margin: 0 0 4px;
+}
+
+.scroll :global(.signalList) {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scroll :global(.signalItem) {
+  background: var(--cp-fact-bg);
+  border: 1px solid var(--cp-border-soft);
+  border-radius: var(--cp-radius-sm);
+  padding: 14px;
+}
+
+.scroll :global(.signalItem p) {
+  color: var(--cp-text);
+  opacity: 0.88;
+}
+
+.scroll :global(.signalTitle strong) {
+  color: var(--cp-text);
+  font-size: 13px;
+}
+
+.scroll :global(.signalProof) {
+  margin-top: 12px;
+  gap: 10px;
+}
+
+.scroll :global(.signalProof dt) {
+  color: var(--cp-text-faint);
+  font-size: 10px;
+}
+
+.scroll :global(.signalProof dd) {
+  color: var(--cp-text);
+  opacity: 0.88;
+  font-size: 12px;
+  line-height: 1.5;
 }

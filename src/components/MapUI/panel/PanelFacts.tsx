@@ -21,6 +21,17 @@ function formatSupplier(caseFile: ExplorerCase): string {
   return "Sin dato";
 }
 
+function resolveYear(caseFile: ExplorerCase): string {
+  if (caseFile.year) return String(caseFile.year);
+  if (isCrossCountryCase(caseFile)) {
+    const awarded = caseFile.awardedAt?.slice(0, 4);
+    if (awarded && /^\d{4}$/.test(awarded)) return awarded;
+    const published = caseFile.publishedAt?.slice(0, 4);
+    if (published && /^\d{4}$/.test(published)) return published;
+  }
+  return "Sin dato";
+}
+
 function renderAmount(amount: AmountInput | null): ReactNode {
   if (!amount) return "Sin dato";
   const formatted = formatAmountWithUsd(amount);
@@ -37,7 +48,7 @@ export default function PanelFacts({ caseFile }: Props) {
   return (
     <div className={styles.facts}>
       <Fact label="Monto">{renderAmount(amount)}</Fact>
-      <Fact label="Año">{caseFile.year ?? "Sin dato"}</Fact>
+      <Fact label="Año">{resolveYear(caseFile)}</Fact>
       <Fact label="Organismo">{caseFile.agencyName ?? "Sin dato"}</Fact>
       <Fact label="Proveedor">{formatSupplier(caseFile)}</Fact>
     </div>

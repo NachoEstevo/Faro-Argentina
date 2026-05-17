@@ -4,7 +4,6 @@ import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { WaybackState } from "@/components/WaybackControl";
 import PanelHero from "./panel/PanelHero";
-import PanelWhy from "./panel/PanelWhy";
 import PanelFacts from "./panel/PanelFacts";
 import PanelImagery from "./panel/PanelImagery";
 import PanelTechDetails from "./panel/PanelTechDetails";
@@ -37,8 +36,6 @@ export default function CasePanel({
     <div className={`${styles.module} ${styles.panel}`}>
       <div className={styles.scroll}>
         <PanelHero caseFile={caseFile} signalContext={signalContext} onClose={onClose} />
-        <div className={styles.divider} aria-hidden />
-        <PanelWhy caseFile={caseFile} signalContext={signalContext} />
         <div className={styles.divider} aria-hidden />
         <PanelFacts caseFile={caseFile} />
         {caseFile.coordinates && waybackState.status !== "off" && (
