@@ -885,8 +885,19 @@
   .statsGrid,
   .tableWrap,
   .detail {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .searchWrap {
+    padding-top: 12px;
+  }
+  .searchBox {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 8px;
+  }
+  .searchBox input {
+    font-size: 13px;
   }
   .statsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
