@@ -64,6 +64,17 @@ export default function ExplorerView({
     [cases, selectedCountry],
   );
 
+  const contractByWorkNumber = useMemo(() => {
+    const map = new Map<string, ExplorerCase>();
+    for (const candidate of countryAll) {
+      const publicWork = (candidate as AnyCase).publicWorkNumber;
+      if (typeof publicWork === "string" && publicWork.length > 0) {
+        if (!map.has(publicWork)) map.set(publicWork, candidate);
+      }
+    }
+    return map;
+  }, [countryAll]);
+
   const yearBounds = useMemo(() => {
     const years = countryAll
       .map((caseFile) => caseFile.year)
@@ -402,9 +413,16 @@ export default function ExplorerView({
                 </tr>
               )}
               {pagedRows.map((caseFile) => {
-                const supplierName =
-                  "supplierName" in caseFile ? caseFile.supplierName ?? "—" : "—";
-                const amount = "amount" in caseFile ? caseFile.amount : null;
+                const related = contractByWorkNumber.get(caseFile.workNumber);
+                const supplierFromCase =
+                  "supplierName" in caseFile ? caseFile.supplierName : null;
+                const supplierFromRelated =
+                  related && "supplierName" in related ? related.supplierName : null;
+                const supplierName = supplierFromCase ?? supplierFromRelated ?? "—";
+                const amountFromCase = "amount" in caseFile ? caseFile.amount : null;
+                const amountFromRelated =
+                  related && "amount" in related ? related.amount : null;
+                const amount = amountFromCase ?? amountFromRelated;
                 const state = computeRowState(caseFile);
                 return (
                   <tr
@@ -461,6 +479,13 @@ function ExplorerDetail({
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
 }) {
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
+  const relatedContract =
+    pool.find(
+      (entry) =>
+        entry.id !== caseFile.id &&
+        typeof (entry as AnyCase).publicWorkNumber === "string" &&
+        (entry as AnyCase).publicWorkNumber === caseFile.workNumber,
+    ) ?? null;
   const supplierKey =
     "supplierName" in caseFile && caseFile.supplierName
       ? caseFile.supplierName.trim().toLowerCase()
@@ -531,11 +556,11 @@ function ExplorerDetail({
         );
       })()}
       <div className={styles.detailGrid}>
-        <MontoCard caseFile={caseFile} />
+        <MontoCard caseFile={caseFile} fallback={relatedContract} />
         <CronologiaCard caseFile={caseFile} />
         <CompetenciaCard caseFile={caseFile} />
         <UbicacionObraCard caseFile={caseFile} />
-        <ProveedorCard caseFile={caseFile} />
+        <ProveedorCard caseFile={caseFile} fallback={relatedContract} />
         <ProcedimientoCard caseFile={caseFile} />
         <EjecucionCard caseFile={caseFile} />
         <OrganismoCard caseFile={caseFile} />
@@ -697,9 +722,15 @@ function formatAmountInline(amount: Amount): string {
   return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
 }
 
-function MontoCard({ caseFile }: { caseFile: ExplorerCase }) {
-  const amount = getField<Amount>(caseFile, "amount");
-  const budget = getField<Amount>(caseFile, "officialBudget");
+function MontoCard({
+  caseFile,
+  fallback,
+}: {
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+}) {
+  const amount = getField<Amount>(caseFile, "amount") ?? (fallback ? getField<Amount>(fallback, "amount") : null);
+  const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
   if (!amount && !budget) return null;
   let overrun: string | null = null;
   if (amount && budget && budget.value > 0) {
@@ -774,11 +805,25 @@ function UbicacionObraCard({ caseFile }: { caseFile: ExplorerCase }) {
   );
 }
 
-function ProveedorCard({ caseFile }: { caseFile: ExplorerCase }) {
-  const name = getField<string>(caseFile, "supplierName");
-  const document = getField<string>(caseFile, "supplierDocument");
-  const locality = getField<string>(caseFile, "supplierLocality");
-  const province = getField<string>(caseFile, "supplierProvince");
+function ProveedorCard({
+  caseFile,
+  fallback,
+}: {
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+}) {
+  const name =
+    getField<string>(caseFile, "supplierName") ??
+    (fallback ? getField<string>(fallback, "supplierName") : null);
+  const document =
+    getField<string>(caseFile, "supplierDocument") ??
+    (fallback ? getField<string>(fallback, "supplierDocument") : null);
+  const locality =
+    getField<string>(caseFile, "supplierLocality") ??
+    (fallback ? getField<string>(fallback, "supplierLocality") : null);
+  const province =
+    getField<string>(caseFile, "supplierProvince") ??
+    (fallback ? getField<string>(fallback, "supplierProvince") : null);
   if (!name && !document) return null;
   return (
     <div className={styles.detailCard}>
