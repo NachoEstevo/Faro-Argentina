@@ -147,16 +147,22 @@ export default function ExplorerView({
   }, [countryAll]);
 
   const totalAmount = useMemo(() => {
-    let totalArs = 0;
     let totalUsd = 0;
+    let convertedCount = 0;
+    let totalAmounts = 0;
     for (const caseFile of countryAll) {
       const amount = "amount" in caseFile ? caseFile.amount : null;
       if (!amount) continue;
-      const value = amount.value;
-      if (amount.currency === "ARS") totalArs += value;
-      else if (amount.currency === "USD") totalUsd += value;
+      totalAmounts += 1;
+      if (amount.currency === "USD") {
+        totalUsd += amount.value;
+        convertedCount += 1;
+      } else if (amount.usdEquivalent) {
+        totalUsd += amount.usdEquivalent.usd;
+        convertedCount += 1;
+      }
     }
-    return { ars: totalArs, usd: totalUsd };
+    return { usd: totalUsd, convertedCount, totalAmounts };
   }, [countryAll]);
 
   const stateCounts = useMemo(() => {
@@ -326,7 +332,15 @@ export default function ExplorerView({
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
           <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
-          <StatCard label="Monto" value={formatAmount(totalAmount.ars, totalAmount.usd)} />
+          <StatCard
+            label="Monto total (USD)"
+            value={formatUsdCompact(totalAmount.usd)}
+            sublabel={
+              totalAmount.convertedCount < totalAmount.totalAmounts
+                ? `${totalAmount.convertedCount} de ${totalAmount.totalAmounts} convertidos`
+                : undefined
+            }
+          />
           <StatCard label="A revisar" value={stateCounts.review.toLocaleString("es-AR")} />
           <StatCard label="Proveedores" value={supplierCount.toLocaleString("es-AR")} />
         </div>
@@ -414,7 +428,19 @@ export default function ExplorerView({
                     <td>{describeCaseType(caseFile)}</td>
                     <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
                     <td className={styles.cellEllipsis}>{supplierName}</td>
-                    <td className={styles.tableNumeric}>{formatRowAmount(amount)}</td>
+                    <td className={styles.tableNumeric}>
+                      {(() => {
+                        const formatted = formatRowAmount(amount);
+                        return (
+                          <span className={styles.rowAmount}>
+                            <span>{formatted.primary}</span>
+                            {formatted.usd && (
+                              <span className={styles.rowAmountUsd}>{formatted.usd}</span>
+                            )}
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td className={styles.cellMono}>{caseFile.year ?? "—"}</td>
                     <td>
                       <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
@@ -518,7 +544,13 @@ function ExplorerDetail({
       <div className={styles.detailGrid}>
         <div className={styles.detailCard}>
           <p className={styles.detailCardHead}>Datos</p>
-          <DetailRow label="Monto adjudicado" value={formatRowAmount("amount" in caseFile ? caseFile.amount : null)} />
+          <DetailRow
+            label="Monto adjudicado"
+            value={(() => {
+              const formatted = formatRowAmount("amount" in caseFile ? caseFile.amount : null);
+              return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
+            })()}
+          />
           <DetailRow label="Año" value={caseFile.year ? String(caseFile.year) : "—"} />
           <DetailRow label="Procedimiento" value={caseFile.procedureNumber || "—"} />
           <DetailRow label="Tipo" value={describeCaseType(caseFile)} />
@@ -621,34 +653,37 @@ function describeCaseType(caseFile: ExplorerCase): string {
   return "Obra";
 }
 
-function formatRowAmount(amount: { value: number; currency: string } | null | undefined): string {
-  if (!amount) return "—";
-  const abs = amount.value;
-  let formatted: string;
-  if (abs >= 1_000_000_000) formatted = `${(abs / 1_000_000_000).toFixed(1).replace(".", ",")} B`;
-  else if (abs >= 1_000_000) formatted = `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
-  else if (abs >= 1_000) formatted = `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
-  else formatted = abs.toLocaleString("es-AR");
-  return `${amount.currency} ${formatted}`;
+function formatRowAmount(
+  amount: { value: number; currency: string; usdEquivalent?: { usd: number } | null } | null | undefined,
+): { primary: string; usd: string | null } {
+  if (!amount) return { primary: "—", usd: null };
+  const primary = `${amount.currency} ${compactNumber(amount.value)}`;
+  if (amount.currency === "USD") return { primary, usd: null };
+  if (amount.usdEquivalent) {
+    return { primary, usd: `US$ ${compactNumber(amount.usdEquivalent.usd)}` };
+  }
+  return { primary, usd: null };
 }
 
-function formatAmount(ars: number, usd: number): string {
-  if (ars === 0 && usd === 0) return "—";
-  const primary = ars >= usd ? { value: ars, currency: "ARS" } : { value: usd, currency: "USD" };
-  const abs = primary.value;
-  let formatted: string;
-  if (abs >= 1_000_000_000) formatted = `${(abs / 1_000_000_000).toFixed(1).replace(".", ",")} B`;
-  else if (abs >= 1_000_000) formatted = `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
-  else if (abs >= 1_000) formatted = `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
-  else formatted = abs.toLocaleString("es-AR");
-  return `${primary.currency} ${formatted}`;
+function compactNumber(value: number): string {
+  const abs = value;
+  if (abs >= 1_000_000_000) return `${(abs / 1_000_000_000).toFixed(1).replace(".", ",")} B`;
+  if (abs >= 1_000_000) return `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
+  if (abs >= 1_000) return `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
+  return abs.toLocaleString("es-AR");
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function formatUsdCompact(value: number): string {
+  if (value === 0) return "—";
+  return `US$ ${compactNumber(value)}`;
+}
+
+function StatCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string }) {
   return (
     <div className={styles.statCard}>
       <p className={styles.statLabel}>{label}</p>
       <p className={styles.statValue}>{value}</p>
+      {sublabel && <p className={styles.statSublabel}>{sublabel}</p>}
     </div>
   );
 }
