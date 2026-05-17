@@ -229,6 +229,8 @@ export default function ExplorerView({
             />
           </label>
         </div>
+        <div className={styles.statsGrid} aria-label="Resumen">
+        </div>
       </main>
     </section>
   );
