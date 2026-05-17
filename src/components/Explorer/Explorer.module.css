@@ -233,6 +233,14 @@
   color: var(--cf-text);
 }
 
+.sidebarSpacer {
+  flex: 1;
+}
+
+.sidebarFooter {
+  border-top: 1px solid var(--cf-border);
+}
+
 .main {
   display: flex;
   flex-direction: column;
