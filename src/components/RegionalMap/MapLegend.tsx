@@ -10,7 +10,7 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
   const normalCount = Math.max(0, totalCount - highCount - mediumCount);
   return (
     <aside className={styles.mapLegend} aria-label="Leyenda del mapa">
-      <p className={styles.mapLegendTitle}>Qué significa cada punto</p>
+      <p className={styles.mapLegendTitle}>Referencias</p>
       <ul className={styles.mapLegendList}>
         <li>
           <span
@@ -18,8 +18,8 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Alerta alta</strong>
-            <em>Single bidder, reclamos masivos o concentración fuerte · {highCount}</em>
+            <strong>Revisar con prioridad</strong>
+            <em>{highCount}</em>
           </span>
         </li>
         <li>
@@ -28,8 +28,8 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Alerta media</strong>
-            <em>Competencia limitada, sobreprecio o reclamos · {mediumCount}</em>
+            <strong>Posibles señales</strong>
+            <em>{mediumCount}</em>
           </span>
         </li>
         <li>
@@ -38,8 +38,8 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Obra pública</strong>
-            <em>Sin alertas detectadas · {normalCount}</em>
+            <strong>Sin alertas</strong>
+            <em>{normalCount}</em>
           </span>
         </li>
       </ul>

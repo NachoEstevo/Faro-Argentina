@@ -504,7 +504,7 @@
 .mapLegend {
   position: absolute;
   right: 18px;
-  bottom: 64px;
+  bottom: 140px;
   z-index: 6;
   display: flex;
   flex-direction: column;
