@@ -190,6 +190,18 @@ test("buildLeadFeed exposes ranked Argentina case leads", () => {
   assert.deepEqual([...priorities].sort((left, right) => right - left), priorities);
 });
 
+test("buildLeadFeed keeps Causa Vialidad visible as official judicial context", () => {
+  const feed = buildLeadFeed({ countryCode: "AR", query: "baez", limit: 10 });
+
+  assert.equal(
+    feed.leads.some((lead) =>
+      lead.caseId === "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME" &&
+      lead.primarySignal.code === "official_judicial_context"
+    ),
+    true,
+  );
+});
+
 test("buildLeadFeed lets lead query matching find cases beyond collection query fields", () => {
   const feed = buildLeadFeed({
     countryCode: "AR",

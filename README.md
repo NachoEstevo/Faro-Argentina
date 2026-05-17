@@ -6,6 +6,14 @@ Faro no acusa. Faro muestra donde mirar, por que mirar ahi y con que evidencia.
 
 Es un mapa y scanner investigativo del dinero publico: toma fuentes oficiales dispersas y las transforma en casos navegables con obras, compras, proveedores, organismos, montos, fechas, receipts, caveats y export de evidencia.
 
+![Faro landing](docs/assets/faro-landing.jpg)
+
+_Entrada a Faro: presentacion del observatorio antes de abrir el mapa._
+
+![Faro Explorer](docs/assets/faro-explorer.jpg)
+
+_Explorer investigador: busqueda, pivots y expedientes verificables a partir de fuentes oficiales._
+
 ## El Problema
 
 La informacion sobre gasto publico suele estar repartida entre portales, CSVs, APIs, XLSX, PDFs y datasets con nombres inconsistentes. Para pasar de una sospecha a una verificacion hay que encontrar la fuente, entender el registro, cruzar IDs, revisar montos, ubicar territorio y guardar evidencia reproducible.
@@ -45,7 +53,7 @@ El producto actual ya tiene una primera version funcional:
 
 - pantalla inicial de entrada a Faro;
 - mapa territorial para casos con geometria oficial;
-- modo investigador tipo scanner para buscar y seguir expedientes;
+- modo investigador tipo scanner con busqueda, filtros compactos y pivots acumulables por fuente, organismo, proveedor y senal;
 - inspector lateral compacto para revisar casos rapido;
 - expediente completo con senales, evidencia, caveats y siguientes pasos;
 - receipts oficiales con source, raw path, hashes, locator y parser version;
@@ -55,10 +63,10 @@ El producto actual ya tiene una primera version funcional:
 
 Datos actuales en la app:
 
-- `633` expedientes;
+- `1608` expedientes;
 - `558` Argentina;
-- `50` Peru;
-- `25` Chile.
+- `525` Peru;
+- `525` Chile.
 
 ## Modos De Uso
 
@@ -72,7 +80,7 @@ Es ideal para obras publicas y casos donde la ubicacion agrega contexto real: te
 
 El scanner es evidencia primero. Permite buscar por proveedor, organismo, fuente, receipt, senal o texto libre, y despues pivotear entre entidades relacionadas.
 
-Este modo es clave para periodistas e investigadores porque no depende del mapa. Peru y Chile pueden tener expedientes utiles aunque todavia no tengan coordenadas confiables.
+Este modo es clave para periodistas e investigadores porque no depende del mapa. Peru y Chile pueden tener expedientes utiles aunque una parte importante todavia no sea dibujable en el mapa.
 
 ## Principios Del Producto
 
@@ -96,7 +104,7 @@ Prioridad recomendada:
 3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
 4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
 
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `413` casos elegibles para mapa sobre `633` expedientes totales.
+La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas, sospechosas o marcadas como geometria mala conocida quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `1097` casos elegibles para mapa sobre `1608` expedientes totales: `411/558` Argentina, `469/525` Peru y `217/525` Chile.
 
 ## Fuentes Iniciales
 
@@ -123,7 +131,7 @@ Peru:
 Chile:
 
 - Mercado Publico API;
-- ChileCompra / OCDS como siguiente expansion;
+- ChileCompra / OCDS procesos;
 - DIPRES pagos como siguiente cruce.
 
 ## Estructura Relevante
@@ -177,8 +185,13 @@ No usar `npm run data:fetch` como reparacion rutinaria. Puede refrescar fuentes 
 - [Handoff UI/UX del expediente](docs/handoffs/2026-05-16-ui-ux-expediente-faro-v1.md)
 - [Handoff de datos, calidad y cobertura](docs/handoffs/2026-05-16-data-quality-and-coverage-handoff.md)
 - [Handoff del sprint de integridad de datos](docs/handoffs/2026-05-17-data-integrity-and-quality-sprint-handoff.md)
+- [Handoff de senales, filtros y Explorer](docs/handoffs/2026-05-17-investigation-signals-and-filters-ui-handoff.md)
 - [Plan del data spine](docs/plans/2026-05-16-data-spine.md)
 - [Spec del modo investigador](docs/superpowers/specs/2026-05-16-investigator-explorer-design.md)
+
+## Descripcion Corta Para GitHub
+
+Faro convierte datos oficiales de gasto publico en expedientes verificables con mapa, Explorer, receipts, caveats y export de evidencia.
 
 ## Frase Central
 

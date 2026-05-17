@@ -2,6 +2,7 @@ import { shouldExposeReceiptInUi, type EvidenceReceipt } from "./evidenceReceipt
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
 
 interface MapCandidate {
+  id?: string;
   countryCode: string;
   coordinates: { lat: number; lon: number } | null;
   evidenceLevel: string;
@@ -17,6 +18,7 @@ export interface UiExposureStatus {
 export function getMapExposureStatus(caseFile: MapCandidate): UiExposureStatus {
   const reasons: string[] = [];
   const coordinateQuality = assessCoordinateQuality({
+    caseId: caseFile.id,
     countryCode: caseFile.countryCode,
     coordinates: caseFile.coordinates,
   });

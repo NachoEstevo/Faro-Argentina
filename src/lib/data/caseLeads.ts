@@ -47,7 +47,7 @@ export function buildCaseLeads(
       signalContexts.get(caseFile.countryCode) ?? buildCaseSignalContext([caseFile]),
     ))
     .filter((lead): lead is CaseLead => lead !== null)
-    .filter((lead) => lead.primarySignal.kind === "watch")
+    .filter((lead) => isReviewLeadSignal(lead.primarySignal))
     .sort((left, right) => right.sortScore - left.sortScore || left.caseId.localeCompare(right.caseId))
     .slice(0, clampLimit(filters.limit));
 }
@@ -109,6 +109,10 @@ function matchesScopeFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters)
 function clampLimit(limit: number | undefined): number {
   if (!Number.isFinite(limit)) return 12;
   return Math.min(Math.max(Math.trunc(Number(limit)), 1), 50);
+}
+
+function isReviewLeadSignal(signal: CaseSignal): boolean {
+  return signal.kind === "watch" || signal.code === "official_judicial_context";
 }
 
 function clean(value: string | null | undefined): string {

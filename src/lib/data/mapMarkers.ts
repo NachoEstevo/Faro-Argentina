@@ -13,10 +13,12 @@ export function buildCaseMarkerKey(
 }
 
 export function isMapMarkerEligible(caseFile: {
+  id?: string;
   countryCode: string;
   coordinates: GeoPoint | null;
 }): boolean {
   return assessCoordinateQuality({
+    caseId: caseFile.id,
     countryCode: caseFile.countryCode,
     coordinates: caseFile.coordinates,
   }).exposeOnMap;

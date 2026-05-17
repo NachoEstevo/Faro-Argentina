@@ -1,8 +1,8 @@
 # Contexto De Producto: Faro
 
-Fecha: 2026-05-16
+Fecha: 2026-05-17
 Audiencia: producto, UI/UX, datos, satelite, ingenieria
-Estado: contexto de trabajo para la proxima iteracion
+Estado: contexto de trabajo vigente despues de Explorer compacto y limpieza de geometria
 
 ## Definicion Corta
 
@@ -169,7 +169,8 @@ Implementado:
 
 - pantalla inicial;
 - modo mapa;
-- scanner investigador;
+- scanner investigador con filtros compactos y pivots por fuente, organismo,
+  proveedor y senal;
 - inspector compacto;
 - panel de expediente completo;
 - lead feed;
@@ -182,22 +183,27 @@ Implementado:
 
 Datos actuales:
 
-- 633 expedientes totales;
+- 1608 expedientes totales;
 - 558 Argentina;
-- 50 Peru;
-- 25 Chile.
+- 525 Peru;
+- 525 Chile.
+- 1097 expedientes elegibles para mapa: 411 Argentina, 469 Peru y 217 Chile.
+- 2 casos de Argentina marcados como `known_bad_geometry` siguen disponibles
+  para Explorer/export, pero no se dibujan en el mapa.
 
 Bloqueos antes de llamarlo producto terminado:
 
 - Algunas coordenadas de Argentina son invalidas, duplicadas, placeholders o
-  parecen tener signos negativos faltantes.
+  parecen tener signos negativos faltantes; esos casos deben seguir como brechas
+  de datos, no como puntos corregidos manualmente.
 - Las obras publicas de Argentina tienen case ids duplicados que deben
   canonicalizarse.
 - Los expedientes historico-judiciales cargados para Argentina son contexto
   verificable; no deben mezclarse con contratos actuales sin match documental
   exacto.
 - Peru y Chile ya prueban que Faro no depende del mapa, pero necesitan mas
-  cobertura y cruces oficiales de mayor valor.
+  cruces oficiales de mayor valor; el Explorer debe mostrar esos expedientes
+  aunque una parte no sea map-ready.
 
 ## Donde Esta El Valor
 

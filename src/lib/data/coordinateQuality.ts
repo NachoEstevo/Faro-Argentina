@@ -11,6 +11,7 @@ export type CoordinateStatus =
   | "invalid_coordinate"
   | "placeholder_geometry"
   | "duplicated_value_geometry"
+  | "known_bad_geometry"
   | "sign_suspect"
   | "outside_country_bounds"
   | "unsupported_country";
@@ -46,6 +47,11 @@ const countryBounds: Record<CountryCode, Bounds> = {
 
 const coordinateTolerance = 0.000001;
 
+const knownBadGeometryCaseIds = new Set([
+  "AR-WORK-74-0001-OBR21",
+  "AR-WORK-74-0005-OBR21",
+]);
+
 export function assessCoordinateQuality(
   candidate: CoordinateCandidate,
 ): CoordinateQuality {
@@ -72,6 +78,14 @@ export function assessCoordinateQuality(
       candidate,
       "duplicated_value_geometry",
       "Latitud y longitud tienen el mismo valor.",
+    );
+  }
+
+  if (candidate.caseId && knownBadGeometryCaseIds.has(candidate.caseId)) {
+    return buildQuality(
+      candidate,
+      "known_bad_geometry",
+      "Coordenadas oficiales bloqueadas por control de calidad manual.",
     );
   }
 

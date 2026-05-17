@@ -31,3 +31,19 @@ test("isMapMarkerEligible only accepts coordinates that pass country bounds", ()
     coordinates: { lat: 38.8977, lon: -77.0365 },
   }), false);
 });
+
+test("isMapMarkerEligible blocks known official coordinates that land in the sea", () => {
+  const ciervosPantanosIntendencia = {
+    id: "AR-WORK-74-0001-OBR21",
+    countryCode: "AR",
+    coordinates: { lat: -54.341326, lon: -54.5854 },
+  };
+  const condoritoVisitorCenter = {
+    id: "AR-WORK-74-0005-OBR21",
+    countryCode: "AR",
+    coordinates: { lat: -54.31232, lon: -54.642749 },
+  };
+
+  assert.equal(isMapMarkerEligible(ciervosPantanosIntendencia), false);
+  assert.equal(isMapMarkerEligible(condoritoVisitorCenter), false);
+});

@@ -1,8 +1,8 @@
 # Faro Agent Onboarding
 
-Date: 2026-05-16
+Date: 2026-05-17
 Audience: new agents, engineers and collaborators cloning this repo
-Status: current handoff after investigator explorer and coordinate quality gate
+Status: current handoff after compact Explorer pivots and known-bad geometry gate
 
 ## What Faro Is
 
@@ -48,13 +48,18 @@ Important rule: a case can be a valid expediente without being map-visible.
 
 Main files:
 
-- `src/components/InvestigatorExplorer.tsx`
+- `src/components/Explorer/ExplorerView.tsx`
+- `src/components/Explorer/Explorer.module.css`
 - `src/components/CaseInspector.tsx`
 - `src/lib/data/investigatorExplorer.ts`
 - `src/lib/data/caseInspector.ts`
 
 This mode scans all current expedientes, including cases without official
 geometry and cases whose geometry needs review.
+
+The UI keeps pivots compact and multi-selectable so reporters can add or remove
+source, agency, supplier and signal pivots without turning the Explorer into a
+wide dashboard.
 
 ### Expediente And Evidence
 
@@ -127,6 +132,7 @@ The gate classifies coordinates as:
 - `placeholder_geometry`
 - `duplicated_value_geometry`
 - `sign_suspect`
+- `known_bad_geometry`
 - `outside_country_bounds`
 - `unsupported_country`
 
@@ -143,10 +149,11 @@ npm run data:geo-report
 
 Expected current shape:
 
-- `633` total expedientes;
-- `413` map eligible;
-- PE and CL currently remain no-geometry expedientes;
-- invalid AR coordinates remain available as data gaps.
+- `1608` total expedientes;
+- `1097` map eligible;
+- map eligibility by country: `411/558` AR, `469/525` PE, `217/525` CL;
+- invalid and known-bad AR coordinates remain available as data gaps in
+  Explorer/export, but must not be drawn on the map.
 
 ## Duplicate Official Rows
 

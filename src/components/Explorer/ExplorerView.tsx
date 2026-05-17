@@ -8,7 +8,6 @@ import {
   FileSearch,
   Map as MapIcon,
   PanelLeftClose,
-  Plus,
   Search,
 } from "lucide-react";
 
@@ -16,9 +15,16 @@ import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
 import {
   buildCaseSignals,
-  getCaseAlertSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
+import {
+  buildInvestigatorExplorer,
+  type InvestigatorEntityFilter,
+  type InvestigatorFacet,
+  type InvestigatorGeometryFilter,
+} from "@/lib/data/investigatorExplorer";
+import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
+import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 import FaroMark from "../FaroMark";
 import styles from "./Explorer.module.css";
 
@@ -32,18 +38,26 @@ interface Props {
   onSwitchToMap: () => void;
 }
 
-type StateFilter = "verified" | "review" | "no_geometry";
+type CountryScope = CountryCode | "ALL";
 
-const STATE_OPTIONS: Array<{ id: StateFilter; label: string }> = [
-  { id: "verified", label: "Verificadas" },
-  { id: "review", label: "A revisar" },
-  { id: "no_geometry", label: "Sin geometría" },
-];
-
-const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
+const COUNTRY_OPTIONS: Array<{ code: CountryScope; short: string; label: string }> = [
+  { code: "ALL", short: "Todos", label: "Todos" },
   { code: "AR", short: "AR", label: "Argentina" },
   { code: "CL", short: "CL", label: "Chile" },
   { code: "PE", short: "PE", label: "Perú" },
+];
+
+const GEOMETRY_OPTIONS: Array<{ id: InvestigatorGeometryFilter; label: string }> = [
+  { id: "any", label: "Todas" },
+  { id: "with", label: "Con geometría oficial" },
+  { id: "without", label: "Sin geometría de mapa" },
+];
+
+const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string; limit: number }> = [
+  { type: "source", label: "Fuente", limit: 4 },
+  { type: "agency", label: "Organismo", limit: 4 },
+  { type: "supplier", label: "Proveedor", limit: 4 },
+  { type: "signal", label: "Señal", limit: 5 },
 ];
 
 export default function ExplorerView({
@@ -55,25 +69,23 @@ export default function ExplorerView({
   onClearSelection,
   onSwitchToMap,
 }: Props) {
-  const [stateFilters, setStateFilters] = useState<Set<StateFilter>>(
-    () => new Set<StateFilter>(["verified", "review"]),
+  const [countryScope, setCountryScope] = useState<CountryScope>(selectedCountry);
+  const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
+  const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+
+  const countries = useMemo(
+    () => (countryScope === "ALL" ? undefined : [countryScope]),
+    [countryScope],
   );
 
   const countryAll = useMemo(
-    () => cases.filter((caseFile) => caseFile.countryCode === selectedCountry),
-    [cases, selectedCountry],
+    () => (countryScope === "ALL"
+      ? cases
+      : cases.filter((caseFile) => caseFile.countryCode === countryScope)),
+    [cases, countryScope],
   );
-
-  const contractByWorkNumber = useMemo(() => {
-    const map = new Map<string, ExplorerCase>();
-    for (const candidate of countryAll) {
-      const publicWork = (candidate as AnyCase).publicWorkNumber;
-      if (typeof publicWork === "string" && publicWork.length > 0) {
-        if (!map.has(publicWork)) map.set(publicWork, candidate);
-      }
-    }
-    return map;
-  }, [countryAll]);
 
   const yearBounds = useMemo(() => {
     const years = countryAll
@@ -88,12 +100,15 @@ export default function ExplorerView({
 
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(0);
+
+  const activeEntities = useMemo<InvestigatorEntityFilter[]>(
+    () => activeFacets.map((facet) => ({ type: facet.type, key: facet.key })),
+    [activeFacets],
+  );
 
   useEffect(() => {
     setPage(0);
-  }, [query, stateFilters, yearFrom, yearTo, selectedCountry]);
+  }, [activeFacets, countryScope, geometryFilter, query, yearFrom, yearTo]);
 
   useEffect(() => {
     setYearFrom(yearBounds.min);
@@ -109,94 +124,71 @@ export default function ExplorerView({
     return () => window.removeEventListener("keydown", handler);
   }, [selectedCase, onClearSelection]);
 
-  const countryCases = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    const filtered = countryAll.filter((caseFile) => {
-      const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
-      const isReview = severity === "high" || severity === "medium";
-      const isNoGeometry = caseFile.coordinates === null;
-      const isVerified = !isReview && !isNoGeometry;
-      const matchState =
-        (stateFilters.has("verified") && isVerified) ||
-        (stateFilters.has("review") && isReview) ||
-        (stateFilters.has("no_geometry") && isNoGeometry);
-      if (!matchState && stateFilters.size > 0) return false;
+  const yearScopedCases = useMemo(
+    () => cases.filter((caseFile) =>
+      caseFile.year === null || (caseFile.year >= yearFrom && caseFile.year <= yearTo),
+    ),
+    [cases, yearFrom, yearTo],
+  );
 
-      if (caseFile.year !== null && (caseFile.year < yearFrom || caseFile.year > yearTo)) {
-        return false;
-      }
+  const explorer = useMemo(
+    () => buildInvestigatorExplorer(yearScopedCases, {
+      countries,
+      entities: activeEntities,
+      geometry: geometryFilter,
+      limit: 500,
+      query,
+    }),
+    [activeEntities, countries, geometryFilter, query, yearScopedCases],
+  );
 
-      if (normalizedQuery.length === 0) return true;
-      const supplier = "supplierName" in caseFile ? caseFile.supplierName ?? "" : "";
-      const haystack = [
-        caseFile.workNumber,
-        caseFile.title,
-        caseFile.agencyName,
-        supplier,
-        caseFile.id,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(normalizedQuery);
-    });
-    return [...filtered].sort((a, b) =>
-      caseTimestampKey(b).localeCompare(caseTimestampKey(a)),
-    );
-  }, [countryAll, query, stateFilters, yearFrom, yearTo]);
+  const facetGroups = useMemo(
+    () => FACET_TYPE_OPTIONS
+      .map((group) => ({
+        ...group,
+        facets: explorer.facets
+          .filter((facet) => facet.type === group.type)
+          .slice(0, group.limit),
+      }))
+      .filter((group) => group.facets.length > 0),
+    [explorer.facets],
+  );
 
   const PAGE_SIZE = 8;
   const pagedRows = useMemo(
-    () => countryCases.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
-    [countryCases, page],
+    () => explorer.rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+    [explorer.rows, page],
   );
 
-  const supplierCount = useMemo(() => {
-    const set = new Set<string>();
-    for (const caseFile of countryAll) {
-      const name = "supplierName" in caseFile ? caseFile.supplierName : null;
-      if (name) set.add(name.trim().toLowerCase());
+  const rowStats = useMemo(() => {
+    let signaledRows = 0;
+    let withoutMapGeometry = 0;
+    for (const row of explorer.rows) {
+      if (row.primarySignal) signaledRows += 1;
+      if (!row.hasOfficialGeometry) withoutMapGeometry += 1;
     }
-    return set.size;
-  }, [countryAll]);
+    return { signaledRows, withoutMapGeometry };
+  }, [explorer.rows]);
 
-  const totalAmount = useMemo(() => {
-    let totalUsd = 0;
-    let convertedCount = 0;
-    let totalAmounts = 0;
-    for (const caseFile of countryAll) {
-      const amount = "amount" in caseFile ? caseFile.amount : null;
-      if (!amount) continue;
-      totalAmounts += 1;
-      if (amount.currency === "USD") {
-        totalUsd += amount.value;
-        convertedCount += 1;
-      } else if (amount.usdEquivalent) {
-        totalUsd += amount.usdEquivalent.usd;
-        convertedCount += 1;
-      }
-    }
-    return { usd: totalUsd, convertedCount, totalAmounts };
-  }, [countryAll]);
+  const resetFilters = () => {
+    setActiveFacets([]);
+    setGeometryFilter("any");
+    setQuery("");
+    setYearFrom(yearBounds.min);
+    setYearTo(yearBounds.max);
+  };
 
-  const stateCounts = useMemo(() => {
-    let verified = 0;
-    let review = 0;
-    let noGeometry = 0;
-    for (const caseFile of countryAll) {
-      const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
-      if (caseFile.coordinates === null) noGeometry += 1;
-      else if (severity === "high" || severity === "medium") review += 1;
-      else verified += 1;
-    }
-    return { verified, review, no_geometry: noGeometry };
-  }, [countryAll]);
+  const selectCountryScope = (code: CountryScope) => {
+    setCountryScope(code);
+    setActiveFacets([]);
+    if (code !== "ALL") onSelectCountry(code);
+  };
 
-  const toggleState = (id: StateFilter) => {
-    setStateFilters((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+  const toggleFacet = (facet: InvestigatorFacet) => {
+    setActiveFacets((prev) => {
+      const exists = prev.some((active) => isSameFacet(active, facet));
+      if (exists) return prev.filter((active) => !isSameFacet(active, facet));
+      return [...prev, facet];
     });
   };
 
@@ -217,25 +209,25 @@ export default function ExplorerView({
             <button
               type="button"
               className={styles.sectionLink}
-              onClick={() => setStateFilters(new Set(["verified", "review"]))}
+              onClick={resetFilters}
             >
               Limpiar
             </button>
           </div>
           <div className={styles.filterGroup}>
-            <p className={styles.filterGroupLabel}>Estado</p>
-            {STATE_OPTIONS.map((option) => {
-              const isChecked = stateFilters.has(option.id);
+            <p className={styles.filterGroupLabel}>Geometría</p>
+            {GEOMETRY_OPTIONS.map((option) => {
+              const isChecked = geometryFilter === option.id;
               return (
                 <label key={option.id} className={styles.checkRow}>
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="explorer-geometry"
                     checked={isChecked}
-                    onChange={() => toggleState(option.id)}
+                    onChange={() => setGeometryFilter(option.id)}
                   />
-                  <span className={`${styles.checkDot} ${styles[`dot_${option.id}`]}`} aria-hidden />
+                  <span className={`${styles.checkDot} ${geometryDotClass(option.id, styles)}`} aria-hidden />
                   <span className={styles.checkLabel}>{option.label}</span>
-                  <span className={styles.checkCount}>{stateCounts[option.id]}</span>
                 </label>
               );
             })}
@@ -258,23 +250,64 @@ export default function ExplorerView({
           </div>
         </section>
         <hr className={styles.sidebarDivider} />
-        <section className={styles.sidebarSection} aria-labelledby="explorer-saved-heading">
+        <section className={styles.sidebarSection} aria-labelledby="explorer-pivots-heading">
           <div className={styles.sectionHead}>
-            <p className={styles.eyebrow} id="explorer-saved-heading">
-              Guardadas
+            <p className={styles.eyebrow} id="explorer-pivots-heading">
+              Pivots
             </p>
-            <button type="button" className={styles.iconButton} aria-label="Agregar búsqueda guardada">
-              <Plus size={14} aria-hidden />
-            </button>
+            {activeFacets.length > 0 && (
+              <button type="button" className={styles.sectionLink} onClick={() => setActiveFacets([])}>
+                Quitar todo
+              </button>
+            )}
           </div>
-          <p className={styles.savedEmpty}>
-            Aún no tenés búsquedas guardadas. Aplicá filtros y guardalos para volver más tarde.
-          </p>
+          {activeFacets.length > 0 && (
+            <div className={styles.activePivotList} aria-label="Pivots activos">
+              {activeFacets.map((facet) => (
+                <button
+                  key={`active-${facet.type}:${facet.key}`}
+                  type="button"
+                  className={styles.activePivotChip}
+                  onClick={() => toggleFacet(facet)}
+                >
+                  <span>{facetTypeLabel(facet.type)}</span>
+                  <span className={styles.activePivotLabel}>{facet.label}</span>
+                  <span className={styles.activePivotRemove} aria-hidden>×</span>
+                </button>
+              ))}
+            </div>
+          )}
+          <div className={styles.facetGroups}>
+            {facetGroups.map((group) => (
+              <div key={group.type} className={styles.facetGroup}>
+                <div className={styles.facetGroupHead}>
+                  <span>{group.label}</span>
+                </div>
+                <div className={styles.facetList}>
+                  {group.facets.map((facet) => {
+                    const isActive = activeFacets.some((active) => isSameFacet(active, facet));
+                    return (
+                      <button
+                        key={`${facet.type}:${facet.key}`}
+                        type="button"
+                        className={`${styles.facetButton} ${isActive ? styles.facetButtonActive : ""}`}
+                        onClick={() => toggleFacet(facet)}
+                        aria-pressed={isActive}
+                      >
+                        <span className={styles.facetLabel}>{facet.label}</span>
+                        <span className={styles.facetCount}>{facet.count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
-        <button type="button" className={styles.exportRow}>
+        <a className={styles.exportRow} href={buildExportHref(countryScope, query)}>
           <Download size={14} aria-hidden />
           <span>Exportar resultados</span>
-        </button>
+        </a>
       </aside>
       <main className={styles.main}>
         {selectedCase ? (
@@ -304,16 +337,20 @@ export default function ExplorerView({
           </div>
           <div className={styles.countrySelector} role="group" aria-label="País">
             {COUNTRY_OPTIONS.map((country) => {
-              const isActive = country.code === selectedCountry;
+              const isActive = country.code === countryScope;
               return (
                 <button
                   key={country.code}
                   type="button"
                   className={`${styles.countryChip} ${isActive ? styles.countryChipActive : ""}`}
-                  onClick={() => onSelectCountry(country.code)}
+                  onClick={() => selectCountryScope(country.code)}
                   aria-pressed={isActive}
                 >
-                  <CountryFlag code={country.code} />
+                  {country.code === "ALL" ? (
+                    <span className={styles.countryShort}>{country.short}</span>
+                  ) : (
+                    <CountryFlag code={country.code} />
+                  )}
                   <span className={styles.countryName}>{country.label}</span>
                 </button>
               );
@@ -327,35 +364,27 @@ export default function ExplorerView({
               type="text"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar por #ID, organismo o proveedor…"
+              placeholder="Buscar proveedor, organismo, fuente, receipt, señal o expediente…"
               aria-label="Buscar"
             />
           </label>
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
-          <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
-          <StatCard
-            label="Monto total (USD)"
-            value={formatUsdCompact(totalAmount.usd)}
-            sublabel={
-              totalAmount.convertedCount < totalAmount.totalAmounts
-                ? `${totalAmount.convertedCount} de ${totalAmount.totalAmounts} convertidos`
-                : undefined
-            }
-          />
-          <StatCard label="A revisar" value={stateCounts.review.toLocaleString("es-AR")} />
-          <StatCard label="Proveedores" value={supplierCount.toLocaleString("es-AR")} />
+          <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
+          <StatCard label="Con señal" value={rowStats.signaledRows.toLocaleString("es-AR")} />
+          <StatCard label="Sin geometría de mapa" value={rowStats.withoutMapGeometry.toLocaleString("es-AR")} />
+          <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
         </div>
         <div className={styles.tableWrap}>
           {(() => {
-            const totalPages = Math.max(1, Math.ceil(countryCases.length / PAGE_SIZE));
+            const totalPages = Math.max(1, Math.ceil(explorer.rows.length / PAGE_SIZE));
             const safePage = Math.min(page, totalPages - 1);
-            const from = countryCases.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
-            const to = Math.min(countryCases.length, (safePage + 1) * PAGE_SIZE);
+            const from = explorer.rows.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
+            const to = Math.min(explorer.rows.length, (safePage + 1) * PAGE_SIZE);
             return (
               <div className={styles.tableFoot}>
                 <span className={styles.tableFootLabel}>
-                  Mostrando {from}-{to} de {countryCases.length.toLocaleString("es-AR")}
+                  Mostrando {from}-{to} de {explorer.rows.length.toLocaleString("es-AR")}
                 </span>
                 <div className={styles.pagination} role="navigation" aria-label="Paginación">
                   <button
@@ -403,8 +432,8 @@ export default function ExplorerView({
                 <th>Organismo</th>
                 <th>Proveedor</th>
                 <th className={styles.tableNumeric}>Monto</th>
-                <th>Fecha</th>
-                <th>Estado</th>
+                <th>Fuente</th>
+                <th>Señal</th>
               </tr>
             </thead>
             <tbody>
@@ -416,41 +445,29 @@ export default function ExplorerView({
                 </tr>
               )}
               {pagedRows.map((caseFile) => {
-                const related = contractByWorkNumber.get(caseFile.workNumber);
-                const supplierFromCase =
-                  "supplierName" in caseFile ? caseFile.supplierName : null;
-                const supplierFromRelated =
-                  related && "supplierName" in related ? related.supplierName : null;
-                const supplierName = supplierFromCase ?? supplierFromRelated ?? "—";
-                const amountFromCase = "amount" in caseFile ? caseFile.amount : null;
-                const amountFromRelated =
-                  related && "amount" in related ? related.amount : null;
-                const amount = amountFromCase ?? amountFromRelated;
                 const state = computeRowState(caseFile);
                 return (
                   <tr
-                    key={caseFile.id}
+                    key={caseFile.caseId}
                     className={styles.tableRow}
-                    onClick={() => onSelectCase(caseFile.id, caseFile.countryCode)}
+                    onClick={() => onSelectCase(caseFile.caseId, caseFile.countryCode)}
                   >
-                    <td className={styles.cellId}>#{caseFile.workNumber}</td>
-                    <td>{describeCaseType(caseFile)}</td>
-                    <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
-                    <td className={styles.cellEllipsis}>{supplierName}</td>
-                    <td className={styles.tableNumeric}>
-                      {(() => {
-                        const formatted = formatRowAmount(amount);
-                        return (
-                          <span className={styles.rowAmount}>
-                            <span>{formatted.primary}</span>
-                            {formatted.usd && (
-                              <span className={styles.rowAmountUsd}>{formatted.usd}</span>
-                            )}
-                          </span>
-                        );
-                      })()}
+                    <td className={styles.cellId}>
+                      <span>{caseFile.countryCode}</span>
+                      <span>#{caseFile.workNumber || caseFile.caseId}</span>
                     </td>
-                    <td className={styles.cellMono}>{formatTableDate(caseFile)}</td>
+                    <td>{caseTypeLabel(caseFile.caseType)}</td>
+                    <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
+                    <td className={styles.cellEllipsis}>{caseFile.supplierLabel}</td>
+                    <td className={styles.tableNumeric}>
+                      <span className={styles.rowAmount}>{caseFile.amountLabel}</span>
+                    </td>
+                    <td className={styles.cellEllipsis}>
+                      <span className={styles.sourceStack}>
+                        <span>{caseFile.sourceName}</span>
+                        <span>{caseFile.locatorLabel}</span>
+                      </span>
+                    </td>
                     <td>
                       <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
                         <span className={styles.stateBadgeDot} aria-hidden />
@@ -504,6 +521,9 @@ function ExplorerDetail({
     })
     .slice(0, 4);
   const sourceUrl = caseFile.receipt?.sourceUrl ?? null;
+  const receiptLocator = caseFile.receipt
+    ? describeReceiptLocator(caseFile.receipt.locatorType)
+    : null;
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
       <div className={styles.detailTopBar}>
@@ -518,7 +538,7 @@ function ExplorerDetail({
             target="_blank"
             rel="noreferrer"
           >
-            Abrir fuente oficial
+            {receiptLocator?.actionLabel ?? "Abrir fuente"}
           </a>
         )}
       </div>
@@ -595,16 +615,28 @@ function ExplorerDetail({
             label="Fuente"
             value={caseFile.receipt.sourceName || caseFile.receipt.sourceId}
           />
+          {receiptLocator && (
+            <>
+              <DetailRow label="Tipo de locator" value={receiptLocator.label} />
+              <DetailRow label="Nota" value={receiptLocator.note} />
+            </>
+          )}
+          <DetailRow label="Record ID" value={caseFile.receipt.recordId} />
+          <DetailRow label="Raw path" value={caseFile.receipt.rawPath} />
           {caseFile.receipt.sourceUrl && (
             <DetailRow
               label="URL"
-              value="Abrir fuente ↗"
+              value={`${receiptLocator?.actionLabel ?? "Abrir fuente"} ↗`}
               href={caseFile.receipt.sourceUrl}
             />
           )}
           <DetailRow
             label="Snapshot"
             value={caseFile.receipt.snapshotHash?.slice(0, 16) ?? "—"}
+          />
+          <DetailRow
+            label="Row hash"
+            value={caseFile.receipt.rowHash?.slice(0, 16) ?? "—"}
           />
           <DetailRow
             label="Extraído"
@@ -703,6 +735,37 @@ function CountryFlag({ code }: { code: CountryCode }) {
   );
 }
 
+function geometryDotClass(
+  id: InvestigatorGeometryFilter,
+  moduleStyles: Record<string, string>,
+): string {
+  if (id === "with") return moduleStyles.dot_verified;
+  if (id === "without") return moduleStyles.dot_no_geometry;
+  return moduleStyles.dot_review;
+}
+
+function facetTypeLabel(type: InvestigatorFacet["type"]): string {
+  if (type === "supplier") return "Proveedor";
+  if (type === "agency") return "Organismo";
+  if (type === "source") return "Fuente";
+  return "Señal";
+}
+
+function isSameFacet(
+  left: Pick<InvestigatorFacet, "type" | "key">,
+  right: Pick<InvestigatorFacet, "type" | "key">,
+): boolean {
+  return left.type === right.type && left.key === right.key;
+}
+
+function buildExportHref(countryScope: CountryScope, query: string): string {
+  const params = new URLSearchParams();
+  if (countryScope !== "ALL") params.set("country", countryScope);
+  if (query.trim()) params.set("q", query.trim());
+  const suffix = params.toString();
+  return suffix ? `/api/export?${suffix}` : "/api/export";
+}
+
 function RangeSlider({
   min,
   max,
@@ -752,7 +815,12 @@ function RangeSlider({
 }
 
 type AnyCase = ExplorerCase & Record<string, unknown>;
-type Amount = { value: number; currency: string; usdEquivalent?: { usd: number } | null } | null | undefined;
+type Amount = {
+  value: number;
+  currency: string;
+  label?: string;
+  usdEquivalent?: { usd: number } | null;
+} | null | undefined;
 
 function getField<T = unknown>(caseFile: ExplorerCase, key: string): T | null {
   const value = (caseFile as AnyCase)[key];
@@ -793,11 +861,18 @@ function MontoCard({
   return (
     <div className={styles.detailCard}>
       <p className={styles.detailCardHead}>Monto</p>
-      {amount && <DetailRow label="Adjudicado" value={formatAmountInline(amount)} />}
+      {amount && <DetailRow label={amountDetailLabel(amount)} value={formatAmountInline(amount)} />}
       {budget && <DetailRow label="Presupuesto oficial" value={formatAmountInline(budget)} />}
       {overrun && <DetailRow label="Variación" value={overrun} />}
     </div>
   );
+}
+
+function amountDetailLabel(amount: Exclude<Amount, null | undefined>): string {
+  const label = amount.label?.toLowerCase() ?? "";
+  if (label.includes("contextual") || label.includes("recaudacion")) return "Monto contextual";
+  if (label.includes("presupuesto")) return "Presupuesto";
+  return "Adjudicado";
 }
 
 function CronologiaCard({ caseFile }: { caseFile: ExplorerCase }) {
@@ -934,7 +1009,7 @@ function OrganismoCard({ caseFile }: { caseFile: ExplorerCase }) {
 
 function PuntoGeoCard({ caseFile }: { caseFile: ExplorerCase }) {
   const coords = caseFile.coordinates;
-  if (!coords) return null;
+  if (!coords || !shouldExposeCaseOnMap(caseFile)) return null;
   const mapUrl = `https://www.openstreetmap.org/?mlat=${coords.lat}&mlon=${coords.lon}#map=15/${coords.lat}/${coords.lon}`;
   return (
     <div className={styles.detailCard}>
@@ -944,23 +1019,6 @@ function PuntoGeoCard({ caseFile }: { caseFile: ExplorerCase }) {
       <DetailRow label="Ver en mapa" value="Abrir en OpenStreetMap ↗" href={mapUrl} />
     </div>
   );
-}
-
-function caseTimestampKey(caseFile: ExplorerCase): string {
-  const awarded = getField<string>(caseFile, "awardedAt");
-  if (awarded) return awarded;
-  const published = getField<string>(caseFile, "publishedAt");
-  if (published) return published;
-  if (caseFile.year !== null) return `${caseFile.year}-12-31`;
-  return "0000-00-00";
-}
-
-function formatTableDate(caseFile: ExplorerCase): string {
-  const awarded = formatDate(getField<string>(caseFile, "awardedAt"));
-  if (awarded) return awarded;
-  const published = formatDate(getField<string>(caseFile, "publishedAt"));
-  if (published) return published;
-  return caseFile.year ? String(caseFile.year) : "—";
 }
 
 function buildPageList(current: number, total: number): Array<number | "…"> {
@@ -977,12 +1035,14 @@ function buildPageList(current: number, total: number): Array<number | "…"> {
   return pages;
 }
 
-function computeRowState(caseFile: ExplorerCase): { tone: "verified" | "review" | "flag" | "unknown"; label: string } {
-  const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
-  if (severity === "high") return { tone: "flag", label: "Marcado" };
-  if (severity === "medium") return { tone: "review", label: "Revisar" };
-  if (caseFile.coordinates === null) return { tone: "unknown", label: "Sin datos" };
-  return { tone: "verified", label: "Verificado" };
+function computeRowState(row: {
+  hasOfficialGeometry: boolean;
+  primarySignal: { severity?: "low" | "medium" | "high" } | null;
+}): { tone: "verified" | "review" | "flag" | "unknown"; label: string } {
+  if (row.primarySignal?.severity === "high") return { tone: "flag", label: "Prioritaria" };
+  if (row.primarySignal?.severity === "medium") return { tone: "review", label: "Revisar" };
+  if (!row.hasOfficialGeometry) return { tone: "unknown", label: "Sin geometría" };
+  return { tone: "verified", label: "Con fuente" };
 }
 
 const CASE_TYPE_LABELS: Record<string, string> = {
@@ -999,10 +1059,13 @@ const CASE_TYPE_LABELS: Record<string, string> = {
 
 function describeCaseType(caseFile: ExplorerCase): string {
   if ("caseType" in caseFile && caseFile.caseType) {
-    const key = caseFile.caseType;
-    return CASE_TYPE_LABELS[key] ?? key.replace(/_/g, " ");
+    return caseTypeLabel(caseFile.caseType);
   }
   return "Obra";
+}
+
+function caseTypeLabel(caseType: string): string {
+  return CASE_TYPE_LABELS[caseType] ?? caseType.replace(/_/g, " ");
 }
 
 function formatRowAmount(
@@ -1023,11 +1086,6 @@ function compactNumber(value: number): string {
   if (abs >= 1_000_000) return `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
   if (abs >= 1_000) return `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
   return abs.toLocaleString("es-AR");
-}
-
-function formatUsdCompact(value: number): string {
-  if (value === 0) return "—";
-  return `US$ ${compactNumber(value)}`;
 }
 
 function StatCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string }) {

@@ -315,6 +315,8 @@ Debe distinguir:
 - `src/lib/data/caseLeads.ts`: feed priorizado del mapa.
 - `src/lib/data/caseCollections.ts`: exports de coleccion.
 - `src/lib/caseRepository.ts`: wiring de API y Evidence Pack.
+- `src/components/Explorer/ExplorerView.tsx`: UI compacta del Explorer,
+  filtros acumulables y tabla de expedientes.
 - `src/components/CaseSignals.tsx`: chips y panel de senales.
 - `src/components/CaseInspector.tsx`: inspector compacto.
 - `src/components/CaseDetails.tsx`: expediente visible.
