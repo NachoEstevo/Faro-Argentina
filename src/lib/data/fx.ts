@@ -55,9 +55,26 @@ export function convertAmountToUsd(input: {
     return { conversion: null, note: "currency_not_supported" };
   }
 
-  const hasAnyDate = input.anchorCandidates.some((candidate) => candidate.date !== null);
-  if (!hasAnyDate) {
+  const candidates = input.anchorCandidates.filter(
+    (candidate): candidate is FxAnchorCandidate & { date: string } => candidate.date !== null,
+  );
+  if (candidates.length === 0) {
     return { conversion: null, note: "no_anchor_date" };
+  }
+
+  for (const candidate of candidates) {
+    const entry = series.get(candidate.date);
+    if (!entry) continue;
+    return {
+      conversion: {
+        usd: input.amount / entry.rate,
+        fxRate: entry.rate,
+        fxDate: candidate.date,
+        anchorDate: candidate.date,
+        anchorField: candidate.field,
+        fxSource: entry.sourceMeta,
+      },
+    };
   }
 
   return { conversion: null, note: "no_fx_for_anchor_dates" };

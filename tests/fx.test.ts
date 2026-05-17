@@ -51,6 +51,34 @@ test("convertAmountToUsd returns no_anchor_date when every candidate has null da
   assert.equal(result.note, "no_anchor_date");
 });
 
+test("convertAmountToUsd uses the first cascade candidate when its date has FX", () => {
+  const arsSeries: FxSeries = new Map([
+    ["2018-03-14", { rate: 20.4, sourceMeta: stubSourceMeta() }],
+    ["2018-04-01", { rate: 20.6, sourceMeta: stubSourceMeta() }],
+  ]);
+  const registry: FxSeriesRegistry = new Map([["ARS", arsSeries]]);
+
+  const result = convertAmountToUsd({
+    amount: 1_234_567,
+    currency: "ARS",
+    anchorCandidates: [
+      { field: "contract_signed", date: "2018-03-14" },
+      { field: "opening", date: "2018-04-01" },
+      { field: "published", date: null },
+      { field: "year", date: "2018-01-01" },
+    ],
+    series: registry,
+  });
+
+  assert.ok(result.conversion, "expected a conversion to be returned");
+  assert.equal(result.conversion!.fxRate, 20.4);
+  assert.equal(result.conversion!.fxDate, "2018-03-14");
+  assert.equal(result.conversion!.anchorDate, "2018-03-14");
+  assert.equal(result.conversion!.anchorField, "contract_signed");
+  assert.equal(result.conversion!.fxSource.sourceId, "ar-bcra-com-a3500");
+  assert.equal(result.note, undefined);
+});
+
 function stubSourceMeta() {
   return {
     sourceId: "ar-bcra-com-a3500",
