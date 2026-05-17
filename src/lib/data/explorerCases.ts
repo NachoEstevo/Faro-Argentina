@@ -1,6 +1,7 @@
 import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
 import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
+import { shouldExposeCaseOnMap } from "./uiGates.ts";
 
 export type ExplorerCase = ArgentinaWorkCase | CrossCountryCaseFile;
 
@@ -20,10 +21,8 @@ export function filterExplorerCases({
   const pool = countryCode === "AR"
     ? [
         ...argentinaCases,
-        ...crossCountryCases.filter(
-          (caseFile) => caseFile.countryCode === "AR" && caseFile.coordinates !== null,
-        ),
-      ]
+        ...crossCountryCases.filter((caseFile) => caseFile.countryCode === "AR"),
+      ].filter(shouldExposeCaseOnMap)
     : crossCountryCases.filter((caseFile) => caseFile.countryCode === countryCode);
 
   const normalizedQuery = query.trim().toLowerCase();

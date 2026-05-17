@@ -4,7 +4,9 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import {
   Database,
+  FileSearch,
   Globe2,
+  Map,
   MapPin,
   Search,
   ShieldCheck,
@@ -17,9 +19,11 @@ import { buildCaseLeads } from "@/lib/data/caseLeads";
 import type { SignalCaseFile } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
+import CaseInspector from "./CaseInspector";
 import { CaseDetails, CountryExplorer } from "./CaseDetails";
 import EntryGate from "./EntryGate";
 import FaroMark from "./FaroMark";
+import InvestigatorExplorer from "./InvestigatorExplorer";
 import LeadFeed from "./LeadFeed";
 
 const CaseMap = dynamic(() => import("./CaseMap"), {
@@ -30,6 +34,10 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
 interface Props {
   dataset: CaseDataset<ArgentinaWorkCase>;
   crossCountryCases: CrossCountryCaseFile[];
+  explorerCases?: ExplorerCase[];
+  initialCountry?: "AR" | "PE" | "CL";
+  initialEntryOpen?: boolean;
+  initialMode?: "map" | "explorer";
 }
 
 const countries = [
@@ -38,31 +46,35 @@ const countries = [
   { code: "CL", label: "Chile", status: "Adjudicaciones", ready: true },
 ] as const;
 
-export default function FaroExperience({ dataset, crossCountryCases }: Props) {
+export default function FaroExperience({
+  dataset,
+  crossCountryCases,
+  explorerCases,
+  initialCountry = "AR",
+  initialEntryOpen = true,
+  initialMode = "map",
+}: Props) {
   const allCases = useMemo(
-    () => [...dataset.cases, ...crossCountryCases],
-    [crossCountryCases, dataset.cases],
+    () => explorerCases ?? [...dataset.cases, ...crossCountryCases],
+    [crossCountryCases, dataset.cases, explorerCases],
   );
   const yearBounds = useMemo(() => getYearBounds(allCases), [allCases]);
-  const [entryOpen, setEntryOpen] = useState(true);
-  const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">("AR");
+  const [entryOpen, setEntryOpen] = useState(initialEntryOpen);
+  const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
   const [selectedCaseId, setSelectedCaseId] = useState<string>("");
   const [query, setQuery] = useState("");
   const [year, setYear] = useState(yearBounds.max);
   const [traceMode, setTraceMode] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("demo") === "map") setEntryOpen(false);
-    const country = params.get("country");
-    if (country === "AR" || country === "PE" || country === "CL") {
-      setSelectedCountry(country);
-    }
-  }, []);
+  const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
+  const [explorerPanelMode, setExplorerPanelMode] = useState<"inspector" | "expediente">("inspector");
 
   useEffect(() => {
     setYear(yearBounds.max);
   }, [yearBounds.max]);
+
+  useEffect(() => {
+    if (viewMode === "explorer") setExplorerPanelMode("inspector");
+  }, [selectedCaseId, viewMode]);
 
   const countryCases = useMemo(() => {
     return filterExplorerCases({
@@ -80,13 +92,15 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
   );
 
   useEffect(() => {
-    if (selectedCaseId && !countryCases.some((caseFile) => caseFile.id === selectedCaseId)) {
+    const selectedPool = viewMode === "explorer" ? allCases : countryCases;
+    if (selectedCaseId && !selectedPool.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId("");
     }
-  }, [countryCases, selectedCaseId]);
+  }, [allCases, countryCases, selectedCaseId, viewMode]);
 
+  const selectedPool = viewMode === "explorer" ? allCases : countryCases;
   const selectedCase =
-    countryCases.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
+    selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const countryExplorerCases = useMemo(
     () => selectedCountry === "AR"
       ? []
@@ -96,80 +110,130 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
 
   return (
     <main className="faroShell">
-      <CaseMap
-        cases={selectedCountry === "AR" ? countryCases : []}
-        selectedCaseId={selectedCase?.id ?? null}
-        traceMode={traceMode}
-        onSelectCase={setSelectedCaseId}
-      />
+      {viewMode === "map" ? (
+        <CaseMap
+          cases={selectedCountry === "AR" ? countryCases : []}
+          selectedCaseId={selectedCase?.id ?? null}
+          traceMode={traceMode}
+          onSelectCase={setSelectedCaseId}
+        />
+      ) : (
+        <div className="explorerBackdrop" />
+      )}
       <div className="mapVignette" />
 
       <header className="topBar">
         <FaroMark />
-        <div className="topBarMeta">
-          <span>Demo 90 seg</span>
-          <strong>{countryCases.length}</strong>
-          <span>{selectedCountry === "AR" ? "puntos verificables" : "casos exportables"}</span>
+        <div className="topBarActions">
+          <div className="modeSwitch" aria-label="Modo de exploracion">
+            <button
+              type="button"
+              className={viewMode === "map" ? "active" : ""}
+              onClick={() => setViewMode("map")}
+            >
+              <Map size={15} aria-hidden />
+              Mapa
+            </button>
+            <button
+              type="button"
+              className={viewMode === "explorer" ? "active" : ""}
+              onClick={() => setViewMode("explorer")}
+            >
+              <FileSearch size={15} aria-hidden />
+              Explorer
+            </button>
+          </div>
+          <div className="topBarMeta">
+            <span>{viewMode === "explorer" ? "Modo investigador" : "Demo 90 seg"}</span>
+            <strong>{viewMode === "explorer" ? allCases.length : countryCases.length}</strong>
+            <span>{viewMode === "explorer" ? "expedientes" : selectedCountry === "AR" ? "puntos verificables" : "casos exportables"}</span>
+          </div>
         </div>
       </header>
 
-      <section className="searchDock" aria-label="Explorar casos">
-        <label className="searchBox">
-          <Search size={18} aria-hidden />
-          <input
-            aria-label="Buscar obra, organismo o proveedor"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar obra, organismo o proveedor"
-          />
-        </label>
+      {viewMode === "map" ? (
+        <section className="searchDock" aria-label="Explorar casos">
+          <label className="searchBox">
+            <Search size={18} aria-hidden />
+            <input
+              aria-label="Buscar obra, organismo o proveedor"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar obra, organismo o proveedor"
+            />
+          </label>
 
-        <div className="countryRail" aria-label="Paises">
-          {countries.map((country) => (
-            <button
-              key={country.code}
-              type="button"
-              className={selectedCountry === country.code ? "active" : ""}
-              aria-pressed={selectedCountry === country.code}
-              onClick={() => setSelectedCountry(country.code)}
-            >
-              <Globe2 size={15} aria-hidden />
-              <span>{country.label}</span>
-              <small>{country.status}</small>
-            </button>
-          ))}
-        </div>
-
-        <div className="dateControl">
-          <div>
-            <SlidersHorizontal size={16} aria-hidden />
-            <span>Hasta {year}</span>
+          <div className="countryRail" aria-label="Paises">
+            {countries.map((country) => (
+              <button
+                key={country.code}
+                type="button"
+                className={selectedCountry === country.code ? "active" : ""}
+                aria-pressed={selectedCountry === country.code}
+                onClick={() => setSelectedCountry(country.code)}
+              >
+                <Globe2 size={15} aria-hidden />
+                <span>{country.label}</span>
+                <small>{country.status}</small>
+              </button>
+            ))}
           </div>
-          <input
-            aria-label="Filtrar por anio maximo"
-            type="range"
-            min={yearBounds.min}
-            max={yearBounds.max}
-            value={year}
-            onChange={(event) => setYear(Number(event.target.value))}
-          />
-        </div>
 
-        <LeadFeed
-          leads={leads}
+          <div className="dateControl">
+            <div>
+              <SlidersHorizontal size={16} aria-hidden />
+              <span>Hasta {year}</span>
+            </div>
+            <input
+              aria-label="Filtrar por anio maximo"
+              type="range"
+              min={yearBounds.min}
+              max={yearBounds.max}
+              value={year}
+              onChange={(event) => setYear(Number(event.target.value))}
+            />
+          </div>
+
+          <LeadFeed
+            leads={leads}
+            selectedCaseId={selectedCase?.id ?? null}
+            onSelectCase={setSelectedCaseId}
+          />
+        </section>
+      ) : (
+        <InvestigatorExplorer
+          cases={allCases}
           selectedCaseId={selectedCase?.id ?? null}
-          onSelectCase={setSelectedCaseId}
+          onSelectCase={(caseId, countryCode) => {
+            setSelectedCountry(countryCode);
+            setExplorerPanelMode("inspector");
+            setSelectedCaseId(caseId);
+          }}
         />
-      </section>
+      )}
 
       <aside className="casePanel" aria-label="Expediente Faro">
-        {selectedCase ? (
-          <CaseDetails
+        {selectedCase && viewMode === "explorer" && explorerPanelMode === "inspector" ? (
+          <CaseInspector
             caseFile={selectedCase}
-            dataset={dataset}
-            traceMode={traceMode}
-            onTraceModeChange={setTraceMode}
+            onOpenFull={() => setExplorerPanelMode("expediente")}
           />
+        ) : selectedCase ? (
+          <>
+            {viewMode === "explorer" && (
+              <div className="panelModeBar">
+                <button type="button" onClick={() => setExplorerPanelMode("inspector")}>
+                  Volver al inspector
+                </button>
+              </div>
+            )}
+            <CaseDetails
+              caseFile={selectedCase}
+              dataset={dataset}
+              traceMode={traceMode}
+              onTraceModeChange={setTraceMode}
+            />
+          </>
         ) : (
           <CountryExplorer
             selectedCountry={selectedCountry}
@@ -193,7 +257,23 @@ export default function FaroExperience({ dataset, crossCountryCases }: Props) {
         </span>
       </footer>
 
-      {entryOpen && <EntryGate onEnter={() => setEntryOpen(false)} />}
+      {entryOpen && (
+        <EntryGate
+          onStartGuide={() => {
+            setViewMode("map");
+            setEntryOpen(false);
+          }}
+          onEnterMap={() => {
+            setViewMode("map");
+            setEntryOpen(false);
+          }}
+          onEnterExplorer={() => {
+            setViewMode("explorer");
+            setExplorerPanelMode("inspector");
+            setEntryOpen(false);
+          }}
+        />
+      )}
     </main>
   );
 }
