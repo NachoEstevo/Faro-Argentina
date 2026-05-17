@@ -61,7 +61,7 @@ test("buildCanonicalRecordsFromCrossCountryCase emits buyer, supplier and procur
     executionTermType: null,
     coordinates: null,
     evidenceLevel: "official_dataset",
-    amount: { value: 294, currency: "CLP", label: "monto_adjudicado" },
+    amount: { value: 294, currency: "CLP", label: "monto_adjudicado", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
     supplierName: "Sociedad de Gestion e Inversiones Julfior SPA",
     supplierDocument: "78.047.617-6",
     receipt: {
@@ -108,7 +108,7 @@ test("buildCanonicalRecordsFromCrossCountryCase emits contract records with supp
     executionTermType: null,
     coordinates: null,
     evidenceLevel: "official_dataset",
-    amount: { value: 113868.79, currency: "PEN", label: "monto_contratado" },
+    amount: { value: 113868.79, currency: "PEN", label: "monto_contratado", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
     supplierName: null,
     supplierDocument: "20487924050",
     receipt: {
@@ -157,7 +157,7 @@ test("buildCanonicalRecordsFromCrossCountryCase links Argentina contracts to off
     locationName: "Construccion cubierta",
     locationSource: "AR-CONTRATAR-OBRAS",
     evidenceLevel: "official_dataset",
-    amount: { value: 8694426.61, currency: "ARS", label: "monto_contrato" },
+    amount: { value: 8694426.61, currency: "ARS", label: "monto_contrato", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
     supplierName: "WARLET S.A.",
     supplierDocument: "30-70043585-3",
     supplierProvince: "Ciudad Autónoma de Buenos Aires",

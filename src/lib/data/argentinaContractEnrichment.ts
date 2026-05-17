@@ -147,7 +147,7 @@ export function summarizeLocation(rows: ArgentinaLocationRow[]) {
 
 export function buildOfficialBudget(
   procedure: ArgentinaProcedureRow | undefined,
-): CrossCountryCaseFile["officialBudget"] {
+): { value: number; currency: string; label: string } | null {
   const value = parseMoney(procedure?.presupuesto_oficial_monto);
   if (value === null) return null;
   return { value, currency: "ARS", label: "presupuesto_oficial" };

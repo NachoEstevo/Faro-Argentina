@@ -1,6 +1,7 @@
 import { parseCsv } from "./argentinaWorks.ts";
 import { createEvidenceReceipt } from "./evidenceReceipts.ts";
 import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import { attachFx, yearAsAnchor } from "./fxAttach.ts";
 import {
   buildCaveats,
   buildOfferStats,
@@ -93,6 +94,7 @@ export interface BuildOptions {
   fileHash: string;
   extractedAt: string;
   parserVersion: string;
+  fxRegistry?: import("./fx.ts").FxSeriesRegistry;
 }
 
 export interface RelatedSource<TRow> {
@@ -216,10 +218,28 @@ function buildCase({
     bidderCount: offerStats?.bidderCount ?? openingOfferCount,
     offerCount: offerStats?.offerCount ?? openingOfferCount,
     evidenceLevel: "official_dataset",
-    amount: amount === null
-      ? null
-      : { value: amount, currency: clean(row.contrato_moneda) || "ARS", label: "monto_contrato" },
-    officialBudget: buildOfficialBudget(procedure),
+    amount: attachFx(
+      amount === null
+        ? null
+        : { value: amount, currency: clean(row.contrato_moneda) || "ARS", label: "monto_contrato" },
+      [
+        { field: "contract_signed", date: normalizeDate(row.contrato_perfeccionamiento_fecha) },
+        { field: "opening", date: normalizeDate(openingActs[0]?.fecha_creacion) },
+        { field: "published", date: normalizeDate(procedure?.publicacion_contratar_fecha) },
+        { field: "year", date: yearAsAnchor(normalizeDate(row.contrato_perfeccionamiento_fecha)) },
+      ],
+      options.fxRegistry,
+    ),
+    officialBudget: attachFx(
+      buildOfficialBudget(procedure),
+      [
+        { field: "contract_signed", date: normalizeDate(row.contrato_perfeccionamiento_fecha) },
+        { field: "opening", date: normalizeDate(openingActs[0]?.fecha_creacion) },
+        { field: "published", date: normalizeDate(procedure?.publicacion_contratar_fecha) },
+        { field: "year", date: yearAsAnchor(normalizeDate(row.contrato_perfeccionamiento_fecha)) },
+      ],
+      options.fxRegistry,
+    ),
     supplierName: clean(supplier?.razon_social) || clean(row.contratista_razon_social) || null,
     supplierDocument: clean(row.contratista_cuit) || null,
     supplierLocality: clean(supplier?.localidad) || null,

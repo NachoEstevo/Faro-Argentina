@@ -1,5 +1,7 @@
 import { createEvidenceReceipt, type EvidenceReceipt } from "./evidenceReceipts.ts";
 import { parseCsv } from "./argentinaWorks.ts";
+import type { FxConversion, FxConversionNote } from "./fx.ts";
+import { attachFx, yearAsAnchor, yearNumberAsAnchor } from "./fxAttach.ts";
 import {
   buildAdminCentroidGeoEvidence,
   extractPeruLocationFromText,
@@ -72,11 +74,15 @@ export interface CrossCountryCaseFile {
     value: number;
     currency: string;
     label: string;
+    usdEquivalent: FxConversion | null;
+    usdConversionNote?: FxConversionNote;
   } | null;
   officialBudget?: {
     value: number;
     currency: string;
     label: string;
+    usdEquivalent: FxConversion | null;
+    usdConversionNote?: FxConversionNote;
   } | null;
   supplierName: string | null;
   supplierDocument: string | null;
@@ -327,6 +333,7 @@ interface BuildOptions {
   fileHash: string;
   extractedAt: string;
   parserVersion: string;
+  fxRegistry?: import("./fx.ts").FxSeriesRegistry;
 }
 
 export function buildPeruBudgetCases(
@@ -361,7 +368,11 @@ export function buildPeruBudgetCases(
         executionTermType: null,
         coordinates: null,
         evidenceLevel: "official_dataset",
-        amount: amount === null ? null : { value: amount, currency: "PEN", label: "devengado" },
+        amount: attachFx(
+          amount === null ? null : { value: amount, currency: "PEN", label: "devengado" },
+          [{ field: "year", date: yearNumberAsAnchor(parseYear(row.ANO_EJE)) }],
+          options.fxRegistry,
+        ),
         supplierName: null,
         supplierDocument: null,
         receipt: createEvidenceReceipt({
@@ -431,7 +442,15 @@ export function buildPeruContractCases(
         buyerRegion: ocdsInfo?.buyerRegion ?? null,
         buyerCommune: ocdsInfo?.buyerCommune ?? null,
         evidenceLevel: "official_dataset",
-        amount: amount === null ? null : { value: amount, currency: normalizePeruCurrency(row.moneda), label: "monto_contratado" },
+        amount: attachFx(
+          amount === null ? null : { value: amount, currency: normalizePeruCurrency(row.moneda), label: "monto_contratado" },
+          [
+            { field: "contract_signed", date: signedDate },
+            { field: "published", date: ocdsInfo?.awardedAt ?? null },
+            { field: "year", date: yearAsAnchor(signedDate) },
+          ],
+          options.fxRegistry,
+        ),
         supplierName: ocdsInfo?.supplierName ?? null,
         supplierDocument: clean(row.ruc_contratista) || null,
         receipt: createEvidenceReceipt({
@@ -619,11 +638,20 @@ export function buildChileCompraCases(
       itemCount: toNumber(tender.Items?.Cantidad ?? tender.Items?.Listado?.length),
       awardedLineCount: award.awardedLineCount,
       evidenceLevel: "official_dataset",
-      amount: amount === null ? null : {
-        value: amount,
-        currency: tender.Moneda ?? "CLP",
-        label: award.amount === null ? "monto_estimado" : "monto_adjudicado_item_sum",
-      },
+      amount: attachFx(
+        amount === null ? null : {
+          value: amount,
+          currency: tender.Moneda ?? "CLP",
+          label: award.amount === null ? "monto_estimado" : "monto_adjudicado_item_sum",
+        },
+        [
+          { field: "contract_signed", date: awardedAt },
+          { field: "opening", date: closedAt },
+          { field: "published", date: publishedAt },
+          { field: "year", date: yearAsAnchor(awardedAt ?? publishedAt) },
+        ],
+        options.fxRegistry,
+      ),
       supplierName: award.supplierName,
       supplierDocument: award.supplierDocument,
       receipt: createEvidenceReceipt({
@@ -710,7 +738,16 @@ export function buildChileCompraOcdsCases(
       itemCount: null,
       awardedLineCount: award ? 1 : 0,
       evidenceLevel: "official_dataset",
-      amount: amount === null ? null : { value: amount, currency, label: award ? "monto_adjudicado_ocds" : "monto_estimado_ocds" },
+      amount: attachFx(
+        amount === null ? null : { value: amount, currency, label: award ? "monto_adjudicado_ocds" : "monto_estimado_ocds" },
+        [
+          { field: "contract_signed", date: awardedAt },
+          { field: "opening", date: closedAt },
+          { field: "published", date: publishedAt },
+          { field: "year", date: yearAsAnchor(awardedAt ?? publishedAt) },
+        ],
+        options.fxRegistry,
+      ),
       supplierName: clean(supplier?.name) || null,
       supplierDocument: clean(supplier?.identifier?.id ?? supplier?.id) || null,
       receipt: createEvidenceReceipt({
