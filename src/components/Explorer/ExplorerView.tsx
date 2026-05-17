@@ -40,10 +40,7 @@ interface Props {
   onSwitchToMap: () => void;
 }
 
-type CountryScope = CountryCode | "ALL";
-
-const COUNTRY_OPTIONS: Array<{ code: CountryScope; short: string; label: string }> = [
-  { code: "ALL", short: "Todos", label: "Todos" },
+const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
   { code: "AR", short: "AR", label: "Argentina" },
   { code: "CL", short: "CL", label: "Chile" },
   { code: "PE", short: "PE", label: "Perú" },
@@ -71,21 +68,16 @@ export default function ExplorerView({
   onClearSelection,
   onSwitchToMap,
 }: Props) {
-  const [countryScope, setCountryScope] = useState<CountryScope>(selectedCountry);
+  const [countryScope, setCountryScope] = useState<CountryCode>(selectedCountry);
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
   const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
 
-  const countries = useMemo(
-    () => (countryScope === "ALL" ? undefined : [countryScope]),
-    [countryScope],
-  );
+  const countries = useMemo(() => [countryScope], [countryScope]);
 
   const countryAll = useMemo(
-    () => (countryScope === "ALL"
-      ? cases
-      : cases.filter((caseFile) => caseFile.countryCode === countryScope)),
+    () => cases.filter((caseFile) => caseFile.countryCode === countryScope),
     [cases, countryScope],
   );
 
@@ -180,10 +172,10 @@ export default function ExplorerView({
     setYearTo(yearBounds.max);
   };
 
-  const selectCountryScope = (code: CountryScope) => {
+  const selectCountryScope = (code: CountryCode) => {
     setCountryScope(code);
     setActiveFacets([]);
-    if (code !== "ALL") onSelectCountry(code);
+    onSelectCountry(code);
   };
 
   const toggleFacet = (facet: InvestigatorFacet) => {
@@ -348,11 +340,7 @@ export default function ExplorerView({
                   onClick={() => selectCountryScope(country.code)}
                   aria-pressed={isActive}
                 >
-                  {country.code === "ALL" ? (
-                    <span className={styles.countryShort}>{country.short}</span>
-                  ) : (
-                    <CountryFlag code={country.code} />
-                  )}
+                  <CountryFlag code={country.code} />
                   <span className={styles.countryName}>{country.label}</span>
                 </button>
               );
@@ -782,12 +770,12 @@ function buildReportHref(caseId: string): string {
   return `/expediente/${encodeURIComponent(caseId)}/informe`;
 }
 
-function buildExportHref(countryScope: CountryScope, query: string): string {
+function buildExportHref(countryScope: CountryCode, query: string): string {
   const params = new URLSearchParams();
-  if (countryScope !== "ALL") params.set("country", countryScope);
+  params.set("country", countryScope);
   if (query.trim()) params.set("q", query.trim());
   const suffix = params.toString();
-  return suffix ? `/api/export?${suffix}` : "/api/export";
+  return `/api/export?${suffix}`;
 }
 
 function RangeSlider({

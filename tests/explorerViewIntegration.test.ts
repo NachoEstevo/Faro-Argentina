@@ -63,3 +63,14 @@ test("ExplorerView promotes a readable report before technical JSON export", asy
   assert.match(source, /JSON técnico/);
   assert.match(source, /buildReportHref/);
 });
+
+test("ExplorerView only offers country-specific search scopes", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /{ code: "AR", short: "AR", label: "Argentina" }/);
+  assert.match(source, /{ code: "CL", short: "CL", label: "Chile" }/);
+  assert.match(source, /{ code: "PE", short: "PE", label: "Perú" }/);
+  assert.doesNotMatch(source, /code: "ALL"/);
+  assert.doesNotMatch(source, /Todos/);
+  assert.doesNotMatch(source, /countryScope === "ALL"/);
+});
