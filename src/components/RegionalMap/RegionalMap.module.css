@@ -835,6 +835,13 @@
   inset: 0;
 }
 
+.featuredHost {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+}
+
 .vignetteTop {
   background: linear-gradient(
     180deg,

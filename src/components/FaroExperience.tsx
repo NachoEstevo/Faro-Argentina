@@ -50,6 +50,7 @@ interface Props {
   initialCountry?: "AR" | "PE" | "CL";
   initialEntryOpen?: boolean;
   initialMode?: "map" | "explorer" | "aportes";
+  initialCaseId?: string;
 }
 
 const COUNTRY_META: Record<"AR" | "PE" | "CL", { label: string; status: string }> = {
@@ -65,6 +66,7 @@ export default function FaroExperience({
   initialCountry = "AR",
   initialEntryOpen = true,
   initialMode = "map",
+  initialCaseId,
 }: Props) {
   const router = useRouter();
   const allCases = useMemo(
@@ -77,7 +79,7 @@ export default function FaroExperience({
   );
   const [entryOpen, setEntryOpen] = useState(initialEntryOpen);
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
-  const [selectedCaseId, setSelectedCaseId] = useState<string>("");
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId ?? "");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [yearFrom, setYearFrom] = useState<number | null>(null);

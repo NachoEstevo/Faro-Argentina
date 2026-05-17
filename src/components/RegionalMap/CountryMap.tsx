@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { GeoJSON, MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
+import { GeoJSON, MapContainer, TileLayer, useMap } from "react-leaflet";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import type { Layer } from "leaflet";
 import L from "leaflet";
 
 import type { CountryCode } from "@/lib/data/countries";
 import { COUNTRIES, isCountryCode } from "@/lib/data/countries";
+import FeaturedCasesOverlay from "./FeaturedCasesOverlay";
 
 const ESRI_IMAGERY_URL =
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
@@ -144,11 +145,11 @@ export default function CountryMap({ geojson }: Props) {
       maxZoom={5}
       zoomSnap={0.5}
       zoomControl={false}
-      scrollWheelZoom
-      doubleClickZoom
-      touchZoom
+      scrollWheelZoom={false}
+      doubleClickZoom={false}
+      touchZoom={false}
       boxZoom={false}
-      keyboard
+      keyboard={false}
       dragging
       attributionControl={false}
       worldCopyJump={false}
@@ -166,7 +167,7 @@ export default function CountryMap({ geojson }: Props) {
         noWrap
       />
       <GeoJSON data={geojson} onEachFeature={onEachFeature} />
-      <ZoomControl position="bottomright" />
+      <FeaturedCasesOverlay />
       <SyncView center={[-32, -75]} zoom={4} />
     </MapContainer>
   );
