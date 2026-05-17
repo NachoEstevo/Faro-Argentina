@@ -1,11 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
 import Link from "next/link";
 
 import type { CaseDataset } from "@/lib/caseRepository";
+import { loadYearlyReleases } from "@/lib/data/wayback";
+import type { WaybackState } from "./WaybackControl";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
 import {
@@ -69,6 +71,9 @@ export default function FaroExperience({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
+  const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
+  const [waybackRetryToken, setWaybackRetryToken] = useState(0);
+  const hasArmedWaybackRef = useRef(false);
 
   const yearBounds = useMemo(() => {
     const pool = filterExplorerCases({
@@ -161,6 +166,48 @@ export default function FaroExperience({
     selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
 
+  useEffect(() => {
+    let cancelled = false;
+    const coordinates = selectedCase?.coordinates;
+    const caseId = selectedCase?.id;
+    if (!caseId || !coordinates || viewMode !== "map") {
+      setWaybackState({ status: "off" });
+      hasArmedWaybackRef.current = true;
+      return;
+    }
+    if (!hasArmedWaybackRef.current) {
+      hasArmedWaybackRef.current = true;
+      return;
+    }
+    setWaybackState({ status: "loading", caseId });
+    loadYearlyReleases()
+      .then((releases) => {
+        if (cancelled) return;
+        if (releases.length === 0) {
+          setWaybackState({ status: "error", caseId, message: "Wayback no devolvio releases disponibles." });
+          return;
+        }
+        const latest = releases[releases.length - 1];
+        setWaybackState({
+          status: "active",
+          caseId,
+          releases,
+          activeReleaseId: latest.releaseId,
+        });
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setWaybackState({
+          status: "error",
+          caseId,
+          message: error instanceof Error ? error.message : "Error desconocido",
+        });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, viewMode, waybackRetryToken]);
+
   const handleSidebarToggle = useCallback(() => {
     setUserToggledSidebar(true);
     setSidebarCollapsed((value) => !value);
@@ -190,6 +237,7 @@ export default function FaroExperience({
               selectedCaseId={selectedCase?.id ?? null}
               traceMode={traceMode}
               onSelectCase={setSelectedCaseId}
+              waybackState={waybackState}
             />
           ) : (
             <div className="explorerBackdrop" />
