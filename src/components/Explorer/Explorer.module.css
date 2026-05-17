@@ -688,3 +688,68 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .mainHeader {
+    flex-wrap: wrap;
+    padding: 20px 20px 0;
+    gap: 14px;
+  }
+  .mainTitle {
+    font-size: 22px;
+  }
+  .countrySelector {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .countryName {
+    display: none;
+  }
+  .countryChip {
+    padding: 8px 12px;
+  }
+  .searchWrap,
+  .statsGrid,
+  .tableWrap,
+  .detail {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .table thead {
+    display: none;
+  }
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+  .tableRow {
+    border: 1px solid var(--cf-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--cf-bg-elev);
+  }
+  .tableRow td {
+    padding: 4px 0;
+    border: none;
+  }
+  .cellEllipsis {
+    max-width: 100%;
+    white-space: normal;
+  }
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+}
