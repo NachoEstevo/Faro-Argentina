@@ -19,10 +19,7 @@ import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignal
 import styles from "./RegionalMap.module.css";
 import SidebarBrand from "./SidebarBrand";
 import SyncFooter from "./SyncFooter";
-import SidebarFilters, {
-  type CaseTypeOption,
-  type SidebarFiltersValue,
-} from "./SidebarFilters";
+import SidebarFilters, { type SidebarFiltersValue } from "./SidebarFilters";
 
 const FAMILY_ICONS: Record<CaseSignalFamily, LucideIcon> = {
   competition: Users,
@@ -51,7 +48,6 @@ interface Props {
   onYearFromChange: (year: number) => void;
   onYearToChange: (year: number) => void;
   onToggleFamily: (family: CaseSignalFamily) => void;
-  onToggleCaseType: (caseType: CaseTypeOption) => void;
   onToggleSeverity: (severity: CaseSignalSeverity) => void;
   onClearFilters: () => void;
   leads: CaseLead[];
@@ -75,7 +71,6 @@ export default function CountrySidebar({
   onYearFromChange,
   onYearToChange,
   onToggleFamily,
-  onToggleCaseType,
   onToggleSeverity,
   onClearFilters,
   leads,
@@ -139,7 +134,6 @@ export default function CountrySidebar({
               onYearFromChange={onYearFromChange}
               onYearToChange={onYearToChange}
               onToggleFamily={onToggleFamily}
-              onToggleCaseType={onToggleCaseType}
               onToggleSeverity={onToggleSeverity}
               onClearAll={onClearFilters}
             />

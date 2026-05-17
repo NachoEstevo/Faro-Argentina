@@ -20,7 +20,6 @@ import {
   type CaseSignalSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
-import type { CaseTypeOption } from "./RegionalMap/SidebarFilters";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import CasePanel from "./MapUI/CasePanel";
@@ -75,7 +74,6 @@ export default function FaroExperience({
   const [yearFrom, setYearFrom] = useState<number | null>(null);
   const [yearTo, setYearTo] = useState<number | null>(null);
   const [selectedFamilies, setSelectedFamilies] = useState<Set<CaseSignalFamily>>(new Set());
-  const [selectedCaseTypes, setSelectedCaseTypes] = useState<Set<CaseTypeOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
@@ -147,10 +145,6 @@ export default function FaroExperience({
       ) {
         return false;
       }
-      if (selectedCaseTypes.size > 0) {
-        const caseType = (caseFile as { caseType?: string }).caseType;
-        if (!caseType || !selectedCaseTypes.has(caseType as CaseTypeOption)) return false;
-      }
       return true;
     });
 
@@ -176,14 +170,13 @@ export default function FaroExperience({
     effectiveYearFrom,
     effectiveYearTo,
     query,
-    selectedCaseTypes,
     selectedCountry,
     selectedFamilies,
     selectedSeverities,
   ]);
 
   const leads = useMemo(
-    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 8 }),
+    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 50 }),
     [countryReviewCases, query],
   );
 
@@ -269,15 +262,6 @@ export default function FaroExperience({
     });
   }, []);
 
-  const handleToggleCaseType = useCallback((caseType: CaseTypeOption) => {
-    setSelectedCaseTypes((current) => {
-      const next = new Set(current);
-      if (next.has(caseType)) next.delete(caseType);
-      else next.add(caseType);
-      return next;
-    });
-  }, []);
-
   const handleToggleSeverity = useCallback((severity: CaseSignalSeverity) => {
     setSelectedSeverities((current) => {
       const next = new Set(current);
@@ -291,7 +275,6 @@ export default function FaroExperience({
     setYearFrom(null);
     setYearTo(null);
     setSelectedFamilies(new Set());
-    setSelectedCaseTypes(new Set());
     setSelectedSeverities(new Set());
   }, []);
 
@@ -300,10 +283,9 @@ export default function FaroExperience({
       yearFrom: effectiveYearFrom,
       yearTo: effectiveYearTo,
       families: selectedFamilies,
-      caseTypes: selectedCaseTypes,
       severities: selectedSeverities,
     }),
-    [effectiveYearFrom, effectiveYearTo, selectedFamilies, selectedCaseTypes, selectedSeverities],
+    [effectiveYearFrom, effectiveYearTo, selectedFamilies, selectedSeverities],
   );
 
   useEffect(() => {
@@ -359,7 +341,6 @@ export default function FaroExperience({
           setYearTo(value === yearBounds.max ? null : value)
         }
         onToggleFamily={handleToggleFamily}
-        onToggleCaseType={handleToggleCaseType}
         onToggleSeverity={handleToggleSeverity}
         onClearFilters={handleClearFilters}
         leads={leads}

@@ -5,8 +5,6 @@ import { X } from "lucide-react";
 import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignals";
 import styles from "./SidebarFilters.module.css";
 
-export type CaseTypeOption = "procurement_contract" | "procurement_process" | "budget_execution";
-
 const FAMILY_LABELS: Record<CaseSignalFamily, string> = {
   competition: "Competencia",
   money: "Dinero",
@@ -15,12 +13,6 @@ const FAMILY_LABELS: Record<CaseSignalFamily, string> = {
   geo_visual: "Geo/visual",
   data_gap: "Falta de dato",
   context: "Contexto",
-};
-
-const CASE_TYPE_LABELS: Record<CaseTypeOption, string> = {
-  procurement_contract: "Contrato",
-  procurement_process: "Adjudicación",
-  budget_execution: "Ejecución",
 };
 
 const SEVERITY_LABELS: Record<CaseSignalSeverity, string> = {
@@ -39,19 +31,12 @@ const FAMILY_ORDER: CaseSignalFamily[] = [
   "context",
 ];
 
-const CASE_TYPE_ORDER: CaseTypeOption[] = [
-  "procurement_contract",
-  "procurement_process",
-  "budget_execution",
-];
-
 const SEVERITY_ORDER: CaseSignalSeverity[] = ["high", "medium", "low"];
 
 export interface SidebarFiltersValue {
   yearFrom: number;
   yearTo: number;
   families: Set<CaseSignalFamily>;
-  caseTypes: Set<CaseTypeOption>;
   severities: Set<CaseSignalSeverity>;
 }
 
@@ -61,7 +46,6 @@ interface Props {
   onYearFromChange: (year: number) => void;
   onYearToChange: (year: number) => void;
   onToggleFamily: (family: CaseSignalFamily) => void;
-  onToggleCaseType: (caseType: CaseTypeOption) => void;
   onToggleSeverity: (severity: CaseSignalSeverity) => void;
   onClearAll: () => void;
 }
@@ -72,7 +56,6 @@ export default function SidebarFilters({
   onYearFromChange,
   onYearToChange,
   onToggleFamily,
-  onToggleCaseType,
   onToggleSeverity,
   onClearAll,
 }: Props) {
@@ -83,7 +66,6 @@ export default function SidebarFilters({
     value.yearFrom !== yearBounds.min ||
     value.yearTo !== yearBounds.max ||
     value.families.size > 0 ||
-    value.caseTypes.size > 0 ||
     value.severities.size > 0;
 
   return (
@@ -138,26 +120,6 @@ export default function SidebarFilters({
             className={styles.rangeSliderInput}
             aria-label="Año hasta"
           />
-        </div>
-      </div>
-
-      <div className={styles.group}>
-        <span className={styles.groupLabel}>Tipo</span>
-        <div className={styles.chipRow}>
-          {CASE_TYPE_ORDER.map((option) => {
-            const active = value.caseTypes.has(option);
-            return (
-              <button
-                key={option}
-                type="button"
-                className={`${styles.chip} ${active ? styles.chipActive : ""}`}
-                onClick={() => onToggleCaseType(option)}
-                aria-pressed={active}
-              >
-                {CASE_TYPE_LABELS[option]}
-              </button>
-            );
-          })}
         </div>
       </div>
 
