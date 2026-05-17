@@ -85,6 +85,11 @@ export default function ExplorerView({
     setPage(0);
   }, [query, stateFilters, yearFrom, yearTo, selectedCountry]);
 
+  useEffect(() => {
+    setYearFrom(yearBounds.min);
+    setYearTo(yearBounds.max);
+  }, [yearBounds.min, yearBounds.max]);
+
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return countryAll.filter((caseFile) => {
