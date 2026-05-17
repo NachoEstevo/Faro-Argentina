@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -80,6 +80,10 @@ export default function ExplorerView({
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    setPage(0);
+  }, [query, stateFilters, yearFrom, yearTo, selectedCountry]);
 
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
