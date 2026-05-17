@@ -17,7 +17,7 @@ import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases
 import CaseInspector from "./CaseInspector";
 import { CaseDetails } from "./CaseDetails";
 import EntryGate from "./EntryGate";
-import InvestigatorExplorer from "./InvestigatorExplorer";
+import ExplorerView from "./Explorer/ExplorerView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
 import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
@@ -263,8 +263,10 @@ export default function FaroExperience({
       </div>
 
       {viewMode === "explorer" && (
-        <InvestigatorExplorer
+        <ExplorerView
           cases={allCases}
+          selectedCountry={selectedCountry}
+          onSelectCountry={setSelectedCountry}
           selectedCaseId={selectedCase?.id ?? null}
           onSelectCase={(caseId, countryCode) => {
             setSelectedCountry(countryCode);
