@@ -555,6 +555,15 @@ function ExplorerDetail({
           </article>
         );
       })()}
+      {caseFile.workNumber.includes("OBR") &&
+        !relatedContract &&
+        !("amount" in caseFile && (caseFile as AnyCase).amount) && (
+          <p className={styles.detailNote}>
+            Esta obra aparece declarada en el catálogo oficial pero todavía no
+            tiene contrato adjudicatario emparejado en los datasets cruzados, por
+            eso no se ven proveedor ni monto.
+          </p>
+        )}
       <div className={styles.detailGrid}>
         <MontoCard caseFile={caseFile} fallback={relatedContract} />
         <CronologiaCard caseFile={caseFile} />
