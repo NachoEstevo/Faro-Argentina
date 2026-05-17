@@ -441,7 +441,7 @@ export default function ExplorerView({
                         );
                       })()}
                     </td>
-                    <td className={styles.cellMono}>{caseFile.year ?? "—"}</td>
+                    <td className={styles.cellMono}>{formatTableDate(caseFile)}</td>
                     <td>
                       <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
                         <span className={styles.stateBadgeDot} aria-hidden />
@@ -732,6 +732,14 @@ function ProcedimientoCard({ caseFile }: { caseFile: ExplorerCase }) {
       {awardUrl && <DetailRow label="Acto (URL)" value={awardUrl} />}
     </div>
   );
+}
+
+function formatTableDate(caseFile: ExplorerCase): string {
+  const awarded = formatDate(getField<string>(caseFile, "awardedAt"));
+  if (awarded) return awarded;
+  const published = formatDate(getField<string>(caseFile, "publishedAt"));
+  if (published) return published;
+  return caseFile.year ? String(caseFile.year) : "—";
 }
 
 function buildPageList(current: number, total: number): Array<number | "…"> {
