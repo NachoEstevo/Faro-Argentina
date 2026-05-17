@@ -65,6 +65,10 @@ export function pickYearlyReleases(releases: WaybackRelease[]): WaybackRelease[]
   const latestPerYear = new Map<number, WaybackRelease>();
   for (const release of releases) {
     const previous = latestPerYear.get(release.year);
+    // Wayback config releaseIds are not chronological, so we sort by the title
+    // date (the actual snapshot date). Some releases lack z>=18 tiles; coverage
+    // gaps are handled at the tile-layer level via maxNativeZoom rather than
+    // here.
     if (!previous || previous.releaseDate < release.releaseDate) {
       latestPerYear.set(release.year, release);
     }
