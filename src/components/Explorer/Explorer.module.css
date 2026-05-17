@@ -634,6 +634,39 @@
   font-size: 12px;
 }
 
+.detailReason {
+  margin: 4px 0 8px;
+  padding: 16px 20px;
+  background: var(--cf-accent-faint);
+  border: 1px solid var(--cf-accent-dim);
+  border-radius: 12px;
+  border-left: 3px solid var(--cf-accent);
+}
+
+.detailReasonEyebrow {
+  margin: 0 0 6px;
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cf-accent);
+}
+
+.detailReasonBody {
+  margin: 0;
+  color: var(--cf-text);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.detailReasonCaveat {
+  margin: 8px 0 0;
+  color: var(--cf-text-muted);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
 .detailGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
