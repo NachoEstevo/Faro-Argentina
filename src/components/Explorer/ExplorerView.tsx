@@ -435,7 +435,41 @@ function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: 
           })}
         </div>
       )}
+      <div className={styles.detailGrid}>
+        <div className={styles.detailCard}>
+          <p className={styles.detailCardHead}>Datos</p>
+          <DetailRow label="Monto adjudicado" value={formatRowAmount("amount" in caseFile ? caseFile.amount : null)} />
+          <DetailRow label="Año" value={caseFile.year ? String(caseFile.year) : "—"} />
+          <DetailRow label="Procedimiento" value={caseFile.procedureNumber || "—"} />
+          <DetailRow label="Tipo" value={describeCaseType(caseFile)} />
+        </div>
+        <div className={styles.detailCard}>
+          <p className={styles.detailCardHead}>Proveedor</p>
+          <DetailRow
+            label="Razón social"
+            value={"supplierName" in caseFile && caseFile.supplierName ? caseFile.supplierName : "—"}
+          />
+          <DetailRow
+            label="CUIT / Documento"
+            value={
+              "supplierDocument" in caseFile && caseFile.supplierDocument
+                ? caseFile.supplierDocument
+                : "—"
+            }
+          />
+          <DetailRow label="Organismo" value={caseFile.agencyName || "—"} />
+        </div>
+      </div>
     </section>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className={styles.detailRow}>
+      <span className={styles.detailRowLabel}>{label}</span>
+      <span className={styles.detailRowValue}>{value}</span>
+    </div>
   );
 }
 
