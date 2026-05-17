@@ -90,7 +90,7 @@ a {
 }
 
 .leafletRoot .leaflet-tile-pane {
-  filter: brightness(0.58) contrast(1.08) saturate(0.78) hue-rotate(-8deg);
+  filter: saturate(1.15) contrast(1.05);
 }
 
 .leafletRoot .leaflet-control-attribution {

@@ -20,7 +20,7 @@ interface Props {
   onSelectCase: (id: string) => void;
 }
 
-const CARTODB_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const CARTODB_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 const CARTODB_ATTRIBUTION = "&copy; OpenStreetMap contributors &copy; CARTO";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 
