@@ -1,0 +1,11 @@
+# Source, docs and generated metadata stay readable and deterministic.
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+
+# Official snapshots are evidence bytes. This override must come after
+# generic patterns so JSON/CSV snapshots are not normalized by Git.
+data/official/** -text

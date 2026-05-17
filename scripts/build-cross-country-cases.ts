@@ -14,6 +14,7 @@ import {
   type PeruContractRow,
 } from "../src/lib/data/crossCountryCases.ts";
 import { parseCsv, type RawArgentinaWorkRow } from "../src/lib/data/argentinaWorks.ts";
+import { resolveDataBuildTimestamp } from "../src/lib/data/dataBuildTimestamps.ts";
 import { profileCsvSnapshot, profileJsonSnapshot } from "../src/lib/data/snapshots.ts";
 import { profileXlsxSnapshot, readXlsxRows } from "../src/lib/data/xlsx.ts";
 
@@ -44,8 +45,13 @@ const clPath = new URL(
   import.meta.url,
 );
 const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta.url);
+const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
-const generatedAt = new Date().toISOString();
+const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
+const generatedAt = resolveDataBuildTimestamp({
+  envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
+  manifestTimestamp: manifest.generatedAt,
+});
 const peText = await readFile(pePath, "utf8");
 const arWorksText = await readFile(arWorksPath, "utf8");
 const arContractsText = await readFile(arContractsPath, "utf8");

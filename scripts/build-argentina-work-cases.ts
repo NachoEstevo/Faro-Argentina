@@ -6,17 +6,23 @@ import {
   parseCsv,
   type RawArgentinaWorkRow,
 } from "../src/lib/data/argentinaWorks.ts";
+import { resolveDataBuildTimestamp } from "../src/lib/data/dataBuildTimestamps.ts";
 import { profileCsvSnapshot } from "../src/lib/data/snapshots.ts";
 
 const sourcePath = new URL("../data/official/ar/onc-contratar-obras.csv", import.meta.url);
 const outputPath = new URL("../src/data/argentinaWorkCases.json", import.meta.url);
+const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 const officialSourceUrl =
   "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv";
 
+const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
 const text = await readFile(sourcePath, "utf8");
 const hash = createHash("sha256").update(text).digest("hex");
 const rows = parseCsv<RawArgentinaWorkRow>(text);
-const generatedAt = new Date().toISOString();
+const generatedAt = resolveDataBuildTimestamp({
+  envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
+  manifestTimestamp: manifest.generatedAt,
+});
 const snapshotProfile = profileCsvSnapshot({
   sourceId: "AR-CONTRATAR-OBRAS",
   rawPath: "data/official/ar/onc-contratar-obras.csv",
