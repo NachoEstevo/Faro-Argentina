@@ -36,7 +36,6 @@ function Body({
     return (
       <div className={styles.imageryCard}>
         <div className={styles.imageryLoadingBar} aria-label="Cargando años disponibles" />
-        <p className={styles.imageryAttribution}>Esri Wayback</p>
       </div>
     );
   }
@@ -116,7 +115,6 @@ function Scrubber({
           <span>{lastRelease.year}</span>
         </div>
       </div>
-      <p className={styles.imageryAttribution}>Esri Wayback · {releases.length} años</p>
     </div>
   );
 }
