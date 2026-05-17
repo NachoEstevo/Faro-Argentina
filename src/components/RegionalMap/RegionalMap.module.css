@@ -717,9 +717,6 @@
   border-radius: 999px;
   background: var(--cf-bg-overlay);
   border: 1px solid var(--cf-border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: var(--cf-shadow-soft);
 }
 
 .backToGlobal {
@@ -769,8 +766,6 @@
   font-size: 12px;
   border-radius: 999px;
   cursor: pointer;
-  text-decoration: none;
-  transition: background-color 160ms ease, color 160ms ease;
 }
 
 .floatingToggleButton:hover {
@@ -781,15 +776,6 @@
   background: var(--cf-bg);
   color: var(--cf-text);
   border: 1px solid var(--cf-border-strong);
-  padding: 5px 13px;
-}
-
-.floatingToggleButton.active .floatingToggleIcon {
-  color: var(--cf-accent);
-}
-
-.floatingToggleIcon {
-  color: var(--cf-text-muted);
 }
 
 .welcomeOverlay {
