@@ -32,6 +32,10 @@ export interface DataQualityCountry {
   withMapEligibleGeometry: number;
   withLeadEligibleSignal: number;
   signals: Record<string, number>;
+  fxCoverage: {
+    converted: number;
+    notConverted: Record<string, number>;
+  };
 }
 
 export interface DataQualitySource {
@@ -102,6 +106,15 @@ export function buildDataQualityReport({
 
       if (caseFile.receipt) country.withReceipt += 1;
       if (caseFile.amount && caseFile.amount.value > 0) country.withAmount += 1;
+      if (caseFile.amount && caseFile.amount.value > 0) {
+        const amt = caseFile.amount as { usdEquivalent?: unknown; usdConversionNote?: string };
+        if (amt.usdEquivalent !== null && amt.usdEquivalent !== undefined) {
+          country.fxCoverage.converted += 1;
+        } else if (typeof amt.usdConversionNote === "string") {
+          country.fxCoverage.notConverted[amt.usdConversionNote] =
+            (country.fxCoverage.notConverted[amt.usdConversionNote] ?? 0) + 1;
+        }
+      }
       if (clean(caseFile.supplierName)) country.withSupplierName += 1;
       if (clean(caseFile.supplierDocument)) country.withSupplierDocument += 1;
       if (clean(caseFile.supplierName) || clean(caseFile.supplierDocument)) {
@@ -159,6 +172,7 @@ function emptyCountry(): DataQualityCountry {
     withMapEligibleGeometry: 0,
     withLeadEligibleSignal: 0,
     signals: {},
+    fxCoverage: { converted: 0, notConverted: {} },
   };
 }
 
