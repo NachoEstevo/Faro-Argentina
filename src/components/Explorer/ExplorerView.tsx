@@ -25,6 +25,16 @@ export default function ExplorerView(_props: Props) {
             <PanelLeftClose size={16} aria-hidden />
           </button>
         </header>
+        <section className={styles.sidebarSection} aria-labelledby="explorer-filters-heading">
+          <div className={styles.sectionHead}>
+            <p className={styles.eyebrow} id="explorer-filters-heading">
+              Filtros
+            </p>
+            <button type="button" className={styles.sectionLink}>
+              Limpiar
+            </button>
+          </div>
+        </section>
       </aside>
       <main className={styles.main}>
         <div className={styles.placeholder}>Explorer</div>
