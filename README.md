@@ -154,22 +154,25 @@ En este workspace tambien se estuvo usando `3003` cuando `3002` estaba ocupado.
 ## Comandos De Datos Y Verificacion
 
 ```bash
-npm run data:fetch
 npm run data:build
-npm run data:geo-report
 npm run data:verify
+npm run data:geo-report
+npm run data:quality-report
 npm test
 npm run typecheck
 npm run build
 ```
 
-Nota: al 16 de mayo de 2026, `typecheck` y `build` pasan, pero `data:verify` falla por hashes desincronizados entre raw files, generated JSON y receipts. Eso debe arreglarse antes de considerar la evidencia como reproducible end to end.
+`npm run data:build` reconstruye los artefactos generados desde snapshots oficiales locales. `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts. `npm run data:geo-report` revisa calidad de coordenadas y elegibilidad de mapa. `npm run data:quality-report` resume cobertura por pais, fuente, monto, proveedor, geometria y senales.
+
+No usar `npm run data:fetch` como reparacion rutinaria. Puede refrescar fuentes externas y cambiar la linea base de evidencia.
 
 ## Docs Para Continuar
 
 - [Contexto de producto](docs/product/faro-product-context.md)
 - [Handoff UI/UX del expediente](docs/handoffs/2026-05-16-ui-ux-expediente-faro-v1.md)
 - [Handoff de datos, calidad y cobertura](docs/handoffs/2026-05-16-data-quality-and-coverage-handoff.md)
+- [Handoff del sprint de integridad de datos](docs/handoffs/2026-05-17-data-integrity-and-quality-sprint-handoff.md)
 - [Plan del data spine](docs/plans/2026-05-16-data-spine.md)
 - [Spec del modo investigador](docs/superpowers/specs/2026-05-16-investigator-explorer-design.md)
 

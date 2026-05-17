@@ -224,6 +224,17 @@ Antes de mas polish visual, la proxima fase debe probar confianza de datos:
 5. El modo investigador debe permitir seguir proveedores, organismos y receipts
    sin convertirse en una tabla cruda.
 
+## Principio De Confianza De Datos
+
+Faro debe preferir menos casos con receipts, hashes y caveats antes que muchos
+casos con procedencia debil. Un caso puede seguir siendo buscable aunque no sea
+map-ready o lead-eligible; el producto debe mostrar la brecha en vez de esconder
+o inventar evidencia.
+
+La recurrencia de proveedores solo debe leerse como pista. Si Faro agrupa por
+documento fiscal, la confianza es mayor. Si agrupa solo por nombre normalizado,
+la senal debe quedar con menor confianza y caveat visible.
+
 ## Notas Para El Equipo
 
 UI/UX puede refinar como se muestran las piezas actuales, pero debe preservar:
