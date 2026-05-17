@@ -182,6 +182,30 @@
   border-color: var(--cf-accent);
 }
 
+.sidebarDivider {
+  border: none;
+  border-top: 1px solid var(--cf-border);
+  margin: 0;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px dashed var(--cf-border-strong);
+  background: transparent;
+  color: var(--cf-text-muted);
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  color: var(--cf-accent);
+  border-color: var(--cf-accent);
+}
+
 .main {
   display: flex;
   flex-direction: column;

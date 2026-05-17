@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PanelLeftClose } from "lucide-react";
+import { PanelLeftClose, Plus } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
@@ -136,6 +136,17 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
                 aria-label="Año hasta"
               />
             </div>
+          </div>
+        </section>
+        <hr className={styles.sidebarDivider} />
+        <section className={styles.sidebarSection} aria-labelledby="explorer-saved-heading">
+          <div className={styles.sectionHead}>
+            <p className={styles.eyebrow} id="explorer-saved-heading">
+              Guardadas
+            </p>
+            <button type="button" className={styles.iconButton} aria-label="Agregar búsqueda guardada">
+              <Plus size={14} aria-hidden />
+            </button>
           </div>
         </section>
       </aside>
