@@ -30,7 +30,18 @@ const STATE_OPTIONS: Array<{ id: StateFilter; label: string }> = [
   { id: "no_geometry", label: "Sin geometría" },
 ];
 
-export default function ExplorerView({ cases, selectedCountry, onSwitchToMap }: Props) {
+const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
+  { code: "AR", short: "AR", label: "Argentina" },
+  { code: "CL", short: "CL", label: "Chile" },
+  { code: "PE", short: "PE", label: "Perú" },
+];
+
+export default function ExplorerView({
+  cases,
+  selectedCountry,
+  onSelectCountry,
+  onSwitchToMap,
+}: Props) {
   const [stateFilters, setStateFilters] = useState<Set<StateFilter>>(
     () => new Set<StateFilter>(["verified", "review"]),
   );
@@ -179,6 +190,23 @@ export default function ExplorerView({ cases, selectedCountry, onSwitchToMap }: 
               <FileSearch size={13} aria-hidden />
               Explorer
             </button>
+          </div>
+          <div className={styles.countrySelector} role="group" aria-label="País">
+            {COUNTRY_OPTIONS.map((country) => {
+              const isActive = country.code === selectedCountry;
+              return (
+                <button
+                  key={country.code}
+                  type="button"
+                  className={`${styles.countryChip} ${isActive ? styles.countryChipActive : ""}`}
+                  onClick={() => onSelectCountry(country.code)}
+                  aria-pressed={isActive}
+                >
+                  <span className={styles.countryShort}>{country.short}</span>
+                  <span className={styles.countryName}>{country.label}</span>
+                </button>
+              );
+            })}
           </div>
         </header>
       </main>
