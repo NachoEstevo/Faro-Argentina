@@ -42,17 +42,6 @@ export const FEATURED_CASES: FeaturedCase[] = [
   // Peru
   {
     countryCode: "PE",
-    caseId: "PE-CONTRACT-2343672-1",
-    variant: "geo",
-    marker: { lat: -10.643432, lon: -76.194278 },
-    callout: { lat: -2.0, lon: -62.0 },
-    kicker: "OBRA · PASCO",
-    title: "Pasco — obra Gobierno Regional",
-    blurb: "El contrato regional más grande del año. ¿Quién se llevó la obra de USD 52M?",
-    tags: ["Gob. Regional", "USD 52M", "Obra grande"],
-  },
-  {
-    countryCode: "PE",
     caseId: "PE-CONTRACT-2377518-1",
     variant: "documentary",
     marker: { lat: -15.2, lon: -75.2 },
@@ -63,17 +52,6 @@ export const FEATURED_CASES: FeaturedCase[] = [
     tags: ["Municipal", "USD 1.8M", "Obra urbana"],
   },
   // Chile
-  {
-    countryCode: "CL",
-    caseId: "CL-TENDER-1057491-76-LP26",
-    variant: "geo",
-    marker: { lat: -33.430964, lon: -70.606399 },
-    callout: { lat: -28.0, lon: -105.0 },
-    kicker: "SALUD · SANTIAGO",
-    title: "Hospital Roberto del Río",
-    blurb: "Servicios clínicos para chicos en plena campaña IRA. Quién contrata y cómo se adjudicó.",
-    tags: ["Salud", "Campaña IRA", "Santiago"],
-  },
   {
     countryCode: "CL",
     caseId: "CL-OCDS-608-282-I225",
