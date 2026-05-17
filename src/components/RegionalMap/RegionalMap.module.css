@@ -717,6 +717,41 @@
   box-shadow: var(--cf-shadow-soft);
 }
 
+.backToGlobal {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--cf-radius-md);
+  background: rgba(13, 15, 19, 0.8);
+  border: 1px solid var(--cf-border);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 12.5px;
+  text-decoration: none;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--cf-shadow-soft);
+  pointer-events: auto;
+}
+
+.backToGlobal:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+}
+
+@media (max-width: 600px) {
+  .backToGlobal span {
+    display: none;
+  }
+  .backToGlobal {
+    padding: 8px 10px;
+  }
+}
+
 .floatingToggleButton {
   display: inline-flex;
   align-items: center;

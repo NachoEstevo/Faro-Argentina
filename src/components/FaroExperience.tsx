@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileSearch, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
+import Link from "next/link";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
@@ -227,6 +228,10 @@ export default function FaroExperience({
       )}
 
       <div className={styles.overlayLayer}>
+        <Link href="/" className={styles.backToGlobal} aria-label="Volver al mapa general">
+          <ArrowLeft size={14} aria-hidden />
+          <span>Mapa general</span>
+        </Link>
         <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
           <button
             type="button"
