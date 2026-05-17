@@ -142,6 +142,49 @@ test("buildExpediente marks cases without coordinates as missing official geomet
   );
 });
 
+test("buildExpediente describes administrative geo evidence without calling it an exact site", () => {
+  const expediente = buildExpediente({
+    id: "PE-CONTRACT-2328678-1",
+    countryCode: "PE",
+    caseType: "procurement_contract",
+    title: "Servicio en Bagua",
+    workNumber: "2328678-1",
+    year: 2025,
+    procedureNumber: "1122118",
+    agencyName: "Gobierno Regional de Amazonas",
+    agencyCode: "010373",
+    contractingUnit: "ORDEN DE SERVICIO N. 373",
+    executionTerm: "2025-06-03 - 2025-06-11",
+    executionTermType: "vigencia_contractual",
+    coordinates: { lat: -5.613, lon: -78.434 },
+    geoEvidence: [
+      {
+        precision: "official_admin_centroid",
+        granularity: "district",
+        label: "LA PECA / BAGUA / AMAZONAS",
+        sourceId: "PE-IDEP-LIMITE-DISTRITAL",
+        sourceField: "descripcion_proceso",
+        method: "official_text_admin_catalog_match",
+        confidence: "medium",
+        coordinates: { lat: -5.613, lon: -78.434 },
+        exposeOnMap: true,
+        satelliteEligible: false,
+        caveat: "Centroide administrativo oficial; no es sitio exacto de ejecucion.",
+      },
+    ],
+    evidenceLevel: "official_dataset",
+    amount: { value: 113868.79, currency: "PEN", label: "PEN 113.868,79" },
+    supplierName: null,
+    supplierDocument: "20487924050",
+    receipt: primaryReceipt,
+    caveats: ["Contrato oficial; ubicacion administrativa para mapa."],
+  });
+
+  assert.equal(expediente.summary.locationLabel, "LA PECA / BAGUA / AMAZONAS");
+  assert.equal(expediente.investigationContext.hasOfficialGeometry, true);
+  assert.equal(expediente.investigationContext.geoEvidence[0]?.satelliteEligible, false);
+});
+
 test("buildExpediente includes contextual supplier patterns when context is provided", () => {
   const caseFile: ExpedienteCaseFile = {
     id: "AR-CONTRACT-381-1001-CON21",

@@ -1,4 +1,5 @@
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
+import type { GeoEvidenceItem } from "./geoEvidence.ts";
 import {
   buildCaseSignalContext,
   buildCaseSignalContextsByCountry,
@@ -70,6 +71,7 @@ export interface SignalCaseFile {
   evidenceLevel?: string;
   year?: number | null;
   coordinates?: { lat: number; lon: number } | null;
+  geoEvidence?: GeoEvidenceItem[];
   amount?: { value: number; currency: string; label: string } | null;
   officialBudget?: { value: number; currency: string; label: string } | null;
   bidderCount?: number | null;
@@ -467,21 +469,34 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
   });
 
   if (coordinateQuality.status === "valid_official_geometry" && caseFile.coordinates) {
+    const mapGeoEvidence = caseFile.geoEvidence?.find((evidence) =>
+      evidence.exposeOnMap && evidence.coordinates,
+    );
+    const isAdminCentroid = mapGeoEvidence?.precision === "official_admin_centroid";
     signals.push({
       code: "official_geometry",
       kind: "ready",
       family: "geo_visual",
       severity: "low",
-      confidence: "high",
+      confidence: isAdminCentroid ? "medium" : "high",
       priority: 58,
-      label: "Ubicacion oficial validada",
-      summary: "El caso tiene coordenadas declaradas por fuente oficial y puede aparecer en el mapa.",
-      evidence: `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`,
-      caveat: "La coordenada ubica el caso, no prueba avance fisico ni pagos.",
+      label: isAdminCentroid ? "Referencia territorial validada" : "Ubicacion oficial validada",
+      summary: isAdminCentroid
+        ? "El caso tiene un centroide administrativo oficial para orientacion territorial en el mapa."
+        : "El caso tiene coordenadas declaradas por fuente oficial y puede aparecer en el mapa.",
+      evidence: mapGeoEvidence
+        ? `${mapGeoEvidence.label}: ${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`
+        : `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`,
+      caveat: mapGeoEvidence?.caveat ?? "La coordenada ubica el caso, no prueba avance fisico ni pagos.",
       action: "Abrir mapa, fuente y expediente antes de interpretar el punto.",
     });
 
-    if (caseFile.countryCode === "AR" && caseFile.year !== null && caseFile.year !== undefined) {
+    if (
+      caseFile.countryCode === "AR" &&
+      !isAdminCentroid &&
+      caseFile.year !== null &&
+      caseFile.year !== undefined
+    ) {
       signals.push({
         code: "sentinel_candidate",
         kind: "ready",

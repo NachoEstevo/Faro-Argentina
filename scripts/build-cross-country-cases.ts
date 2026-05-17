@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import {
   buildArgentinaContractCases,
   buildChileCompraCases,
+  buildChileCompraOcdsCases,
   buildPeruBudgetCases,
   buildPeruContractCases,
   type ArgentinaSupplierRow,
@@ -11,6 +12,7 @@ import {
   type ArgentinaOpeningActRow,
   type ArgentinaProcedureRow,
   type ChileCompraSnapshot,
+  type ChileCompraOcdsSnapshot,
   type PeruContractRow,
 } from "../src/lib/data/crossCountryCases.ts";
 import { parseCsv, type RawArgentinaWorkRow } from "../src/lib/data/argentinaWorks.ts";
@@ -40,8 +42,20 @@ const peOcdsPath = new URL(
   "../data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
   import.meta.url,
 );
+const peDistrictCentroidsPath = new URL(
+  "../data/official/pe/idep-district-centroids.json",
+  import.meta.url,
+);
 const clPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
+  import.meta.url,
+);
+const clOcdsPath = new URL(
+  "../data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+  import.meta.url,
+);
+const clCommuneCentroidsPath = new URL(
+  "../data/official/cl/ciren-commune-centroids.json",
   import.meta.url,
 );
 const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta.url);
@@ -49,6 +63,7 @@ const manifestPath = new URL("../data/official/snapshot-manifest.json", import.m
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
 const argentinaContractCaseLimit = 300;
+const peruOeceContractLimit = Number(process.env.PERU_OECE_CONTRACT_LIMIT ?? "500");
 const generatedAt = resolveDataBuildTimestamp({
   envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
   manifestTimestamp: manifest.generatedAt,
@@ -63,7 +78,10 @@ const arLocationsText = await readFile(arLocationsPath, "utf8");
 const arOpeningActsText = await readFile(arOpeningActsPath, "utf8");
 const peContractsBuffer = await readFile(peContractsPath);
 const peOcdsText = await readFile(peOcdsPath, "utf8");
+const peDistrictCentroidsText = await readFile(peDistrictCentroidsPath, "utf8");
 const clText = await readFile(clPath, "utf8");
+const clOcdsText = await readFile(clOcdsPath, "utf8");
+const clCommuneCentroidsText = await readFile(clCommuneCentroidsPath, "utf8");
 const arWorksProfile = profileCsvSnapshot({
   sourceId: "AR-CONTRATAR-OBRAS",
   rawPath: "data/official/ar/onc-contratar-obras.csv",
@@ -123,6 +141,12 @@ const clProfile = profileJsonSnapshot({
   text: clText,
   recordPath: ["details"],
 });
+const clOcdsProfile = profileJsonSnapshot({
+  sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+  rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+  text: clOcdsText,
+  recordPath: ["records"],
+});
 const peContractsProfile = profileXlsxSnapshot({
   sourceId: "PE-OECE-CONTRATOS",
   rawPath: "data/official/pe/oece-contratos-2025.xlsx",
@@ -134,6 +158,22 @@ const peOcdsProfile = profileJsonSnapshot({
   text: peOcdsText,
   recordPath: ["releases"],
 });
+const peDistrictCentroidsProfile = profileJsonSnapshot({
+  sourceId: "PE-IDEP-LIMITE-DISTRITAL",
+  rawPath: "data/official/pe/idep-district-centroids.json",
+  text: peDistrictCentroidsText,
+  recordPath: ["centroids"],
+});
+const clCommuneCentroidsProfile = profileJsonSnapshot({
+  sourceId: "CL-CIREN-LIMITE-COMUNAL",
+  rawPath: "data/official/cl/ciren-commune-centroids.json",
+  text: clCommuneCentroidsText,
+  recordPath: ["centroids"],
+});
+const adminCentroids = [
+  ...(JSON.parse(peDistrictCentroidsText) as { centroids: [] }).centroids,
+  ...(JSON.parse(clCommuneCentroidsText) as { centroids: [] }).centroids,
+];
 
 const peCases = buildPeruBudgetCases(peText, {
   sourceId: "PE-MEF-GASTO-DIARIO",
@@ -227,7 +267,7 @@ const arContractCases = buildArgentinaContractCases(arContractsText, {
     },
   },
 });
-const peContractRows = readXlsxRows(peContractsBuffer, { limit: 30 })
+const peContractRows = readXlsxRows(peContractsBuffer, { limit: peruOeceContractLimit })
   .rows as unknown as PeruContractRow[];
 const peContractCases = buildPeruContractCases(peContractRows, {
   sourceId: "PE-OECE-CONTRATOS",
@@ -237,7 +277,7 @@ const peContractCases = buildPeruContractCases(peContractRows, {
   fileHash: peContractsProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
-}, 25, {
+}, peruOeceContractLimit, {
   releases: (JSON.parse(peOcdsText) as { releases: [] }).releases,
   source: {
     sourceId: "PE-OECE-OCDS",
@@ -248,6 +288,8 @@ const peContractCases = buildPeruContractCases(peContractRows, {
     extractedAt: generatedAt,
     parserVersion: "peru-ocds@1",
   },
+}, {
+  adminCentroids,
 });
 const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot, {
   sourceId: "CL-MERCADO-PUBLICO-API",
@@ -257,6 +299,19 @@ const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot,
   fileHash: clProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
+}, {
+  adminCentroids,
+});
+const clOcdsCases = buildChileCompraOcdsCases(JSON.parse(clOcdsText) as ChileCompraOcdsSnapshot, {
+  sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+  sourceName: "ChileCompra descargas OCDS procesos",
+  sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
+  rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+  fileHash: clOcdsProfile.fileHash,
+  extractedAt: generatedAt,
+  parserVersion: "chilecompra-ocds@1",
+}, {
+  adminCentroids,
 });
 
 const payload = {
@@ -302,8 +357,18 @@ const payload = {
       rawRows: clProfile.recordCount,
       cases: clCases,
     }),
+    buildDataset({
+      sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+      sourceName: "ChileCompra descargas OCDS procesos",
+      sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
+      filePath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+      fileHash: clOcdsProfile.fileHash,
+      snapshotProfile: clOcdsProfile,
+      rawRows: clOcdsProfile.recordCount,
+      cases: clOcdsCases,
+    }),
   ],
-  cases: [...arContractCases, ...peCases, ...peContractCases, ...clCases],
+  cases: [...arContractCases, ...peCases, ...peContractCases, ...clCases, ...clOcdsCases],
 };
 
 await mkdir(new URL("../src/data/", import.meta.url), { recursive: true });

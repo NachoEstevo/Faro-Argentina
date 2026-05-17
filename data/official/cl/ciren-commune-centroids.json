@@ -1,0 +1,4148 @@
+{
+  "sourceId": "CL-CIREN-LIMITE-COMUNAL",
+  "sourceName": "CIREN limite comunal Chile continental",
+  "sourceUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3",
+  "generatedAt": "2026-05-17T17:19:59.582Z",
+  "centroids": [
+    {
+      "countryCode": "CL",
+      "code": "11201",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Aisén",
+      "commune": "Aisén",
+      "coordinates": {
+        "lat": -46.005045,
+        "lon": -73.75354
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05802",
+      "region": "Región de Valparaíso",
+      "province": "Margamarga",
+      "commune": "Limache",
+      "coordinates": {
+        "lat": -33.029759,
+        "lon": -71.263192
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09110",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Melipeuco",
+      "coordinates": {
+        "lat": -38.826108,
+        "lon": -71.613628
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06110",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Mostazal",
+      "coordinates": {
+        "lat": -33.952531,
+        "lon": -70.579824
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05803",
+      "region": "Región de Valparaíso",
+      "province": "Margamarga",
+      "commune": "Olmué",
+      "coordinates": {
+        "lat": -33.031633,
+        "lon": -71.10945
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16204",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Ninhue",
+      "coordinates": {
+        "lat": -36.351895,
+        "lon": -72.395901
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05401",
+      "region": "Región de Valparaíso",
+      "province": "Petorca",
+      "commune": "La Ligua",
+      "coordinates": {
+        "lat": -32.35387,
+        "lon": -71.265719
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03103",
+      "region": "Región de Atacama",
+      "province": "Copiapó",
+      "commune": "Tierra Amarilla",
+      "coordinates": {
+        "lat": -27.865205,
+        "lon": -69.674765
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05105",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Puchuncaví",
+      "coordinates": {
+        "lat": -32.735817,
+        "lon": -71.395735
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "15101",
+      "region": "Región de Arica y Parinacota",
+      "province": "Arica",
+      "commune": "Arica",
+      "coordinates": {
+        "lat": -18.524089,
+        "lon": -69.966625
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13118",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Macul",
+      "coordinates": {
+        "lat": -33.484893,
+        "lon": -70.596574
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09119",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Vilcún",
+      "coordinates": {
+        "lat": -38.701528,
+        "lon": -72.107689
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10203",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Chonchi",
+      "coordinates": {
+        "lat": -42.685371,
+        "lon": -73.929635
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04203",
+      "region": "Región de Coquimbo",
+      "province": "Choapa",
+      "commune": "Los Vilos",
+      "coordinates": {
+        "lat": -31.979734,
+        "lon": -71.314707
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10201",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Castro",
+      "coordinates": {
+        "lat": -42.476415,
+        "lon": -73.832921
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10208",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Quellón",
+      "coordinates": {
+        "lat": -43.145766,
+        "lon": -74.009521
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05506",
+      "region": "Región de Valparaíso",
+      "province": "Quillota",
+      "commune": "Nogales",
+      "coordinates": {
+        "lat": -32.689539,
+        "lon": -71.171064
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13402",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Maipo",
+      "commune": "Buin",
+      "coordinates": {
+        "lat": -33.751956,
+        "lon": -70.732713
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06112",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Peumo",
+      "coordinates": {
+        "lat": -34.323528,
+        "lon": -71.218465
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04202",
+      "region": "Región de Coquimbo",
+      "province": "Choapa",
+      "commune": "Canela",
+      "coordinates": {
+        "lat": -31.395837,
+        "lon": -71.394613
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14106",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Mariquina",
+      "coordinates": {
+        "lat": -39.509865,
+        "lon": -73.047724
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08201",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Lebu",
+      "coordinates": {
+        "lat": -37.628863,
+        "lon": -73.577684
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16305",
+      "region": "Región de Ñuble",
+      "province": "Punilla",
+      "commune": "San Nicolás",
+      "coordinates": {
+        "lat": -36.487403,
+        "lon": -72.22913
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07304",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Molina",
+      "coordinates": {
+        "lat": -35.339052,
+        "lon": -70.936274
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10109",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Puerto Varas",
+      "coordinates": {
+        "lat": -41.189935,
+        "lon": -72.405146
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06206",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "Paredones",
+      "coordinates": {
+        "lat": -34.670642,
+        "lon": -71.913706
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12302",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Tierra del Fuego",
+      "commune": "Primavera",
+      "coordinates": {
+        "lat": -52.81338,
+        "lon": -69.337403
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02301",
+      "region": "Región de Antofagasta",
+      "province": "Tocopilla",
+      "commune": "Tocopilla",
+      "coordinates": {
+        "lat": -21.988675,
+        "lon": -70.018423
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07307",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Sagrada Familia",
+      "coordinates": {
+        "lat": -35.108176,
+        "lon": -71.512113
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05604",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "El Quisco",
+      "coordinates": {
+        "lat": -33.417095,
+        "lon": -71.655946
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05103",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Concón",
+      "coordinates": {
+        "lat": -32.957955,
+        "lon": -71.459577
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07408",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Yerbas Buenas",
+      "coordinates": {
+        "lat": -35.697168,
+        "lon": -71.552436
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09116",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Saavedra",
+      "coordinates": {
+        "lat": -38.827918,
+        "lon": -73.299893
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03301",
+      "region": "Región de Atacama",
+      "province": "Huasco",
+      "commune": "Vallenar",
+      "coordinates": {
+        "lat": -28.598011,
+        "lon": -70.597629
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "15102",
+      "region": "Región de Arica y Parinacota",
+      "province": "Arica",
+      "commune": "Camarones",
+      "coordinates": {
+        "lat": -18.941212,
+        "lon": -69.720847
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05101",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Valparaíso",
+      "coordinates": {
+        "lat": -33.12486,
+        "lon": -71.588409
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02302",
+      "region": "Región de Antofagasta",
+      "province": "Tocopilla",
+      "commune": "María Elena",
+      "coordinates": {
+        "lat": -22.091574,
+        "lon": -69.465844
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09113",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Perquenco",
+      "coordinates": {
+        "lat": -38.4283,
+        "lon": -72.429824
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14202",
+      "region": "Región de Los Ríos",
+      "province": "Ranco",
+      "commune": "Futrono",
+      "coordinates": {
+        "lat": -40.116796,
+        "lon": -72.130907
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12103",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Magallanes",
+      "commune": "Río Verde",
+      "coordinates": {
+        "lat": -52.841183,
+        "lon": -72.432436
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16104",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "El Carmen",
+      "coordinates": {
+        "lat": -36.920653,
+        "lon": -71.853446
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06301",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "San Fernando",
+      "coordinates": {
+        "lat": -34.742992,
+        "lon": -70.601132
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16202",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Cobquecura",
+      "coordinates": {
+        "lat": -36.176516,
+        "lon": -72.722073
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03101",
+      "region": "Región de Atacama",
+      "province": "Copiapó",
+      "commune": "Copiapó",
+      "coordinates": {
+        "lat": -27.317878,
+        "lon": -69.821252
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09207",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Lumaco",
+      "coordinates": {
+        "lat": -38.281574,
+        "lon": -73.04354
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07406",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "San Javier",
+      "coordinates": {
+        "lat": -35.622499,
+        "lon": -71.926597
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09211",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Victoria",
+      "coordinates": {
+        "lat": -38.281761,
+        "lon": -72.229612
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06202",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "La Estrella",
+      "coordinates": {
+        "lat": -34.221953,
+        "lon": -71.609848
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07402",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Colbún",
+      "coordinates": {
+        "lat": -36.083026,
+        "lon": -70.974824
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02104",
+      "region": "Región de Antofagasta",
+      "province": "Antofagasta",
+      "commune": "Taltal",
+      "coordinates": {
+        "lat": -25.314955,
+        "lon": -69.859477
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06107",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Las Cabras",
+      "coordinates": {
+        "lat": -34.166582,
+        "lon": -71.336283
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16103",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Chillán Viejo",
+      "coordinates": {
+        "lat": -36.68381,
+        "lon": -72.193255
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12301",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Tierra del Fuego",
+      "commune": "Porvenir",
+      "coordinates": {
+        "lat": -53.305588,
+        "lon": -69.37931
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04102",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "Coquimbo",
+      "coordinates": {
+        "lat": -30.234647,
+        "lon": -71.370062
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08110",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Talcahuano",
+      "coordinates": {
+        "lat": -36.735248,
+        "lon": -73.093103
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16302",
+      "region": "Región de Ñuble",
+      "province": "Punilla",
+      "commune": "Coihueco",
+      "coordinates": {
+        "lat": -36.703084,
+        "lon": -71.587231
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01403",
+      "region": "Región de Tarapacá",
+      "province": "Tamarugal",
+      "commune": "Colchane",
+      "coordinates": {
+        "lat": -19.346577,
+        "lon": -68.840114
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13115",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Lo Barnechea",
+      "coordinates": {
+        "lat": -33.30373,
+        "lon": -70.36854
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06310",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Santa Cruz",
+      "coordinates": {
+        "lat": -34.650349,
+        "lon": -71.405766
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09202",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Collipulli",
+      "coordinates": {
+        "lat": -38.018186,
+        "lon": -72.135454
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04305",
+      "region": "Región de Coquimbo",
+      "province": "Limarí",
+      "commune": "Río Hurtado",
+      "coordinates": {
+        "lat": -30.424964,
+        "lon": -70.666752
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14201",
+      "region": "Región de Los Ríos",
+      "province": "Ranco",
+      "commune": "La Unión",
+      "coordinates": {
+        "lat": -40.202734,
+        "lon": -73.202434
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07107",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Pencahue",
+      "coordinates": {
+        "lat": -35.324487,
+        "lon": -71.80863
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16101",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Chillán",
+      "coordinates": {
+        "lat": -36.625372,
+        "lon": -72.118278
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13106",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Estación Central",
+      "coordinates": {
+        "lat": -33.458224,
+        "lon": -70.694194
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09102",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Carahue",
+      "coordinates": {
+        "lat": -38.610568,
+        "lon": -73.275056
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08108",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "San Pedro de la Paz",
+      "coordinates": {
+        "lat": -36.882827,
+        "lon": -73.11539
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05701",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "San Felipe",
+      "coordinates": {
+        "lat": -32.739754,
+        "lon": -70.752169
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02101",
+      "region": "Región de Antofagasta",
+      "province": "Antofagasta",
+      "commune": "Antofagasta",
+      "coordinates": {
+        "lat": -24.273011,
+        "lon": -69.41009
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10103",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Cochamó",
+      "coordinates": {
+        "lat": -41.758332,
+        "lon": -72.091478
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "15202",
+      "region": "Región de Arica y Parinacota",
+      "province": "Parinacota",
+      "commune": "General Lagos",
+      "coordinates": {
+        "lat": -17.827069,
+        "lon": -69.570236
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07303",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Licantén",
+      "coordinates": {
+        "lat": -34.977514,
+        "lon": -72.059733
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12101",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Magallanes",
+      "commune": "Punta Arenas",
+      "coordinates": {
+        "lat": -53.636052,
+        "lon": -71.962477
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07101",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Talca",
+      "coordinates": {
+        "lat": -35.426683,
+        "lon": -71.607042
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06309",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Pumanque",
+      "coordinates": {
+        "lat": -34.593255,
+        "lon": -71.688441
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03304",
+      "region": "Región de Atacama",
+      "province": "Huasco",
+      "commune": "Huasco",
+      "coordinates": {
+        "lat": -28.253774,
+        "lon": -71.024211
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08101",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Concepción",
+      "coordinates": {
+        "lat": -36.835659,
+        "lon": -72.960125
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07308",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Teno",
+      "coordinates": {
+        "lat": -34.887818,
+        "lon": -71.021732
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09106",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Galvarino",
+      "coordinates": {
+        "lat": -38.4506,
+        "lon": -72.780287
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09121",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Cholchol",
+      "coordinates": {
+        "lat": -38.591348,
+        "lon": -72.905106
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10202",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Ancud",
+      "coordinates": {
+        "lat": -42.014086,
+        "lon": -73.802547
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13124",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Pudahuel",
+      "coordinates": {
+        "lat": -33.427588,
+        "lon": -70.846237
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05605",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "El Tabo",
+      "coordinates": {
+        "lat": -33.479739,
+        "lon": -71.580935
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13128",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Renca",
+      "coordinates": {
+        "lat": -33.400179,
+        "lon": -70.740349
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08103",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Chiguayante",
+      "coordinates": {
+        "lat": -36.882552,
+        "lon": -73.001334
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06103",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Coinco",
+      "coordinates": {
+        "lat": -34.273205,
+        "lon": -70.948624
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05606",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "Santo Domingo",
+      "coordinates": {
+        "lat": -33.816982,
+        "lon": -71.680994
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16301",
+      "region": "Región de Ñuble",
+      "province": "Punilla",
+      "commune": "San Carlos",
+      "coordinates": {
+        "lat": -36.387428,
+        "lon": -72.016138
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13503",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Melipilla",
+      "commune": "Curacaví",
+      "coordinates": {
+        "lat": -33.356253,
+        "lon": -71.087979
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05603",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "Cartagena",
+      "coordinates": {
+        "lat": -33.540147,
+        "lon": -71.436937
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08305",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Mulchén",
+      "coordinates": {
+        "lat": -37.847996,
+        "lon": -72.070555
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02202",
+      "region": "Región de Antofagasta",
+      "province": "El Loa",
+      "commune": "Ollagüe",
+      "coordinates": {
+        "lat": -21.470279,
+        "lon": -68.310646
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "15201",
+      "region": "Región de Arica y Parinacota",
+      "province": "Parinacota",
+      "commune": "Putre",
+      "coordinates": {
+        "lat": -18.425822,
+        "lon": -69.319928
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13107",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Huechuraba",
+      "coordinates": {
+        "lat": -33.369181,
+        "lon": -70.631902
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13403",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Maipo",
+      "commune": "Calera de Tango",
+      "coordinates": {
+        "lat": -33.628594,
+        "lon": -70.792113
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08104",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Florida",
+      "coordinates": {
+        "lat": -36.824453,
+        "lon": -72.712526
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08109",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Santa Juana",
+      "coordinates": {
+        "lat": -37.27656,
+        "lon": -72.96305
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11102",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Coihaique",
+      "commune": "Lago Verde",
+      "coordinates": {
+        "lat": -44.493051,
+        "lon": -71.832203
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08308",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Quilaco",
+      "coordinates": {
+        "lat": -37.963335,
+        "lon": -71.693381
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10108",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Maullín",
+      "coordinates": {
+        "lat": -41.628824,
+        "lon": -73.497871
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05706",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "Santa María",
+      "coordinates": {
+        "lat": -32.691136,
+        "lon": -70.602267
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09208",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Purén",
+      "coordinates": {
+        "lat": -38.008485,
+        "lon": -73.051032
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05302",
+      "region": "Región de Valparaíso",
+      "province": "Los Andes",
+      "commune": "Calle Larga",
+      "coordinates": {
+        "lat": -32.945183,
+        "lon": -70.539626
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04302",
+      "region": "Región de Coquimbo",
+      "province": "Limarí",
+      "commune": "Combarbalá",
+      "coordinates": {
+        "lat": -31.142993,
+        "lon": -70.974644
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09120",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Villarrica",
+      "coordinates": {
+        "lat": -39.306093,
+        "lon": -72.191944
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10204",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Curaco de Vélez",
+      "coordinates": {
+        "lat": -42.427136,
+        "lon": -73.585831
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04303",
+      "region": "Región de Coquimbo",
+      "province": "Limarí",
+      "commune": "Monte Patria",
+      "coordinates": {
+        "lat": -30.830897,
+        "lon": -70.647552
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08313",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Yumbel",
+      "coordinates": {
+        "lat": -37.088864,
+        "lon": -72.620592
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01402",
+      "region": "Región de Tarapacá",
+      "province": "Tamarugal",
+      "commune": "Camiña",
+      "coordinates": {
+        "lat": -19.366587,
+        "lon": -69.497501
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13505",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Melipilla",
+      "commune": "San Pedro",
+      "coordinates": {
+        "lat": -33.933745,
+        "lon": -71.44608
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13103",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Cerro Navia",
+      "coordinates": {
+        "lat": -33.420691,
+        "lon": -70.742068
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06105",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Doñihue",
+      "coordinates": {
+        "lat": -34.199105,
+        "lon": -70.922285
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09109",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Loncoche",
+      "coordinates": {
+        "lat": -39.35687,
+        "lon": -72.588789
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13116",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Lo Espejo",
+      "coordinates": {
+        "lat": -33.514719,
+        "lon": -70.690933
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10402",
+      "region": "Región de Los Lagos",
+      "province": "Palena",
+      "commune": "Futaleufú",
+      "coordinates": {
+        "lat": -43.176251,
+        "lon": -72.010358
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14101",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Valdivia",
+      "coordinates": {
+        "lat": -39.823248,
+        "lon": -73.173312
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08312",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Tucapel",
+      "coordinates": {
+        "lat": -37.228623,
+        "lon": -71.746898
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13121",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Pedro Aguirre Cerda",
+      "coordinates": {
+        "lat": -33.496395,
+        "lon": -70.673778
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12401",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Ultima Esperanza",
+      "commune": "Natales",
+      "coordinates": {
+        "lat": -50.745247,
+        "lon": -73.93725
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12402",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Ultima Esperanza",
+      "commune": "Torres del Paine",
+      "coordinates": {
+        "lat": -51.059341,
+        "lon": -72.832442
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05405",
+      "region": "Región de Valparaíso",
+      "province": "Petorca",
+      "commune": "Zapallar",
+      "coordinates": {
+        "lat": -32.58801,
+        "lon": -71.326326
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13122",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Peñalolén",
+      "coordinates": {
+        "lat": -33.487585,
+        "lon": -70.509153
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07306",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Romeral",
+      "coordinates": {
+        "lat": -35.066515,
+        "lon": -70.722784
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13131",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "San Ramón",
+      "coordinates": {
+        "lat": -33.543959,
+        "lon": -70.641139
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05402",
+      "region": "Región de Valparaíso",
+      "province": "Petorca",
+      "commune": "Cabildo",
+      "coordinates": {
+        "lat": -32.410832,
+        "lon": -70.816184
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05504",
+      "region": "Región de Valparaíso",
+      "province": "Quillota",
+      "commune": "La Cruz",
+      "coordinates": {
+        "lat": -32.828055,
+        "lon": -71.239723
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13203",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Cordillera",
+      "commune": "San José de Maipo",
+      "coordinates": {
+        "lat": -33.709246,
+        "lon": -70.100465
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16106",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Pinto",
+      "coordinates": {
+        "lat": -36.917117,
+        "lon": -71.513438
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05102",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Casablanca",
+      "coordinates": {
+        "lat": -33.314453,
+        "lon": -71.440549
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06307",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Peralillo",
+      "coordinates": {
+        "lat": -34.47365,
+        "lon": -71.49842
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10302",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "Puerto Octay",
+      "coordinates": {
+        "lat": -40.937648,
+        "lon": -72.605479
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08111",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Tomé",
+      "coordinates": {
+        "lat": -36.601864,
+        "lon": -72.869692
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12104",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Magallanes",
+      "commune": "San Gregorio",
+      "coordinates": {
+        "lat": -52.320511,
+        "lon": -70.214303
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11203",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Aisén",
+      "commune": "Guaitecas",
+      "coordinates": {
+        "lat": -43.943186,
+        "lon": -73.814227
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06203",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "Litueche",
+      "coordinates": {
+        "lat": -34.103351,
+        "lon": -71.742014
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14104",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Los Lagos",
+      "coordinates": {
+        "lat": -39.875077,
+        "lon": -72.559457
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10401",
+      "region": "Región de Los Lagos",
+      "province": "Palena",
+      "commune": "Chaitén",
+      "coordinates": {
+        "lat": -43.107433,
+        "lon": -72.575959
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01401",
+      "region": "Región de Tarapacá",
+      "province": "Tamarugal",
+      "commune": "Pozo Almonte",
+      "coordinates": {
+        "lat": -20.770396,
+        "lon": -69.511172
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16304",
+      "region": "Región de Ñuble",
+      "province": "Punilla",
+      "commune": "San Fabián",
+      "coordinates": {
+        "lat": -36.575023,
+        "lon": -71.297668
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09111",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Nueva Imperial",
+      "coordinates": {
+        "lat": -38.753019,
+        "lon": -72.973851
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13108",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Independencia",
+      "coordinates": {
+        "lat": -33.411548,
+        "lon": -70.663894
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13201",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Cordillera",
+      "commune": "Puente Alto",
+      "coordinates": {
+        "lat": -33.591795,
+        "lon": -70.559071
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09209",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Renaico",
+      "coordinates": {
+        "lat": -37.709698,
+        "lon": -72.587642
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07405",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Retiro",
+      "coordinates": {
+        "lat": -36.002263,
+        "lon": -71.833758
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03102",
+      "region": "Región de Atacama",
+      "province": "Copiapó",
+      "commune": "Caldera",
+      "coordinates": {
+        "lat": -27.130758,
+        "lon": -70.678286
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08302",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Antuco",
+      "coordinates": {
+        "lat": -37.326668,
+        "lon": -71.358448
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08307",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Negrete",
+      "coordinates": {
+        "lat": -37.605868,
+        "lon": -72.580833
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14203",
+      "region": "Región de Los Ríos",
+      "province": "Ranco",
+      "commune": "Lago Ranco",
+      "coordinates": {
+        "lat": -40.374132,
+        "lon": -72.162171
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09108",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Lautaro",
+      "coordinates": {
+        "lat": -38.542119,
+        "lon": -72.300038
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08310",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "San Rosendo",
+      "coordinates": {
+        "lat": -37.215617,
+        "lon": -72.722502
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14108",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Panguipulli",
+      "coordinates": {
+        "lat": -39.715082,
+        "lon": -72.037837
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07103",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Curepto",
+      "coordinates": {
+        "lat": -35.126402,
+        "lon": -71.968587
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13126",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Quinta Normal",
+      "coordinates": {
+        "lat": -33.423682,
+        "lon": -70.702027
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07201",
+      "region": "Región del Maule",
+      "province": "Cauquenes",
+      "commune": "Cauquenes",
+      "coordinates": {
+        "lat": -35.973233,
+        "lon": -72.270531
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13301",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Chacabuco",
+      "commune": "Colina",
+      "coordinates": {
+        "lat": -33.137846,
+        "lon": -70.611728
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08204",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Contulmo",
+      "coordinates": {
+        "lat": -38.039357,
+        "lon": -73.210309
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08311",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Santa Bárbara",
+      "coordinates": {
+        "lat": -37.62171,
+        "lon": -71.754533
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08303",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Cabrero",
+      "coordinates": {
+        "lat": -37.057624,
+        "lon": -72.383458
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16109",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Yungay",
+      "coordinates": {
+        "lat": -37.10773,
+        "lon": -71.945939
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13101",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Santiago",
+      "coordinates": {
+        "lat": -33.460155,
+        "lon": -70.652611
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03201",
+      "region": "Región de Atacama",
+      "province": "Chañaral",
+      "commune": "Chañaral",
+      "coordinates": {
+        "lat": -26.378504,
+        "lon": -70.340166
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13603",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Talagante",
+      "commune": "Isla de Maipo",
+      "coordinates": {
+        "lat": -33.744587,
+        "lon": -70.940896
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04105",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "Paiguano",
+      "coordinates": {
+        "lat": -30.231682,
+        "lon": -70.374672
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05303",
+      "region": "Región de Valparaíso",
+      "province": "Los Andes",
+      "commune": "Rinconada",
+      "coordinates": {
+        "lat": -32.85747,
+        "lon": -70.711348
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07309",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Vichuquén",
+      "coordinates": {
+        "lat": -34.842156,
+        "lon": -72.027914
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16105",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Pemuco",
+      "coordinates": {
+        "lat": -36.98703,
+        "lon": -72.071994
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14102",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Corral",
+      "coordinates": {
+        "lat": -39.983734,
+        "lon": -73.374577
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14204",
+      "region": "Región de Los Ríos",
+      "province": "Ranco",
+      "commune": "Río Bueno",
+      "coordinates": {
+        "lat": -40.495921,
+        "lon": -72.543843
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11202",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Aisén",
+      "commune": "Cisnes",
+      "coordinates": {
+        "lat": -44.459687,
+        "lon": -73.089772
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14107",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Paillaco",
+      "coordinates": {
+        "lat": -40.076954,
+        "lon": -72.830483
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06104",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Coltauco",
+      "coordinates": {
+        "lat": -34.279277,
+        "lon": -71.09625
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10107",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Llanquihue",
+      "coordinates": {
+        "lat": -41.23118,
+        "lon": -73.143333
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08205",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Curanilahue",
+      "coordinates": {
+        "lat": -37.478494,
+        "lon": -73.240088
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07106",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Pelarco",
+      "coordinates": {
+        "lat": -35.384532,
+        "lon": -71.369792
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07404",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Parral",
+      "coordinates": {
+        "lat": -36.261333,
+        "lon": -71.647687
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09204",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Ercilla",
+      "coordinates": {
+        "lat": -38.083715,
+        "lon": -72.359463
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11301",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Capitán Prat",
+      "commune": "Cochrane",
+      "coordinates": {
+        "lat": -47.367655,
+        "lon": -72.740915
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07203",
+      "region": "Región del Maule",
+      "province": "Cauquenes",
+      "commune": "Pelluhue",
+      "coordinates": {
+        "lat": -35.905325,
+        "lon": -72.598666
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07302",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Hualañé",
+      "coordinates": {
+        "lat": -34.952052,
+        "lon": -71.716592
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09107",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Gorbea",
+      "coordinates": {
+        "lat": -39.177507,
+        "lon": -72.671815
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05304",
+      "region": "Región de Valparaíso",
+      "province": "Los Andes",
+      "commune": "San Esteban",
+      "coordinates": {
+        "lat": -32.692175,
+        "lon": -70.346696
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01404",
+      "region": "Región de Tarapacá",
+      "province": "Tamarugal",
+      "commune": "Huara",
+      "coordinates": {
+        "lat": -19.608907,
+        "lon": -69.663331
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13119",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Maipú",
+      "coordinates": {
+        "lat": -33.515715,
+        "lon": -70.810286
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13501",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Melipilla",
+      "commune": "Melipilla",
+      "coordinates": {
+        "lat": -33.74919,
+        "lon": -71.197951
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11101",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Coihaique",
+      "commune": "Coihaique",
+      "coordinates": {
+        "lat": -45.560007,
+        "lon": -71.994081
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13112",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "La Pintana",
+      "coordinates": {
+        "lat": -33.595664,
+        "lon": -70.626961
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09105",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Freire",
+      "coordinates": {
+        "lat": -38.953733,
+        "lon": -72.588229
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13129",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "San Joaquín",
+      "coordinates": {
+        "lat": -33.502241,
+        "lon": -70.623643
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16108",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "San Ignacio",
+      "coordinates": {
+        "lat": -36.815127,
+        "lon": -72.013385
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09101",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Temuco",
+      "coordinates": {
+        "lat": -38.675934,
+        "lon": -72.659228
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10207",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Queilén",
+      "coordinates": {
+        "lat": -42.963714,
+        "lon": -73.484697
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13132",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Vitacura",
+      "coordinates": {
+        "lat": -33.377448,
+        "lon": -70.57131
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16102",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Bulnes",
+      "coordinates": {
+        "lat": -36.78975,
+        "lon": -72.284996
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04101",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "La Serena",
+      "coordinates": {
+        "lat": -29.774746,
+        "lon": -71.066139
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11401",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "General Carrera",
+      "commune": "Chile Chico",
+      "coordinates": {
+        "lat": -46.767788,
+        "lon": -72.604286
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03303",
+      "region": "Región de Atacama",
+      "province": "Huasco",
+      "commune": "Freirina",
+      "coordinates": {
+        "lat": -28.80949,
+        "lon": -71.178298
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08301",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Los Angeles",
+      "coordinates": {
+        "lat": -37.413983,
+        "lon": -72.336303
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02201",
+      "region": "Región de Antofagasta",
+      "province": "El Loa",
+      "commune": "Calama",
+      "coordinates": {
+        "lat": -22.176972,
+        "lon": -68.634128
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07108",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Río Claro",
+      "coordinates": {
+        "lat": -35.258902,
+        "lon": -71.277171
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01405",
+      "region": "Región de Tarapacá",
+      "province": "Tamarugal",
+      "commune": "Pica",
+      "coordinates": {
+        "lat": -20.484266,
+        "lon": -68.910055
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16201",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Quirihue",
+      "coordinates": {
+        "lat": -36.240927,
+        "lon": -72.538285
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10206",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Puqueldón",
+      "coordinates": {
+        "lat": -42.629165,
+        "lon": -73.62703
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10207",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Queilén",
+      "coordinates": {
+        "lat": -42.922491,
+        "lon": -73.428639
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10207",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Queilén",
+      "coordinates": {
+        "lat": -42.816988,
+        "lon": -73.608076
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13125",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Quilicura",
+      "coordinates": {
+        "lat": -33.357634,
+        "lon": -70.732705
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01107",
+      "region": "Región de Tarapacá",
+      "province": "Iquique",
+      "commune": "Alto Hospicio",
+      "coordinates": {
+        "lat": -20.193253,
+        "lon": -70.016281
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13601",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Talagante",
+      "commune": "Talagante",
+      "coordinates": {
+        "lat": -33.68219,
+        "lon": -70.908788
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10205",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Dalcahue",
+      "coordinates": {
+        "lat": -42.308871,
+        "lon": -73.840782
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08304",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Laja",
+      "coordinates": {
+        "lat": -37.315319,
+        "lon": -72.576823
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13130",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "San Miguel",
+      "coordinates": {
+        "lat": -33.501973,
+        "lon": -70.654186
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06109",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Malloa",
+      "coordinates": {
+        "lat": -34.471241,
+        "lon": -70.890737
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08306",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Nacimiento",
+      "coordinates": {
+        "lat": -37.475497,
+        "lon": -72.818491
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10106",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Los Muermos",
+      "coordinates": {
+        "lat": -41.401192,
+        "lon": -73.587299
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05804",
+      "region": "Región de Valparaíso",
+      "province": "Margamarga",
+      "commune": "Villa Alemana",
+      "coordinates": {
+        "lat": -33.056411,
+        "lon": -71.333065
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13602",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Talagante",
+      "commune": "El Monte",
+      "coordinates": {
+        "lat": -33.66749,
+        "lon": -71.03016
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04201",
+      "region": "Región de Coquimbo",
+      "province": "Choapa",
+      "commune": "Illapel",
+      "coordinates": {
+        "lat": -31.553397,
+        "lon": -70.97452
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06303",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Chimbarongo",
+      "coordinates": {
+        "lat": -34.750367,
+        "lon": -70.98166
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02103",
+      "region": "Región de Antofagasta",
+      "province": "Antofagasta",
+      "commune": "Sierra Gorda",
+      "coordinates": {
+        "lat": -23.256941,
+        "lon": -69.304882
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13202",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Cordillera",
+      "commune": "Pirque",
+      "coordinates": {
+        "lat": -33.714756,
+        "lon": -70.521144
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13117",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Lo Prado",
+      "coordinates": {
+        "lat": -33.44906,
+        "lon": -70.722006
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09115",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Pucón",
+      "coordinates": {
+        "lat": -39.269671,
+        "lon": -71.797878
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13504",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Melipilla",
+      "commune": "María Pinto",
+      "coordinates": {
+        "lat": -33.495265,
+        "lon": -71.194039
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13502",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Melipilla",
+      "commune": "Alhué",
+      "coordinates": {
+        "lat": -34.044985,
+        "lon": -71.056177
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10307",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "San Pablo",
+      "coordinates": {
+        "lat": -40.419275,
+        "lon": -73.170742
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04104",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "La Higuera",
+      "coordinates": {
+        "lat": -29.369562,
+        "lon": -70.906034
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05501",
+      "region": "Región de Valparaíso",
+      "province": "Quillota",
+      "commune": "Quillota",
+      "coordinates": {
+        "lat": -32.894518,
+        "lon": -71.266871
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05502",
+      "region": "Región de Valparaíso",
+      "province": "Quillota",
+      "commune": "Calera",
+      "coordinates": {
+        "lat": -32.80428,
+        "lon": -71.179569
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09103",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Cunco",
+      "coordinates": {
+        "lat": -38.983673,
+        "lon": -71.999269
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13102",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Cerrillos",
+      "coordinates": {
+        "lat": -33.494238,
+        "lon": -70.714714
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10104",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Fresia",
+      "coordinates": {
+        "lat": -41.159405,
+        "lon": -73.589847
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06106",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Graneros",
+      "coordinates": {
+        "lat": -34.068873,
+        "lon": -70.737706
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09205",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Lonquimay",
+      "coordinates": {
+        "lat": -38.473014,
+        "lon": -71.24367
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "01101",
+      "region": "Región de Tarapacá",
+      "province": "Iquique",
+      "commune": "Iquique",
+      "coordinates": {
+        "lat": -20.937549,
+        "lon": -70.051091
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13105",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "El Bosque",
+      "coordinates": {
+        "lat": -33.568985,
+        "lon": -70.672515
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16205",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Portezuelo",
+      "coordinates": {
+        "lat": -36.530177,
+        "lon": -72.472027
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07105",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Maule",
+      "coordinates": {
+        "lat": -35.515465,
+        "lon": -71.703826
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10301",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "Osorno",
+      "coordinates": {
+        "lat": -40.609231,
+        "lon": -73.079179
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13127",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Recoleta",
+      "coordinates": {
+        "lat": -33.400524,
+        "lon": -70.645029
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10101",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Puerto Montt",
+      "coordinates": {
+        "lat": -41.488995,
+        "lon": -72.804064
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05705",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "Putaendo",
+      "coordinates": {
+        "lat": -32.479506,
+        "lon": -70.527915
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05404",
+      "region": "Región de Valparaíso",
+      "province": "Petorca",
+      "commune": "Petorca",
+      "coordinates": {
+        "lat": -32.185777,
+        "lon": -70.89615
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08202",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Arauco",
+      "coordinates": {
+        "lat": -37.286094,
+        "lon": -73.395738
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07301",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Curicó",
+      "coordinates": {
+        "lat": -35.220225,
+        "lon": -70.860669
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12201",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Antártica Chilena",
+      "commune": "Cabo de Hornos",
+      "coordinates": {
+        "lat": -55.032325,
+        "lon": -69.190538
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07407",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Villa Alegre",
+      "coordinates": {
+        "lat": -35.687239,
+        "lon": -71.682835
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08107",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Penco",
+      "coordinates": {
+        "lat": -36.748416,
+        "lon": -72.948384
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10305",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "Río Negro",
+      "coordinates": {
+        "lat": -40.771835,
+        "lon": -73.427631
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04304",
+      "region": "Región de Coquimbo",
+      "province": "Limarí",
+      "commune": "Punitaqui",
+      "coordinates": {
+        "lat": -30.939899,
+        "lon": -71.335299
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12303",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Tierra del Fuego",
+      "commune": "Timaukel",
+      "coordinates": {
+        "lat": -54.211114,
+        "lon": -69.530908
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06116",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Requínoa",
+      "coordinates": {
+        "lat": -34.342548,
+        "lon": -70.658881
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06101",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Rancagua",
+      "coordinates": {
+        "lat": -34.122178,
+        "lon": -70.808153
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04103",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "Andacollo",
+      "coordinates": {
+        "lat": -30.261932,
+        "lon": -71.098116
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07109",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "San Clemente",
+      "coordinates": {
+        "lat": -35.715006,
+        "lon": -70.844725
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13404",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Maipo",
+      "commune": "Paine",
+      "coordinates": {
+        "lat": -33.85475,
+        "lon": -70.763811
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08309",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Quilleco",
+      "coordinates": {
+        "lat": -37.43378,
+        "lon": -71.876034
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06114",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Quinta de Tilcoco",
+      "coordinates": {
+        "lat": -34.363518,
+        "lon": -71.001972
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10210",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Quinchao",
+      "coordinates": {
+        "lat": -42.515035,
+        "lon": -73.369124
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10102",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Calbuco",
+      "coordinates": {
+        "lat": -41.734673,
+        "lon": -73.204098
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07403",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Longaví",
+      "coordinates": {
+        "lat": -36.107283,
+        "lon": -71.449864
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06305",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Nancagua",
+      "coordinates": {
+        "lat": -34.673625,
+        "lon": -71.194723
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08206",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Los Alamos",
+      "coordinates": {
+        "lat": -37.675065,
+        "lon": -73.365983
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16203",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Coelemu",
+      "coordinates": {
+        "lat": -36.505562,
+        "lon": -72.744965
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05601",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "San Antonio",
+      "coordinates": {
+        "lat": -33.653588,
+        "lon": -71.494812
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13114",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Las Condes",
+      "coordinates": {
+        "lat": -33.418224,
+        "lon": -70.505548
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07104",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Empedrado",
+      "coordinates": {
+        "lat": -35.623639,
+        "lon": -72.283713
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11303",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Capitán Prat",
+      "commune": "Tortel",
+      "coordinates": {
+        "lat": -48.038021,
+        "lon": -74.114908
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05801",
+      "region": "Región de Valparaíso",
+      "province": "Margamarga",
+      "commune": "Quilpué",
+      "coordinates": {
+        "lat": -33.151062,
+        "lon": -71.255229
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02203",
+      "region": "Región de Antofagasta",
+      "province": "El Loa",
+      "commune": "San Pedro de Atacama",
+      "coordinates": {
+        "lat": -23.405755,
+        "lon": -67.911651
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07202",
+      "region": "Región del Maule",
+      "province": "Cauquenes",
+      "commune": "Chanco",
+      "coordinates": {
+        "lat": -35.694052,
+        "lon": -72.484167
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14105",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Máfil",
+      "coordinates": {
+        "lat": -39.687663,
+        "lon": -72.870384
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06204",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "Marchihue",
+      "coordinates": {
+        "lat": -34.374875,
+        "lon": -71.68042
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10303",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "Purranque",
+      "coordinates": {
+        "lat": -40.934435,
+        "lon": -73.439259
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08105",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Hualqui",
+      "coordinates": {
+        "lat": -37.034189,
+        "lon": -72.867134
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06306",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Palmilla",
+      "coordinates": {
+        "lat": -34.53305,
+        "lon": -71.350403
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16207",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Treguaco",
+      "coordinates": {
+        "lat": -36.423461,
+        "lon": -72.651431
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "14103",
+      "region": "Región de Los Ríos",
+      "province": "Valdivia",
+      "commune": "Lanco",
+      "coordinates": {
+        "lat": -39.517474,
+        "lon": -72.610278
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13123",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Providencia",
+      "coordinates": {
+        "lat": -33.430964,
+        "lon": -70.606399
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13401",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Maipo",
+      "commune": "San Bernardo",
+      "coordinates": {
+        "lat": -33.643356,
+        "lon": -70.719146
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06117",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "San Vicente",
+      "coordinates": {
+        "lat": -34.474093,
+        "lon": -71.122289
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05403",
+      "region": "Región de Valparaíso",
+      "province": "Petorca",
+      "commune": "Papudo",
+      "coordinates": {
+        "lat": -32.468207,
+        "lon": -71.377976
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "12102",
+      "region": "Región de Magallanes y de la Antártica Chilena",
+      "province": "Magallanes",
+      "commune": "Laguna Blanca",
+      "coordinates": {
+        "lat": -52.326815,
+        "lon": -71.249645
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07401",
+      "region": "Región del Maule",
+      "province": "Linares",
+      "commune": "Linares",
+      "coordinates": {
+        "lat": -35.959314,
+        "lon": -71.329128
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09210",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Traiguén",
+      "coordinates": {
+        "lat": -38.242664,
+        "lon": -72.65821
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05702",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "Catemu",
+      "coordinates": {
+        "lat": -32.710672,
+        "lon": -70.939046
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13604",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Talagante",
+      "commune": "Padre Hurtado",
+      "coordinates": {
+        "lat": -33.546906,
+        "lon": -70.879244
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13110",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "La Florida",
+      "coordinates": {
+        "lat": -33.523557,
+        "lon": -70.55412
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09201",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Angol",
+      "coordinates": {
+        "lat": -37.763195,
+        "lon": -72.800708
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09206",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Los Sauces",
+      "coordinates": {
+        "lat": -37.985112,
+        "lon": -72.791603
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10105",
+      "region": "Región de Los Lagos",
+      "province": "Llanquihue",
+      "commune": "Frutillar",
+      "coordinates": {
+        "lat": -41.089521,
+        "lon": -73.111672
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04301",
+      "region": "Región de Coquimbo",
+      "province": "Limarí",
+      "commune": "Ovalle",
+      "coordinates": {
+        "lat": -30.677385,
+        "lon": -71.407454
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06201",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "Pichilemu",
+      "coordinates": {
+        "lat": -34.387189,
+        "lon": -71.916252
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "02102",
+      "region": "Región de Antofagasta",
+      "province": "Antofagasta",
+      "commune": "Mejillones",
+      "coordinates": {
+        "lat": -22.945911,
+        "lon": -70.204708
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06302",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Chépica",
+      "coordinates": {
+        "lat": -34.787885,
+        "lon": -71.361273
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06304",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Lolol",
+      "coordinates": {
+        "lat": -34.765507,
+        "lon": -71.6367
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08112",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Hualpén",
+      "coordinates": {
+        "lat": -36.785654,
+        "lon": -73.142516
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13104",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Conchalí",
+      "coordinates": {
+        "lat": -33.389647,
+        "lon": -70.676323
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08203",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Cañete",
+      "coordinates": {
+        "lat": -37.874525,
+        "lon": -73.326104
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13303",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Chacabuco",
+      "commune": "Tiltil",
+      "coordinates": {
+        "lat": -33.068839,
+        "lon": -70.863892
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09104",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Curarrehue",
+      "coordinates": {
+        "lat": -39.333971,
+        "lon": -71.544082
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06205",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cardenal Caro",
+      "commune": "Navidad",
+      "coordinates": {
+        "lat": -34.008731,
+        "lon": -71.810656
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03202",
+      "region": "Región de Atacama",
+      "province": "Chañaral",
+      "commune": "Diego de Almagro",
+      "coordinates": {
+        "lat": -26.241254,
+        "lon": -69.199983
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08102",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Coronel",
+      "coordinates": {
+        "lat": -37.015904,
+        "lon": -73.136558
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13113",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "La Reina",
+      "coordinates": {
+        "lat": -33.451611,
+        "lon": -70.544469
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05107",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Quintero",
+      "coordinates": {
+        "lat": -32.840257,
+        "lon": -71.464644
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11302",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "Capitán Prat",
+      "commune": "O'Higgins",
+      "coordinates": {
+        "lat": -48.480402,
+        "lon": -72.884276
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09114",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Pitrufquén",
+      "coordinates": {
+        "lat": -39.081302,
+        "lon": -72.667984
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13109",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "La Cisterna",
+      "coordinates": {
+        "lat": -33.53288,
+        "lon": -70.669978
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "11402",
+      "region": "Región del General Carlos Ibañez del Campo",
+      "province": "General Carrera",
+      "commune": "Río Ibáñez",
+      "coordinates": {
+        "lat": -46.298093,
+        "lon": -72.491274
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08207",
+      "region": "Región del Biobío",
+      "province": "Arauco",
+      "commune": "Tirúa",
+      "coordinates": {
+        "lat": -38.280377,
+        "lon": -73.383522
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13120",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "Ñuñoa",
+      "coordinates": {
+        "lat": -33.461257,
+        "lon": -70.60898
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05703",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "Llaillay",
+      "coordinates": {
+        "lat": -32.889939,
+        "lon": -70.895511
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13111",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Santiago",
+      "commune": "La Granja",
+      "coordinates": {
+        "lat": -33.529188,
+        "lon": -70.621302
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07305",
+      "region": "Región del Maule",
+      "province": "Curicó",
+      "commune": "Rauco",
+      "coordinates": {
+        "lat": -34.931024,
+        "lon": -71.425463
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04106",
+      "region": "Región de Coquimbo",
+      "province": "Elqui",
+      "commune": "Vicuña",
+      "coordinates": {
+        "lat": -29.889289,
+        "lon": -70.393923
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10304",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "Puyehue",
+      "coordinates": {
+        "lat": -40.727262,
+        "lon": -72.386275
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08314",
+      "region": "Región del Biobío",
+      "province": "Biobío",
+      "commune": "Alto Biobío",
+      "coordinates": {
+        "lat": -37.876566,
+        "lon": -71.347717
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06102",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Codegua",
+      "coordinates": {
+        "lat": -34.057185,
+        "lon": -70.529792
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05602",
+      "region": "Región de Valparaíso",
+      "province": "San Antonio",
+      "commune": "Algarrobo",
+      "coordinates": {
+        "lat": -33.327783,
+        "lon": -71.597588
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09112",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Padre las Casas",
+      "coordinates": {
+        "lat": -38.800075,
+        "lon": -72.531815
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10403",
+      "region": "Región de Los Lagos",
+      "province": "Palena",
+      "commune": "Hualaihué",
+      "coordinates": {
+        "lat": -42.185549,
+        "lon": -72.374966
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05301",
+      "region": "Región de Valparaíso",
+      "province": "Los Andes",
+      "commune": "Los Andes",
+      "coordinates": {
+        "lat": -32.951948,
+        "lon": -70.223555
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13302",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Chacabuco",
+      "commune": "Lampa",
+      "coordinates": {
+        "lat": -33.273973,
+        "lon": -70.870805
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16206",
+      "region": "Región de Ñuble",
+      "province": "Itata",
+      "commune": "Ránquil",
+      "coordinates": {
+        "lat": -36.642876,
+        "lon": -72.595268
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09118",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Toltén",
+      "coordinates": {
+        "lat": -39.207154,
+        "lon": -73.064298
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06308",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Colchagua",
+      "commune": "Placilla",
+      "coordinates": {
+        "lat": -34.601919,
+        "lon": -71.078931
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10404",
+      "region": "Región de Los Lagos",
+      "province": "Palena",
+      "commune": "Palena",
+      "coordinates": {
+        "lat": -43.679916,
+        "lon": -71.98902
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09117",
+      "region": "Región de La Araucanía",
+      "province": "Cautín",
+      "commune": "Teodoro Schmidt",
+      "coordinates": {
+        "lat": -39.011057,
+        "lon": -73.126328
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "13605",
+      "region": "Región Metropolitana de Santiago",
+      "province": "Talagante",
+      "commune": "Peñaflor",
+      "coordinates": {
+        "lat": -33.620655,
+        "lon": -70.881675
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07110",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "San Rafael",
+      "coordinates": {
+        "lat": -35.298309,
+        "lon": -71.497111
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05704",
+      "region": "Región de Valparaíso",
+      "province": "San Felipe",
+      "commune": "Panquehue",
+      "coordinates": {
+        "lat": -32.787832,
+        "lon": -70.823827
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "07102",
+      "region": "Región del Maule",
+      "province": "Talca",
+      "commune": "Constitución",
+      "coordinates": {
+        "lat": -35.354262,
+        "lon": -72.267296
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06115",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Rengo",
+      "coordinates": {
+        "lat": -34.460577,
+        "lon": -70.723111
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05503",
+      "region": "Región de Valparaíso",
+      "province": "Quillota",
+      "commune": "Hijuelas",
+      "coordinates": {
+        "lat": -32.857235,
+        "lon": -71.099438
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06111",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Olivar",
+      "coordinates": {
+        "lat": -34.212331,
+        "lon": -70.819377
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "05109",
+      "region": "Región de Valparaíso",
+      "province": "Valparaíso",
+      "commune": "Viña del Mar",
+      "coordinates": {
+        "lat": -33.025588,
+        "lon": -71.511235
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "04204",
+      "region": "Región de Coquimbo",
+      "province": "Choapa",
+      "commune": "Salamanca",
+      "coordinates": {
+        "lat": -31.895865,
+        "lon": -70.667274
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16107",
+      "region": "Región de Ñuble",
+      "province": "Diguillín",
+      "commune": "Quillón",
+      "coordinates": {
+        "lat": -36.813784,
+        "lon": -72.494421
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "08106",
+      "region": "Región del Biobío",
+      "province": "Concepción",
+      "commune": "Lota",
+      "coordinates": {
+        "lat": -37.12102,
+        "lon": -73.109559
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06113",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Pichidegua",
+      "coordinates": {
+        "lat": -34.373511,
+        "lon": -71.334121
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "03302",
+      "region": "Región de Atacama",
+      "province": "Huasco",
+      "commune": "Alto del Carmen",
+      "coordinates": {
+        "lat": -28.989767,
+        "lon": -70.152632
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "16303",
+      "region": "Región de Ñuble",
+      "province": "Punilla",
+      "commune": "Ñiquén",
+      "coordinates": {
+        "lat": -36.311237,
+        "lon": -71.873122
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "06108",
+      "region": "Región del Libertador General Bernardo O'Higgins",
+      "province": "Cachapoal",
+      "commune": "Machalí",
+      "coordinates": {
+        "lat": -34.324735,
+        "lon": -70.321833
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10306",
+      "region": "Región de Los Lagos",
+      "province": "Osorno",
+      "commune": "San Juan de La Costa",
+      "coordinates": {
+        "lat": -40.506249,
+        "lon": -73.559318
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "09203",
+      "region": "Región de La Araucanía",
+      "province": "Malleco",
+      "commune": "Curacautín",
+      "coordinates": {
+        "lat": -38.421432,
+        "lon": -71.779195
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    },
+    {
+      "countryCode": "CL",
+      "code": "10209",
+      "region": "Región de Los Lagos",
+      "province": "Chiloé",
+      "commune": "Quemchi",
+      "coordinates": {
+        "lat": -42.166148,
+        "lon": -73.429434
+      },
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL"
+    }
+  ]
+}

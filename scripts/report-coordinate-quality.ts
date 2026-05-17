@@ -25,11 +25,13 @@ function toReportCase(caseFile: {
   countryCode: string;
   title: string;
   coordinates: CoordinateQualityReportCase["coordinates"];
+  geoEvidence?: CoordinateQualityReportCase["geoEvidence"];
 }): CoordinateQualityReportCase {
   return {
     id: caseFile.id,
     countryCode: caseFile.countryCode,
     title: caseFile.title,
     coordinates: caseFile.coordinates,
+    geoEvidence: caseFile.geoEvidence,
   };
 }

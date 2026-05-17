@@ -4,9 +4,11 @@ import assert from "node:assert/strict";
 import {
   buildArgentinaContractCases,
   buildChileCompraCases,
+  buildChileCompraOcdsCases,
   buildPeruBudgetCases,
   buildPeruContractCases,
   type ChileCompraSnapshot,
+  type ChileCompraOcdsSnapshot,
 } from "../src/lib/data/crossCountryCases.ts";
 
 const options = {
@@ -366,6 +368,111 @@ test("buildPeruContractCases enriches OECE contracts with OCDS release evidence"
   assert.equal(caseFile?.relatedReceipts?.[0]?.sourceUrl, releaseUrl);
 });
 
+test("buildPeruContractCases can expose official district centroid as administrative geo evidence", () => {
+  const [caseFile] = buildPeruContractCases(
+    [
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Servicio en el DISTRITO DE LA PECA, PROVINCIA DE BAGUA, AMAZONAS",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "1",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "113868.79",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "2025-06-03",
+        fecha_suscripcion_contrato: "2025-06-03",
+      },
+    ],
+    {
+      ...options,
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    },
+    25,
+    undefined,
+    {
+      adminCentroids: [
+        {
+          countryCode: "PE",
+          code: "010202",
+          region: "AMAZONAS",
+          province: "BAGUA",
+          district: "LA PECA",
+          coordinates: { lat: -5.613, lon: -78.434 },
+          sourceId: "PE-IDEP-LIMITE-DISTRITAL",
+        },
+      ],
+    },
+  );
+
+  assert.deepEqual(caseFile?.coordinates, { lat: -5.613, lon: -78.434 });
+  assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
+  assert.equal(caseFile?.geoEvidence?.[0]?.satelliteEligible, false);
+  assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /no es sitio exacto/i);
+});
+
+test("buildPeruContractCases preserves one case per contract item when tender IDs repeat", () => {
+  const cases = buildPeruContractCases(
+    [
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Contratacion de maquinaria pesada",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "1",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "113868.79",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "2025-06-03",
+        fecha_suscripcion_contrato: "2025-06-03",
+      },
+      {
+        codigoentidad: "010373",
+        codigoconvocatoria: "1122118",
+        descripcion_proceso: "Contratacion de maquinaria pesada",
+        n_cod_contrato: "2328678",
+        codigo_contrato: "2328678",
+        num_contrato: "ORDEN DE SERVICIO N. 373",
+        num_item: "2",
+        monto_contratado_total: "113868.79",
+        monto_contratado_item: "1000",
+        moneda: "Soles",
+        ruc_contratista: "20487924050",
+        ruc_destinatario_pago: "20487924050",
+        urlcontrato: "https://prodapp.seace.gob.pe/contrato",
+        fecha_publicacion_contrato: "2025-06-03",
+        fecha_suscripcion_contrato: "2025-06-03",
+      },
+    ],
+    {
+      ...options,
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
+      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+    },
+  );
+
+  assert.equal(cases.length, 2);
+  assert.deepEqual(cases.map((caseFile) => caseFile.id), [
+    "PE-CONTRACT-2328678-1",
+    "PE-CONTRACT-2328678-2",
+  ]);
+});
+
 test("buildPeruContractCases normalizes OECE Excel serial dates for filters and validity", () => {
   const [caseFile] = buildPeruContractCases(
     [
@@ -499,6 +606,159 @@ test("buildChileCompraCases turns API details into exportable procurement cases"
   assert.equal(chileCase?.itemCount, 1);
   assert.equal(chileCase?.awardedLineCount, 1);
   assert.equal(chileCase?.receipt.sourceUrl, awardActUrl);
+});
+
+test("buildChileCompraCases can expose official buyer commune centroid as administrative geo evidence", () => {
+  const snapshot: ChileCompraSnapshot = {
+    details: [
+      {
+        Listado: [
+          {
+            CodigoExterno: "1159-2-LP26",
+            Nombre: "Bolsas de carga pesada",
+            CodigoEstado: 8,
+            Moneda: "CLP",
+            MontoEstimado: 1000,
+            Comprador: {
+              CodigoOrganismo: "6919",
+              NombreOrganismo: "SERVICIO AGRICOLA Y GANADERO",
+              RutUnidad: "61.308.000-7",
+              CodigoUnidad: "2155",
+              NombreUnidad: "SAG - Coquimbo",
+              RegionUnidad: "Región de Coquimbo ",
+              ComunaUnidad: "La Serena",
+            },
+          },
+        ],
+      },
+    ],
+  };
+
+  const [caseFile] = buildChileCompraCases(
+    snapshot,
+    {
+      ...options,
+      sourceId: "CL-MERCADO-PUBLICO-API",
+      sourceName: "API de Mercado Publico",
+      sourceUrl: "https://api.mercadopublico.cl/modules/api.aspx",
+      rawPath: "data/official/cl/sample.json",
+    },
+    {
+      adminCentroids: [
+        {
+          countryCode: "CL",
+          code: "04101",
+          region: "Región de Coquimbo",
+          province: "Elqui",
+          commune: "La Serena",
+          coordinates: { lat: -29.9, lon: -71.25 },
+          sourceId: "CL-CIREN-LIMITE-COMUNAL",
+        },
+      ],
+    },
+  );
+
+  assert.deepEqual(caseFile?.coordinates, { lat: -29.9, lon: -71.25 });
+  assert.equal(caseFile?.locationName, "La Serena / Región de Coquimbo");
+  assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
+  assert.equal(caseFile?.geoEvidence?.[0]?.granularity, "commune");
+  assert.equal(caseFile?.geoEvidence?.[0]?.satelliteEligible, false);
+  assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /comprador/i);
+});
+
+test("buildChileCompraOcdsCases turns OCDS releases into supplier-aware cases with buyer admin centroids", () => {
+  const snapshot: ChileCompraOcdsSnapshot = {
+    records: [
+      {
+        ocid: "ocds-70d2nz-4052-3-LE26",
+        urlTender: "https://api.mercadopublico.cl/APISOCDS/OCDS/tender/4052-3-LE26",
+        urlAward: "https://api.mercadopublico.cl/APISOCDS/OCDS/award/4052-3-LE26",
+        tenderPackage: {
+          releases: [
+            {
+              ocid: "ocds-70d2nz-4052-3-LE26",
+              id: "tender-release",
+              date: "2026-01-06T18:43:00Z",
+              parties: [
+                {
+                  name: "I MUNICIPALIDAD DE LAGUNA BLANCA | I MUNICIPALIDAD DE LAGUNA BLANCA",
+                  id: "CL-MP-4972",
+                  identifier: { id: "692512006", legalName: "I MUNICIPALIDAD DE LAGUNA BLANCA" },
+                  address: {
+                    streetAddress: "KM 100 Ruta 9 Norte",
+                    region: "Región de Magallanes y de la Antártica",
+                    countryName: "Chile",
+                  },
+                  roles: ["procuringEntity", "buyer"],
+                },
+              ],
+              tender: {
+                id: "4052-3-LE26",
+                title: "Servicio produccion de eventos",
+                description: "Servicio produccion de eventos municipales",
+                value: { amount: 19450000, currency: "CLP" },
+                procurementMethodDetails: "Licitación Pública Entre 100 y 1000 UTM (LE)",
+                tenderers: [{ id: "CL-MP-182455", name: "Proveedor uno" }],
+                tenderPeriod: {
+                  startDate: "2026-01-06T18:43:00Z",
+                  endDate: "2026-01-14T10:00:00Z",
+                },
+              },
+            },
+          ],
+        },
+        awardPackage: {
+          releases: [
+            {
+              date: "2026-01-14T18:56:48Z",
+              awards: [
+                {
+                  id: "9622498",
+                  date: "2026-01-14T18:56:48Z",
+                  value: { amount: 19000000, currency: "CLP" },
+                  suppliers: [{ id: "CL-MP-182455", name: "Proveedor uno" }],
+                  documents: [{ url: "https://www.mercadopublico.cl/award" }],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const [caseFile] = buildChileCompraOcdsCases(
+    snapshot,
+    {
+      ...options,
+      sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+      sourceName: "ChileCompra descargas OCDS procesos",
+      sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
+      rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+    },
+    {
+      adminCentroids: [
+        {
+          countryCode: "CL",
+          code: "12102",
+          region: "Región de Magallanes y de la Antártica",
+          province: "Magallanes",
+          commune: "Laguna Blanca",
+          coordinates: { lat: -52.25, lon: -71.92 },
+          sourceId: "CL-CIREN-LIMITE-COMUNAL",
+        },
+      ],
+    },
+  );
+
+  assert.equal(caseFile?.id, "CL-OCDS-4052-3-LE26");
+  assert.equal(caseFile?.supplierName, "Proveedor uno");
+  assert.equal(caseFile?.bidderCount, 1);
+  assert.equal(caseFile?.amount?.value, 19000000);
+  assert.equal(caseFile?.awardActUrl, "https://www.mercadopublico.cl/award");
+  assert.deepEqual(caseFile?.coordinates, { lat: -52.25, lon: -71.92 });
+  assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
+  assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /comprador/i);
 });
 
 test("buildChileCompraCases keeps missing Chile numeric context as null", () => {

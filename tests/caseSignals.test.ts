@@ -148,6 +148,43 @@ test("buildCaseSignals does not treat invalid coordinates as official geometry",
   assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
 
+test("buildCaseSignals labels administrative centroids without implying exact site geometry", () => {
+  const signals = buildCaseSignals({
+    id: "PE-CONTRACT-2328678-1",
+    countryCode: "PE",
+    title: "Servicio en Bagua",
+    caseType: "procurement_contract",
+    year: 2025,
+    coordinates: { lat: -5.613, lon: -78.434 },
+    geoEvidence: [
+      {
+        precision: "official_admin_centroid",
+        granularity: "district",
+        label: "LA PECA / BAGUA / AMAZONAS",
+        sourceId: "PE-IDEP-LIMITE-DISTRITAL",
+        sourceField: "descripcion_proceso",
+        method: "official_text_admin_catalog_match",
+        confidence: "medium",
+        coordinates: { lat: -5.613, lon: -78.434 },
+        exposeOnMap: true,
+        satelliteEligible: false,
+        caveat: "Centroide administrativo oficial; no es sitio exacto de ejecucion.",
+      },
+    ],
+    receipt: {
+      sourceId: "PE-OECE-CONTRATOS",
+      sourceName: "OECE contratos",
+      sourceUrl: "https://example.test",
+    },
+  });
+
+  const geometry = signals.find((signal) => signal.code === "official_geometry");
+
+  assert.equal(geometry?.label, "Referencia territorial validada");
+  assert.match(geometry?.caveat ?? "", /no es sitio exacto/i);
+  assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), false);
+});
+
 test("buildCaseSignals keeps map and satellite capability out of lead selection", () => {
   const signals = buildCaseSignals({
     id: "AR-WORK-604-0001-OBR21",

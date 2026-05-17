@@ -330,6 +330,22 @@
     "caveats": ["Normaliza territorio; no prueba ubicacion exacta de una obra o proveedor."]
   },
   {
+    "sourceId": "PE-IDEP-LIMITE-DISTRITAL",
+    "countryCode": "PE",
+    "name": "IDEP limite distrital",
+    "agency": "Infraestructura de Datos Espaciales del Peru",
+    "category": "geo_boundaries",
+    "priority": "later",
+    "official": true,
+    "accessMode": "portal_api",
+    "format": "arcgis_json",
+    "sourceUrl": "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5",
+    "downloadUrl": "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5/query?where=1%3D1&outFields=UBIGEO,NOMBDEP,NOMBPROV,NOMBDIST&returnGeometry=true&f=json",
+    "updateFrequency": "unknown",
+    "keyFields": ["UBIGEO", "NOMBDEP", "NOMBPROV", "NOMBDIST"],
+    "caveats": ["Permite centroides administrativos distritales; no representa sitio exacto de ejecucion."]
+  },
+  {
     "sourceId": "PE-OECE-OCDS",
     "countryCode": "PE",
     "name": "Portal de contrataciones abiertas OCDS",
@@ -424,5 +440,21 @@
     "updateFrequency": "unknown",
     "keyFields": ["codigo_organismo", "rut_unidad", "nombre_unidad", "region", "comuna"],
     "caveats": ["Catalogo de compradores; usar como normalizador, no como prueba de compra."]
+  },
+  {
+    "sourceId": "CL-CIREN-LIMITE-COMUNAL",
+    "countryCode": "CL",
+    "name": "CIREN limite comunal Chile continental",
+    "agency": "Centro de Informacion de Recursos Naturales",
+    "category": "geo_boundaries",
+    "priority": "later",
+    "official": true,
+    "accessMode": "portal_api",
+    "format": "arcgis_json",
+    "sourceUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3",
+    "downloadUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3/query?where=1%3D1&outFields=codreg,codpro,codcom,nomreg,nompro,nomcom&returnGeometry=true&f=json",
+    "updateFrequency": "unknown",
+    "keyFields": ["codreg", "codpro", "codcom", "nomreg", "nompro", "nomcom"],
+    "caveats": ["Permite centroides comunales administrativos; no representa sitio exacto de ejecucion."]
   }
 ]

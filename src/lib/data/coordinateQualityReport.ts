@@ -9,11 +9,15 @@ export type CoordinateQualityReportCase = {
   countryCode: string;
   title: string;
   coordinates: GeoPoint | null;
+  geoEvidence?: Array<{
+    exposeOnMap: boolean;
+  }>;
 };
 
 export type CoordinateQualityCountryReport = {
   totalCases: number;
   mapEligibleCases: number;
+  geoEvidenceCases: number;
   byStatus: Partial<Record<CoordinateStatus, number>>;
 };
 
@@ -57,12 +61,16 @@ export function buildCoordinateQualityReport(
       byCountry[caseFile.countryCode] = {
         totalCases: 0,
         mapEligibleCases: 0,
+        geoEvidenceCases: 0,
         byStatus: {},
       };
     }
 
     const countryReport = byCountry[caseFile.countryCode];
     countryReport.totalCases += 1;
+    if ((caseFile.geoEvidence ?? []).length > 0) {
+      countryReport.geoEvidenceCases += 1;
+    }
     countryReport.byStatus[quality.status] =
       (countryReport.byStatus[quality.status] ?? 0) + 1;
 

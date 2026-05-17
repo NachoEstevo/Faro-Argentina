@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-16T06:58:58.684Z",
+  "generatedAt": "2026-05-17T17:28:27.601Z",
   "snapshots": [
     {
       "sourceId": "AR-CONTRATAR-CONTRATOS",
@@ -101,15 +101,56 @@
       "byteSize": 15827272
     },
     {
+      "sourceId": "PE-IDEP-LIMITE-DISTRITAL",
+      "rawPath": "data/official/pe/idep-district-centroids.json",
+      "fetchUrl": "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5/query",
+      "fetchedAt": "2026-05-17T17:28:27.362Z",
+      "contentType": "application/json",
+      "recordCount": 1891,
+      "failedCount": 0,
+      "partial": true,
+      "reused": true,
+      "fileHash": "sha256-a46297c0294b8862ce5e8678439cbfd943e5f4195bec91de5f6c00d348ff89bb",
+      "byteSize": 533165
+    },
+    {
       "sourceId": "PE-OECE-OCDS",
       "rawPath": "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
       "fetchUrl": "https://contratacionesabiertas.oece.gob.pe/api/v1/release/seace_v3/{tenderId}",
-      "fetchedAt": "2026-05-16T06:58:47.096Z",
+      "fetchedAt": "2026-05-17T17:28:27.481Z",
       "contentType": "application/json",
-      "recordCount": 25,
+      "recordCount": 494,
+      "failedCount": 1,
       "partial": true,
-      "fileHash": "sha256-2339931c44b256966e1c5650b6221598d470dae52d517ab99f3598eda59492c2",
-      "byteSize": 1873591
+      "reused": true,
+      "fileHash": "sha256-eed606a09e9e59e48e5b0ceba748622ecd570a91ad8d767e67d75f1c507c5ed3",
+      "byteSize": 32731259
+    },
+    {
+      "sourceId": "CL-CIREN-LIMITE-COMUNAL",
+      "rawPath": "data/official/cl/ciren-commune-centroids.json",
+      "fetchUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3/query",
+      "fetchedAt": "2026-05-17T17:28:27.496Z",
+      "contentType": "application/json",
+      "recordCount": 345,
+      "failedCount": 0,
+      "partial": true,
+      "reused": true,
+      "fileHash": "sha256-eefaebda753c44965f565ea173e697162fbc5e0ff4c582428d77230d6f34b9cd",
+      "byteSize": 103161
+    },
+    {
+      "sourceId": "CL-CHILECOMPRA-OCDS-PROCESOS",
+      "rawPath": "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+      "fetchUrl": "https://api.mercadopublico.cl/APISOCDS/OCDS/listaOCDSAgnoMes/2026/1/0/500",
+      "fetchedAt": "2026-05-17T17:28:27.568Z",
+      "contentType": "application/json",
+      "recordCount": 500,
+      "failedCount": 0,
+      "partial": true,
+      "reused": true,
+      "fileHash": "sha256-33efe42fb773a99569cf285cd8834e1f7b9dfe33f35b5f3daf7ff7bf62750c5f",
+      "byteSize": 22883468
     },
     {
       "sourceId": "CL-MERCADO-PUBLICO-API",

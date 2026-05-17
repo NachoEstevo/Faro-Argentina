@@ -30,7 +30,7 @@ test("filterCaseFiles filters by country, source and case type", () => {
     caseType: "procurement_contract",
   });
 
-  assert.equal(peContracts.length, 25);
+  assert.equal(peContracts.length, 500);
   assert.equal(peContracts.every((caseFile) => caseFile.countryCode === "PE"), true);
   assert.equal(
     peContracts.every((caseFile) => caseFile.receipt.sourceId === "PE-OECE-CONTRATOS"),
@@ -43,8 +43,8 @@ test("buildCaseCollectionPack creates a country export with receipts and source 
 
   assert.equal(pack.packType, "faro_case_collection");
   assert.equal(pack.filters.countryCode, "PE");
-  assert.equal(pack.stats.caseFiles, 50);
-  assert.equal(pack.stats.receipts, 75);
+  assert.equal(pack.stats.caseFiles, 525);
+  assert.equal(pack.stats.receipts, 1024);
   assert.deepEqual(pack.sourceIds.sort(), ["PE-MEF-GASTO-DIARIO", "PE-OECE-CONTRATOS", "PE-OECE-OCDS"]);
   assert.equal(pack.cases.every((caseFile) => caseFile.countryCode === "PE"), true);
   assert.equal(pack.receipts[0]?.sourceId.startsWith("PE-"), true);
@@ -133,7 +133,10 @@ test("buildCaseCollectionPack keeps supplier context when query narrows the expo
 });
 
 test("buildCaseCollectionPack exports Chile award evidence with official act context", () => {
-  const pack = buildCaseCollectionPack(cases, { countryCode: "CL" });
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "CL",
+    sourceId: "CL-MERCADO-PUBLICO-API",
+  });
   const [caseFile] = pack.cases as Array<ExportableCaseFile & {
     awardedAt?: string | null;
     awardActUrl?: string | null;

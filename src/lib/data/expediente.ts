@@ -9,6 +9,8 @@ import {
   type EvidenceReceipt,
   type ReceiptLocatorPresentation,
 } from "./evidenceReceipts.ts";
+import { assessCoordinateQuality } from "./coordinateQuality.ts";
+import type { GeoEvidenceItem } from "./geoEvidence.ts";
 
 export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceipts"> & {
   receipt: EvidenceReceipt;
@@ -44,6 +46,7 @@ export interface ExpedienteView {
     hasOfficialGeometry: boolean;
     relatedReceiptCount: number;
     sourceCount: number;
+    geoEvidence: GeoEvidenceItem[];
   };
   actions: {
     officialSourceHref: string;
@@ -70,6 +73,11 @@ export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: Ca
     primaryReceipt.sourceId,
     ...relatedReceipts.map((receipt) => receipt.sourceId),
   ]);
+  const coordinateQuality = assessCoordinateQuality({
+    caseId: caseFile.id,
+    countryCode: caseFile.countryCode,
+    coordinates: caseFile.coordinates ?? null,
+  });
 
   return {
     expedienteType: "faro_expediente_v1",
@@ -93,9 +101,10 @@ export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: Ca
       related: relatedReceipts,
     },
     investigationContext: {
-      hasOfficialGeometry: Boolean(caseFile.coordinates),
+      hasOfficialGeometry: coordinateQuality.exposeOnMap,
       relatedReceiptCount: relatedReceipts.length,
       sourceCount: sourceIds.size,
+      geoEvidence: caseFile.geoEvidence ?? [],
     },
     actions: {
       officialSourceHref: primaryReceipt.sourceUrl,
@@ -143,6 +152,10 @@ function buildDateLabel(caseFile: ExpedienteCaseFile): string {
 }
 
 function buildLocationLabel(caseFile: ExpedienteCaseFile): string {
+  const mapEvidence = caseFile.geoEvidence?.find((evidence) =>
+    evidence.exposeOnMap && evidence.coordinates,
+  );
+  if (mapEvidence) return mapEvidence.label;
   if (!caseFile.coordinates) return "Sin geometria oficial";
   return `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`;
 }
