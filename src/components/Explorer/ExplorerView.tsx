@@ -111,7 +111,7 @@ export default function ExplorerView({
 
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return countryAll.filter((caseFile) => {
+    const filtered = countryAll.filter((caseFile) => {
       const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
       const isReview = severity === "high" || severity === "medium";
       const isNoGeometry = caseFile.coordinates === null;
@@ -139,6 +139,9 @@ export default function ExplorerView({
         .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
+    return [...filtered].sort((a, b) =>
+      caseTimestampKey(b).localeCompare(caseTimestampKey(a)),
+    );
   }, [countryAll, query, stateFilters, yearFrom, yearTo]);
 
   const PAGE_SIZE = 8;
@@ -902,6 +905,15 @@ function PuntoGeoCard({ caseFile }: { caseFile: ExplorerCase }) {
       <DetailRow label="Ver en mapa" value="Abrir en OpenStreetMap ↗" href={mapUrl} />
     </div>
   );
+}
+
+function caseTimestampKey(caseFile: ExplorerCase): string {
+  const awarded = getField<string>(caseFile, "awardedAt");
+  if (awarded) return awarded;
+  const published = getField<string>(caseFile, "publishedAt");
+  if (published) return published;
+  if (caseFile.year !== null) return `${caseFile.year}-12-31`;
+  return "0000-00-00";
 }
 
 function formatTableDate(caseFile: ExplorerCase): string {
