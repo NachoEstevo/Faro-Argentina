@@ -143,7 +143,7 @@ npm run data:geo-report
 
 Expected current shape:
 
-- `371` total expedientes;
+- `383` total expedientes;
 - `247` map eligible;
 - PE and CL currently remain no-geometry expedientes;
 - invalid AR coordinates remain available as data gaps.
@@ -198,16 +198,17 @@ Full test suite:
 npm test
 ```
 
-Known issue: full `npm test` currently fails in `tests/dataSpineVerifier.test.ts`
-because raw files and generated receipt hashes are out of sync.
+Current state: full `npm test`, `npm run typecheck`, `npm run build` and the
+data spine verifier pass in the checked-in snapshot.
 
 ## Current Priorities
 
-1. Fix data spine reproducibility so `npm run data:verify` and `npm test` pass.
-2. Canonicalize duplicate public works while preserving source rows and receipts.
-3. Expand Argentina, Peru and Chile with validated official sources and useful
+1. Canonicalize duplicate public works while preserving source rows and receipts.
+2. Expand Argentina, Peru and Chile with validated official sources and useful
    cross-source joins.
-4. Keep satellite work dependent on validated geometry and date anchors.
+3. Keep satellite work dependent on validated geometry and date anchors.
+4. Deepen historical-judicial Argentina cases only when the official join is
+   documentable.
 
 ## What Not To Do
 

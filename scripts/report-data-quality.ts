@@ -19,10 +19,15 @@ const crossCountryDataset = await readJson<{
   generatedAt: string;
   datasets: GeneratedDataset[];
 }>("src/data/crossCountryCaseFiles.json");
+const historicalJudicialDataset = await readJson<{
+  generatedAt: string;
+  datasets: GeneratedDataset[];
+}>("src/data/argentinaHistoricalJudicialCases.json");
 
 const datasets = [
   withCatalogCountry(argentinaDataset, catalog),
   ...crossCountryDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
+  ...historicalJudicialDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
 ];
 
 const verification = await verifyDataSpine({
@@ -32,7 +37,11 @@ const verification = await verifyDataSpine({
 });
 
 const report = buildDataQualityReport({
-  generatedAt: crossCountryDataset.generatedAt ?? argentinaDataset.generatedAt ?? new Date().toISOString(),
+  generatedAt:
+    historicalJudicialDataset.generatedAt ??
+    crossCountryDataset.generatedAt ??
+    argentinaDataset.generatedAt ??
+    new Date().toISOString(),
   verification,
   datasets,
 });

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import {
   buildEvidencePack,
   buildLeadFeed,
@@ -19,6 +20,7 @@ import {
 const cases = [
   ...argentinaDataset.cases,
   ...crossCountryDataset.cases,
+  ...historicalJudicialDataset.cases,
 ] as ExportableCaseFile[];
 
 test("filterCaseFiles filters by country, source and case type", () => {
@@ -150,6 +152,25 @@ test("buildCaseCollectionPack exports Chile award evidence with official act con
   assert.equal(pack.cases.every((caseFile) => Boolean(caseFile.supplierName)), true);
   assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
   assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);
+});
+
+test("buildCaseCollectionPack exports Argentina judicial context with related receipts", () => {
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "AR",
+    caseType: "supplier_judicial_context",
+    query: "CONSTRUMEX",
+  });
+
+  assert.equal(pack.stats.caseFiles, 1);
+  assert.equal(pack.cases[0]?.id, "AR-HIST-JUD-CUADERNOS-CAMARITA-CONSTRUMEX");
+  assert.equal(pack.sourceIds.includes("AR-MPF-CUADERNOS-CAMARITA"), true);
+  assert.equal(pack.sourceIds.includes("AR-CONTRATAR-CONTRATOS"), true);
+  assert.equal(pack.receipts.length >= 4, true);
+  assert.equal(
+    pack.signals.some((signal) => signal.code === "official_judicial_context"),
+    true,
+  );
+  assert.match(pack.verificationSteps.join("\n"), /fuentes? oficial/i);
 });
 
 test("buildLeadFeed exposes ranked Argentina case leads", () => {

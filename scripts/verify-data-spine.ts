@@ -10,6 +10,9 @@ const argentinaDataset = await readJson<unknown>("src/data/argentinaWorkCases.js
 const crossCountryDataset = await readJson<{ datasets: unknown[] }>(
   "src/data/crossCountryCaseFiles.json",
 );
+const historicalJudicialDataset = await readJson<{ datasets: unknown[] }>(
+  "src/data/argentinaHistoricalJudicialCases.json",
+);
 
 const report = await verifyDataSpine({
   rootDir,
@@ -17,6 +20,7 @@ const report = await verifyDataSpine({
   datasets: [
     argentinaDataset,
     ...crossCountryDataset.datasets,
+    ...historicalJudicialDataset.datasets,
   ] as Parameters<typeof verifyDataSpine>[0]["datasets"],
 });
 

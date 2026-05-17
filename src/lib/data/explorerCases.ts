@@ -1,9 +1,13 @@
 import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
+import type { ArgentinaHistoricalJudicialCase } from "./argentinaHistoricalJudicial.ts";
 import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 import { shouldExposeCaseOnMap } from "./uiGates.ts";
 
-export type ExplorerCase = ArgentinaWorkCase | CrossCountryCaseFile;
+export type ExplorerCase =
+  | ArgentinaWorkCase
+  | CrossCountryCaseFile
+  | ArgentinaHistoricalJudicialCase;
 
 export function filterExplorerCases({
   countryCode,

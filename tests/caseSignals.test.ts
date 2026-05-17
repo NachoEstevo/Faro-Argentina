@@ -83,6 +83,45 @@ test("buildCaseSignals surfaces evidence gaps instead of inventing map context",
   assert.equal(signals.some((signal) => signal.code === "payment_verification_gap"), true);
 });
 
+test("buildCaseSignals marks judicial context as official context without map exposure", () => {
+  const signals = buildCaseSignals({
+    id: "AR-HIST-JUD-CUADERNOS-CAMARITA-COARCO",
+    countryCode: "AR",
+    caseType: "supplier_judicial_context",
+    title: "La Camarita - proveedor mencionado y contrato Faro: COARCO SA",
+    workNumber: "CUADERNOS-CAMARITA-COARCO",
+    year: 2026,
+    procedureNumber: "CFP 13816/2018",
+    agencyName: "Tribunal Oral en lo Criminal Federal Nro. 7",
+    agencyCode: "TOF7",
+    contractingUnit: "Ministerio Publico Fiscal de la Nacion",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: null,
+    evidenceLevel: "official_dataset",
+    amount: null,
+    supplierName: "COARCO SA",
+    supplierDocument: "30-51650063-4",
+    judicialStatus: "Mencion en requerimiento MPF; juicio oral en curso.",
+    contextSummary: "Fuente judicial oficial con contrato Faro relacionado por proveedor.",
+    localMatchStatus: "Match exacto por razon social y CUIT en caso relacionado.",
+    relatedCaseIds: ["AR-CONTRACT-451-1003-CON18"],
+    relatedReceipts: [receipt],
+    receipt,
+    caveats: ["Contexto judicial; no afirma nada sobre el contrato relacionado."],
+  });
+
+  assert.equal(signals.some((signal) => signal.code === "official_judicial_context"), true);
+  assert.equal(signals.some((signal) => signal.code === "missing_official_geometry"), true);
+  assert.equal(signals.some((signal) => signal.code === "official_geometry"), false);
+  assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), false);
+  assert.equal(
+    signals.find((signal) => signal.code === "official_judicial_context")?.leadEligible,
+    true,
+  );
+  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
+});
+
 test("buildCaseSignals does not treat invalid coordinates as official geometry", () => {
   const signals = buildCaseSignals({
     id: "AR-WORK-BAD-GEO",

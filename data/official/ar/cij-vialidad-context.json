@@ -1,0 +1,49 @@
+{
+  "records": [
+    {
+      "contextId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+      "caseType": "judicial_context",
+      "title": "Causa Vialidad CFP 5048/2016/TO1",
+      "year": 2025,
+      "procedureNumber": "CFP 5048/2016/TO1",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 2",
+      "agencyCode": "TOF2",
+      "contractingUnit": "Poder Judicial de la Nacion",
+      "supplierName": "Grupo Baez",
+      "supplierDocument": null,
+      "amount": {
+        "value": 46000000000,
+        "currency": "ARS",
+        "label": "monto contextual informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Sentencia firme desde 2025-06-10; veredicto TOF2 2022-12-06; fundamentos 2023-03-09.",
+      "contextSummary": "El Poder Judicial y el MPF documentan la Causa Vialidad sobre 51 procesos de licitacion vial en Santa Cruz entre 2003 y 2015.",
+      "localMatchStatus": "Sin match directo en los snapshots CONTRAT.AR actuales de Faro.",
+      "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+          "sourceName": "MPF Causa Vialidad",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-vialidad-confirmaron-la-condena-a-la-expresidenta-cristina-fernandez-y-a-otros-funcionarios-por-administracion-fraudulenta/",
+          "recordId": "MPF-VIALIDAD-CASACION-2024-11-13",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/scp/d/sentencia-SGU-e152f064-2851-49c5-942f-d15d8b40b477.pdf",
+          "recordId": "CIJ-VIALIDAD-FIRMEZA-2025-07-01",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "Este registro resume el estado judicial oficial de la causa; no identifica por si solo contratos actuales de Faro.",
+        "Los procesos mencionados corresponden a 2003-2015 en Santa Cruz; CONTRAT.AR moderno tiene otra cobertura temporal.",
+        "Abrir CIJ y MPF antes de citar personas, montos o estado procesal."
+      ]
+    }
+  ]
+}

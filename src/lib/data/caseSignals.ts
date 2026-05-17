@@ -78,6 +78,10 @@ export interface SignalCaseFile {
   awardActUrl?: string | null;
   supplierName?: string | null;
   supplierDocument?: string | null;
+  judicialStatus?: string;
+  contextSummary?: string;
+  localMatchStatus?: string;
+  relatedCaseIds?: string[];
   relatedReceipts?: Array<{ sourceId: string }>;
   receipt: {
     sourceId: string;
@@ -95,6 +99,7 @@ export function buildCaseSignals(caseFile: SignalCaseFile, context?: CaseSignalC
   addAmountGapSignals(signals, caseFile);
   addClaimSignals(signals, caseFile);
   addTraceabilitySignals(signals, caseFile);
+  addJudicialContextSignals(signals, caseFile);
   addAggregateSupplierSignals(signals, caseFile, context);
   addGeoSignals(signals, caseFile);
   addVerificationGapSignals(signals, caseFile);
@@ -136,6 +141,39 @@ export function buildCaseSignalFeed(
     },
     signals,
   };
+}
+
+function addJudicialContextSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
+  if (!isJudicialContextCase(caseFile)) return;
+
+  const relatedCaseCount = caseFile.relatedCaseIds?.length ?? 0;
+  const status = clean(caseFile.judicialStatus);
+  const summary = clean(caseFile.contextSummary) || "Hay una fuente judicial oficial para revisar como contexto documental.";
+  signals.push({
+    code: "official_judicial_context",
+    kind: "context",
+    family: "context",
+    severity: caseFile.caseType === "judicial_context" ? "medium" : "low",
+    confidence: "high",
+    displayGroup: "context",
+    leadEligible: true,
+    priority: caseFile.caseType === "judicial_context" ? 86 : 72,
+    label: "Contexto judicial oficial",
+    summary,
+    evidence: [
+      status,
+      relatedCaseCount > 0
+        ? `${relatedCaseCount} receipt(s) local(es) relacionados para abrir en Faro.`
+        : `Fuente principal: ${caseFile.receipt.sourceId}.`,
+    ].filter(Boolean).join(" "),
+    caveat: "El contexto judicial no prueba por si solo nada sobre otros contratos Faro; requiere lectura documental y match exacto.",
+    action: "Abrir la fuente judicial y los receipts relacionados antes de citar el caso.",
+    relatedCaseIds: caseFile.relatedCaseIds,
+    sourceIds: uniqueStrings([
+      caseFile.receipt.sourceId,
+      ...(caseFile.relatedReceipts ?? []).map((receipt) => receipt.sourceId),
+    ]),
+  });
 }
 
 function addCompetitionSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
@@ -189,6 +227,12 @@ function addCompetitionSignals(signals: CaseSignal[], caseFile: SignalCaseFile) 
     caveat: "Faro no evalua calidad de ofertas ni requisitos tecnicos sin documentos adicionales.",
     action: "Usar el dato como contexto al revisar monto y adjudicacion.",
   });
+}
+
+function isJudicialContextCase(caseFile: SignalCaseFile): boolean {
+  return caseFile.caseType === "judicial_context" ||
+    caseFile.caseType === "historical_public_work" ||
+    caseFile.caseType === "supplier_judicial_context";
 }
 
 function addBudgetSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
@@ -546,6 +590,14 @@ const capabilitySignalCodes = new Set([
   "official_geometry",
   "sentinel_candidate",
 ]);
+
+function uniqueStrings(values: string[]): string[] {
+  return Array.from(new Set(values.map(clean).filter((value) => value.length > 0)));
+}
+
+function clean(value: string | null | undefined): string {
+  return String(value ?? "").trim();
+}
 
 function numberOrNull(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;

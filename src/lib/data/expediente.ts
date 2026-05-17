@@ -130,6 +130,9 @@ function describeCaseType(caseType: string | undefined): string {
   if (caseType === "procurement_contract") return "Contrato";
   if (caseType === "procurement_process") return "Proceso de compra";
   if (caseType === "public_work") return "Obra publica";
+  if (caseType === "judicial_context") return "Contexto judicial";
+  if (caseType === "historical_public_work") return "Obra historica";
+  if (caseType === "supplier_judicial_context") return "Proveedor con contexto judicial";
   return "Caso";
 }
 

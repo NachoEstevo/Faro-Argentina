@@ -55,8 +55,8 @@ El producto actual ya tiene una primera version funcional:
 
 Datos actuales en la app:
 
-- `371` expedientes;
-- `296` Argentina;
+- `383` expedientes;
+- `308` Argentina;
 - `50` Peru;
 - `25` Chile.
 
@@ -91,12 +91,12 @@ La base es buena para continuar, pero todavia no esta al nivel de producto termi
 
 Prioridad recomendada:
 
-1. Arreglar `data:verify` para que raw snapshots, JSON generados y receipts coincidan.
-2. Dedupear obras y casos repetidos preservando receipts.
-3. Expandir datos de Argentina, Chile y Peru con fuentes oficiales, cruces reproducibles y valor investigativo real.
-4. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
+1. Dedupear obras y casos repetidos preservando receipts.
+2. Expandir datos de Argentina, Chile y Peru con fuentes oficiales, cruces reproducibles y valor investigativo real.
+3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
+4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
 
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `247` casos elegibles para mapa sobre `371` expedientes totales.
+La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `247` casos elegibles para mapa sobre `383` expedientes totales.
 
 ## Fuentes Iniciales
 
@@ -108,7 +108,11 @@ Argentina:
 - CONTRAT.AR ofertas;
 - CONTRAT.AR ubicacion geografica;
 - CONTRAT.AR actas de apertura;
-- SIPRO proveedores.
+- SIPRO proveedores;
+- CIJ Causa Vialidad;
+- MPF Causa Vialidad;
+- MPF Cuadernos / La Camarita;
+- Contratar historico obras como fuente auxiliar.
 
 Peru:
 

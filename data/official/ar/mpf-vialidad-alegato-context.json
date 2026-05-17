@@ -1,0 +1,222 @@
+{
+  "records": [
+    {
+      "contextId": "VIALIDAD-DNV-9067-2007-RP9",
+      "caseType": "historical_public_work",
+      "title": "DNV 9067/2007 - Obras basicas y enripiado RP 9, tramo RN 3 - RN 40",
+      "year": 2007,
+      "procedureNumber": "DNV 9067/2007",
+      "agencyName": "Direccion Nacional de Vialidad",
+      "agencyCode": "DNV",
+      "contractingUnit": "Causa Vialidad - alegato fiscal",
+      "supplierName": "Austral Construcciones S.A.",
+      "supplierDocument": null,
+      "amount": {
+        "value": 76817044.79,
+        "currency": "USD",
+        "label": "USD 76.817.044,79 informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; revisar expediente fuente antes de publicar.",
+      "contextSummary": "El indice y las jornadas del alegato MPF ubican esta obra vial de Santa Cruz dentro del universo documental de la causa.",
+      "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/DIA-8-19.08.2022-Causa-2833.doc.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+          "sourceName": "MPF Causa Vialidad alegato",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+          "recordId": "INDICE-MPF-DNV-9067-2007",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+          "recordId": "CIJ-VIALIDAD-VEREDICTO-2022-12-06",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "El proveedor y monto surgen del alegato MPF; falta contrato administrativo completo en los snapshots Faro.",
+        "No mapear sin traza o geometria oficial de la obra.",
+        "Usar como expediente historico, no como match con contratos modernos."
+      ]
+    },
+    {
+      "contextId": "VIALIDAD-DNV-12309-2007-RN288",
+      "caseType": "historical_public_work",
+      "title": "DNV 12309/2007 - RN 288, Comandante Luis Piedrabuena - Estancia La Julia",
+      "year": 2007,
+      "procedureNumber": "DNV 12309/2007",
+      "agencyName": "Direccion Nacional de Vialidad",
+      "agencyCode": "DNV",
+      "contractingUnit": "Causa Vialidad - alegato fiscal",
+      "supplierName": "Grupo Baez",
+      "supplierDocument": null,
+      "amount": {
+        "value": 72802191.7,
+        "currency": "USD",
+        "label": "USD 72.802.191,70 informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; proveedor exacto debe verificarse en expediente contractual.",
+      "contextSummary": "El alegato MPF identifica el caso RN 288 y reporta diferencias entre monto adjudicado y ejecutado.",
+      "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/DIA-6-12.08.2022-Causa-2833.doc.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+          "sourceName": "MPF Causa Vialidad alegato",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+          "recordId": "INDICE-MPF-DNV-12309-2007",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+          "recordId": "CIJ-VIALIDAD-VEREDICTO-2022-12-06",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "MPF usa la categoria Grupo Baez; verificar razon social contractual exacta antes de citar.",
+        "No mapear sin traza o geometria oficial de la obra.",
+        "Usar como expediente historico, no como match con contratos modernos."
+      ]
+    },
+    {
+      "contextId": "VIALIDAD-DNV-12328-2007-RP12",
+      "caseType": "historical_public_work",
+      "title": "DNV 12328/2007 - RP 12, Empalme RP 25 - Pico Truncado",
+      "year": 2007,
+      "procedureNumber": "DNV 12328/2007",
+      "agencyName": "Direccion Nacional de Vialidad",
+      "agencyCode": "DNV",
+      "contractingUnit": "Causa Vialidad - alegato fiscal",
+      "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
+      "supplierDocument": null,
+      "amount": {
+        "value": 23445670.9,
+        "currency": "USD",
+        "label": "USD 23.445.670,90 informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; se consigna cadena de adjudicacion y cesion segun fuente fiscal.",
+      "contextSummary": "El alegato MPF indica adjudicacion inicial a Equimac y posterior cesion a UTE vinculada a Austral Construcciones.",
+      "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/DIA-6-12.08.2022-Causa-2833.doc.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+          "sourceName": "MPF Causa Vialidad alegato",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+          "recordId": "INDICE-MPF-DNV-12328-2007",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+          "recordId": "CIJ-VIALIDAD-VEREDICTO-2022-12-06",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "La cadena de cesion debe verificarse contra expediente contractual antes de publicar.",
+        "No mapear sin traza o geometria oficial de la obra.",
+        "Usar como expediente historico, no como match con contratos modernos."
+      ]
+    },
+    {
+      "contextId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
+      "caseType": "historical_public_work",
+      "title": "DNV 16751/2006 - Remediacion de canteras RN 3, Limite Chubut - Monte Aymond",
+      "year": 2008,
+      "procedureNumber": "DNV 16751/2006",
+      "agencyName": "Direccion Nacional de Vialidad",
+      "agencyCode": "DNV",
+      "contractingUnit": "Causa Vialidad - alegato fiscal",
+      "supplierName": "Grupo Baez",
+      "supplierDocument": null,
+      "amount": {
+        "value": 37519987.64,
+        "currency": "USD",
+        "label": "USD 37.519.987,64 informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; ubicacion territorial requiere verificacion documental.",
+      "contextSummary": "El alegato MPF trata la obra de canteras y advierte una descripcion territorial amplia sobre RN 3.",
+      "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/DIA-6-12.08.2022-Causa-2833.doc.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+          "sourceName": "MPF Causa Vialidad alegato",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+          "recordId": "INDICE-MPF-DNV-16751-2006",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+          "recordId": "CIJ-VIALIDAD-VEREDICTO-2022-12-06",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "La descripcion de tramo no alcanza para ubicar canteras puntuales.",
+        "No mapear sin traza o geometria oficial de la obra.",
+        "Usar como expediente historico, no como match con contratos modernos."
+      ]
+    },
+    {
+      "contextId": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3",
+      "caseType": "historical_public_work",
+      "title": "DNV 1615/2008 - Restauracion y remediacion de 9 canteras RN 3, segunda etapa",
+      "year": 2008,
+      "procedureNumber": "DNV 1615/2008",
+      "agencyName": "Direccion Nacional de Vialidad",
+      "agencyCode": "DNV",
+      "contractingUnit": "Causa Vialidad - alegato fiscal",
+      "supplierName": "Austral Construcciones S.A.",
+      "supplierDocument": null,
+      "amount": {
+        "value": 26501228.02,
+        "currency": "USD",
+        "label": "USD 26.501.228,02 informado por MPF"
+      },
+      "officialBudget": null,
+      "judicialStatus": "Obra mencionada en indice de alegato MPF de Causa Vialidad.",
+      "contextSummary": "El indice MPF identifica la segunda etapa de restauracion de canteras sobre RN 3 dentro del universo del caso.",
+      "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+          "sourceName": "CIJ Causa Vialidad",
+          "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+          "recordId": "CIJ-VIALIDAD-VEREDICTO-2022-12-06",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "Falta traza o coordenada oficial de cada cantera en Faro.",
+        "No mapear sin traza o geometria oficial de la obra.",
+        "Usar como expediente historico, no como match con contratos modernos."
+      ]
+    }
+  ]
+}

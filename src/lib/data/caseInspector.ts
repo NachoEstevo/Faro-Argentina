@@ -75,5 +75,8 @@ function labelCaseType(caseType: string | null): string {
   if (caseType === "procurement_process") return "Adjudicacion";
   if (caseType === "budget_execution") return "Presupuesto";
   if (caseType === "public_work") return "Obra";
+  if (caseType === "judicial_context") return "Judicial";
+  if (caseType === "historical_public_work") return "Obra historica";
+  if (caseType === "supplier_judicial_context") return "Proveedor judicial";
   return "Expediente";
 }

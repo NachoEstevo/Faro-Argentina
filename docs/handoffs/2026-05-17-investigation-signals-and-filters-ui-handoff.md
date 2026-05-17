@@ -326,6 +326,5 @@ Pasaron:
 - `npm run typecheck`
 - `npm run build`
 - tests focalizados de senales, explorer, inspector, expediente, leads y exports
-
-El suite completo sigue bloqueado por el verificador de data spine: hashes raw y
-related receipts. Ese problema es de integridad de snapshots/receipts, no de UI.
+- `npm test`
+- `npm run data:verify`

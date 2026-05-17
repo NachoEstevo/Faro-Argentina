@@ -182,19 +182,20 @@ Implementado:
 
 Datos actuales:
 
-- 371 expedientes totales;
-- 296 Argentina;
+- 383 expedientes totales;
+- 308 Argentina;
 - 50 Peru;
 - 25 Chile.
 
 Bloqueos antes de llamarlo producto terminado:
 
-- `data:verify` falla porque hashes generados y raw files locales estan fuera de
-  sync.
 - Algunas coordenadas de Argentina son invalidas, duplicadas, placeholders o
   parecen tener signos negativos faltantes.
 - Las obras publicas de Argentina tienen case ids duplicados que deben
   canonicalizarse.
+- Los expedientes historico-judiciales cargados para Argentina son contexto
+  verificable; no deben mezclarse con contratos actuales sin match documental
+  exacto.
 - Peru y Chile ya prueban que Faro no depende del mapa, pero necesitan mas
   cobertura y cruces oficiales de mayor valor.
 

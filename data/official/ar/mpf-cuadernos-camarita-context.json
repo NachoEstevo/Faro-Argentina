@@ -1,0 +1,219 @@
+{
+  "records": [
+    {
+      "contextId": "CUADERNOS-CAMARITA-TOF7-2026",
+      "caseType": "judicial_context",
+      "title": "Cuadernos / La Camarita - juicio oral TOF 7",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "Camara Argentina de Empresas Viales",
+      "supplierDocument": null,
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Juicio oral en curso ante TOF 7; sin sentencia firme al 2026-05-17.",
+      "contextSummary": "MPF informa que el tramo La Camarita trata una acusacion vinculada a obra publica civil y a la Camara Argentina de Empresas Viales.",
+      "localMatchStatus": "Contexto de red; no es una obra o contrato individual.",
+      "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/juicio-por-la-causa-cuadernos-durante-mayo-declararan-43-testigos/",
+          "recordId": "MPF-CUADERNOS-CRONOGRAMA-2026-04-24",
+          "locatorType": "official_detail"
+        },
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+          "recordId": "MPF-CAMARITA-REQUERIMIENTO-2019",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [],
+      "caveats": [
+        "El juicio esta en curso; no tratar como sentencia ni como conclusion cerrada.",
+        "Este expediente es de contexto de red, no de contrato individual Faro.",
+        "Abrir MPF y el requerimiento antes de citar nombres, fechas o alcance."
+      ]
+    },
+    {
+      "contextId": "CUADERNOS-CAMARITA-CONSTRUMEX",
+      "caseType": "supplier_judicial_context",
+      "title": "La Camarita - proveedor mencionado y contratos Faro: CONSTRUMEX S.A.",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "CONSTRUMEX S.A.",
+      "supplierDocument": "30-69639421-7",
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
+      "contextSummary": "El requerimiento MPF incluye a Construmex S.A.; Faro encontro contratos CONTRAT.AR actuales con la misma razon social y CUIT.",
+      "localMatchStatus": "Match exacto por razon social y CUIT en casos relacionados.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+          "recordId": "MPF-CAMARITA-LECTURA-2025-12-09",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": [
+        "AR-CONTRACT-451-1613-CON19",
+        "AR-CONTRACT-501-0474-CON20",
+        "AR-CONTRACT-451-1001-CON18"
+      ],
+      "caveats": [
+        "El match es a nivel entidad/proveedor; no afirma que los contratos Faro relacionados sean hechos del juicio.",
+        "Los contratos Faro relacionados son 2018-2020 y el requerimiento trata documentacion de otra ventana temporal.",
+        "Verificar razon social, CUIT y continuidad societaria antes de publicar."
+      ]
+    },
+    {
+      "contextId": "CUADERNOS-CAMARITA-MARCALBA",
+      "caseType": "supplier_judicial_context",
+      "title": "La Camarita - proveedor mencionado y contrato Faro: MARCALBA S.A.",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "MARCALBA S.A.",
+      "supplierDocument": "30-60867483-3",
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
+      "contextSummary": "El requerimiento MPF incluye a Marcalba S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
+      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+          "recordId": "MPF-CAMARITA-LECTURA-2025-12-09",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": ["AR-CONTRACT-451-1005-CON18"],
+      "caveats": [
+        "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
+        "Verificar razon social, CUIT y continuidad societaria antes de publicar."
+      ]
+    },
+    {
+      "contextId": "CUADERNOS-CAMARITA-COARCO",
+      "caseType": "supplier_judicial_context",
+      "title": "La Camarita - proveedor mencionado y contrato Faro: COARCO SA",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "COARCO SA",
+      "supplierDocument": "30-51650063-4",
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
+      "contextSummary": "El requerimiento MPF y la nota MPF mencionan a Coarco; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
+      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+          "recordId": "MPF-CAMARITA-REQUERIMIENTO-2019",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": ["AR-CONTRACT-451-1003-CON18"],
+      "caveats": [
+        "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
+        "Verificar razon social, CUIT y continuidad societaria antes de publicar."
+      ]
+    },
+    {
+      "contextId": "CUADERNOS-CAMARITA-CONCRET-NOR",
+      "caseType": "supplier_judicial_context",
+      "title": "La Camarita - proveedor mencionado y contrato Faro: CONCRET NOR S.A.",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "CONCRET NOR S.A.",
+      "supplierDocument": "30-69327676-0",
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
+      "contextSummary": "El requerimiento MPF incluye a Concret-Nor S.A.; Faro encontro un contrato CONTRAT.AR actual con razon social y CUIT compatibles.",
+      "localMatchStatus": "Match por CUIT y razon social normalizada en caso relacionado.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+          "recordId": "MPF-CAMARITA-LECTURA-2025-12-09",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": ["AR-CONTRACT-451-1002-CON18"],
+      "caveats": [
+        "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
+        "Verificar razon social, CUIT y continuidad societaria antes de publicar."
+      ]
+    },
+    {
+      "contextId": "CUADERNOS-CAMARITA-CONORVIAL",
+      "caseType": "supplier_judicial_context",
+      "title": "La Camarita - proveedor mencionado y contrato Faro: CONORVIAL SA",
+      "year": 2026,
+      "procedureNumber": "CFP 13816/2018",
+      "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
+      "agencyCode": "TOF7",
+      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "supplierName": "CONORVIAL SA",
+      "supplierDocument": "30-51649274-7",
+      "amount": null,
+      "officialBudget": null,
+      "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
+      "contextSummary": "El requerimiento MPF incluye a Conorvial S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
+      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "sourceUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+      "locatorType": "official_detail",
+      "relatedSourceRefs": [
+        {
+          "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+          "sourceName": "MPF Cuadernos La Camarita",
+          "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+          "recordId": "MPF-CAMARITA-LECTURA-2025-12-09",
+          "locatorType": "official_detail"
+        }
+      ],
+      "relatedLocalCaseIds": ["AR-CONTRACT-23-0003-CON17"],
+      "caveats": [
+        "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
+        "El contrato Faro relacionado es 2017 y el requerimiento trata documentacion de otra ventana temporal.",
+        "Verificar razon social, CUIT y continuidad societaria antes de publicar."
+      ]
+    }
+  ]
+}

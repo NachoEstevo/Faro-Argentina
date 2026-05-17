@@ -147,6 +147,82 @@
     "caveats": ["Normaliza territorio; no prueba ubicacion exacta de una obra."]
   },
   {
+    "sourceId": "AR-CONTRATAR-HISTORICO-OBRAS",
+    "countryCode": "AR",
+    "name": "Contratar historico obras",
+    "agency": "Jefatura de Gabinete de Ministros",
+    "category": "historical_public_works",
+    "priority": "later",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "csv",
+    "sourceUrl": "https://datos.gob.ar/dataset/jgm-contratar-historico",
+    "downloadUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/12/distribution/12.2/download/onc_obras_decreto_1169_18.csv",
+    "updateFrequency": "archived",
+    "keyFields": ["proceso_de_seleccion_numero", "obra_nombre", "contratista_cuit_1", "monto_certificado", "avance_fisico"],
+    "caveats": [
+      "Fuente historica auxiliar; no equivale a expediente judicial.",
+      "No mezclar con CONTRAT.AR moderno sin preservar periodo, campos y caveats."
+    ]
+  },
+  {
+    "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
+    "countryCode": "AR",
+    "name": "CIJ Causa Vialidad",
+    "agency": "Poder Judicial de la Nacion",
+    "category": "judicial_context",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "pdf_json_extract",
+    "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+    "downloadUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
+    "updateFrequency": "case_event",
+    "keyFields": ["contextId", "procedureNumber", "judicialStatus"],
+    "caveats": [
+      "Fuente judicial; usar para contexto y estado procesal, no para mapear obras.",
+      "No atribuir alcance a contratos Faro modernos sin match documental exacto."
+    ]
+  },
+  {
+    "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
+    "countryCode": "AR",
+    "name": "MPF Causa Vialidad alegato",
+    "agency": "Ministerio Publico Fiscal de la Nacion",
+    "category": "judicial_context",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "pdf_json_extract",
+    "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-vialidad-confirmaron-la-condena-a-la-expresidenta-cristina-fernandez-y-a-otros-funcionarios-por-administracion-fraudulenta/",
+    "downloadUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
+    "updateFrequency": "case_event",
+    "keyFields": ["contextId", "procedureNumber", "supplierName", "amount"],
+    "caveats": [
+      "Fuente fiscal y judicial; verificar contra expediente administrativo antes de publicar una obra individual.",
+      "No mapear sin traza o geometria oficial validada."
+    ]
+  },
+  {
+    "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
+    "countryCode": "AR",
+    "name": "MPF Cuadernos La Camarita",
+    "agency": "Ministerio Publico Fiscal de la Nacion",
+    "category": "judicial_context",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "pdf_json_extract",
+    "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
+    "downloadUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
+    "updateFrequency": "case_event",
+    "keyFields": ["contextId", "procedureNumber", "supplierName", "relatedLocalCaseIds"],
+    "caveats": [
+      "Juicio oral en curso; no tratar como sentencia.",
+      "Los cruces de proveedor son contexto, no prueba sobre los contratos relacionados."
+    ]
+  },
+  {
     "sourceId": "PE-OECE-DATOS-ABIERTOS",
     "countryCode": "PE",
     "name": "OECE datos abiertos SEACE",
