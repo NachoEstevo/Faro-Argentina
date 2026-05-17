@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Download, FileSearch, Map as MapIcon, PanelLeftClose, Plus } from "lucide-react";
+import {
+  Download,
+  FileSearch,
+  Map as MapIcon,
+  PanelLeftClose,
+  Plus,
+  Search,
+} from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
@@ -64,6 +71,7 @@ export default function ExplorerView({
 
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
+  const [query, setQuery] = useState("");
 
   const stateCounts = useMemo(() => {
     let verified = 0;
@@ -209,6 +217,18 @@ export default function ExplorerView({
             })}
           </div>
         </header>
+        <div className={styles.searchWrap}>
+          <label className={styles.searchBox}>
+            <Search size={15} aria-hidden />
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar por #ID, organismo o proveedor…"
+              aria-label="Buscar"
+            />
+          </label>
+        </div>
       </main>
     </section>
   );

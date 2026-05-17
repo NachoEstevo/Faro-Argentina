@@ -344,3 +344,38 @@
   font-family: var(--cf-font-heading);
   font-weight: 500;
 }
+
+.searchWrap {
+  padding: 28px 40px 0;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 16px;
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-border);
+  border-radius: 10px;
+  color: var(--cf-text-muted);
+}
+
+.searchBox:focus-within {
+  border-color: var(--cf-accent);
+  color: var(--cf-text);
+}
+
+.searchBox input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 13px;
+  outline: none;
+}
+
+.searchBox input::placeholder {
+  color: var(--cf-text-muted);
+}
