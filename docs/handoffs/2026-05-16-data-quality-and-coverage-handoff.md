@@ -30,21 +30,23 @@ Snapshot actualizado 2026-05-17:
 - 558 Argentina;
 - 525 Peru;
 - 525 Chile;
-- 1099 casos elegibles para mapa: 413 AR, 469 PE y 217 CL.
+- 1097 casos elegibles para mapa: 411 AR, 469 PE y 217 CL.
 
 Fuentes principales generadas:
 
 - `AR-CONTRATAR-OBRAS`: 246 casos;
-- `AR-CONTRATAR-CONTRATOS`: 50 casos;
+- `AR-CONTRATAR-CONTRATOS`: 300 casos;
 - `PE-MEF-GASTO-DIARIO`: 25 casos;
-- `PE-OECE-CONTRATOS`: 25 casos;
-- `CL-MERCADO-PUBLICO-API`: 25 casos.
+- `PE-OECE-CONTRATOS`: 500 casos;
+- `CL-MERCADO-PUBLICO-API`: 25 casos;
+- `CL-CHILECOMPRA-OCDS-PROCESOS`: 500 casos;
+- fuentes judiciales Argentina: 12 casos de contexto verificable.
 
 Receipts actuales:
 
-- 321 primary receipts apuntan a datasets oficiales;
-- 50 primary receipts apuntan a URLs de detalle oficial;
-- existen related receipts para casos cruzados de Argentina y Peru.
+- 3995 receipts chequeados por el data spine;
+- 15 raw files chequeados;
+- 0 errores de verificacion en el reporte actual.
 
 ## Problemas Verificados
 
@@ -174,8 +176,10 @@ npm run data:geo-report
 ```
 
 El reporte debe usarse antes de dar casos al mapa o al flujo satelital. En el
-estado actualizado del 17/05/2026 reporta `1608` expedientes totales y `1099`
-casos elegibles para mapa.
+estado actualizado del 17/05/2026 reporta `1608` expedientes totales y `1097`
+casos elegibles para mapa. Argentina queda en `411/558` porque dos expedientes
+se mantienen como `known_bad_geometry`: disponibles para Explorer/export, fuera
+del mapa.
 
 ### Tarea 3: Canonicalizar Obras De Argentina
 
