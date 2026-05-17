@@ -996,4 +996,15 @@
   .detailGrid {
     grid-template-columns: 1fr;
   }
+  .tableFoot {
+    padding: 12px 0 16px;
+    border-bottom: none;
+  }
+  .tableFootLabel {
+    font-size: 10px;
+  }
+  .pageBtn,
+  .pageGap {
+    display: none;
+  }
 }
