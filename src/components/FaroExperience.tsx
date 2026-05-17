@@ -471,14 +471,18 @@ export default function FaroExperience({
 }
 
 function getYearBounds(cases: Array<{ year: number | null }>) {
-  const years = cases.map((caseFile) => caseFile.year).filter((value): value is number => value !== null);
+  const currentYear = new Date().getFullYear();
+  const years = cases
+    .map((caseFile) => caseFile.year)
+    .filter((value): value is number => value !== null);
   if (years.length === 0) {
-    const currentYear = new Date().getFullYear();
     return { min: currentYear, max: currentYear };
   }
+  // The upper bound always reaches the current year so the slider can include
+  // "today" even when the dataset hasn't ingested cases for it yet.
   return {
     min: Math.min(...years),
-    max: Math.max(...years),
+    max: Math.max(Math.max(...years), currentYear),
   };
 }
 
