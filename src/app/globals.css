@@ -741,8 +741,7 @@ a {
 .panelKicker,
 .statusStrip span,
 .actionRow a,
-.traceBox button,
-.satelliteBox > div:first-child {
+.traceBox button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -912,7 +911,6 @@ a {
 .metric,
 .whyBox,
 .signalsBox,
-.satelliteBox,
 .receiptBox,
 .traceBox,
 .nextStepsBox {
@@ -923,8 +921,7 @@ a {
 
 .metric span,
 .receiptBox dt,
-.signalProof dt,
-.satelliteGrid span {
+.signalProof dt {
   display: block;
   color: rgba(255, 255, 255, 0.48);
   font-size: 11px;
@@ -943,7 +940,6 @@ a {
 
 .whyBox h2,
 .signalsBox h2,
-.satelliteBox h2,
 .receiptBox h2,
 .nextStepsBox h2 {
   margin: 0 0 8px;
@@ -952,7 +948,6 @@ a {
 
 .whyBox p,
 .signalItem p,
-.satelliteBox p,
 .traceBox p,
 .explorerIntro,
 .emptyState p {
@@ -1143,37 +1138,6 @@ a {
   grid-template-columns: 1fr;
   gap: 8px;
   margin: 0;
-}
-
-.satelliteBox {
-  display: grid;
-  gap: 12px;
-}
-
-.satelliteBox h2 {
-  margin: 0;
-}
-
-.satelliteGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.satelliteGrid div {
-  min-height: 74px;
-  padding: 10px;
-  border: 1px solid rgba(243, 201, 105, 0.18);
-  background:
-    linear-gradient(135deg, rgba(16, 40, 24, 0.92), rgba(108, 91, 38, 0.7)),
-    radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.16), transparent 28%);
-}
-
-.satelliteGrid strong {
-  display: block;
-  margin-top: 12px;
-  color: var(--faro-amber-strong);
-  font-size: 15px;
 }
 
 .receiptBox dl {
@@ -1634,5 +1598,137 @@ a {
   .leadList,
   .leadEmpty {
     display: none;
+  }
+}
+
+.waybackControl {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  z-index: 5;
+  width: 340px;
+  border: 1px solid var(--faro-line);
+  background: var(--faro-panel-strong);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--faro-shadow);
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+  color: var(--faro-text);
+  font-size: 12px;
+  pointer-events: auto;
+}
+
+.waybackControl header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.waybackControl header h3 {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faro-amber);
+}
+
+.waybackControl header button {
+  background: transparent;
+  border: 1px solid var(--faro-line);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.waybackControl header button:hover {
+  border-color: var(--faro-amber);
+  color: var(--faro-amber);
+}
+
+.waybackDate {
+  font-weight: 700;
+  color: var(--faro-amber-strong);
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.waybackSlider {
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
+  align-items: center;
+  gap: 8px;
+}
+
+.waybackSlider button {
+  background: transparent;
+  border: 1px solid var(--faro-line);
+  color: var(--faro-text);
+  padding: 4px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.waybackSlider button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.waybackSlider input[type="range"] {
+  width: 100%;
+  accent-color: var(--faro-amber);
+}
+
+.waybackMeta {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.waybackEmpty {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.waybackError {
+  display: grid;
+  gap: 8px;
+  color: rgba(255, 200, 200, 0.85);
+  font-size: 12px;
+}
+
+.waybackError button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--faro-line);
+  color: var(--faro-amber);
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.waybackAttribution {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.42);
+  border-top: 1px solid var(--faro-line);
+  padding-top: 8px;
+  line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .waybackControl {
+    bottom: 84px;
+    left: 16px;
+    right: 16px;
+    width: auto;
   }
 }
