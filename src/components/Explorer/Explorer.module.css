@@ -1022,4 +1022,35 @@
     padding: 6px 10px;
     font-size: 11.5px;
   }
+  .detailCard,
+  .receiptCard {
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 6px 0;
+  }
+  .detailRowValue {
+    max-width: 100%;
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .similarGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .similarCard {
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+  .detailReason {
+    padding: 14px 16px;
+  }
+  .detailReasonBody {
+    font-size: 12.5px;
+  }
 }
