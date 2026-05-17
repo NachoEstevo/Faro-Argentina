@@ -764,9 +764,22 @@ function computeRowState(caseFile: ExplorerCase): { tone: "verified" | "review" 
   return { tone: "verified", label: "Verificado" };
 }
 
+const CASE_TYPE_LABELS: Record<string, string> = {
+  argentina_contract: "Contrato AR",
+  argentina_work: "Obra AR",
+  peru_contract: "Contrato PE",
+  peru_budget: "Presupuesto PE",
+  chile_award: "Adjudicación CL",
+  chile_tender: "Licitación CL",
+  judicial_context: "Contexto judicial",
+  historical_public_work: "Obra histórica",
+  supplier_judicial_context: "Proveedor con causa judicial",
+};
+
 function describeCaseType(caseFile: ExplorerCase): string {
   if ("caseType" in caseFile && caseFile.caseType) {
-    return caseFile.caseType.replace(/_/g, " ");
+    const key = caseFile.caseType;
+    return CASE_TYPE_LABELS[key] ?? key.replace(/_/g, " ");
   }
   return "Obra";
 }
