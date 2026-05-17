@@ -40,6 +40,10 @@ export interface FxConversionResult {
   note?: FxConversionNote;
 }
 
+function roundToCents(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
 export function convertAmountToUsd(input: {
   amount: number;
   currency: string;
@@ -67,7 +71,7 @@ export function convertAmountToUsd(input: {
     if (!entry) continue;
     return {
       conversion: {
-        usd: input.amount / entry.rate,
+        usd: roundToCents(input.amount / entry.rate),
         fxRate: entry.rate,
         fxDate: candidate.date,
         anchorDate: candidate.date,

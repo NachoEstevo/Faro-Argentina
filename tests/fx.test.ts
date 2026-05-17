@@ -124,6 +124,22 @@ test("convertAmountToUsd returns no_fx_for_anchor_dates when every candidate mis
   assert.equal(result.note, "no_fx_for_anchor_dates");
 });
 
+test("convertAmountToUsd rounds usd to two decimals", () => {
+  const arsSeries: FxSeries = new Map([
+    ["2018-03-14", { rate: 20.4, sourceMeta: stubSourceMeta() }],
+  ]);
+  const registry: FxSeriesRegistry = new Map([["ARS", arsSeries]]);
+
+  const result = convertAmountToUsd({
+    amount: 1_234_567,
+    currency: "ARS",
+    anchorCandidates: [{ field: "contract_signed", date: "2018-03-14" }],
+    series: registry,
+  });
+
+  assert.equal(result.conversion!.usd, 60517.99);
+});
+
 function stubSourceMeta() {
   return {
     sourceId: "ar-bcra-com-a3500",
