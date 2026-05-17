@@ -73,6 +73,19 @@ export default function ExplorerView({
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
   const [query, setQuery] = useState("");
 
+  const totalAmount = useMemo(() => {
+    let totalArs = 0;
+    let totalUsd = 0;
+    for (const caseFile of countryCases) {
+      const amount = "amount" in caseFile ? caseFile.amount : null;
+      if (!amount) continue;
+      const value = amount.value;
+      if (amount.currency === "ARS") totalArs += value;
+      else if (amount.currency === "USD") totalUsd += value;
+    }
+    return { ars: totalArs, usd: totalUsd };
+  }, [countryCases]);
+
   const stateCounts = useMemo(() => {
     let verified = 0;
     let review = 0;
@@ -231,10 +244,23 @@ export default function ExplorerView({
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
           <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
+          <StatCard label="Monto" value={formatAmount(totalAmount.ars, totalAmount.usd)} />
         </div>
       </main>
     </section>
   );
+}
+
+function formatAmount(ars: number, usd: number): string {
+  if (ars === 0 && usd === 0) return "—";
+  const primary = ars >= usd ? { value: ars, currency: "ARS" } : { value: usd, currency: "USD" };
+  const abs = primary.value;
+  let formatted: string;
+  if (abs >= 1_000_000_000) formatted = `${(abs / 1_000_000_000).toFixed(1).replace(".", ",")} B`;
+  else if (abs >= 1_000_000) formatted = `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
+  else if (abs >= 1_000) formatted = `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
+  else formatted = abs.toLocaleString("es-AR");
+  return `${primary.currency} ${formatted}`;
 }
 
 function StatCard({ label, value }: { label: string; value: string }) {
