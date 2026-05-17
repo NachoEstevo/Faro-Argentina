@@ -307,6 +307,11 @@
   display: flex;
   flex-direction: column;
   color: var(--cp-text);
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 280ms var(--cp-ease),
+    transform 280ms var(--cp-ease);
 }
 
 .scroll {
@@ -330,4 +335,11 @@
 .divider {
   height: 1px;
   background: var(--cp-border-soft);
+}
+
+@starting-style {
+  .panel {
+    opacity: 0;
+    transform: translateX(20px);
+  }
 }
