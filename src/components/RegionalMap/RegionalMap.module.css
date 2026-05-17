@@ -389,7 +389,26 @@
   flex: 1;
   overflow-y: auto;
   margin: 0 -4px;
-  padding: 0 4px 4px;
+  padding: 0 8px 4px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.cpLeadsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cpLeadsList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cpLeadsList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+}
+
+.cpLeadsList::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
 }
 
 .cpLeadCard {
@@ -501,6 +520,50 @@
   font-family: var(--cf-font-body);
   font-size: 12px;
   color: var(--cf-text-muted);
+}
+
+.cpPagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+  margin-top: 2px;
+  border-top: 1px solid var(--cf-border);
+  flex-shrink: 0;
+}
+
+.cpPageButton {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--cf-border);
+  border-radius: 6px;
+  color: var(--cf-text-secondary);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.cpPageButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cf-text);
+  border-color: var(--cf-border-strong);
+}
+
+.cpPageButton:disabled {
+  color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+}
+
+.cpPageStatus {
+  font-family: var(--cf-font-data);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--cf-text-secondary);
+  min-width: 48px;
+  text-align: center;
 }
 
 /* --- Map legend (bottom-right) -------------------------------------- */

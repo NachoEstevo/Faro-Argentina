@@ -1,0 +1,207 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cf-text);
+  letter-spacing: -0.005em;
+}
+
+.clearAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.clearAll:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cf-text);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Sub-labels are quiet — they don't compete with the section title.
+   This is the key hierarchy fix: only "Filtros" reads as a heading. */
+.groupLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cf-text-secondary);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.groupValue {
+  font-size: 11px;
+  color: var(--cf-text-muted);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--cf-font-data);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chipColumn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  font-size: 12px;
+  line-height: 1.25;
+  border-radius: 999px;
+  border: 1px solid var(--cf-border);
+  background: transparent;
+  color: var(--cf-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+  white-space: nowrap;
+}
+
+.chipFlex {
+  white-space: normal;
+  text-align: left;
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cf-text);
+}
+
+.chipActive {
+  background: rgba(90, 169, 229, 0.12);
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+}
+
+.chipActive:hover {
+  background: rgba(90, 169, 229, 0.18);
+}
+
+.chipDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Severity colors — distinct hues for each level so the dots read
+   instantly as red / orange / yellow instead of three close shades. */
+.chipSev_high   { --chip-sev: #ef4444; color: var(--chip-sev); }
+.chipSev_medium { --chip-sev: #f59e0b; color: var(--chip-sev); }
+.chipSev_low    { --chip-sev: #facc15; color: var(--chip-sev); }
+
+.chipSev_high.chipActive   { background: rgba(239, 68, 68, 0.14);  border-color: var(--chip-sev); }
+.chipSev_medium.chipActive { background: rgba(245, 158, 11, 0.14); border-color: var(--chip-sev); }
+.chipSev_low.chipActive    { background: rgba(250, 204, 21, 0.14); border-color: var(--chip-sev); }
+
+/* Dual range slider */
+
+.rangeSlider {
+  position: relative;
+  height: 22px;
+}
+
+.rangeSliderTrack {
+  position: absolute;
+  top: 10px;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.rangeSliderFill {
+  position: absolute;
+  top: 10px;
+  height: 3px;
+  background: var(--cf-accent);
+  border-radius: 2px;
+}
+
+.rangeSliderInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: none;
+}
+
+.rangeSliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--cf-text);
+  border: 0;
+  box-shadow: 0 0 0 4px rgba(90, 169, 229, 0.22), 0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.rangeSliderInput::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--cf-text);
+  border: 0;
+  box-shadow: 0 0 0 4px rgba(90, 169, 229, 0.22), 0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.rangeSliderInput::-webkit-slider-runnable-track {
+  background: transparent;
+}

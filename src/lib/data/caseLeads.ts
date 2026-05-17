@@ -108,7 +108,7 @@ function matchesScopeFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters)
 
 function clampLimit(limit: number | undefined): number {
   if (!Number.isFinite(limit)) return 12;
-  return Math.min(Math.max(Math.trunc(Number(limit)), 1), 50);
+  return Math.min(Math.max(Math.trunc(Number(limit)), 1), 1000);
 }
 
 function isReviewLeadSignal(signal: CaseSignal): boolean {
