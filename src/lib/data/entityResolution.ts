@@ -77,8 +77,8 @@ export function normalizeSupplierName(value: string | null | undefined): string 
 export function normalizeDocument(value: string | null | undefined): string | null {
   const normalized = clean(value)
     .toUpperCase()
-    .replace(/[^0-9K]/g, "");
-  return normalized.length > 0 ? normalized : null;
+    .replace(/[^A-Z0-9]/g, "");
+  return /\d/.test(normalized) ? normalized : null;
 }
 
 function clean(value: string | null | undefined): string {

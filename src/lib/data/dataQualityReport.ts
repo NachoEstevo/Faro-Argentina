@@ -1,4 +1,9 @@
-import { buildCaseSignals, selectLeadCaseSignal, type SignalCaseFile } from "./caseSignals.ts";
+import {
+  buildCaseSignals,
+  buildCaseSignalContextsByCountry,
+  selectLeadCaseSignal,
+  type SignalCaseFile,
+} from "./caseSignals.ts";
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
 import type { DataSpineVerificationReport } from "./dataSpineVerifier.ts";
 
@@ -67,6 +72,8 @@ export function buildDataQualityReport({
 }): DataQualityReport {
   const byCountry: Record<string, DataQualityCountry> = {};
   const bySource: Record<string, DataQualitySource> = {};
+  const allCases = datasets.flatMap((dataset) => dataset.cases);
+  const signalContextsByCountry = buildCaseSignalContextsByCountry(allCases);
   let totalCases = 0;
   let totalRawRows = 0;
 
@@ -109,7 +116,7 @@ export function buildDataQualityReport({
         country.withMapEligibleGeometry += 1;
       }
 
-      const signals = buildCaseSignals(caseFile);
+      const signals = buildCaseSignals(caseFile, signalContextsByCountry.get(caseFile.countryCode));
       if (selectLeadCaseSignal(signals)) country.withLeadEligibleSignal += 1;
       for (const signal of signals) {
         country.signals[signal.code] = (country.signals[signal.code] ?? 0) + 1;

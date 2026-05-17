@@ -102,3 +102,42 @@ test("buildDataQualityReport keeps verification failures visible as blockers", (
     "Data spine has 1 verification error(s). Fix receipts and raw hashes before expanding data.",
   ]);
 });
+
+test("buildDataQualityReport counts collection-aware supplier signals", () => {
+  const report = buildDataQualityReport({
+    generatedAt: "2026-05-17T00:00:00.000Z",
+    verification: {
+      checkedDatasets: 1,
+      checkedCases: 3,
+      checkedReceipts: 3,
+      checkedRawFiles: 1,
+      errors: [],
+    },
+    datasets: [{
+      source: { sourceId: "AR-CONTRATAR-CONTRATOS" },
+      stats: { rawRows: 3, caseFiles: 3, mapReadyCases: 0 },
+      cases: [1, 2, 3].map((index) => ({
+        id: `AR-CONTRACT-381-100${index}-CON21`,
+        countryCode: "AR",
+        caseType: "procurement_contract",
+        title: `Contrato recurrente ${index}`,
+        year: 2021,
+        workNumber: `381-100${index}-CON21`,
+        procedureNumber: "381-0001-LPU21",
+        agencyName: "Estado Mayor General de La Fuerza Aerea",
+        coordinates: null,
+        amount: { value: 1000 * index, currency: "ARS", label: "monto_contrato" },
+        bidderCount: 1,
+        supplierName: "ANSAL CONSTRUCCIONES SRL",
+        supplierDocument: "30-64071769-2",
+        receipt,
+        caveats: ["Contrato oficial; falta pago."],
+      })),
+    }],
+  });
+
+  assert.equal(report.byCountry.AR.signals.repeat_single_bid_winner, 3);
+  assert.equal(report.byCountry.AR.signals.recurring_supplier_agency, 3);
+  assert.equal(report.byCountry.AR.signals.supplier_concentration, 3);
+  assert.equal(report.byCountry.AR.withLeadEligibleSignal, 3);
+});

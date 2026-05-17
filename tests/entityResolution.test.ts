@@ -61,6 +61,30 @@ test("resolveSupplierIdentity preserves Chilean RUT verifier digits", () => {
   assert.equal(identity?.confidence, "high");
 });
 
+test("resolveSupplierIdentity preserves alphanumeric official documents", () => {
+  const identity = resolveSupplierIdentity({
+    countryCode: "PE",
+    supplierName: "Proveedor extranjero",
+    supplierDocument: "L0606465503",
+  });
+
+  assert.equal(identity?.key, "supplier:PE:doc:L0606465503");
+  assert.equal(identity?.document, "L0606465503");
+  assert.equal(identity?.confidence, "high");
+});
+
+test("resolveSupplierIdentity ignores document strings without digits", () => {
+  const identity = resolveSupplierIdentity({
+    countryCode: "PE",
+    supplierName: "Proveedor sin documento",
+    supplierDocument: "N/A",
+  });
+
+  assert.equal(identity?.key, "supplier:PE:name:PROVEEDOR SIN DOCUMENTO");
+  assert.equal(identity?.method, "normalized_name");
+  assert.equal(identity?.confidence, "low");
+});
+
 test("resolveSupplierIdentity returns null when supplier data is missing", () => {
   assert.equal(resolveSupplierIdentity({
     countryCode: "PE",
