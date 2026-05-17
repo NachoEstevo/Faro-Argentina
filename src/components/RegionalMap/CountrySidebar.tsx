@@ -1,24 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Building2,
-  ChevronLeft,
-  ChevronRight,
-  CircleDollarSign,
-  CircleHelp,
-  FileCheck,
-  Info,
-  MapPin,
-  Search,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { AlertTriangle, ChevronRight, Search } from "lucide-react";
 
-import type { CaseLead } from "@/lib/data/caseLeads";
-import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignals";
+import type { CaseSignalSeverity } from "@/lib/data/caseSignals";
 import type { SearchSuggestion } from "@/lib/data/searchSuggestions";
 import styles from "./RegionalMap.module.css";
 import SidebarBrand from "./SidebarBrand";
@@ -27,22 +11,6 @@ import SidebarFilters, {
   type FindingOption,
   type SidebarFiltersValue,
 } from "./SidebarFilters";
-
-const FAMILY_ICONS: Record<CaseSignalFamily, LucideIcon> = {
-  competition: Users,
-  money: CircleDollarSign,
-  supplier: Building2,
-  traceability: FileCheck,
-  geo_visual: MapPin,
-  data_gap: CircleHelp,
-  context: Info,
-};
-
-const SEVERITY_CLASS: Record<"high" | "medium" | "low", string> = {
-  high: styles.cpLeadIconHigh,
-  medium: styles.cpLeadIconMedium,
-  low: styles.cpLeadIconLow,
-};
 
 interface Props {
   countryName: string;
@@ -60,9 +28,9 @@ interface Props {
   onToggleFinding: (finding: FindingOption) => void;
   onToggleSeverity: (severity: CaseSignalSeverity) => void;
   onClearFilters: () => void;
-  leads: CaseLead[];
-  selectedCaseId: string | null;
-  onSelectCase: (caseId: string) => void;
+  leadsCount: number;
+  leadsPanelOpen: boolean;
+  onOpenLeadsPanel: () => void;
   syncLabel: string;
   collapsed: boolean;
   onToggle: () => void;
@@ -86,33 +54,15 @@ export default function CountrySidebar({
   onToggleFinding,
   onToggleSeverity,
   onClearFilters,
-  leads,
-  selectedCaseId,
-  onSelectCase,
+  leadsCount,
+  leadsPanelOpen,
+  onOpenLeadsPanel,
   syncLabel,
   collapsed,
   onToggle,
   mobileOpen,
   onCloseMobile,
 }: Props) {
-  const PAGE_SIZE = 12;
-  const [page, setPage] = useState(0);
-  const totalPages = Math.max(1, Math.ceil(leads.length / PAGE_SIZE));
-
-  // Reset to first page whenever the lead list changes shape (filters,
-  // query, country). Keeping page sticky across content changes hides the
-  // top-ranked leads, which is the opposite of what triage needs.
-  useEffect(() => {
-    setPage(0);
-  }, [leads.length, leads[0]?.leadId]);
-
-  const safePage = Math.min(page, totalPages - 1);
-  const pageStart = safePage * PAGE_SIZE;
-  const pagedLeads = useMemo(
-    () => leads.slice(pageStart, pageStart + PAGE_SIZE),
-    [leads, pageStart],
-  );
-
   const classes = [
     styles.sidebar,
     collapsed ? styles.sidebarCollapsed : "",
@@ -210,72 +160,34 @@ export default function CountrySidebar({
             />
           </section>
 
-          <section
-            className={`${styles.section} ${styles.cpLeadsSection}`}
-            aria-labelledby="leads-heading"
-          >
-            <p className={styles.eyebrow} id="leads-heading">
-              Casos a revisar · {leads.length}
+          <section className={styles.section} aria-labelledby="leads-button-heading">
+            <p className={styles.eyebrow} id="leads-button-heading">
+              Alertas
             </p>
-            {leads.length === 0 ? (
-              <p className={styles.cpLeadEmpty}>No hay alertas para estos filtros.</p>
-            ) : (
-              <div className={styles.cpLeadsList}>
-                {pagedLeads.map((lead) => {
-                  const isSelected = lead.caseId === selectedCaseId;
-                  const family = lead.primarySignal.family;
-                  const SignalIcon = family ? FAMILY_ICONS[family] : AlertTriangle;
-                  const severity = lead.primarySignal.severity;
-                  const severityClass = severity ? SEVERITY_CLASS[severity] : "";
-                  return (
-                    <button
-                      key={lead.leadId}
-                      type="button"
-                      className={`${styles.cpLeadCard} ${isSelected ? styles.cpLeadCardActive : ""}`}
-                      onClick={() => onSelectCase(lead.caseId)}
-                      aria-pressed={isSelected}
-                    >
-                      <span className={`${styles.cpLeadIcon} ${severityClass}`}>
-                        <SignalIcon size={14} aria-hidden />
-                      </span>
-                      <span className={styles.cpLeadBody}>
-                        <span className={styles.cpLeadMeta}>{lead.sourceName}</span>
-                        <strong className={styles.cpLeadTitle}>{lead.caseTitle}</strong>
-                        <span className={styles.cpLeadWhy}>{lead.why}</span>
-                      </span>
-                      <ArrowRight size={14} aria-hidden className={styles.cpLeadArrow} />
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-            {leads.length > PAGE_SIZE && (
-              <div className={styles.cpPagination} role="navigation" aria-label="Paginación de casos">
-                <button
-                  type="button"
-                  className={styles.cpPageButton}
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  disabled={safePage === 0}
-                  aria-label="Página anterior"
-                >
-                  <ChevronLeft size={14} aria-hidden />
-                </button>
-                <span className={styles.cpPageStatus}>
-                  {safePage + 1} / {totalPages}
+            <button
+              type="button"
+              className={`${styles.cpLeadsButton} ${leadsPanelOpen ? styles.cpLeadsButtonActive : ""}`}
+              onClick={onOpenLeadsPanel}
+              disabled={leadsCount === 0}
+              aria-expanded={leadsPanelOpen}
+              aria-controls="leads-panel"
+            >
+              <AlertTriangle size={18} aria-hidden className={styles.cpLeadsButtonIcon} />
+              <span className={styles.cpLeadsButtonLabel}>
+                <span className={styles.cpLeadsButtonTitle}>
+                  {leadsCount === 0 ? "Sin alertas para estos filtros" : "Casos a revisar"}
                 </span>
-                <button
-                  type="button"
-                  className={styles.cpPageButton}
-                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                  disabled={safePage >= totalPages - 1}
-                  aria-label="Página siguiente"
-                >
-                  <ChevronRight size={14} aria-hidden />
-                </button>
-              </div>
-            )}
+                {leadsCount > 0 && (
+                  <span className={styles.cpLeadsButtonCount}>
+                    {leadsCount.toLocaleString("es-AR")}
+                  </span>
+                )}
+              </span>
+              <ChevronRight size={14} aria-hidden className={styles.cpLeadsButtonChevron} />
+            </button>
           </section>
 
+          <div className={styles.spacer} aria-hidden />
           <SyncFooter label={syncLabel} />
         </>
       )}
