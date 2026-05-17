@@ -155,7 +155,7 @@
 .introTitle {
   margin: 0;
   font-family: var(--cf-font-heading);
-  font-size: clamp(20px, 2.6vh, 26px);
+  font-size: clamp(22px, 3.2vh, 30px);
   font-weight: 500;
   letter-spacing: -0.3px;
   line-height: 1.2;
@@ -165,9 +165,9 @@
 .introBody {
   margin: 0;
   font-family: var(--cf-font-body);
-  font-size: clamp(12px, 1.5vh, 13px);
-  line-height: 1.5;
-  color: var(--cf-text-muted);
+  font-size: clamp(14px, 2vh, 18px);
+  line-height: 1.55;
+  color: var(--cf-text-secondary);
 }
 
 .introLink {
@@ -520,6 +520,50 @@
   font-family: var(--cf-font-body);
   font-size: 12px;
   color: var(--cf-text-muted);
+}
+
+.cpPagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+  margin-top: 2px;
+  border-top: 1px solid var(--cf-border);
+  flex-shrink: 0;
+}
+
+.cpPageButton {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--cf-border);
+  border-radius: 6px;
+  color: var(--cf-text-secondary);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.cpPageButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cf-text);
+  border-color: var(--cf-border-strong);
+}
+
+.cpPageButton:disabled {
+  color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+}
+
+.cpPageStatus {
+  font-family: var(--cf-font-data);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--cf-text-secondary);
+  min-width: 48px;
+  text-align: center;
 }
 
 /* --- Map legend (bottom-right) -------------------------------------- */

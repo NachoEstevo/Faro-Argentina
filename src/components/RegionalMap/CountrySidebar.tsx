@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
   Building2,
+  ChevronLeft,
+  ChevronRight,
   CircleDollarSign,
   CircleHelp,
   FileCheck,
@@ -85,6 +88,24 @@ export default function CountrySidebar({
   mobileOpen,
   onCloseMobile,
 }: Props) {
+  const PAGE_SIZE = 12;
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(leads.length / PAGE_SIZE));
+
+  // Reset to first page whenever the lead list changes shape (filters,
+  // query, country). Keeping page sticky across content changes hides the
+  // top-ranked leads, which is the opposite of what triage needs.
+  useEffect(() => {
+    setPage(0);
+  }, [leads.length, leads[0]?.leadId]);
+
+  const safePage = Math.min(page, totalPages - 1);
+  const pageStart = safePage * PAGE_SIZE;
+  const pagedLeads = useMemo(
+    () => leads.slice(pageStart, pageStart + PAGE_SIZE),
+    [leads, pageStart],
+  );
+
   const classes = [
     styles.sidebar,
     collapsed ? styles.sidebarCollapsed : "",
@@ -153,7 +174,7 @@ export default function CountrySidebar({
               <p className={styles.cpLeadEmpty}>No hay alertas para estos filtros.</p>
             ) : (
               <div className={styles.cpLeadsList}>
-                {leads.map((lead) => {
+                {pagedLeads.map((lead) => {
                   const isSelected = lead.caseId === selectedCaseId;
                   const family = lead.primarySignal.family;
                   const SignalIcon = family ? FAMILY_ICONS[family] : AlertTriangle;
@@ -179,6 +200,31 @@ export default function CountrySidebar({
                     </button>
                   );
                 })}
+              </div>
+            )}
+            {leads.length > PAGE_SIZE && (
+              <div className={styles.cpPagination} role="navigation" aria-label="Paginación de casos">
+                <button
+                  type="button"
+                  className={styles.cpPageButton}
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={safePage === 0}
+                  aria-label="Página anterior"
+                >
+                  <ChevronLeft size={14} aria-hidden />
+                </button>
+                <span className={styles.cpPageStatus}>
+                  {safePage + 1} / {totalPages}
+                </span>
+                <button
+                  type="button"
+                  className={styles.cpPageButton}
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={safePage >= totalPages - 1}
+                  aria-label="Página siguiente"
+                >
+                  <ChevronRight size={14} aria-hidden />
+                </button>
               </div>
             )}
           </section>
