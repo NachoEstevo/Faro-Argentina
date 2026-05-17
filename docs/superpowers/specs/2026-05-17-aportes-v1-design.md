@@ -249,9 +249,13 @@ generated public dataset.
 Cloudflare R2 is the recommended storage target for V1 attachments because it
 keeps the feature small while avoiding public file exposure.
 
-Recommended bucket:
+Recommended bucket and environment variables:
 
-- bucket name: `faro-contributions`;
+- bucket name: `faro`;
+- endpoint env: `STORAGE_ENDPOINT`;
+- bucket env: `STORAGE_BUCKET`;
+- access key env: `STORAGE_ACCESS_KEY`;
+- secret key env: `STORAGE_SECRET_KEY`;
 - access: private;
 - object key pattern:
   `submissions/{submissionId}/{attachmentId}.{extension}`;

@@ -32,7 +32,7 @@ export interface StoreContributionResult {
 }
 
 interface R2Config {
-  accountId: string;
+  endpoint: string;
   accessKeyId: string;
   secretAccessKey: string;
   bucket: string;
@@ -133,7 +133,7 @@ async function putR2Object({
   body: Uint8Array;
   contentType: string;
 }) {
-  const endpoint = `https://${config.accountId}.r2.cloudflarestorage.com`;
+  const endpoint = config.endpoint.replace(/\/+$/, "");
   const pathname = `/${config.bucket}/${encodeKeyPath(key)}`;
   const url = new URL(pathname, endpoint);
   const amzDate = toAmzDate(new Date());
@@ -189,12 +189,20 @@ async function putR2Object({
 }
 
 function getR2Config(): R2Config | null {
-  const accountId = process.env.R2_ACCOUNT_ID;
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
-  const bucket = process.env.R2_BUCKET ?? "faro-contributions";
-  if (!accountId || !accessKeyId || !secretAccessKey) return null;
-  return { accountId, accessKeyId, secretAccessKey, bucket };
+  const endpoint = optionalEnv("STORAGE_ENDPOINT") ??
+    (optionalEnv("R2_ACCOUNT_ID")
+      ? `https://${optionalEnv("R2_ACCOUNT_ID")}.r2.cloudflarestorage.com`
+      : null);
+  const accessKeyId = optionalEnv("STORAGE_ACCESS_KEY") ?? optionalEnv("R2_ACCESS_KEY_ID");
+  const secretAccessKey = optionalEnv("STORAGE_SECRET_KEY") ?? optionalEnv("R2_SECRET_ACCESS_KEY");
+  const bucket = optionalEnv("STORAGE_BUCKET") ?? optionalEnv("R2_BUCKET") ?? "faro";
+  if (!endpoint || !accessKeyId || !secretAccessKey) return null;
+  return { endpoint, accessKeyId, secretAccessKey, bucket };
+}
+
+function optionalEnv(key: string): string | null {
+  const value = process.env[key]?.trim();
+  return value ? value : null;
 }
 
 function createContributionId(createdAt: string): string {
