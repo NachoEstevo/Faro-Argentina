@@ -15,6 +15,7 @@ import {
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
 import {
+  buildCaseSignals,
   getCaseAlertSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
@@ -405,15 +406,35 @@ export default function ExplorerView({
 }
 
 function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: () => void }) {
+  const signals = buildCaseSignals(caseFile as SignalCaseFile);
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
       <button type="button" className={styles.detailBack} onClick={onBack}>
         ← Volver al listado
       </button>
-      <h2 className={styles.detailTitle}>{caseFile.title}</h2>
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
       </p>
+      <h2 className={styles.detailTitle}>{caseFile.title}</h2>
+      <p className={styles.detailSubtitle}>{caseFile.agencyName}</p>
+      {signals.length > 0 && (
+        <div className={styles.detailChips}>
+          {signals.slice(0, 5).map((signal) => {
+            const tone =
+              signal.kind === "watch"
+                ? signal.severity === "high"
+                  ? "flag"
+                  : "review"
+                : "verified";
+            return (
+              <span key={signal.code} className={`${styles.detailChip} ${styles[`state_${tone}`]}`}>
+                <span className={styles.stateBadgeDot} aria-hidden />
+                {signal.label}
+              </span>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
