@@ -542,35 +542,12 @@ function ExplorerDetail({
         );
       })()}
       <div className={styles.detailGrid}>
-        <div className={styles.detailCard}>
-          <p className={styles.detailCardHead}>Datos</p>
-          <DetailRow
-            label="Monto adjudicado"
-            value={(() => {
-              const formatted = formatRowAmount("amount" in caseFile ? caseFile.amount : null);
-              return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
-            })()}
-          />
-          <DetailRow label="Año" value={caseFile.year ? String(caseFile.year) : "—"} />
-          <DetailRow label="Procedimiento" value={caseFile.procedureNumber || "—"} />
-          <DetailRow label="Tipo" value={describeCaseType(caseFile)} />
-        </div>
-        <div className={styles.detailCard}>
-          <p className={styles.detailCardHead}>Proveedor</p>
-          <DetailRow
-            label="Razón social"
-            value={"supplierName" in caseFile && caseFile.supplierName ? caseFile.supplierName : "—"}
-          />
-          <DetailRow
-            label="CUIT / Documento"
-            value={
-              "supplierDocument" in caseFile && caseFile.supplierDocument
-                ? caseFile.supplierDocument
-                : "—"
-            }
-          />
-          <DetailRow label="Organismo" value={caseFile.agencyName || "—"} />
-        </div>
+        <MontoCard caseFile={caseFile} />
+        <CronologiaCard caseFile={caseFile} />
+        <CompetenciaCard caseFile={caseFile} />
+        <UbicacionObraCard caseFile={caseFile} />
+        <ProveedorCard caseFile={caseFile} />
+        <ProcedimientoCard caseFile={caseFile} />
       </div>
       {caseFile.receipt && (
         <article className={styles.receiptCard}>
@@ -620,6 +597,139 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     <div className={styles.detailRow}>
       <span className={styles.detailRowLabel}>{label}</span>
       <span className={styles.detailRowValue}>{value}</span>
+    </div>
+  );
+}
+
+type AnyCase = ExplorerCase & Record<string, unknown>;
+type Amount = { value: number; currency: string; usdEquivalent?: { usd: number } | null } | null | undefined;
+
+function getField<T = unknown>(caseFile: ExplorerCase, key: string): T | null {
+  const value = (caseFile as AnyCase)[key];
+  if (value === null || value === undefined || value === "") return null;
+  return value as T;
+}
+
+function formatDate(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const iso = value.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value;
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function formatAmountInline(amount: Amount): string {
+  const formatted = formatRowAmount(amount ?? null);
+  return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
+}
+
+function MontoCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const amount = getField<Amount>(caseFile, "amount");
+  const budget = getField<Amount>(caseFile, "officialBudget");
+  if (!amount && !budget) return null;
+  let overrun: string | null = null;
+  if (amount && budget && budget.value > 0) {
+    const delta = ((amount.value - budget.value) / budget.value) * 100;
+    if (Math.abs(delta) >= 0.5) {
+      overrun = `${delta > 0 ? "+" : ""}${delta.toFixed(1).replace(".", ",")} %`;
+    }
+  }
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Monto</p>
+      {amount && <DetailRow label="Adjudicado" value={formatAmountInline(amount)} />}
+      {budget && <DetailRow label="Presupuesto oficial" value={formatAmountInline(budget)} />}
+      {overrun && <DetailRow label="Variación" value={overrun} />}
+    </div>
+  );
+}
+
+function CronologiaCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const published = formatDate(getField<string>(caseFile, "publishedAt"));
+  const opening = formatDate(getField<string>(caseFile, "openingAt"));
+  const closing = formatDate(getField<string>(caseFile, "closedAt"));
+  const awarded = formatDate(getField<string>(caseFile, "awardedAt"));
+  const year = caseFile.year ? String(caseFile.year) : null;
+  const hasAny = published || opening || closing || awarded;
+  if (!hasAny && !year) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Cronología</p>
+      {published && <DetailRow label="Publicación" value={published} />}
+      {opening && <DetailRow label="Apertura" value={opening} />}
+      {closing && <DetailRow label="Cierre" value={closing} />}
+      {awarded && <DetailRow label="Adjudicación" value={awarded} />}
+      {!hasAny && year && <DetailRow label="Año" value={year} />}
+    </div>
+  );
+}
+
+function CompetenciaCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const bidders = getField<number>(caseFile, "bidderCount");
+  const offers = getField<number>(caseFile, "offerCount");
+  const claims = getField<number>(caseFile, "claimCount");
+  const state = getField<string>(caseFile, "procedureState");
+  if (bidders === null && offers === null && claims === null && !state) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Competencia</p>
+      {bidders !== null && <DetailRow label="Oferentes" value={String(bidders)} />}
+      {offers !== null && <DetailRow label="Ofertas" value={String(offers)} />}
+      {claims !== null && <DetailRow label="Reclamos" value={String(claims)} />}
+      {state && <DetailRow label="Estado" value={state} />}
+    </div>
+  );
+}
+
+function UbicacionObraCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const locality = getField<string>(caseFile, "workLocality");
+  const department = getField<string>(caseFile, "workDepartment");
+  const province = getField<string>(caseFile, "workProvince");
+  const named = getField<string>(caseFile, "locationName");
+  if (!locality && !department && !province && !named) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Ubicación de obra</p>
+      {locality && <DetailRow label="Localidad" value={locality} />}
+      {department && <DetailRow label="Departamento" value={department} />}
+      {province && <DetailRow label="Provincia / Región" value={province} />}
+      {named && !locality && !department && !province && (
+        <DetailRow label="Punto declarado" value={named} />
+      )}
+    </div>
+  );
+}
+
+function ProveedorCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const name = getField<string>(caseFile, "supplierName");
+  const document = getField<string>(caseFile, "supplierDocument");
+  const locality = getField<string>(caseFile, "supplierLocality");
+  const province = getField<string>(caseFile, "supplierProvince");
+  if (!name && !document) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Proveedor</p>
+      {name && <DetailRow label="Razón social" value={name} />}
+      {document && <DetailRow label="CUIT / Documento" value={document} />}
+      {locality && <DetailRow label="Localidad" value={locality} />}
+      {province && <DetailRow label="Provincia / Región" value={province} />}
+    </div>
+  );
+}
+
+function ProcedimientoCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const method = getField<string>(caseFile, "procurementMethodDetails");
+  const awardNumber = getField<string>(caseFile, "awardNumber");
+  const awardUrl = getField<string>(caseFile, "awardActUrl");
+  const procedure = caseFile.procedureNumber;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Procedimiento</p>
+      <DetailRow label="Tipo de caso" value={describeCaseType(caseFile)} />
+      {procedure && <DetailRow label="Número" value={procedure} />}
+      {method && <DetailRow label="Modalidad" value={method} />}
+      {awardNumber && <DetailRow label="Acto adjudicatario" value={awardNumber} />}
+      {awardUrl && <DetailRow label="Acto (URL)" value={awardUrl} />}
     </div>
   );
 }
