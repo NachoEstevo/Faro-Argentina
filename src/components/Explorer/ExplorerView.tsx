@@ -461,11 +461,24 @@ function ExplorerDetail({
       return false;
     })
     .slice(0, 4);
+  const sourceUrl = caseFile.receipt?.sourceUrl ?? null;
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
-      <button type="button" className={styles.detailBack} onClick={onBack}>
-        ← Volver al listado
-      </button>
+      <div className={styles.detailTopBar}>
+        <button type="button" className={styles.detailBack} onClick={onBack}>
+          ← Volver al listado
+        </button>
+        {sourceUrl && (
+          <a
+            className={styles.detailPrimaryAction}
+            href={sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Abrir fuente oficial
+          </a>
+        )}
+      </div>
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
       </p>
