@@ -67,6 +67,43 @@ test("buildInvestigatorExplorer applies geometry, country, signal, and pivot fil
   assert.equal(pivoted.rows.every((row) => row.entities.supplierKey === supplierFacet?.key), true);
 });
 
+test("buildInvestigatorExplorer applies multiple pivot filters grouped by type", () => {
+  const cases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1, {
+      agencyName: "Agencia Norte",
+      supplierName: "Proveedor A",
+    }),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1, {
+      agencyName: "Agencia Norte",
+      supplierName: "Proveedor B",
+    }),
+    buildExplorerFixture("AR-CONTRACT-381-1003-CON21", 1, {
+      agencyName: "Agencia Sur",
+      supplierName: "Proveedor A",
+    }),
+  ] as InvestigatorExplorerCase[];
+  const base = buildInvestigatorExplorer(cases, { limit: 20 });
+  const agencyNorte = base.facets.find((facet) => facet.type === "agency" && facet.label === "Agencia Norte");
+  const supplierA = base.facets.find((facet) => facet.type === "supplier" && facet.label.includes("Proveedor A"));
+  const supplierB = base.facets.find((facet) => facet.type === "supplier" && facet.label.includes("Proveedor B"));
+
+  const filtered = buildInvestigatorExplorer(cases, {
+    entities: [
+      { type: "agency", key: agencyNorte?.key ?? "" },
+      { type: "supplier", key: supplierA?.key ?? "" },
+      { type: "supplier", key: supplierB?.key ?? "" },
+    ],
+    limit: 20,
+  });
+
+  assert.deepEqual(
+    filtered.rows.map((row) => row.caseId).sort(),
+    ["AR-CONTRACT-381-1001-CON21", "AR-CONTRACT-381-1002-CON21"],
+  );
+  assert.equal(filtered.activeEntities.length, 3);
+  assert.equal(filtered.rows.every((row) => row.entities.agencyKey === agencyNorte?.key), true);
+});
+
 test("buildInvestigatorExplorer uses the coordinate quality gate for geometry status", () => {
   const placeholderGeometryCase = buildExplorerFixture("AR-CONTRACT-381-1009-CON21", 2, {
     coordinates: { lat: 0, lon: 0 },
@@ -154,7 +191,12 @@ test("buildInvestigatorExplorer scopes supplier recurrence by filtered country",
 function buildExplorerFixture(
   id: string,
   bidderCount: number,
-  overrides: Partial<Pick<InvestigatorExplorerCase, "countryCode" | "agencyName" | "coordinates">> = {},
+  overrides: {
+    countryCode?: string;
+    agencyName?: string;
+    coordinates?: { lat: number; lon: number } | null;
+    supplierName?: string;
+  } = {},
 ) {
   return {
     id,
@@ -174,7 +216,7 @@ function buildExplorerFixture(
     amount: { value: 1_000_000, currency: "ARS", label: "monto_contrato" },
     bidderCount,
     offerCount: bidderCount,
-    supplierName: "ANSAL CONSTRUCCIONES SRL",
+    supplierName: overrides.supplierName ?? "ANSAL CONSTRUCCIONES SRL",
     supplierDocument: "30-64071769-2",
     receipt: createEvidenceReceipt({
       sourceId: "AR-CONTRATAR-CONTRATOS",

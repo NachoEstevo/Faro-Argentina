@@ -30,6 +30,7 @@ export interface InvestigatorExplorerFilters {
   geometry?: InvestigatorGeometryFilter;
   signalCode?: string;
   entity?: InvestigatorEntityFilter;
+  entities?: InvestigatorEntityFilter[];
   limit?: number;
 }
 
@@ -89,6 +90,7 @@ export interface InvestigatorExplorerView {
   };
   rows: InvestigatorCaseRow[];
   facets: InvestigatorFacet[];
+  activeEntities: InvestigatorFacet[];
   activeEntity: InvestigatorFacet | null;
 }
 
@@ -105,11 +107,20 @@ export function buildInvestigatorExplorer(
   const allRows = cases.map((caseFile) =>
     toInvestigatorRow(caseFile, signalContexts.get(caseFile.countryCode) ?? fallbackContext),
   );
+  const facetRows = allRows.filter((row) => matchesFilters(row, {
+    ...filters,
+    entity: undefined,
+    entities: undefined,
+  }));
   const filteredRows = allRows
     .filter((row) => matchesFilters(row, filters))
     .sort(compareRows);
-  const facets = buildFacets(filteredRows);
+  const facets = buildFacets(facetRows);
   const rows = filteredRows.slice(0, clampLimit(filters.limit));
+  const activeEntities = findActiveEntities(
+    buildFacets(facetRows, Number.POSITIVE_INFINITY),
+    getEntityFilters(filters),
+  );
 
   return {
     viewType: "faro_investigator_explorer_v1",
@@ -122,7 +133,8 @@ export function buildInvestigatorExplorer(
     },
     rows,
     facets,
-    activeEntity: findActiveEntity(facets, filters.entity),
+    activeEntities,
+    activeEntity: activeEntities[0] ?? null,
   };
 }
 
@@ -182,10 +194,7 @@ function matchesContextScope(caseFile: InvestigatorExplorerCase, filters: Invest
   if (filters.countries?.length && !filters.countries.includes(caseFile.countryCode as CountryCode)) {
     return false;
   }
-  if (!filters.entity || filters.entity.type === "signal") return true;
-  if (filters.entity.type === "source") return (entityKey(caseFile.receipt.sourceId) ?? "") === filters.entity.key;
-  if (filters.entity.type === "agency") return (entityKey(caseFile.agencyName) ?? "") === filters.entity.key;
-  return entityKey(formatSupplier(caseFile)) === filters.entity.key;
+  return matchesCaseEntities(caseFile, getEntityFilters(filters).filter((entity) => entity.type !== "signal"));
 }
 
 function matchesFilters(row: InvestigatorCaseRow, filters: InvestigatorExplorerFilters): boolean {
@@ -193,11 +202,38 @@ function matchesFilters(row: InvestigatorCaseRow, filters: InvestigatorExplorerF
   if (filters.geometry === "with" && !row.hasOfficialGeometry) return false;
   if (filters.geometry === "without" && row.hasOfficialGeometry) return false;
   if (filters.signalCode && !row.signalCodes.includes(filters.signalCode)) return false;
-  if (filters.entity && !matchesEntity(row, filters.entity)) return false;
+  if (!matchesEntityFilters(row, getEntityFilters(filters))) return false;
 
   const query = normalize(filters.query);
   if (!query) return true;
   return row.searchText.includes(query);
+}
+
+function getEntityFilters(filters: InvestigatorExplorerFilters): InvestigatorEntityFilter[] {
+  const entities = filters.entities ?? [];
+  return filters.entity ? [filters.entity, ...entities] : entities;
+}
+
+function matchesEntityFilters(
+  row: InvestigatorCaseRow,
+  entities: InvestigatorEntityFilter[],
+): boolean {
+  if (entities.length === 0) return true;
+  const byType = groupEntitiesByType(entities);
+  return Array.from(byType.values()).every((group) =>
+    group.some((entity) => matchesEntity(row, entity)),
+  );
+}
+
+function matchesCaseEntities(
+  caseFile: InvestigatorExplorerCase,
+  entities: InvestigatorEntityFilter[],
+): boolean {
+  if (entities.length === 0) return true;
+  const byType = groupEntitiesByType(entities);
+  return Array.from(byType.values()).every((group) =>
+    group.some((entity) => matchesCaseEntity(caseFile, entity)),
+  );
 }
 
 function matchesEntity(row: InvestigatorCaseRow, entity: InvestigatorEntityFilter): boolean {
@@ -207,7 +243,29 @@ function matchesEntity(row: InvestigatorCaseRow, entity: InvestigatorEntityFilte
   return row.entities.signalKeys.includes(entity.key);
 }
 
-function buildFacets(rows: InvestigatorCaseRow[]): InvestigatorFacet[] {
+function matchesCaseEntity(
+  caseFile: InvestigatorExplorerCase,
+  entity: InvestigatorEntityFilter,
+): boolean {
+  if (entity.type === "source") return (entityKey(caseFile.receipt.sourceId) ?? "") === entity.key;
+  if (entity.type === "agency") return (entityKey(caseFile.agencyName) ?? "") === entity.key;
+  if (entity.type === "supplier") return entityKey(formatSupplier(caseFile)) === entity.key;
+  return true;
+}
+
+function groupEntitiesByType(
+  entities: InvestigatorEntityFilter[],
+): Map<InvestigatorEntityType, InvestigatorEntityFilter[]> {
+  const byType = new Map<InvestigatorEntityType, InvestigatorEntityFilter[]>();
+  for (const entity of entities) {
+    const group = byType.get(entity.type) ?? [];
+    group.push(entity);
+    byType.set(entity.type, group);
+  }
+  return byType;
+}
+
+function buildFacets(rows: InvestigatorCaseRow[], limit = 32): InvestigatorFacet[] {
   const facets = new Map<string, MutableFacet>();
 
   for (const row of rows) {
@@ -226,7 +284,7 @@ function buildFacets(rows: InvestigatorCaseRow[]): InvestigatorFacet[] {
       right.watchCount - left.watchCount ||
       left.label.localeCompare(right.label),
     )
-    .slice(0, 32);
+    .slice(0, limit);
 }
 
 interface MutableFacet {
@@ -268,6 +326,15 @@ function findActiveEntity(
 ): InvestigatorFacet | null {
   if (!entity) return null;
   return facets.find((facet) => facet.type === entity.type && facet.key === entity.key) ?? null;
+}
+
+function findActiveEntities(
+  facets: InvestigatorFacet[],
+  entities: InvestigatorEntityFilter[],
+): InvestigatorFacet[] {
+  return entities
+    .map((entity) => findActiveEntity(facets, entity))
+    .filter((facet): facet is InvestigatorFacet => facet !== null);
 }
 
 function buildSearchText(row: Omit<InvestigatorCaseRow, "searchText">, signals: CaseSignal[]): string {

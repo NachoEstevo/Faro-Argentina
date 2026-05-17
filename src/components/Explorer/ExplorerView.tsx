@@ -53,6 +53,13 @@ const GEOMETRY_OPTIONS: Array<{ id: InvestigatorGeometryFilter; label: string }>
   { id: "without", label: "Sin geometría de mapa" },
 ];
 
+const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string; limit: number }> = [
+  { type: "source", label: "Fuente", limit: 4 },
+  { type: "agency", label: "Organismo", limit: 4 },
+  { type: "supplier", label: "Proveedor", limit: 4 },
+  { type: "signal", label: "Señal", limit: 5 },
+];
+
 export default function ExplorerView({
   cases,
   selectedCountry,
@@ -64,8 +71,7 @@ export default function ExplorerView({
 }: Props) {
   const [countryScope, setCountryScope] = useState<CountryScope>(selectedCountry);
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
-  const [signalCode, setSignalCode] = useState("");
-  const [activeEntity, setActiveEntity] = useState<InvestigatorEntityFilter | null>(null);
+  const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
 
@@ -95,9 +101,14 @@ export default function ExplorerView({
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
 
+  const activeEntities = useMemo<InvestigatorEntityFilter[]>(
+    () => activeFacets.map((facet) => ({ type: facet.type, key: facet.key })),
+    [activeFacets],
+  );
+
   useEffect(() => {
     setPage(0);
-  }, [activeEntity, countryScope, geometryFilter, query, signalCode, yearFrom, yearTo]);
+  }, [activeFacets, countryScope, geometryFilter, query, yearFrom, yearTo]);
 
   useEffect(() => {
     setYearFrom(yearBounds.min);
@@ -123,24 +134,24 @@ export default function ExplorerView({
   const explorer = useMemo(
     () => buildInvestigatorExplorer(yearScopedCases, {
       countries,
-      entity: activeEntity ?? undefined,
+      entities: activeEntities,
       geometry: geometryFilter,
       limit: 500,
       query,
-      signalCode: signalCode || undefined,
     }),
-    [activeEntity, countries, geometryFilter, query, signalCode, yearScopedCases],
+    [activeEntities, countries, geometryFilter, query, yearScopedCases],
   );
 
-  const signalOptions = useMemo(
-    () => buildInvestigatorExplorer(yearScopedCases, {
-      countries,
-      entity: activeEntity ?? undefined,
-      geometry: geometryFilter,
-      limit: 500,
-      query,
-    }).facets.filter((facet) => facet.type === "signal"),
-    [activeEntity, countries, geometryFilter, query, yearScopedCases],
+  const facetGroups = useMemo(
+    () => FACET_TYPE_OPTIONS
+      .map((group) => ({
+        ...group,
+        facets: explorer.facets
+          .filter((facet) => facet.type === group.type)
+          .slice(0, group.limit),
+      }))
+      .filter((group) => group.facets.length > 0),
+    [explorer.facets],
   );
 
   const PAGE_SIZE = 8;
@@ -160,22 +171,25 @@ export default function ExplorerView({
   }, [explorer.rows]);
 
   const resetFilters = () => {
-    setActiveEntity(null);
+    setActiveFacets([]);
     setGeometryFilter("any");
     setQuery("");
-    setSignalCode("");
     setYearFrom(yearBounds.min);
     setYearTo(yearBounds.max);
   };
 
   const selectCountryScope = (code: CountryScope) => {
     setCountryScope(code);
-    setActiveEntity(null);
+    setActiveFacets([]);
     if (code !== "ALL") onSelectCountry(code);
   };
 
-  const selectFacet = (facet: InvestigatorFacet) => {
-    setActiveEntity({ type: facet.type, key: facet.key });
+  const toggleFacet = (facet: InvestigatorFacet) => {
+    setActiveFacets((prev) => {
+      const exists = prev.some((active) => isSameFacet(active, facet));
+      if (exists) return prev.filter((active) => !isSameFacet(active, facet));
+      return [...prev, facet];
+    });
   };
 
   return (
@@ -218,21 +232,6 @@ export default function ExplorerView({
               );
             })}
           </div>
-          <label className={styles.filterGroup}>
-            <span className={styles.filterGroupLabel}>Señal</span>
-            <select
-              className={styles.filterSelect}
-              value={signalCode}
-              onChange={(event) => setSignalCode(event.target.value)}
-            >
-              <option value="">Todas las señales</option>
-              {signalOptions.map((facet) => (
-                <option key={facet.key} value={facet.key}>
-                  {facet.label} ({facet.count})
-                </option>
-              ))}
-            </select>
-          </label>
           <div className={styles.filterGroup}>
             <div className={styles.filterRowHead}>
               <span className={styles.filterGroupLabel}>Período</span>
@@ -256,30 +255,52 @@ export default function ExplorerView({
             <p className={styles.eyebrow} id="explorer-pivots-heading">
               Pivots
             </p>
-            {activeEntity && (
-              <button type="button" className={styles.sectionLink} onClick={() => setActiveEntity(null)}>
-                Quitar
+            {activeFacets.length > 0 && (
+              <button type="button" className={styles.sectionLink} onClick={() => setActiveFacets([])}>
+                Quitar todo
               </button>
             )}
           </div>
-          {activeEntity && explorer.activeEntity && (
-            <div className={styles.activePivot}>
-              <span>{facetTypeLabel(explorer.activeEntity.type)}</span>
-              <strong>{explorer.activeEntity.label}</strong>
+          {activeFacets.length > 0 && (
+            <div className={styles.activePivotList} aria-label="Pivots activos">
+              {activeFacets.map((facet) => (
+                <button
+                  key={`active-${facet.type}:${facet.key}`}
+                  type="button"
+                  className={styles.activePivotChip}
+                  onClick={() => toggleFacet(facet)}
+                >
+                  <span>{facetTypeLabel(facet.type)}</span>
+                  <span className={styles.activePivotLabel}>{facet.label}</span>
+                  <span className={styles.activePivotRemove} aria-hidden>×</span>
+                </button>
+              ))}
             </div>
           )}
-          <div className={styles.facetList}>
-            {explorer.facets.slice(0, 12).map((facet) => (
-              <button
-                key={`${facet.type}:${facet.key}`}
-                type="button"
-                className={styles.facetButton}
-                onClick={() => selectFacet(facet)}
-              >
-                <span className={styles.facetMeta}>{facetTypeLabel(facet.type)}</span>
-                <span className={styles.facetLabel}>{facet.label}</span>
-                <span className={styles.facetCount}>{facet.count}</span>
-              </button>
+          <div className={styles.facetGroups}>
+            {facetGroups.map((group) => (
+              <div key={group.type} className={styles.facetGroup}>
+                <div className={styles.facetGroupHead}>
+                  <span>{group.label}</span>
+                </div>
+                <div className={styles.facetList}>
+                  {group.facets.map((facet) => {
+                    const isActive = activeFacets.some((active) => isSameFacet(active, facet));
+                    return (
+                      <button
+                        key={`${facet.type}:${facet.key}`}
+                        type="button"
+                        className={`${styles.facetButton} ${isActive ? styles.facetButtonActive : ""}`}
+                        onClick={() => toggleFacet(facet)}
+                        aria-pressed={isActive}
+                      >
+                        <span className={styles.facetLabel}>{facet.label}</span>
+                        <span className={styles.facetCount}>{facet.count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -728,6 +749,13 @@ function facetTypeLabel(type: InvestigatorFacet["type"]): string {
   if (type === "agency") return "Organismo";
   if (type === "source") return "Fuente";
   return "Señal";
+}
+
+function isSameFacet(
+  left: Pick<InvestigatorFacet, "type" | "key">,
+  right: Pick<InvestigatorFacet, "type" | "key">,
+): boolean {
+  return left.type === right.type && left.key === right.key;
 }
 
 function buildExportHref(countryScope: CountryScope, query: string): string {

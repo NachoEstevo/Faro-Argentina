@@ -36,3 +36,14 @@ test("ExplorerView only shows map links for map-eligible geometry", async () => 
   assert.match(source, /shouldExposeCaseOnMap/);
   assert.match(source, /if \(!coords \|\| !shouldExposeCaseOnMap\(caseFile\)\) return null/);
 });
+
+test("ExplorerView groups compact pivots by type and supports multiple active pivots", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /activeFacets/);
+  assert.match(source, /toggleFacet/);
+  assert.match(source, /FACET_TYPE_OPTIONS/);
+  assert.match(source, /entities: activeEntities/);
+  assert.doesNotMatch(source, /const \[activeEntity/);
+  assert.doesNotMatch(source, /signalOptions/);
+});
