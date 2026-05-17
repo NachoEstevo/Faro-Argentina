@@ -477,3 +477,34 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.stateBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--cf-text-secondary);
+}
+
+.stateBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state_verified {
+  color: var(--cf-state-verified);
+}
+
+.state_review {
+  color: var(--cf-state-caution);
+}
+
+.state_flag {
+  color: var(--cf-state-flag);
+}
+
+.state_unknown {
+  color: var(--cf-state-unknown);
+}

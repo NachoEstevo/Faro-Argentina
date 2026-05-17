@@ -283,6 +283,7 @@ export default function ExplorerView({
                 const supplierName =
                   "supplierName" in caseFile ? caseFile.supplierName ?? "—" : "—";
                 const amount = "amount" in caseFile ? caseFile.amount : null;
+                const state = computeRowState(caseFile);
                 return (
                   <tr
                     key={caseFile.id}
@@ -295,7 +296,12 @@ export default function ExplorerView({
                     <td className={styles.cellEllipsis}>{supplierName}</td>
                     <td className={styles.tableNumeric}>{formatRowAmount(amount)}</td>
                     <td className={styles.cellMono}>{caseFile.year ?? "—"}</td>
-                    <td>—</td>
+                    <td>
+                      <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
+                        <span className={styles.stateBadgeDot} aria-hidden />
+                        {state.label}
+                      </span>
+                    </td>
                   </tr>
                 );
               })}
@@ -305,6 +311,14 @@ export default function ExplorerView({
       </main>
     </section>
   );
+}
+
+function computeRowState(caseFile: ExplorerCase): { tone: "verified" | "review" | "flag" | "unknown"; label: string } {
+  const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
+  if (severity === "high") return { tone: "flag", label: "Marcado" };
+  if (severity === "medium") return { tone: "review", label: "Revisar" };
+  if (caseFile.coordinates === null) return { tone: "unknown", label: "Sin datos" };
+  return { tone: "verified", label: "Verificado" };
 }
 
 function describeCaseType(caseFile: ExplorerCase): string {
