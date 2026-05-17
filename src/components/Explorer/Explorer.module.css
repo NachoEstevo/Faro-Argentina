@@ -213,6 +213,26 @@
   line-height: 1.5;
 }
 
+.exportRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 14px;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid var(--cf-border);
+  border-radius: 8px;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.exportRow:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-text);
+}
+
 .main {
   display: flex;
   flex-direction: column;

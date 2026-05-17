@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PanelLeftClose, Plus } from "lucide-react";
+import { Download, PanelLeftClose, Plus } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
@@ -152,6 +152,10 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
             Aún no tenés búsquedas guardadas. Aplicá filtros y guardalos para volver más tarde.
           </p>
         </section>
+        <button type="button" className={styles.exportRow}>
+          <Download size={14} aria-hidden />
+          <span>Exportar resultados</span>
+        </button>
       </aside>
       <main className={styles.main}>
         <div className={styles.placeholder}>Explorer</div>
