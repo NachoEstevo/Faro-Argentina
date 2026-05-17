@@ -397,6 +397,13 @@
   color: var(--cf-accent);
 }
 
+.countryFlag {
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--cf-border);
+  flex-shrink: 0;
+}
+
 .countryName {
   font-family: var(--cf-font-heading);
   font-weight: 500;
