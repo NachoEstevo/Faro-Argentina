@@ -1,4 +1,5 @@
 import { createEvidenceReceipt, type EvidenceReceipt, type LocatorType } from "./evidenceReceipts.ts";
+import { attachFx } from "./fxAttach.ts";
 
 export type ArgentinaHistoricalJudicialCaseType =
   | "judicial_context"
@@ -44,6 +45,8 @@ export interface HistoricalAmount {
   value: number;
   currency: string;
   label: string;
+  usdEquivalent: import("./fx.ts").FxConversion | null;
+  usdConversionNote?: import("./fx.ts").FxConversionNote;
 }
 
 export interface ArgentinaHistoricalJudicialCase {
@@ -83,6 +86,7 @@ export interface ArgentinaHistoricalJudicialBuildOptions {
   extractedAt: string;
   parserVersion: string;
   localReceiptsByCaseId?: Map<string, EvidenceReceipt>;
+  fxRegistry?: import("./fx.ts").FxSeriesRegistry;
 }
 
 export function buildArgentinaHistoricalJudicialCases(
@@ -107,8 +111,8 @@ export function buildArgentinaHistoricalJudicialCases(
       executionTermType: null,
       coordinates: null,
       evidenceLevel: "official_dataset",
-      amount: normalizeAmount(record.amount),
-      officialBudget: normalizeAmount(record.officialBudget),
+      amount: normalizeAmount(record.amount, record.year, options.fxRegistry),
+      officialBudget: normalizeAmount(record.officialBudget, record.year, options.fxRegistry),
       supplierName: nullable(record.supplierName),
       supplierDocument: nullable(record.supplierDocument),
       judicialStatus: clean(record.judicialStatus),
@@ -166,13 +170,19 @@ function buildRelatedReceipts(
   return dedupeReceipts([...officialReceipts, ...localReceipts]);
 }
 
-function normalizeAmount(amount: HistoricalAmount | null | undefined): HistoricalAmount | null {
+function normalizeAmount(
+  amount: { value: number; currency: string; label: string } | HistoricalAmount | null | undefined,
+  year: number | null | undefined,
+  fxRegistry: import("./fx.ts").FxSeriesRegistry | undefined,
+): HistoricalAmount | null {
   if (!amount || !Number.isFinite(amount.value) || amount.value <= 0) return null;
-  return {
+  const base = {
     value: amount.value,
     currency: clean(amount.currency),
     label: clean(amount.label),
   };
+  const yearAnchor = year && Number.isFinite(year) ? `${year}-01-01` : null;
+  return attachFx(base, [{ field: "year", date: yearAnchor }], fxRegistry) as HistoricalAmount;
 }
 
 function dedupeReceipts(receipts: EvidenceReceipt[]): EvidenceReceipt[] {

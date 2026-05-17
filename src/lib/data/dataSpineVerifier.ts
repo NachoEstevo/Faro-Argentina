@@ -18,7 +18,16 @@ interface VerifyDataset {
     caveats?: string[];
     receipt?: VerifyReceipt;
     relatedReceipts?: VerifyReceipt[];
+    amount?: VerifyAmount | null;
+    officialBudget?: VerifyAmount | null;
   }>;
+}
+
+interface VerifyAmount {
+  value: number;
+  currency: string;
+  usdEquivalent?: unknown;
+  usdConversionNote?: string;
 }
 
 interface VerifyReceipt {
@@ -95,6 +104,9 @@ export async function verifyDataSpine({
         expectedHash: dataset.source.fileHash,
       });
 
+      checkFxConversion(errors, caseFile.id, "amount", caseFile.amount ?? null);
+      checkFxConversion(errors, caseFile.id, "officialBudget", caseFile.officialBudget ?? null);
+
       for (const relatedReceipt of caseFile.relatedReceipts ?? []) {
         checkedReceipts += 1;
         const relatedRawHash = await getRawFileHash({
@@ -122,6 +134,21 @@ export async function verifyDataSpine({
     checkedRawFiles: rawFileHashes.size,
     errors,
   };
+}
+
+function checkFxConversion(
+  errors: string[],
+  caseId: string,
+  field: "amount" | "officialBudget",
+  amount: VerifyAmount | null,
+): void {
+  if (!amount) return;
+  if (amount.currency === "USD") return;
+  const hasEquivalent = amount.usdEquivalent !== null && amount.usdEquivalent !== undefined;
+  const hasNote = typeof amount.usdConversionNote === "string" && amount.usdConversionNote.length > 0;
+  if (!hasEquivalent && !hasNote) {
+    errors.push(`${caseId}: ${field}.usdEquivalent missing and no usdConversionNote`);
+  }
 }
 
 function validateCatalogKeyFields(

@@ -45,7 +45,20 @@
           "amount": {
             "value": 46000000000,
             "currency": "ARS",
-            "label": "monto contextual informado por MPF"
+            "label": "monto contextual informado por MPF",
+            "usdEquivalent": {
+              "usd": 44552058.11,
+              "fxRate": 1032.5,
+              "fxDate": "2025-01-01",
+              "anchorDate": "2025-01-01",
+              "anchorField": "year",
+              "fxSource": {
+                "sourceId": "AR-BCRA-COM-A3500",
+                "sourceName": "AR-BCRA-COM-A3500",
+                "sourceUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+                "snapshotHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef"
+              }
+            }
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -152,7 +165,9 @@
           "amount": {
             "value": 76817044.79,
             "currency": "USD",
-            "label": "USD 76.817.044,79 informado por MPF"
+            "label": "USD 76.817.044,79 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A.",
@@ -231,7 +246,9 @@
           "amount": {
             "value": 72802191.7,
             "currency": "USD",
-            "label": "USD 72.802.191,70 informado por MPF"
+            "label": "USD 72.802.191,70 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -310,7 +327,9 @@
           "amount": {
             "value": 23445670.9,
             "currency": "USD",
-            "label": "USD 23.445.670,90 informado por MPF"
+            "label": "USD 23.445.670,90 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
@@ -389,7 +408,9 @@
           "amount": {
             "value": 37519987.64,
             "currency": "USD",
-            "label": "USD 37.519.987,64 informado por MPF"
+            "label": "USD 37.519.987,64 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -468,7 +489,9 @@
           "amount": {
             "value": 26501228.02,
             "currency": "USD",
-            "label": "USD 26.501.228,02 informado por MPF"
+            "label": "USD 26.501.228,02 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A.",
@@ -1055,7 +1078,20 @@
       "amount": {
         "value": 46000000000,
         "currency": "ARS",
-        "label": "monto contextual informado por MPF"
+        "label": "monto contextual informado por MPF",
+        "usdEquivalent": {
+          "usd": 44552058.11,
+          "fxRate": 1032.5,
+          "fxDate": "2025-01-01",
+          "anchorDate": "2025-01-01",
+          "anchorField": "year",
+          "fxSource": {
+            "sourceId": "AR-BCRA-COM-A3500",
+            "sourceName": "AR-BCRA-COM-A3500",
+            "sourceUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+            "snapshotHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef"
+          }
+        }
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1134,7 +1170,9 @@
       "amount": {
         "value": 76817044.79,
         "currency": "USD",
-        "label": "USD 76.817.044,79 informado por MPF"
+        "label": "USD 76.817.044,79 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A.",
@@ -1213,7 +1251,9 @@
       "amount": {
         "value": 72802191.7,
         "currency": "USD",
-        "label": "USD 72.802.191,70 informado por MPF"
+        "label": "USD 72.802.191,70 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1292,7 +1332,9 @@
       "amount": {
         "value": 23445670.9,
         "currency": "USD",
-        "label": "USD 23.445.670,90 informado por MPF"
+        "label": "USD 23.445.670,90 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
@@ -1371,7 +1413,9 @@
       "amount": {
         "value": 37519987.64,
         "currency": "USD",
-        "label": "USD 37.519.987,64 informado por MPF"
+        "label": "USD 37.519.987,64 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1450,7 +1494,9 @@
       "amount": {
         "value": 26501228.02,
         "currency": "USD",
-        "label": "USD 26.501.228,02 informado por MPF"
+        "label": "USD 26.501.228,02 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A.",
