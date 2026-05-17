@@ -264,6 +264,7 @@ export default function FaroExperience({
         <EntryGate
           onStartGuide={() => {
             setViewMode("map");
+            setSelectedCaseId(selectDefaultDemoCase(allCases));
             setEntryOpen(false);
           }}
           onEnterMap={() => {
