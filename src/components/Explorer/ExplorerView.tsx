@@ -245,6 +245,7 @@ export default function ExplorerView({
         <div className={styles.statsGrid} aria-label="Resumen">
           <StatCard label="Obras" value={countryCases.length.toLocaleString("es-AR")} />
           <StatCard label="Monto" value={formatAmount(totalAmount.ars, totalAmount.usd)} />
+          <StatCard label="A revisar" value={stateCounts.review.toLocaleString("es-AR")} />
         </div>
       </main>
     </section>
