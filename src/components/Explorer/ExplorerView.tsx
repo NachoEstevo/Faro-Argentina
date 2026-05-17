@@ -61,6 +61,22 @@ export default function ExplorerView({
     [cases, selectedCountry],
   );
 
+  const yearBounds = useMemo(() => {
+    const years = countryAll
+      .map((caseFile) => caseFile.year)
+      .filter((value): value is number => value !== null);
+    if (years.length === 0) {
+      const now = new Date().getFullYear();
+      return { min: now, max: now };
+    }
+    return { min: Math.min(...years), max: Math.max(...years) };
+  }, [countryAll]);
+
+  const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
+  const [yearTo, setYearTo] = useState<number>(yearBounds.max);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return countryAll.filter((caseFile) => {
@@ -92,22 +108,6 @@ export default function ExplorerView({
       return haystack.includes(normalizedQuery);
     });
   }, [countryAll, query, stateFilters, yearFrom, yearTo]);
-
-  const yearBounds = useMemo(() => {
-    const years = countryAll
-      .map((caseFile) => caseFile.year)
-      .filter((value): value is number => value !== null);
-    if (years.length === 0) {
-      const now = new Date().getFullYear();
-      return { min: now, max: now };
-    }
-    return { min: Math.min(...years), max: Math.max(...years) };
-  }, [countryAll]);
-
-  const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
-  const [yearTo, setYearTo] = useState<number>(yearBounds.max);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(0);
 
   const PAGE_SIZE = 8;
   const pagedRows = useMemo(
