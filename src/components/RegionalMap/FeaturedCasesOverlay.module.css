@@ -57,15 +57,11 @@
     fc-pulse 1.6s ease-in-out infinite;
 }
 
-.dot_geo {
-  background: #fbbf24;
-  border: 2px solid rgba(0, 0, 0, 0.85);
-  box-sizing: border-box;
-  box-shadow:
-    0 0 0 1.5px rgba(251, 191, 36, 0.95),
-    0 0 12px 2px rgba(251, 191, 36, 0.55);
-}
-
+/* Both variants share the same dot styling — the documentary look
+   (pale cream center with amber ring) reads well on satellite imagery
+   and avoids the inconsistency the user flagged between geo and
+   documentary markers. */
+.dot_geo,
 .dot_documentary {
   background: #fef3c7;
   border: 2px solid #fbbf24;
