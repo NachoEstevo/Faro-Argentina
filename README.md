@@ -6,6 +6,10 @@ Faro no acusa. Faro muestra donde mirar, por que mirar ahi y con que evidencia.
 
 Es un mapa y scanner investigativo del dinero publico: toma fuentes oficiales dispersas y las transforma en casos navegables con obras, compras, proveedores, organismos, montos, fechas, receipts, caveats y export de evidencia.
 
+![Faro landing](docs/assets/faro-landing.jpg)
+
+_Entrada a Faro: presentacion del observatorio antes de abrir el mapa._
+
 ![Faro Explorer](docs/assets/faro-explorer.jpg)
 
 _Explorer investigador: busqueda, pivots y expedientes verificables a partir de fuentes oficiales._
