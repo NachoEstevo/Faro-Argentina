@@ -1,0 +1,14 @@
+.module {
+  --cp-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --cp-surface: #0d0f13;
+  --cp-border: rgba(255, 255, 255, 0.08);
+  --cp-border-soft: rgba(255, 255, 255, 0.06);
+  --cp-hover: rgba(255, 255, 255, 0.06);
+  --cp-fact-bg: rgba(255, 255, 255, 0.03);
+  --cp-text: #eef2f7;
+  --cp-text-muted: rgba(255, 255, 255, 0.6);
+  --cp-text-faint: rgba(255, 255, 255, 0.45);
+  --cp-accent: #5aa9e5;
+  --cp-radius: 12px;
+  --cp-radius-sm: 10px;
+}
