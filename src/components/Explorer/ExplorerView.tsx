@@ -56,13 +56,45 @@ export default function ExplorerView({
     () => new Set<StateFilter>(["verified", "review"]),
   );
 
-  const countryCases = useMemo(
+  const countryAll = useMemo(
     () => cases.filter((caseFile) => caseFile.countryCode === selectedCountry),
     [cases, selectedCountry],
   );
 
+  const countryCases = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return countryAll.filter((caseFile) => {
+      const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
+      const isReview = severity === "high" || severity === "medium";
+      const isNoGeometry = caseFile.coordinates === null;
+      const isVerified = !isReview && !isNoGeometry;
+      const matchState =
+        (stateFilters.has("verified") && isVerified) ||
+        (stateFilters.has("review") && isReview) ||
+        (stateFilters.has("no_geometry") && isNoGeometry);
+      if (!matchState && stateFilters.size > 0) return false;
+
+      if (caseFile.year !== null && (caseFile.year < yearFrom || caseFile.year > yearTo)) {
+        return false;
+      }
+
+      if (normalizedQuery.length === 0) return true;
+      const supplier = "supplierName" in caseFile ? caseFile.supplierName ?? "" : "";
+      const haystack = [
+        caseFile.workNumber,
+        caseFile.title,
+        caseFile.agencyName,
+        supplier,
+        caseFile.id,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(normalizedQuery);
+    });
+  }, [countryAll, query, stateFilters, yearFrom, yearTo]);
+
   const yearBounds = useMemo(() => {
-    const years = countryCases
+    const years = countryAll
       .map((caseFile) => caseFile.year)
       .filter((value): value is number => value !== null);
     if (years.length === 0) {
@@ -70,7 +102,7 @@ export default function ExplorerView({
       return { min: now, max: now };
     }
     return { min: Math.min(...years), max: Math.max(...years) };
-  }, [countryCases]);
+  }, [countryAll]);
 
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
@@ -85,17 +117,17 @@ export default function ExplorerView({
 
   const supplierCount = useMemo(() => {
     const set = new Set<string>();
-    for (const caseFile of countryCases) {
+    for (const caseFile of countryAll) {
       const name = "supplierName" in caseFile ? caseFile.supplierName : null;
       if (name) set.add(name.trim().toLowerCase());
     }
     return set.size;
-  }, [countryCases]);
+  }, [countryAll]);
 
   const totalAmount = useMemo(() => {
     let totalArs = 0;
     let totalUsd = 0;
-    for (const caseFile of countryCases) {
+    for (const caseFile of countryAll) {
       const amount = "amount" in caseFile ? caseFile.amount : null;
       if (!amount) continue;
       const value = amount.value;
@@ -103,20 +135,20 @@ export default function ExplorerView({
       else if (amount.currency === "USD") totalUsd += value;
     }
     return { ars: totalArs, usd: totalUsd };
-  }, [countryCases]);
+  }, [countryAll]);
 
   const stateCounts = useMemo(() => {
     let verified = 0;
     let review = 0;
     let noGeometry = 0;
-    for (const caseFile of countryCases) {
+    for (const caseFile of countryAll) {
       const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
       if (caseFile.coordinates === null) noGeometry += 1;
       else if (severity === "high" || severity === "medium") review += 1;
       else verified += 1;
     }
     return { verified, review, no_geometry: noGeometry };
-  }, [countryCases]);
+  }, [countryAll]);
 
   const toggleState = (id: StateFilter) => {
     setStateFilters((prev) => {
