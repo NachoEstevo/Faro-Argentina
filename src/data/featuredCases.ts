@@ -25,7 +25,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -50.0, lon: -44.0 },
     kicker: "OBRA · PATAGONIA",
     title: "Vialidad — Ruta 3 Patagonia",
-    blurb: "DNV · obras Santa Cruz/Chubut",
+    blurb: "Misma ruta y agencia que la causa que llegó a la Corte. ¿Qué pasa con la obra nueva?",
     tags: ["DNV", "USD 67M", "RN 3"],
   },
   {
@@ -36,7 +36,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -27.0, lon: -47.0 },
     kicker: "CAUSA JUDICIAL",
     title: "Cuadernos / La Camarita",
-    blurb: "Juicio oral TOF 7 · contratos y proveedores",
+    blurb: "Las anotaciones que sacudieron la Argentina. Sentencia 2026 — leé el detalle.",
     tags: ["Coimas", "Sentencia 2026", "TOF 7"],
   },
   // Peru
@@ -48,7 +48,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -2.0, lon: -62.0 },
     kicker: "OBRA · PASCO",
     title: "Pasco — obra Gobierno Regional",
-    blurb: "Expediente técnico + ejecución de obra",
+    blurb: "El contrato regional más grande del año. ¿Quién se llevó la obra de USD 52M?",
     tags: ["Gob. Regional", "USD 52M", "Obra grande"],
   },
   {
@@ -59,7 +59,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -6.0, lon: -100.0 },
     kicker: "CONTRATO · ICA",
     title: "Marcona — parque urbano",
-    blurb: "Municipalidad distrital · espacios públicos",
+    blurb: "Una municipalidad chica gasta USD 1.8M en un parque. Seguí la trazabilidad.",
     tags: ["Municipal", "USD 1.8M", "Obra urbana"],
   },
   // Chile
@@ -71,7 +71,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -28.0, lon: -105.0 },
     kicker: "SALUD · SANTIAGO",
     title: "Hospital Roberto del Río",
-    blurb: "Servicios clínicos pediátricos",
+    blurb: "Servicios clínicos para chicos en plena campaña IRA. Quién contrata y cómo se adjudicó.",
     tags: ["Salud", "Campaña IRA", "Santiago"],
   },
   {
@@ -82,7 +82,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -48.0, lon: -100.0 },
     kicker: "SALUD · VIÑA DEL MAR",
     title: "Marcapasos Hospital Fricke",
-    blurb: "Servicio quirúrgico de implantación y seguimiento",
+    blurb: "USD 2.3M en cirugía cardíaca. Trazá proveedor, monto y receipt oficial.",
     tags: ["Hospital", "USD 2.3M", "Salud"],
   },
 ];

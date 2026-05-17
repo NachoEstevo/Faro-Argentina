@@ -188,15 +188,6 @@ export default function FeaturedCasesOverlay() {
               <Icon size={11} aria-hidden /> {fc.kicker}
             </span>
             <strong className={styles.title}>{fc.title}</strong>
-            {fc.tags.length > 0 && (
-              <span className={styles.tagRow}>
-                {fc.tags.map((tag) => (
-                  <span key={tag} className={styles.tag}>
-                    {tag}
-                  </span>
-                ))}
-              </span>
-            )}
             <span className={styles.blurb}>{fc.blurb}</span>
             <span className={styles.action}>
               {actionLabel} <ArrowRight size={12} aria-hidden />
