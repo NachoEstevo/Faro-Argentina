@@ -5,6 +5,7 @@ node_modules/
 *.log
 *-preview.png
 public/exports/
+.faro-contributions/
 .env
 .env.*
 !.env.example

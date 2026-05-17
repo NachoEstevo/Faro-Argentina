@@ -1,0 +1,371 @@
+.shell {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+  background:
+    linear-gradient(135deg, rgba(13, 15, 19, 0.98), rgba(18, 26, 34, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 42px);
+  color: var(--cf-text);
+  min-height: 0;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+  border-right: 1px solid var(--cf-border);
+  background: rgba(13, 15, 19, 0.62);
+}
+
+.modeSwitch {
+  display: inline-flex;
+  width: fit-content;
+  overflow: hidden;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-bg);
+}
+
+.modeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-right: 1px solid var(--cf-border);
+  background: transparent;
+  color: var(--cf-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.modeButton:last-child {
+  border-right: 0;
+}
+
+.modeButton:hover {
+  color: var(--cf-text);
+  background: var(--cf-bg-surface);
+}
+
+.activeMode {
+  color: var(--cf-on-accent);
+  background: var(--cf-accent);
+}
+
+.activeMode:hover {
+  color: var(--cf-on-accent);
+  background: var(--cf-accent-hi);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cf-accent);
+}
+
+.title {
+  margin: 0;
+  max-width: 12ch;
+  font-family: var(--cf-font-heading);
+  font-size: clamp(34px, 6vw, 64px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.intro {
+  margin: 0;
+  max-width: 30rem;
+  color: var(--cf-text-secondary);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.rules {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--cf-border);
+}
+
+.rule {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.rule svg {
+  color: var(--cf-accent);
+}
+
+.content {
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(22px, 5vw, 56px);
+}
+
+.form {
+  display: grid;
+  gap: 22px;
+  max-width: 980px;
+}
+
+.section {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.section:last-of-type {
+  border-bottom: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.sectionHint {
+  margin: 0;
+  color: var(--cf-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.typeButton {
+  display: grid;
+  gap: 7px;
+  min-height: 86px;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.typeButton:hover,
+.typeActive {
+  border-color: var(--cf-accent-dim);
+  background: var(--cf-accent-faint);
+  color: var(--cf-text);
+}
+
+.typeButton svg {
+  color: var(--cf-accent);
+}
+
+.typeLabel {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.typeDescription {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.label {
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(13, 15, 19, 0.78);
+  color: var(--cf-text);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.input,
+.select {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.textarea {
+  min-height: 112px;
+  resize: vertical;
+  padding: 12px;
+  line-height: 1.5;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--cf-accent-dim);
+}
+
+.dropzone {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px dashed var(--cf-border-strong);
+  border-radius: var(--cf-radius-md);
+  background: rgba(13, 15, 19, 0.42);
+}
+
+.fileInput {
+  max-width: 100%;
+  color: var(--cf-text-secondary);
+}
+
+.fileList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fileChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 260px;
+  padding: 7px 9px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+}
+
+.fileChip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checks {
+  display: grid;
+  gap: 10px;
+}
+
+.checkRow {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.checkRow input {
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.status {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+}
+
+.statusError {
+  color: var(--cf-state-flag);
+}
+
+.statusSuccess {
+  color: var(--cf-state-verified);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .rules {
+    margin-top: 0;
+  }
+
+  .content {
+    padding: 18px;
+  }
+
+  .typeGrid,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

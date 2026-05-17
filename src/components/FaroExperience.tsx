@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, FileSearch, Map as MapIcon, MessageSquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -25,6 +25,7 @@ import {
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import CasePanel from "./MapUI/CasePanel";
+import AportesView from "./Aportes/AportesView";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
@@ -43,7 +44,7 @@ interface Props {
   explorerCases?: ExplorerCase[];
   initialCountry?: "AR" | "PE" | "CL";
   initialEntryOpen?: boolean;
-  initialMode?: "map" | "explorer";
+  initialMode?: "map" | "explorer" | "aportes";
 }
 
 const COUNTRY_META: Record<"AR" | "PE" | "CL", { label: string; status: string }> = {
@@ -78,7 +79,7 @@ export default function FaroExperience({
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
-  const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
+  const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
@@ -204,6 +205,10 @@ export default function FaroExperience({
   }, [countryReviewCases]);
 
   useEffect(() => {
+    if (viewMode === "aportes") {
+      setSelectedCaseId("");
+      return;
+    }
     const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
     if (selectedCaseId && !selectedPool.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId("");
@@ -406,6 +411,15 @@ export default function FaroExperience({
             <FileSearch size={13} aria-hidden />
             Explorer
           </button>
+          <button
+            type="button"
+            className={`${styles.floatingToggleButton} ${viewMode === "aportes" ? styles.active : ""}`}
+            onClick={() => setViewMode("aportes")}
+            aria-pressed={viewMode === "aportes"}
+          >
+            <MessageSquarePlus size={13} aria-hidden />
+            Aportes
+          </button>
         </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
@@ -428,6 +442,14 @@ export default function FaroExperience({
           }}
           onClearSelection={() => setSelectedCaseId("")}
           onSwitchToMap={() => setViewMode("map")}
+        />
+      )}
+
+      {viewMode === "aportes" && (
+        <AportesView
+          selectedCountry={selectedCountry}
+          onSwitchToMap={() => setViewMode("map")}
+          onSwitchToExplorer={() => setViewMode("explorer")}
         />
       )}
 
