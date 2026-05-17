@@ -561,7 +561,11 @@ function ExplorerDetail({
             value={caseFile.receipt.sourceName || caseFile.receipt.sourceId}
           />
           {caseFile.receipt.sourceUrl && (
-            <DetailRow label="URL" value={caseFile.receipt.sourceUrl} />
+            <DetailRow
+              label="URL"
+              value="Abrir fuente ↗"
+              href={caseFile.receipt.sourceUrl}
+            />
           )}
           <DetailRow
             label="Snapshot"
@@ -596,11 +600,31 @@ function ExplorerDetail({
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+function DetailRow({
+  label,
+  value,
+  href,
+}: {
+  label: string;
+  value: string;
+  href?: string | null;
+}) {
   return (
     <div className={styles.detailRow}>
       <span className={styles.detailRowLabel}>{label}</span>
-      <span className={styles.detailRowValue}>{value}</span>
+      {href ? (
+        <a
+          className={styles.detailRowLink}
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          title={value}
+        >
+          {value}
+        </a>
+      ) : (
+        <span className={styles.detailRowValue}>{value}</span>
+      )}
     </div>
   );
 }
@@ -781,7 +805,7 @@ function ProcedimientoCard({ caseFile }: { caseFile: ExplorerCase }) {
       {procedure && <DetailRow label="Número" value={procedure} />}
       {method && <DetailRow label="Modalidad" value={method} />}
       {awardNumber && <DetailRow label="Acto adjudicatario" value={awardNumber} />}
-      {awardUrl && <DetailRow label="Acto (URL)" value={awardUrl} />}
+      {awardUrl && <DetailRow label="Acto oficial" value="Abrir documento ↗" href={awardUrl} />}
     </div>
   );
 }

@@ -840,6 +840,24 @@
   white-space: nowrap;
 }
 
+.detailRowLink {
+  font-family: var(--cf-font-body);
+  font-size: 13.5px;
+  color: var(--cf-accent);
+  text-decoration: none;
+  text-align: right;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.detailRowLink:hover {
+  text-decoration: underline;
+  color: var(--cf-accent-hi);
+}
+
 @media (min-width: 1280px) {
   .detailCardHead {
     font-size: 12px;
