@@ -14,7 +14,6 @@ import {
 } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
-import CaseInspector from "./CaseInspector";
 import { CaseDetails } from "./CaseDetails";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
@@ -66,7 +65,6 @@ export default function FaroExperience({
   const [year, setYear] = useState<number | null>(null);
   const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
-  const [explorerPanelMode, setExplorerPanelMode] = useState<"inspector" | "expediente">("inspector");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
@@ -81,10 +79,6 @@ export default function FaroExperience({
     });
     return getYearBounds(pool);
   }, [crossCountryCases, dataset.cases, selectedCountry]);
-
-  useEffect(() => {
-    if (viewMode === "explorer") setExplorerPanelMode("inspector");
-  }, [selectedCaseId, viewMode]);
 
   useEffect(() => {
     if (year === null) return;
@@ -270,7 +264,6 @@ export default function FaroExperience({
           selectedCase={selectedCase}
           onSelectCase={(caseId, countryCode) => {
             setSelectedCountry(countryCode);
-            setExplorerPanelMode("inspector");
             setSelectedCaseId(caseId);
           }}
           onClearSelection={() => setSelectedCaseId("")}
@@ -278,32 +271,15 @@ export default function FaroExperience({
         />
       )}
 
-      {selectedCase && viewMode !== "explorer" && (
+      {selectedCase && viewMode === "map" && (
         <aside className="casePanel" aria-label="Expediente Faro">
-          {viewMode === "explorer" && explorerPanelMode === "inspector" ? (
-            <CaseInspector
-              caseFile={selectedCase}
-              signalContext={activeSignalContext}
-              onOpenFull={() => setExplorerPanelMode("expediente")}
-            />
-          ) : (
-            <>
-              {viewMode === "explorer" && (
-                <div className="panelModeBar">
-                  <button type="button" onClick={() => setExplorerPanelMode("inspector")}>
-                    Volver al inspector
-                  </button>
-                </div>
-              )}
-              <CaseDetails
-                caseFile={selectedCase}
-                dataset={dataset}
-                signalContext={activeSignalContext}
-                traceMode={traceMode}
-                onTraceModeChange={setTraceMode}
-              />
-            </>
-          )}
+          <CaseDetails
+            caseFile={selectedCase}
+            dataset={dataset}
+            signalContext={activeSignalContext}
+            traceMode={traceMode}
+            onTraceModeChange={setTraceMode}
+          />
         </aside>
       )}
 
@@ -319,7 +295,6 @@ export default function FaroExperience({
           }}
           onEnterExplorer={() => {
             setViewMode("explorer");
-            setExplorerPanelMode("inspector");
             setEntryOpen(false);
           }}
         />
