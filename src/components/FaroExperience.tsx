@@ -15,11 +15,13 @@ import {
   buildCaseSignalContext,
   buildCaseSignals,
   getCaseAlertSeverity,
-  selectLeadCaseSignal,
-  type CaseSignalFamily,
   type CaseSignalSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
+import {
+  FINDING_CODES,
+  type FindingOption,
+} from "./RegionalMap/SidebarFilters";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import CasePanel from "./MapUI/CasePanel";
@@ -73,7 +75,7 @@ export default function FaroExperience({
   const [query, setQuery] = useState("");
   const [yearFrom, setYearFrom] = useState<number | null>(null);
   const [yearTo, setYearTo] = useState<number | null>(null);
-  const [selectedFamilies, setSelectedFamilies] = useState<Set<CaseSignalFamily>>(new Set());
+  const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
@@ -148,8 +150,16 @@ export default function FaroExperience({
       return true;
     });
 
-    if (selectedFamilies.size === 0 && selectedSeverities.size === 0) {
+    if (selectedFindings.size === 0 && selectedSeverities.size === 0) {
       return base;
+    }
+
+    // Pre-compute the union of signal codes a case needs to expose to match
+    // the active "Hallazgo" chips. A case matches if it carries ANY of those
+    // codes (OR within findings, AND across other filter groups).
+    const findingCodes = new Set<string>();
+    for (const finding of selectedFindings) {
+      for (const code of FINDING_CODES[finding]) findingCodes.add(code);
     }
 
     return base.filter((caseFile) => {
@@ -157,10 +167,9 @@ export default function FaroExperience({
         const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
         if (!severity || !selectedSeverities.has(severity)) return false;
       }
-      if (selectedFamilies.size > 0) {
+      if (findingCodes.size > 0) {
         const signals = buildCaseSignals(caseFile as SignalCaseFile, countrySignalContext);
-        const primary = selectLeadCaseSignal(signals);
-        if (!primary?.family || !selectedFamilies.has(primary.family)) return false;
+        if (!signals.some((signal) => findingCodes.has(signal.code))) return false;
       }
       return true;
     });
@@ -171,7 +180,7 @@ export default function FaroExperience({
     effectiveYearTo,
     query,
     selectedCountry,
-    selectedFamilies,
+    selectedFindings,
     selectedSeverities,
   ]);
 
@@ -253,11 +262,11 @@ export default function FaroExperience({
     setSidebarCollapsed((value) => !value);
   }, []);
 
-  const handleToggleFamily = useCallback((family: CaseSignalFamily) => {
-    setSelectedFamilies((current) => {
+  const handleToggleFinding = useCallback((finding: FindingOption) => {
+    setSelectedFindings((current) => {
       const next = new Set(current);
-      if (next.has(family)) next.delete(family);
-      else next.add(family);
+      if (next.has(finding)) next.delete(finding);
+      else next.add(finding);
       return next;
     });
   }, []);
@@ -274,7 +283,7 @@ export default function FaroExperience({
   const handleClearFilters = useCallback(() => {
     setYearFrom(null);
     setYearTo(null);
-    setSelectedFamilies(new Set());
+    setSelectedFindings(new Set());
     setSelectedSeverities(new Set());
   }, []);
 
@@ -282,10 +291,10 @@ export default function FaroExperience({
     () => ({
       yearFrom: effectiveYearFrom,
       yearTo: effectiveYearTo,
-      families: selectedFamilies,
+      findings: selectedFindings,
       severities: selectedSeverities,
     }),
-    [effectiveYearFrom, effectiveYearTo, selectedFamilies, selectedSeverities],
+    [effectiveYearFrom, effectiveYearTo, selectedFindings, selectedSeverities],
   );
 
   useEffect(() => {
@@ -340,7 +349,7 @@ export default function FaroExperience({
         onYearToChange={(value) =>
           setYearTo(value === yearBounds.max ? null : value)
         }
-        onToggleFamily={handleToggleFamily}
+        onToggleFinding={handleToggleFinding}
         onToggleSeverity={handleToggleSeverity}
         onClearFilters={handleClearFilters}
         leads={leads}

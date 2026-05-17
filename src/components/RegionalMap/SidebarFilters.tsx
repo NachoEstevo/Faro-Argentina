@@ -2,18 +2,52 @@
 
 import { X } from "lucide-react";
 
-import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignals";
+import type { CaseSignalSeverity } from "@/lib/data/caseSignals";
 import styles from "./SidebarFilters.module.css";
 
-const FAMILY_LABELS: Record<CaseSignalFamily, string> = {
-  competition: "Competencia",
-  money: "Dinero",
-  supplier: "Proveedor",
-  traceability: "Trazabilidad",
-  geo_visual: "Geo/visual",
-  data_gap: "Falta de dato",
-  context: "Contexto",
+/**
+ * Curated "findings" — UI groupings of one or more raw signal codes that a
+ * non-technical investigator can recognize. Each option resolves to the set
+ * of signal codes that, if present on a case, count as a match.
+ */
+export type FindingOption =
+  | "low_competition"
+  | "recurring_supplier"
+  | "over_budget"
+  | "claims"
+  | "supplier_alias"
+  | "missing_amount";
+
+export const FINDING_CODES: Record<FindingOption, string[]> = {
+  low_competition: ["single_bidder", "limited_competition"],
+  recurring_supplier: [
+    "recurring_supplier_agency",
+    "repeat_single_bid_winner",
+    "supplier_concentration",
+  ],
+  over_budget: ["amount_over_official_budget"],
+  claims: ["high_claim_volume"],
+  supplier_alias: ["possible_supplier_alias"],
+  missing_amount: ["missing_amount"],
 };
+
+const FINDING_LABELS: Record<FindingOption, string> = {
+  low_competition: "Competencia baja",
+  recurring_supplier: "Proveedor recurrente",
+  over_budget: "Monto sobre presupuesto",
+  claims: "Reclamos asociados",
+  supplier_alias: "Posible alias proveedor",
+  missing_amount: "Monto faltante",
+};
+
+const FINDING_ORDER: FindingOption[] = [
+  "low_competition",
+  "recurring_supplier",
+  "over_budget",
+  "claims",
+  "supplier_alias",
+  "missing_amount",
+];
 
 const SEVERITY_LABELS: Record<CaseSignalSeverity, string> = {
   high: "Alta",
@@ -21,22 +55,12 @@ const SEVERITY_LABELS: Record<CaseSignalSeverity, string> = {
   low: "Baja",
 };
 
-const FAMILY_ORDER: CaseSignalFamily[] = [
-  "competition",
-  "money",
-  "supplier",
-  "traceability",
-  "geo_visual",
-  "data_gap",
-  "context",
-];
-
 const SEVERITY_ORDER: CaseSignalSeverity[] = ["high", "medium", "low"];
 
 export interface SidebarFiltersValue {
   yearFrom: number;
   yearTo: number;
-  families: Set<CaseSignalFamily>;
+  findings: Set<FindingOption>;
   severities: Set<CaseSignalSeverity>;
 }
 
@@ -45,7 +69,7 @@ interface Props {
   yearBounds: { min: number; max: number };
   onYearFromChange: (year: number) => void;
   onYearToChange: (year: number) => void;
-  onToggleFamily: (family: CaseSignalFamily) => void;
+  onToggleFinding: (finding: FindingOption) => void;
   onToggleSeverity: (severity: CaseSignalSeverity) => void;
   onClearAll: () => void;
 }
@@ -55,7 +79,7 @@ export default function SidebarFilters({
   yearBounds,
   onYearFromChange,
   onYearToChange,
-  onToggleFamily,
+  onToggleFinding,
   onToggleSeverity,
   onClearAll,
 }: Props) {
@@ -65,13 +89,13 @@ export default function SidebarFilters({
   const hasAny =
     value.yearFrom !== yearBounds.min ||
     value.yearTo !== yearBounds.max ||
-    value.families.size > 0 ||
+    value.findings.size > 0 ||
     value.severities.size > 0;
 
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <p className={styles.eyebrow}>Filtros</p>
+        <h3 className={styles.title}>Filtros</h3>
         {hasAny && (
           <button
             type="button"
@@ -124,19 +148,19 @@ export default function SidebarFilters({
       </div>
 
       <div className={styles.group}>
-        <span className={styles.groupLabel}>Familia</span>
-        <div className={styles.chipRow}>
-          {FAMILY_ORDER.map((family) => {
-            const active = value.families.has(family);
+        <span className={styles.groupLabel}>Hallazgo</span>
+        <div className={styles.chipColumn}>
+          {FINDING_ORDER.map((finding) => {
+            const active = value.findings.has(finding);
             return (
               <button
-                key={family}
+                key={finding}
                 type="button"
-                className={`${styles.chip} ${active ? styles.chipActive : ""}`}
-                onClick={() => onToggleFamily(family)}
+                className={`${styles.chip} ${styles.chipFlex} ${active ? styles.chipActive : ""}`}
+                onClick={() => onToggleFinding(finding)}
                 aria-pressed={active}
               >
-                {FAMILY_LABELS[family]}
+                {FINDING_LABELS[finding]}
               </button>
             );
           })}
