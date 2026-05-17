@@ -267,17 +267,18 @@ export default function FaroExperience({
           cases={allCases}
           selectedCountry={selectedCountry}
           onSelectCountry={setSelectedCountry}
-          selectedCaseId={selectedCase?.id ?? null}
+          selectedCase={selectedCase}
           onSelectCase={(caseId, countryCode) => {
             setSelectedCountry(countryCode);
             setExplorerPanelMode("inspector");
             setSelectedCaseId(caseId);
           }}
+          onClearSelection={() => setSelectedCaseId("")}
           onSwitchToMap={() => setViewMode("map")}
         />
       )}
 
-      {selectedCase && (
+      {selectedCase && viewMode !== "explorer" && (
         <aside className="casePanel" aria-label="Expediente Faro">
           {viewMode === "explorer" && explorerPanelMode === "inspector" ? (
             <CaseInspector

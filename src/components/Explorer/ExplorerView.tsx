@@ -26,8 +26,9 @@ interface Props {
   cases: ExplorerCase[];
   selectedCountry: CountryCode;
   onSelectCountry: (code: CountryCode) => void;
-  selectedCaseId: string | null;
+  selectedCase: ExplorerCase | null;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+  onClearSelection: () => void;
   onSwitchToMap: () => void;
 }
 
@@ -49,7 +50,9 @@ export default function ExplorerView({
   cases,
   selectedCountry,
   onSelectCountry,
+  selectedCase,
   onSelectCase,
+  onClearSelection,
   onSwitchToMap,
 }: Props) {
   const [stateFilters, setStateFilters] = useState<Set<StateFilter>>(
@@ -247,6 +250,10 @@ export default function ExplorerView({
         </div>
       </aside>
       <main className={styles.main}>
+        {selectedCase ? (
+          <ExplorerDetail caseFile={selectedCase} onBack={onClearSelection} />
+        ) : (
+        <>
         <header className={styles.mainHeader}>
           <h1 className={styles.mainTitle}>Explorer</h1>
           <div className={styles.modeToggle} role="group" aria-label="Modo de exploración">
@@ -390,7 +397,23 @@ export default function ExplorerView({
             </tbody>
           </table>
         </div>
+        </>
+        )}
       </main>
+    </section>
+  );
+}
+
+function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: () => void }) {
+  return (
+    <section className={styles.detail} aria-label="Detalle de expediente">
+      <button type="button" className={styles.detailBack} onClick={onBack}>
+        ← Volver al listado
+      </button>
+      <h2 className={styles.detailTitle}>{caseFile.title}</h2>
+      <p className={styles.detailEyebrow}>
+        {caseFile.countryCode} · #{caseFile.workNumber}
+      </p>
     </section>
   );
 }

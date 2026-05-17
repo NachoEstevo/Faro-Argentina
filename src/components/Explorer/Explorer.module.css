@@ -570,3 +570,42 @@
   font-family: var(--cf-font-data);
   font-size: 12px;
 }
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 40px;
+}
+
+.detailBack {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  color: var(--cf-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.detailBack:hover {
+  color: var(--cf-text);
+}
+
+.detailEyebrow {
+  margin: 0;
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cf-text-muted);
+}
+
+.detailTitle {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--cf-text);
+  line-height: 1.15;
+}
