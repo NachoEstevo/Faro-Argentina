@@ -167,18 +167,13 @@ async function putR2Object({
   ].join("\n");
   const signingKey = getSignatureKey(config.secretAccessKey, dateStamp, "auto", "s3");
   const signature = hmacHex(signingKey, stringToSign);
-  const authorization = [
-    "AWS4-HMAC-SHA256",
-    `Credential=${config.accessKeyId}/${credentialScope}`,
-    `SignedHeaders=${signedHeaders}`,
-    `Signature=${signature}`,
-  ].join(", ");
+  const authorization = `AWS4-HMAC-SHA256 Credential=${config.accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
 
   const response = await fetch(url, {
     method: "PUT",
     headers: {
       ...headers,
-      authorization,
+      Authorization: authorization,
     },
     body: Buffer.from(body),
   });
