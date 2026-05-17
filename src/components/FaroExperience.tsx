@@ -17,7 +17,7 @@ import {
 } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
-import { CaseDetails } from "./CaseDetails";
+import CasePanel from "./MapUI/CasePanel";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
@@ -326,12 +326,19 @@ export default function FaroExperience({
 
       {selectedCase && viewMode === "map" && (
         <aside className="casePanel" aria-label="Expediente Faro">
-          <CaseDetails
+          <CasePanel
             caseFile={selectedCase}
-            dataset={dataset}
             signalContext={activeSignalContext}
             traceMode={traceMode}
             onTraceModeChange={setTraceMode}
+            onClose={() => setSelectedCaseId("")}
+            waybackState={waybackState}
+            onWaybackReleaseChange={(releaseId) => {
+              setWaybackState((current) =>
+                current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,
+              );
+            }}
+            onWaybackRetry={() => setWaybackRetryToken((token) => token + 1)}
           />
         </aside>
       )}
