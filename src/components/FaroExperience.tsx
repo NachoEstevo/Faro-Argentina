@@ -273,6 +273,7 @@ export default function FaroExperience({
             setExplorerPanelMode("inspector");
             setSelectedCaseId(caseId);
           }}
+          onSwitchToMap={() => setViewMode("map")}
         />
       )}
 

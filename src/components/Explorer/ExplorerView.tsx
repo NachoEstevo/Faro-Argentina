@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Download, PanelLeftClose, Plus } from "lucide-react";
+import { Download, FileSearch, Map as MapIcon, PanelLeftClose, Plus } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
@@ -19,6 +19,7 @@ interface Props {
   onSelectCountry: (code: CountryCode) => void;
   selectedCaseId: string | null;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+  onSwitchToMap: () => void;
 }
 
 type StateFilter = "verified" | "review" | "no_geometry";
@@ -29,7 +30,7 @@ const STATE_OPTIONS: Array<{ id: StateFilter; label: string }> = [
   { id: "no_geometry", label: "Sin geometría" },
 ];
 
-export default function ExplorerView({ cases, selectedCountry }: Props) {
+export default function ExplorerView({ cases, selectedCountry, onSwitchToMap }: Props) {
   const [stateFilters, setStateFilters] = useState<Set<StateFilter>>(
     () => new Set<StateFilter>(["verified", "review"]),
   );
@@ -165,6 +166,20 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
       <main className={styles.main}>
         <header className={styles.mainHeader}>
           <h1 className={styles.mainTitle}>Explorer</h1>
+          <div className={styles.modeToggle} role="group" aria-label="Modo de exploración">
+            <button type="button" className={styles.modeToggleButton} onClick={onSwitchToMap}>
+              <MapIcon size={13} aria-hidden />
+              Mapa
+            </button>
+            <button
+              type="button"
+              className={`${styles.modeToggleButton} ${styles.modeToggleActive}`}
+              aria-pressed
+            >
+              <FileSearch size={13} aria-hidden />
+              Explorer
+            </button>
+          </div>
         </header>
       </main>
     </section>
