@@ -29,41 +29,50 @@
   stroke-dasharray: 3 3;
 }
 
-/* The landing map uses Esri satellite imagery, so dots need to read
-   against varied earth tones. A warm amber pops out far better than
-   the accent blue, and a stronger pulse + larger size make them
-   genuinely "blink" instead of fading politely. */
-.dot {
+/* The dot is split in two layers so the pulse `transform: scale(...)`
+   in the keyframes doesn't clobber the positioning translate that
+   places the marker on the map. */
+.dotPositioner {
   position: absolute;
   top: 0;
   left: 0;
-  width: 12px;
-  height: 12px;
-  margin-left: -6px;
-  margin-top: -6px;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.dot {
+  display: block;
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   pointer-events: auto;
   cursor: pointer;
   opacity: 1;
   animation:
     fc-enter 320ms var(--fc-ease) backwards,
-    fc-pulse 1.8s ease-in-out infinite;
+    fc-pulse 1.6s ease-in-out infinite;
 }
 
 .dot_geo {
   background: #fbbf24;
+  border: 3px solid rgba(0, 0, 0, 0.85);
+  box-sizing: border-box;
   box-shadow:
-    0 0 0 2px rgba(0, 0, 0, 0.55),
-    0 0 0 8px rgba(251, 191, 36, 0.28);
+    0 0 0 2px rgba(251, 191, 36, 0.95),
+    0 0 18px 4px rgba(251, 191, 36, 0.55);
 }
 
 .dot_documentary {
-  background: #fde047;
-  border: 2px solid #fbbf24;
+  background: #fef3c7;
+  border: 3px solid #fbbf24;
   box-sizing: border-box;
   box-shadow:
-    0 0 0 2px rgba(0, 0, 0, 0.55),
-    0 0 0 8px rgba(253, 224, 71, 0.22);
+    0 0 0 2px rgba(0, 0, 0, 0.7),
+    0 0 14px 3px rgba(251, 191, 36, 0.45);
 }
 
 .card {
@@ -189,15 +198,11 @@
   0%,
   100% {
     transform: scale(1);
-    box-shadow:
-      0 0 0 2px rgba(0, 0, 0, 0.55),
-      0 0 0 8px rgba(251, 191, 36, 0.28);
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.55));
   }
   50% {
-    transform: scale(1.18);
-    box-shadow:
-      0 0 0 2px rgba(0, 0, 0, 0.55),
-      0 0 0 16px rgba(251, 191, 36, 0.05);
+    transform: scale(1.25);
+    filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.85));
   }
 }
 

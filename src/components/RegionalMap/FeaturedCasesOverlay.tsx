@@ -52,11 +52,11 @@ export default function FeaturedCasesOverlay() {
       for (const fc of FEATURED_CASES) {
         const dot = map.latLngToContainerPoint([fc.marker.lat, fc.marker.lon]);
         const card = map.latLngToContainerPoint([fc.callout.lat, fc.callout.lon]);
-        // Card translate places its top-left at (card.x, card.y). Pick the
-        // card corner that's closest to the dot so the leader line tucks
-        // into the card naturally instead of always biting the top-left.
-        const lineEndX = dot.x < card.x + CARD_WIDTH / 2 ? card.x : card.x + CARD_WIDTH;
-        const lineEndY = dot.y < card.y + CARD_HEIGHT / 2 ? card.y : card.y + CARD_HEIGHT;
+        // Card translate places its top-left at (card.x, card.y). The
+        // leader line ends at the card's geometric center so the line
+        // reads as pointing TO the card as a whole, not biting a corner.
+        const lineEndX = card.x + CARD_WIDTH / 2;
+        const lineEndY = card.y + CARD_HEIGHT / 2;
         const visible =
           dot.x > -MARGIN &&
           dot.y > -MARGIN &&
@@ -142,18 +142,23 @@ export default function FeaturedCasesOverlay() {
         const p = projections[fc.caseId];
         if (!p) return null;
         const delay = 200 + index * 80;
+        // The dot is split in two: the positioner uses `transform: translate`
+        // to place it at the projected pixel; the inner glyph runs the pulse
+        // animation (which also uses `transform: scale`). Without the split,
+        // the keyframes would overwrite the positioning transform and the
+        // dot would collapse to the parent's top-left corner.
         return (
           <span
             key={`dot-${fc.caseId}`}
-            className={`${styles.dot} ${styles[`dot_${fc.variant}`]} ${
-              p.visible ? "" : styles.hidden
-            }`}
-            style={{
-              transform: `translate(${p.dotX}px, ${p.dotY}px)`,
-              animationDelay: `${delay}ms`,
-            }}
+            className={`${styles.dotPositioner} ${p.visible ? "" : styles.hidden}`}
+            style={{ transform: `translate(${p.dotX}px, ${p.dotY}px)` }}
             aria-hidden
-          />
+          >
+            <span
+              className={`${styles.dot} ${styles[`dot_${fc.variant}`]}`}
+              style={{ animationDelay: `${delay}ms` }}
+            />
+          </span>
         );
       })}
 
