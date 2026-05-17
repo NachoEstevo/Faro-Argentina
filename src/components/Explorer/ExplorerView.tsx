@@ -47,6 +47,7 @@ export default function ExplorerView({
   cases,
   selectedCountry,
   onSelectCountry,
+  onSelectCase,
   onSwitchToMap,
 }: Props) {
   const [stateFilters, setStateFilters] = useState<Set<StateFilter>>(
@@ -72,6 +73,13 @@ export default function ExplorerView({
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+
+  const PAGE_SIZE = 8;
+  const pagedRows = useMemo(
+    () => countryCases.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+    [countryCases, page],
+  );
 
   const supplierCount = useMemo(() => {
     const set = new Set<string>();
@@ -270,12 +278,51 @@ export default function ExplorerView({
                 <th>Estado</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              {pagedRows.map((caseFile) => {
+                const supplierName =
+                  "supplierName" in caseFile ? caseFile.supplierName ?? "—" : "—";
+                const amount = "amount" in caseFile ? caseFile.amount : null;
+                return (
+                  <tr
+                    key={caseFile.id}
+                    className={styles.tableRow}
+                    onClick={() => onSelectCase(caseFile.id, caseFile.countryCode)}
+                  >
+                    <td className={styles.cellId}>#{caseFile.workNumber}</td>
+                    <td>{describeCaseType(caseFile)}</td>
+                    <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
+                    <td className={styles.cellEllipsis}>{supplierName}</td>
+                    <td className={styles.tableNumeric}>{formatRowAmount(amount)}</td>
+                    <td className={styles.cellMono}>{caseFile.year ?? "—"}</td>
+                    <td>—</td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       </main>
     </section>
   );
+}
+
+function describeCaseType(caseFile: ExplorerCase): string {
+  if ("caseType" in caseFile && caseFile.caseType) {
+    return caseFile.caseType.replace(/_/g, " ");
+  }
+  return "Obra";
+}
+
+function formatRowAmount(amount: { value: number; currency: string } | null | undefined): string {
+  if (!amount) return "—";
+  const abs = amount.value;
+  let formatted: string;
+  if (abs >= 1_000_000_000) formatted = `${(abs / 1_000_000_000).toFixed(1).replace(".", ",")} B`;
+  else if (abs >= 1_000_000) formatted = `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
+  else if (abs >= 1_000) formatted = `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
+  else formatted = abs.toLocaleString("es-AR");
+  return `${amount.currency} ${formatted}`;
 }
 
 function formatAmount(ars: number, usd: number): string {

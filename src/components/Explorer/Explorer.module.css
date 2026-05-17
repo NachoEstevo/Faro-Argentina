@@ -442,3 +442,38 @@
 .tableNumeric {
   text-align: right;
 }
+
+.tableRow {
+  cursor: pointer;
+  border-bottom: 1px solid var(--cf-border-subtle, var(--cf-border));
+}
+
+.tableRow td {
+  padding: 14px 12px;
+  color: var(--cf-text);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.tableRow:hover {
+  background: var(--cf-bg-elev);
+}
+
+.cellId {
+  font-family: var(--cf-font-data);
+  color: var(--cf-text-muted);
+  font-size: 12px;
+}
+
+.cellMono {
+  font-family: var(--cf-font-data);
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+}
+
+.cellEllipsis {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
