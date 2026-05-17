@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, Map as MapIcon, MessageSquarePlus } from "lucide-react";
+import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -33,6 +33,7 @@ import CasePanel from "./MapUI/CasePanel";
 import AportesView from "./Aportes/AportesView";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
+import InvestigationsView from "./Investigations/InvestigationsView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
 import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
@@ -49,7 +50,7 @@ interface Props {
   explorerCases?: ExplorerCase[];
   initialCountry?: "AR" | "PE" | "CL";
   initialEntryOpen?: boolean;
-  initialMode?: "map" | "explorer" | "aportes";
+  initialMode?: "map" | "explorer" | "aportes" | "investigations";
   initialCaseId?: string;
 }
 
@@ -87,7 +88,7 @@ export default function FaroExperience({
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
-  const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes">(initialMode);
+  const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes" | "investigations">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
@@ -231,7 +232,7 @@ export default function FaroExperience({
   }, [countryReviewCases]);
 
   useEffect(() => {
-    if (viewMode === "aportes") {
+    if (viewMode === "aportes" || viewMode === "investigations") {
       setSelectedCaseId("");
       return;
     }
@@ -337,6 +338,8 @@ export default function FaroExperience({
 
   const country = COUNTRY_META[selectedCountry];
   const syncLabel = "Datos hasta mayo 2026";
+  const showMapChrome = viewMode === "map";
+  const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
 
   const shellClasses = [
     styles.shell,
@@ -345,6 +348,10 @@ export default function FaroExperience({
   ]
     .filter(Boolean)
     .join(" ");
+
+  useEffect(() => {
+    if (!showMapChrome) setMobileMenuOpen(false);
+  }, [showMapChrome]);
 
   return (
     <main className={shellClasses}>
@@ -364,39 +371,41 @@ export default function FaroExperience({
         </div>
       </div>
 
-      <MobileHeader onOpenMenu={handleOpenMobileMenu} />
+      {showMapChrome && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}
 
-      <CountrySidebar
-        countryName={country.label}
-        sourceLabel={country.status}
-        visibleCount={countryReviewCases.length}
-        query={query}
-        onQueryChange={setQuery}
-        searchSuggestions={searchSuggestions}
-        searchPending={query.trim() !== debouncedQuery.trim()}
-        onSelectSearchSuggestion={handleSelectSearchSuggestion}
-        filters={filtersValue}
-        yearBounds={yearBounds}
-        onYearFromChange={(value) =>
-          setYearFrom(value === yearBounds.min ? null : value)
-        }
-        onYearToChange={(value) =>
-          setYearTo(value === yearBounds.max ? null : value)
-        }
-        onToggleFinding={handleToggleFinding}
-        onToggleSeverity={handleToggleSeverity}
-        onClearFilters={handleClearFilters}
-        leads={leads}
-        selectedCaseId={selectedCase?.id ?? null}
-        onSelectCase={setSelectedCaseId}
-        syncLabel={syncLabel}
-        collapsed={sidebarCollapsed}
-        onToggle={handleSidebarToggle}
-        mobileOpen={mobileMenuOpen}
-        onCloseMobile={handleCloseMobileMenu}
-      />
+      {showMapChrome && (
+        <CountrySidebar
+          countryName={country.label}
+          sourceLabel={country.status}
+          visibleCount={countryReviewCases.length}
+          query={query}
+          onQueryChange={setQuery}
+          searchSuggestions={searchSuggestions}
+          searchPending={query.trim() !== debouncedQuery.trim()}
+          onSelectSearchSuggestion={handleSelectSearchSuggestion}
+          filters={filtersValue}
+          yearBounds={yearBounds}
+          onYearFromChange={(value) =>
+            setYearFrom(value === yearBounds.min ? null : value)
+          }
+          onYearToChange={(value) =>
+            setYearTo(value === yearBounds.max ? null : value)
+          }
+          onToggleFinding={handleToggleFinding}
+          onToggleSeverity={handleToggleSeverity}
+          onClearFilters={handleClearFilters}
+          leads={leads}
+          selectedCaseId={selectedCase?.id ?? null}
+          onSelectCase={setSelectedCaseId}
+          syncLabel={syncLabel}
+          collapsed={sidebarCollapsed}
+          onToggle={handleSidebarToggle}
+          mobileOpen={mobileMenuOpen}
+          onCloseMobile={handleCloseMobileMenu}
+        />
+      )}
 
-      {mobileMenuOpen && (
+      {showMapChrome && mobileMenuOpen && (
         <button
           type="button"
           className={styles.mobileBackdrop}
@@ -405,59 +414,70 @@ export default function FaroExperience({
         />
       )}
 
-      <div className={styles.overlayLayer}>
-        <button
-          type="button"
-          className={styles.backToGlobal}
-          onClick={() => {
-            if (selectedCaseId) {
-              setSelectedCaseId("");
-              return;
-            }
-            router.push("/");
-          }}
-          aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
-        >
-          <ArrowLeft size={14} aria-hidden />
-          <span>{selectedCaseId ? country.label : "Mapa general"}</span>
-        </button>
-        <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
+      {showOverlayChrome && (
+        <div className={styles.overlayLayer}>
           <button
             type="button"
-            className={`${styles.floatingToggleButton} ${viewMode === "map" ? styles.active : ""}`}
-            onClick={() => setViewMode("map")}
-            aria-pressed={viewMode === "map"}
+            className={styles.backToGlobal}
+            onClick={() => {
+              if (selectedCaseId) {
+                setSelectedCaseId("");
+                return;
+              }
+              router.push("/");
+            }}
+            aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
           >
-            <MapIcon size={13} aria-hidden />
-            Mapa
+            <ArrowLeft size={14} aria-hidden />
+            <span>{selectedCaseId ? country.label : "Mapa general"}</span>
           </button>
-          <button
-            type="button"
-            className={`${styles.floatingToggleButton} ${viewMode === "explorer" ? styles.active : ""}`}
-            onClick={() => setViewMode("explorer")}
-            aria-pressed={viewMode === "explorer"}
-          >
-            <FileSearch size={13} aria-hidden />
-            Explorer
-          </button>
-          <button
-            type="button"
-            className={`${styles.floatingToggleButton} ${viewMode === "aportes" ? styles.active : ""}`}
-            onClick={() => setViewMode("aportes")}
-            aria-pressed={viewMode === "aportes"}
-          >
-            <MessageSquarePlus size={13} aria-hidden />
-            Aportes
-          </button>
+          <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
+            <button
+              type="button"
+              className={`${styles.floatingToggleButton} ${viewMode === "map" ? styles.active : ""}`}
+              onClick={() => setViewMode("map")}
+              aria-pressed={viewMode === "map"}
+            >
+              <MapIcon size={13} aria-hidden />
+              Mapa
+            </button>
+            <button
+              type="button"
+              className={`${styles.floatingToggleButton} ${viewMode === "explorer" ? styles.active : ""}`}
+              onClick={() => setViewMode("explorer")}
+              aria-pressed={viewMode === "explorer"}
+            >
+              <FileSearch size={13} aria-hidden />
+              Explorer
+            </button>
+            <button
+              type="button"
+              className={styles.floatingToggleButton}
+              onClick={() => setViewMode("aportes")}
+              aria-pressed={false}
+            >
+              <MessageSquarePlus size={13} aria-hidden />
+              Aportes
+            </button>
+            <button
+              type="button"
+              className={styles.floatingToggleButton}
+              onClick={() => setViewMode("investigations")}
+              aria-pressed={false}
+            >
+              <FolderOpen size={13} aria-hidden />
+              Investigaciones
+            </button>
+          </div>
+          {viewMode === "map" && !selectedCase && (
+            <MapLegend
+              highCount={severityCounts.high}
+              mediumCount={severityCounts.medium}
+              totalCount={severityCounts.total}
+            />
+          )}
         </div>
-        {viewMode === "map" && !selectedCase && (
-          <MapLegend
-            highCount={severityCounts.high}
-            mediumCount={severityCounts.medium}
-            totalCount={severityCounts.total}
-          />
-        )}
-      </div>
+      )}
 
       {viewMode === "explorer" && (
         <ExplorerView
@@ -479,6 +499,17 @@ export default function FaroExperience({
           selectedCountry={selectedCountry}
           onSwitchToMap={() => setViewMode("map")}
           onSwitchToExplorer={() => setViewMode("explorer")}
+          onSwitchToInvestigations={() => setViewMode("investigations")}
+        />
+      )}
+
+      {viewMode === "investigations" && (
+        <InvestigationsView
+          cases={allCases}
+          selectedCountry={selectedCountry}
+          onSwitchToMap={() => setViewMode("map")}
+          onSwitchToExplorer={() => setViewMode("explorer")}
+          onSwitchToAportes={() => setViewMode("aportes")}
         />
       )}
 

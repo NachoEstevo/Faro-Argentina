@@ -8,6 +8,7 @@ import {
   FilePlus2,
   FileSearch,
   Flag,
+  FolderOpen,
   Link as LinkIcon,
   Map as MapIcon,
   MessageSquarePlus,
@@ -22,6 +23,7 @@ interface Props {
   selectedCountry: "AR" | "PE" | "CL";
   onSwitchToMap: () => void;
   onSwitchToExplorer: () => void;
+  onSwitchToInvestigations: () => void;
 }
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -59,7 +61,7 @@ const contributionTypes = [
   },
 ] as const;
 
-export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchToExplorer }: Props) {
+export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchToExplorer, onSwitchToInvestigations }: Props) {
   const [type, setType] = useState<(typeof contributionTypes)[number]["id"]>("add_photo");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
   const [files, setFiles] = useState<File[]>([]);
@@ -122,6 +124,10 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           <button type="button" className={`${styles.modeButton} ${styles.activeMode}`} aria-pressed="true">
             <MessageSquarePlus size={13} aria-hidden />
             Aportes
+          </button>
+          <button type="button" className={styles.modeButton} onClick={onSwitchToInvestigations}>
+            <FolderOpen size={13} aria-hidden />
+            Investigaciones
           </button>
         </div>
         <p className={styles.eyebrow}>Revision privada</p>

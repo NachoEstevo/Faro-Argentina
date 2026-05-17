@@ -94,6 +94,12 @@ export interface CaseLeadFeed {
   leads: CaseLead[];
 }
 
+export interface InvestigationCasePack {
+  caseId: string;
+  expediente: ExpedienteView;
+  evidencePack: EvidencePack;
+}
+
 interface CrossCountryPayload {
   generatedAt: string;
   datasets: Array<CaseDataset<CrossCountryCaseFile>>;
@@ -208,6 +214,28 @@ export function getCaseReportById(id: string): CaseReportView | null {
     signalContextForCase(caseFile),
     getContextualCitationsForCase(caseFile.id),
   );
+}
+
+export function getInvestigationCasePacks(ids: string[]): {
+  casePacks: InvestigationCasePack[];
+  missingCaseIds: string[];
+} {
+  const casePacks: InvestigationCasePack[] = [];
+  const missingCaseIds: string[] = [];
+  for (const id of ids) {
+    const caseFile = getCaseById(id);
+    const expediente = caseFile ? getExpedienteById(id) : null;
+    if (!caseFile || !expediente) {
+      missingCaseIds.push(id);
+      continue;
+    }
+    casePacks.push({
+      caseId: id,
+      expediente,
+      evidencePack: buildEvidencePack(caseFile),
+    });
+  }
+  return { casePacks, missingCaseIds };
 }
 
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
