@@ -711,10 +711,11 @@
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
   padding: 4px;
-  border-radius: var(--cf-radius-md);
-  background: rgba(13, 15, 19, 0.8);
+  border-radius: 999px;
+  background: var(--cf-bg-overlay);
   border: 1px solid var(--cf-border);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -759,15 +760,14 @@
 .floatingToggleButton {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 16px;
-  border: 0;
-  border-radius: var(--cf-radius-sm);
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
   background: transparent;
-  color: var(--cf-text-secondary);
-  font-family: var(--cf-font-heading);
-  font-size: 13px;
-  font-weight: 500;
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  border-radius: 999px;
   cursor: pointer;
   text-decoration: none;
   transition: background-color 160ms ease, color 160ms ease;
@@ -778,10 +778,10 @@
 }
 
 .floatingToggleButton.active {
-  background: var(--cf-bg-surface);
+  background: var(--cf-bg);
   color: var(--cf-text);
   border: 1px solid var(--cf-border-strong);
-  padding: 7px 15px;
+  padding: 5px 13px;
 }
 
 .floatingToggleButton.active .floatingToggleIcon {
