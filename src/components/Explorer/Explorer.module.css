@@ -159,27 +159,81 @@
   color: var(--cf-text-muted);
 }
 
-.yearRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.filterRowHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
-.yearInput {
-  height: 30px;
-  background: var(--cf-bg);
-  border: 1px solid var(--cf-border);
-  border-radius: 6px;
-  color: var(--cf-text);
-  padding: 0 10px;
+.filterRowValue {
   font-family: var(--cf-font-data);
   font-size: 12px;
-  text-align: left;
+  color: var(--cf-text);
 }
 
-.yearInput:focus {
-  outline: none;
-  border-color: var(--cf-accent);
+.rangeSlider {
+  position: relative;
+  height: 22px;
+  margin-top: 4px;
+}
+
+.rangeSliderTrack {
+  position: absolute;
+  top: 10px;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  background: var(--cf-bg-overlay);
+  border-radius: 2px;
+}
+
+.rangeSliderFill {
+  position: absolute;
+  top: 10px;
+  height: 3px;
+  background: var(--cf-accent);
+  border-radius: 2px;
+}
+
+.rangeSliderInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: none;
+}
+
+.rangeSliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--cf-accent);
+  border: 2px solid var(--cf-bg);
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 0 0 1px var(--cf-accent);
+}
+
+.rangeSliderInput::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--cf-accent);
+  border: 2px solid var(--cf-bg);
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 0 0 1px var(--cf-accent);
+}
+
+.rangeSliderInput::-webkit-slider-runnable-track {
+  background: transparent;
 }
 
 .sidebarDivider {

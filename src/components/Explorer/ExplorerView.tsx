@@ -228,27 +228,20 @@ export default function ExplorerView({
             })}
           </div>
           <div className={styles.filterGroup}>
-            <p className={styles.filterGroupLabel}>Período</p>
-            <div className={styles.yearRow}>
-              <input
-                type="number"
-                className={styles.yearInput}
-                value={yearFrom}
-                min={yearBounds.min}
-                max={yearTo}
-                onChange={(event) => setYearFrom(Number(event.target.value))}
-                aria-label="Año desde"
-              />
-              <input
-                type="number"
-                className={styles.yearInput}
-                value={yearTo}
-                min={yearFrom}
-                max={yearBounds.max}
-                onChange={(event) => setYearTo(Number(event.target.value))}
-                aria-label="Año hasta"
-              />
+            <div className={styles.filterRowHead}>
+              <span className={styles.filterGroupLabel}>Período</span>
+              <span className={styles.filterRowValue}>
+                {yearFrom} – {yearTo}
+              </span>
             </div>
+            <RangeSlider
+              min={yearBounds.min}
+              max={yearBounds.max}
+              from={yearFrom}
+              to={yearTo}
+              onFromChange={setYearFrom}
+              onToChange={setYearTo}
+            />
           </div>
         </section>
         <hr className={styles.sidebarDivider} />
@@ -607,6 +600,54 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     <div className={styles.detailRow}>
       <span className={styles.detailRowLabel}>{label}</span>
       <span className={styles.detailRowValue}>{value}</span>
+    </div>
+  );
+}
+
+function RangeSlider({
+  min,
+  max,
+  from,
+  to,
+  onFromChange,
+  onToChange,
+}: {
+  min: number;
+  max: number;
+  from: number;
+  to: number;
+  onFromChange: (value: number) => void;
+  onToChange: (value: number) => void;
+}) {
+  const span = Math.max(1, max - min);
+  const fromPct = ((from - min) / span) * 100;
+  const toPct = ((to - min) / span) * 100;
+  return (
+    <div className={styles.rangeSlider}>
+      <div className={styles.rangeSliderTrack} aria-hidden />
+      <div
+        className={styles.rangeSliderFill}
+        aria-hidden
+        style={{ left: `${fromPct}%`, right: `${100 - toPct}%` }}
+      />
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={from}
+        onChange={(event) => onFromChange(Math.min(Number(event.target.value), to))}
+        className={styles.rangeSliderInput}
+        aria-label="Año desde"
+      />
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={to}
+        onChange={(event) => onToChange(Math.max(Number(event.target.value), from))}
+        className={styles.rangeSliderInput}
+        aria-label="Año hasta"
+      />
     </div>
   );
 }
