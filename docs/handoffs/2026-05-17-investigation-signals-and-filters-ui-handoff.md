@@ -33,6 +33,8 @@ Ahora tambien puede traer:
 - `family`: categoria semantica.
 - `severity`: intensidad de revision.
 - `confidence`: confianza de la senal.
+- `displayGroup`: rol de la senal en la experiencia.
+- `leadEligible`: si puede convertirse en pista principal o pivot destacado.
 - `relatedCaseIds`: expedientes relacionados que explican la recurrencia.
 - `sourceIds`: reservado para senales multi-fuente.
 
@@ -56,6 +58,28 @@ Ahora tambien puede traer:
 - `geo_visual`: geometria oficial y candidato satelital.
 - `data_gap`: falta de monto, pagos, avance, geometria confiable.
 - `context`: contexto general.
+
+## Display Groups
+
+`displayGroup` evita que Faro trate todo como una alerta. Una senal puede estar
+en el expediente sin ser candidata a pista principal.
+
+- `investigative`: patrones que ameritan revision prioritaria.
+- `data_gap`: falta o calidad de dato que cambia como se interpreta el caso.
+- `context`: dato verificable que ayuda a leer el expediente.
+- `capability`: habilita una vista o herramienta, por ejemplo mapa o satelite.
+
+`leadEligible` marca si una senal puede aparecer como senal principal en scanner,
+lead feed o pivots destacados.
+
+Regla actual:
+
+- `investigative` suele ser `leadEligible: true`.
+- brechas criticas como `missing_amount`, `possible_supplier_alias` y
+  `geometry_needs_review` tambien pueden ser `leadEligible: true`.
+- senales ubicuas como `official_geometry`, `sentinel_candidate`,
+  `supplier_identified` y `payment_verification_gap` quedan disponibles como
+  contexto del expediente, pero no dominan el ranking ni los pivots principales.
 
 ## Senales actuales
 
@@ -256,12 +280,16 @@ Debe distinguir:
 
 - Mostrar `kind` como estado visual principal.
 - Usar `family` para agrupaciones o filtros avanzados.
+- Usar `displayGroup` para decidir jerarquia visual.
+- Usar `leadEligible` para scanner rows, lead feed y pivots principales.
 - Mostrar `confidence` solo si ayuda; no deberia sentirse como un score de culpa.
 - No usar lenguaje acusatorio. Evitar terminos como fraude, delito, culpable,
   corrupcion, estafa, abuso, favoritismo o irregularidad.
 - El inspector derecho debe seguir siendo compacto: senal principal, hechos,
   evidencia, caveat y accion.
 - El expediente completo puede mostrar todas las senales y `relatedCaseIds`.
+- El expediente completo si puede mostrar senales de contexto/capacidad. La
+  restriccion es de jerarquia, no de ocultamiento de datos.
 - Los pivots de proveedor/organismo/senal son mas importantes que un dashboard
   de metricas decorativas.
 

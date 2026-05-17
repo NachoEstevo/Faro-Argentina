@@ -102,6 +102,31 @@ test("buildCaseLeads does not match nullish optional fields as query text", () =
   assert.equal(buildCaseLeads([sparseCase], { query: "null", limit: 10 }).length, 0);
 });
 
+test("buildCaseLeads does not promote geometry or satellite capability as an investigation lead", () => {
+  const geometryOnlyCase = {
+    id: "AR-WORK-604-0001-OBR21",
+    countryCode: "AR",
+    caseType: "public_work",
+    title: "Obra vial con geometria oficial",
+    workNumber: "604-0001-OBR21",
+    year: 2021,
+    procedureNumber: "604-0001-LPU21",
+    agencyName: "Direccion Nacional de Vialidad",
+    agencyCode: "604",
+    contractingUnit: "DNV",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -34.585722, lon: -58.389361 },
+    evidenceLevel: "official_dataset",
+    receipt,
+    caveats: ["Obra oficial; falta cruzar pagos y avance."],
+  };
+
+  const leads = buildCaseLeads([geometryOnlyCase], { limit: 10 });
+
+  assert.equal(leads.length, 0);
+});
+
 test("buildCaseLeads avoids accusation language", () => {
   const leads = buildCaseLeads([highPriorityCase], { limit: 10 });
 

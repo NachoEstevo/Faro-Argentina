@@ -73,6 +73,33 @@ test("buildInvestigatorExplorer keeps scanner copy non-accusatory", () => {
   assert.doesNotMatch(JSON.stringify(explorer), /corrup|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
 
+test("buildInvestigatorExplorer keeps ubiquitous capability signals out of default signal pivots", () => {
+  const explorer = buildInvestigatorExplorer(allCases, { limit: 500 });
+
+  assert.equal(
+    explorer.facets.some((facet) =>
+      facet.type === "signal" &&
+      ["official_geometry", "sentinel_candidate", "supplier_identified", "payment_verification_gap"].includes(facet.key)
+    ),
+    false,
+  );
+  assert.equal(
+    explorer.rows.some((row) => row.signalCodes.includes("sentinel_candidate")),
+    true,
+  );
+});
+
+test("buildInvestigatorExplorer leaves cases without lead-eligible signals navigable but not primary-ranked", () => {
+  const contextOnlyCase = buildExplorerFixture("AR-CONTRACT-381-1004-CON21", 5) as InvestigatorExplorerCase;
+  const explorer = buildInvestigatorExplorer([contextOnlyCase], { limit: 20 });
+  const row = explorer.rows[0];
+
+  assert.equal(row?.primarySignal, null);
+  assert.equal(row?.signalCodes.includes("payment_verification_gap"), true);
+  assert.equal(row?.signalCodes.includes("sentinel_candidate"), true);
+  assert.equal(explorer.facets.some((facet) => facet.type === "signal"), false);
+});
+
 test("buildInvestigatorExplorer exposes collection-aware supplier signals as searchable facets", () => {
   const recurringCases = [
     buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1),

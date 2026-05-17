@@ -2,6 +2,7 @@ import {
   buildCaseSignalContext,
   buildCaseSignalContextsByCountry,
   buildCaseSignals,
+  selectLeadCaseSignal,
   type CaseSignalContext,
   type CaseSignal,
   type SignalCaseFile,
@@ -52,7 +53,7 @@ export function buildCaseLeads(
 
 function toCaseLead(caseFile: SignalCaseFile, signalContext: CaseSignalContext): CaseLead | null {
   const signals = buildCaseSignals(caseFile, signalContext);
-  const primarySignal = signals[0];
+  const primarySignal = selectLeadCaseSignal(signals);
   if (!primarySignal) return null;
 
   return {

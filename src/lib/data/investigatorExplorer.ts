@@ -2,6 +2,7 @@ import {
   buildCaseSignalContext,
   buildCaseSignalContextsByCountry,
   buildCaseSignals,
+  selectPrimaryCaseSignal,
   type CaseSignalContext,
   type CaseSignal,
   type SignalCaseFile,
@@ -59,6 +60,8 @@ export interface InvestigatorCaseRow {
     agencyKey: string | null;
     sourceKey: string;
     signalKeys: string[];
+    signalFacetKeys: string[];
+    signalFacetLabels: string[];
   };
   exportHref: string;
   sortScore: number;
@@ -124,13 +127,14 @@ export function buildInvestigatorExplorer(
 
 function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: CaseSignalContext): InvestigatorCaseRow {
   const signals = buildCaseSignals(caseFile as SignalCaseFile, signalContext);
-  const primarySignal = signals[0] ?? null;
+  const primarySignal = selectPrimaryCaseSignal(signals);
   const receipt = caseFile.receipt;
   const locator = describeReceiptLocator(receipt.locatorType);
   const supplierLabel = formatSupplier(caseFile);
   const amount = getAmount(caseFile);
   const signalLabels = signals.map((signal) => signal.label);
   const signalCodes = signals.map((signal) => signal.code);
+  const signalFacets = signals.filter((signal) => signal.leadEligible);
   const sourceKey = entityKey(receipt.sourceId) ?? receipt.sourceId.toLowerCase();
   const row: Omit<InvestigatorCaseRow, "searchText"> = {
     caseId: caseFile.id,
@@ -160,9 +164,11 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
       agencyKey: entityKey(caseFile.agencyName),
       sourceKey,
       signalKeys: signalCodes,
+      signalFacetKeys: signalFacets.map((signal) => signal.code),
+      signalFacetLabels: signalFacets.map((signal) => signal.label),
     },
     exportHref: `/api/export/${encodeURIComponent(caseFile.id)}`,
-    sortScore: computeSortScore(signals, caseFile.coordinates !== null, amount?.value ?? null),
+    sortScore: computeSortScore(signals, primarySignal, caseFile.coordinates !== null, amount?.value ?? null),
   };
 
   return {
@@ -207,8 +213,8 @@ function buildFacets(rows: InvestigatorCaseRow[]): InvestigatorFacet[] {
     addFacet(facets, row, "source", row.entities.sourceKey, row.sourceName);
     addFacet(facets, row, "agency", row.entities.agencyKey, row.agencyName);
     addFacet(facets, row, "supplier", row.entities.supplierKey, row.supplierLabel);
-    row.signalCodes.forEach((signalCode, index) => {
-      addFacet(facets, row, "signal", signalCode, row.signalLabels[index] ?? signalCode);
+    row.entities.signalFacetKeys.forEach((signalCode, index) => {
+      addFacet(facets, row, "signal", signalCode, row.entities.signalFacetLabels[index] ?? signalCode);
     });
   }
 
@@ -292,10 +298,11 @@ function buildSearchText(row: Omit<InvestigatorCaseRow, "searchText">, signals: 
 
 function computeSortScore(
   signals: CaseSignal[],
+  primarySignal: CaseSignal | null,
   hasOfficialGeometry: boolean,
   amountValue: number | null,
 ): number {
-  const primaryPriority = signals[0]?.priority ?? 0;
+  const primaryPriority = primarySignal?.priority ?? 0;
   const geometryBonus = hasOfficialGeometry ? 4 : 0;
   const amountBonus = amountValue !== null ? Math.min(Math.log10(Math.max(amountValue, 1)), 12) : 0;
   return primaryPriority * 100 + signals.length * 6 + geometryBonus + amountBonus;

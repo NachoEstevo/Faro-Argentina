@@ -5,6 +5,7 @@ import {
   buildCaseSignalContext,
   buildCaseSignalFeed,
   buildCaseSignals,
+  selectLeadCaseSignal,
 } from "../src/lib/data/caseSignals.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 
@@ -106,6 +107,36 @@ test("buildCaseSignals does not treat invalid coordinates as official geometry",
   assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), false);
   assert.equal(signals.some((signal) => signal.code === "geometry_needs_review"), true);
   assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
+});
+
+test("buildCaseSignals keeps map and satellite capability out of lead selection", () => {
+  const signals = buildCaseSignals({
+    id: "AR-WORK-604-0001-OBR21",
+    countryCode: "AR",
+    caseType: "public_work",
+    title: "Obra vial con geometria oficial",
+    workNumber: "604-0001-OBR21",
+    year: 2021,
+    procedureNumber: "604-0001-LPU21",
+    agencyName: "Direccion Nacional de Vialidad",
+    agencyCode: "604",
+    contractingUnit: "DNV",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -34.585722, lon: -58.389361 },
+    evidenceLevel: "official_dataset",
+    receipt,
+    caveats: ["Obra oficial; falta cruzar pagos y avance."],
+  });
+
+  const officialGeometry = signals.find((signal) => signal.code === "official_geometry");
+  const sentinelCandidate = signals.find((signal) => signal.code === "sentinel_candidate");
+
+  assert.equal(officialGeometry?.displayGroup, "capability");
+  assert.equal(officialGeometry?.leadEligible, false);
+  assert.equal(sentinelCandidate?.displayGroup, "capability");
+  assert.equal(sentinelCandidate?.leadEligible, false);
+  assert.equal(selectLeadCaseSignal(signals), null);
 });
 
 test("buildCaseSignalFeed ranks concrete review leads across cases", () => {

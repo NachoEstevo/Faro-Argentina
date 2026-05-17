@@ -16,6 +16,7 @@ export type CaseSignalFamily =
   | "context";
 export type CaseSignalSeverity = "low" | "medium" | "high";
 export type CaseSignalConfidence = "low" | "medium" | "high";
+export type CaseSignalDisplayGroup = "investigative" | "data_gap" | "context" | "capability";
 
 export { buildCaseSignalContext, buildCaseSignalContextsByCountry, type CaseSignalContext };
 
@@ -25,6 +26,8 @@ export interface CaseSignal {
   family?: CaseSignalFamily;
   severity?: CaseSignalSeverity;
   confidence?: CaseSignalConfidence;
+  displayGroup?: CaseSignalDisplayGroup;
+  leadEligible?: boolean;
   priority: number;
   label: string;
   summary: string;
@@ -96,7 +99,15 @@ export function buildCaseSignals(caseFile: SignalCaseFile, context?: CaseSignalC
   addGeoSignals(signals, caseFile);
   addVerificationGapSignals(signals, caseFile);
 
-  return signals.sort((left, right) => right.priority - left.priority || left.code.localeCompare(right.code));
+  return sortCaseSignals(signals);
+}
+
+export function selectLeadCaseSignal(signals: CaseSignal[]): CaseSignal | null {
+  return sortCaseSignals(signals).find((signal) => signal.leadEligible) ?? null;
+}
+
+export function selectPrimaryCaseSignal(signals: CaseSignal[]): CaseSignal | null {
+  return selectLeadCaseSignal(signals);
 }
 
 export function buildCaseSignalFeed(
@@ -465,6 +476,70 @@ function addVerificationGapSignals(signals: CaseSignal[], caseFile: SignalCaseFi
     action: "Cruzar con ejecucion presupuestaria, pagos, recepciones y avance fisico.",
   });
 }
+
+function sortCaseSignals(signals: CaseSignal[]): CaseSignal[] {
+  return signals
+    .map(applySignalHygiene)
+    .sort(compareSignals);
+}
+
+function applySignalHygiene(signal: CaseSignal): CaseSignal {
+  const displayGroup = signal.displayGroup ?? classifySignalDisplay(signal);
+  return {
+    ...signal,
+    displayGroup,
+    leadEligible: signal.leadEligible ?? isLeadEligibleSignal(signal, displayGroup),
+  };
+}
+
+function classifySignalDisplay(signal: CaseSignal): CaseSignalDisplayGroup {
+  if (capabilitySignalCodes.has(signal.code)) return "capability";
+  if (investigativeSignalCodes.has(signal.code)) return "investigative";
+  if (signal.kind === "gap") return "data_gap";
+  return "context";
+}
+
+function isLeadEligibleSignal(signal: CaseSignal, displayGroup: CaseSignalDisplayGroup): boolean {
+  if (displayGroup === "investigative") return true;
+  return leadEligibleGapCodes.has(signal.code);
+}
+
+function compareSignals(left: CaseSignal, right: CaseSignal): number {
+  const leftGroup = left.displayGroup ?? classifySignalDisplay(left);
+  const rightGroup = right.displayGroup ?? classifySignalDisplay(right);
+  return signalDisplayRank[leftGroup] - signalDisplayRank[rightGroup] ||
+    Number(Boolean(right.leadEligible)) - Number(Boolean(left.leadEligible)) ||
+    right.priority - left.priority ||
+    left.code.localeCompare(right.code);
+}
+
+const signalDisplayRank: Record<CaseSignalDisplayGroup, number> = {
+  investigative: 0,
+  data_gap: 1,
+  context: 2,
+  capability: 3,
+};
+
+const investigativeSignalCodes = new Set([
+  "repeat_single_bid_winner",
+  "single_bidder",
+  "recurring_supplier_agency",
+  "amount_over_official_budget",
+  "supplier_concentration",
+  "high_claim_volume",
+  "limited_competition",
+]);
+
+const leadEligibleGapCodes = new Set([
+  "missing_amount",
+  "possible_supplier_alias",
+  "geometry_needs_review",
+]);
+
+const capabilitySignalCodes = new Set([
+  "official_geometry",
+  "sentinel_candidate",
+]);
 
 function numberOrNull(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
