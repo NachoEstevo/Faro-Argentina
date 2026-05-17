@@ -15,6 +15,30 @@ export interface FormattedAmount {
   showMissingChip: boolean;
 }
 
+/**
+ * Like formatAmountWithUsd but with USD as the primary line and the local
+ * currency as the secondary line. Used in compact summary surfaces (e.g.
+ * the case panel facts grid) where USD reads as the cross-country anchor.
+ * Drops the FX source/date suffix to keep the secondary line short; that
+ * provenance metadata still lives in the technical-details accordion.
+ */
+export function formatAmountUsdFirst(amount: AmountInput | null | undefined): FormattedAmount {
+  if (!amount) {
+    return { primary: "—", usdSegment: null, showMissingChip: false };
+  }
+  const local = `${amount.currency} ${Math.round(amount.value).toLocaleString("es-AR")}`;
+  if (amount.currency === "USD") {
+    return { primary: local, usdSegment: null, showMissingChip: false };
+  }
+  if (amount.usdEquivalent) {
+    const usdRounded = Math.round(amount.usdEquivalent.usd).toLocaleString("es-AR");
+    return { primary: `US$ ${usdRounded}`, usdSegment: local, showMissingChip: false };
+  }
+  const note = amount.usdConversionNote;
+  const showMissingChip = note !== undefined && note !== "already_usd";
+  return { primary: local, usdSegment: null, note, showMissingChip };
+}
+
 export function formatAmountWithUsd(amount: AmountInput | null | undefined): FormattedAmount {
   if (!amount) {
     return { primary: "—", usdSegment: null, showMissingChip: false };

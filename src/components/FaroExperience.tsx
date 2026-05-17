@@ -1,11 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
+import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
+import { resolveCaseYear } from "@/lib/data/caseYear";
+import type { WaybackState } from "./WaybackControl";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
 import {
@@ -15,7 +18,7 @@ import {
 } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
-import { CaseDetails } from "./CaseDetails";
+import CasePanel from "./MapUI/CasePanel";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
@@ -51,6 +54,7 @@ export default function FaroExperience({
   initialEntryOpen = true,
   initialMode = "map",
 }: Props) {
+  const router = useRouter();
   const allCases = useMemo(
     () => explorerCases ?? [...dataset.cases, ...crossCountryCases],
     [crossCountryCases, dataset.cases, explorerCases],
@@ -68,7 +72,9 @@ export default function FaroExperience({
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userToggledSidebar, setUserToggledSidebar] = useState(false);
+  const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
+  const [waybackRetryToken, setWaybackRetryToken] = useState(0);
+  const hasArmedWaybackRef = useRef(false);
 
   const yearBounds = useMemo(() => {
     const pool = filterExplorerCases({
@@ -85,21 +91,6 @@ export default function FaroExperience({
     if (year === null) return;
     if (year < yearBounds.min || year > yearBounds.max) setYear(null);
   }, [year, yearBounds.min, yearBounds.max]);
-
-  useEffect(() => {
-    if (userToggledSidebar) return;
-    const apply = () => {
-      const w = window.innerWidth;
-      if (w >= 901 && w <= 1180) {
-        setSidebarCollapsed(true);
-      } else if (w > 1180) {
-        setSidebarCollapsed(false);
-      }
-    };
-    apply();
-    window.addEventListener("resize", apply);
-    return () => window.removeEventListener("resize", apply);
-  }, [userToggledSidebar]);
 
   const countryCases = useMemo(() => {
     const filtered = filterExplorerCases({
@@ -169,10 +160,56 @@ export default function FaroExperience({
     selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
 
+  useEffect(() => {
+    let cancelled = false;
+    const coordinates = selectedCase?.coordinates;
+    const caseId = selectedCase?.id;
+    if (!caseId || !coordinates || viewMode !== "map") {
+      setWaybackState({ status: "off" });
+      hasArmedWaybackRef.current = true;
+      return;
+    }
+    if (!hasArmedWaybackRef.current) {
+      hasArmedWaybackRef.current = true;
+      return;
+    }
+    setWaybackState({ status: "loading", caseId });
+    loadYearlyReleases()
+      .then((releases) => {
+        if (cancelled) return;
+        if (releases.length === 0) {
+          setWaybackState({ status: "error", caseId, message: "Wayback no devolvio releases disponibles." });
+          return;
+        }
+        const targetYear = selectedCase ? resolveCaseYear(selectedCase) : null;
+        const initial = pickReleaseForYear(releases, targetYear) ?? releases[releases.length - 1];
+        setWaybackState({
+          status: "active",
+          caseId,
+          releases,
+          activeReleaseId: initial.releaseId,
+        });
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setWaybackState({
+          status: "error",
+          caseId,
+          message: error instanceof Error ? error.message : "Error desconocido",
+        });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, viewMode, waybackRetryToken]);
+
   const handleSidebarToggle = useCallback(() => {
-    setUserToggledSidebar(true);
     setSidebarCollapsed((value) => !value);
   }, []);
+
+  useEffect(() => {
+    setSidebarCollapsed(Boolean(selectedCaseId));
+  }, [selectedCaseId]);
 
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
@@ -198,6 +235,7 @@ export default function FaroExperience({
               selectedCaseId={selectedCase?.id ?? null}
               traceMode={traceMode}
               onSelectCase={setSelectedCaseId}
+              waybackState={waybackState}
             />
           ) : (
             <div className="explorerBackdrop" />
@@ -236,10 +274,21 @@ export default function FaroExperience({
       )}
 
       <div className={styles.overlayLayer}>
-        <Link href="/" className={styles.backToGlobal} aria-label="Volver al mapa general">
+        <button
+          type="button"
+          className={styles.backToGlobal}
+          onClick={() => {
+            if (selectedCaseId) {
+              setSelectedCaseId("");
+              return;
+            }
+            router.push("/");
+          }}
+          aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
+        >
           <ArrowLeft size={14} aria-hidden />
-          <span>Mapa general</span>
-        </Link>
+          <span>{selectedCaseId ? country.label : "Mapa general"}</span>
+        </button>
         <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
           <button
             type="button"
@@ -286,12 +335,19 @@ export default function FaroExperience({
 
       {selectedCase && viewMode === "map" && (
         <aside className="casePanel" aria-label="Expediente Faro">
-          <CaseDetails
+          <CasePanel
             caseFile={selectedCase}
-            dataset={dataset}
             signalContext={activeSignalContext}
             traceMode={traceMode}
             onTraceModeChange={setTraceMode}
+            onClose={() => setSelectedCaseId("")}
+            waybackState={waybackState}
+            onWaybackReleaseChange={(releaseId) => {
+              setWaybackState((current) =>
+                current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,
+              );
+            }}
+            onWaybackRetry={() => setWaybackRetryToken((token) => token + 1)}
           />
         </aside>
       )}

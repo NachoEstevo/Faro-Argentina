@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
@@ -10,21 +10,22 @@ import {
   type CaseAlertSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
-import { loadYearlyReleases, tileUrlForRelease } from "@/lib/data/wayback";
-import WaybackControl, { type WaybackState } from "./WaybackControl";
+import { tileUrlForRelease } from "@/lib/data/wayback";
+import type { WaybackState } from "./WaybackControl";
 
 interface Props {
   cases: ExplorerCase[];
   selectedCaseId: string | null;
   traceMode: boolean;
   onSelectCase: (id: string) => void;
+  waybackState: WaybackState;
 }
 
 const CARTODB_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 const CARTODB_ATTRIBUTION = "&copy; OpenStreetMap contributors &copy; CARTO";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 
-export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase }: Props) {
+export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase, waybackState }: Props) {
   const selectedCase = cases.find(
     (caseFile) => caseFile.id === selectedCaseId && isMapMarkerEligible(caseFile),
   ) ?? null;
@@ -38,77 +39,15 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
     return map;
   }, [mapCases]);
 
-  const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
-  const [retryToken, setRetryToken] = useState(0);
-  const hasArmedWaybackRef = useRef(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    const coordinates = selectedCase?.coordinates;
-    const caseId = selectedCase?.id;
-    if (!caseId || !coordinates) {
-      setWaybackState({ status: "off" });
-      hasArmedWaybackRef.current = true;
-      return;
-    }
-    if (!hasArmedWaybackRef.current) {
-      hasArmedWaybackRef.current = true;
-      return;
-    }
-    setWaybackState({ status: "loading", caseId });
-    loadYearlyReleases()
-      .then((releases) => {
-        if (cancelled) return;
-        if (releases.length === 0) {
-          setWaybackState({
-            status: "error",
-            caseId,
-            message: "Wayback no devolvio releases disponibles.",
-          });
-          return;
-        }
-        const latest = releases[releases.length - 1];
-        setWaybackState({
-          status: "active",
-          caseId,
-          releases,
-          activeReleaseId: latest.releaseId,
-        });
-      })
-      .catch((error: unknown) => {
-        if (cancelled) return;
-        setWaybackState({
-          status: "error",
-          caseId,
-          message: error instanceof Error ? error.message : "Error desconocido",
-        });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, retryToken]);
-
-  const handleActiveReleaseChange = useCallback((releaseId: number) => {
-    setWaybackState((current) =>
-      current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,
-    );
-  }, []);
-
   const handleClose = useCallback(() => {
-    setWaybackState({ status: "off" });
     onSelectCase("");
   }, [onSelectCase]);
-
-  const handleRetry = useCallback(() => {
-    setRetryToken((current) => current + 1);
-  }, []);
 
   const waybackTileUrl =
     waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
 
   return (
-    <>
-      <MapContainer
+    <MapContainer
         center={[-31.5, -64.2]}
         zoom={5}
         minZoom={3}
@@ -181,13 +120,6 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           );
         })}
       </MapContainer>
-      <WaybackControl
-        state={waybackState}
-        onActiveReleaseChange={handleActiveReleaseChange}
-        onClose={handleClose}
-        onRetry={handleRetry}
-      />
-    </>
   );
 }
 
