@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import {
+  ChevronLeft,
+  ChevronRight,
   Download,
   FileSearch,
   Map as MapIcon,
@@ -266,6 +268,54 @@ export default function ExplorerView({
           <StatCard label="Proveedores" value={supplierCount.toLocaleString("es-AR")} />
         </div>
         <div className={styles.tableWrap}>
+          {(() => {
+            const totalPages = Math.max(1, Math.ceil(countryCases.length / PAGE_SIZE));
+            const safePage = Math.min(page, totalPages - 1);
+            const from = countryCases.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
+            const to = Math.min(countryCases.length, (safePage + 1) * PAGE_SIZE);
+            return (
+              <div className={styles.tableFoot}>
+                <span className={styles.tableFootLabel}>
+                  Mostrando {from}-{to} de {countryCases.length.toLocaleString("es-AR")}
+                </span>
+                <div className={styles.pagination} role="navigation" aria-label="Paginación">
+                  <button
+                    type="button"
+                    className={styles.pageNav}
+                    onClick={() => setPage(Math.max(0, safePage - 1))}
+                    disabled={safePage === 0}
+                    aria-label="Página anterior"
+                  >
+                    <ChevronLeft size={14} aria-hidden />
+                  </button>
+                  {buildPageList(safePage, totalPages).map((entry, idx) =>
+                    entry === "…" ? (
+                      <span key={`gap-${idx}`} className={styles.pageGap}>…</span>
+                    ) : (
+                      <button
+                        key={entry}
+                        type="button"
+                        className={`${styles.pageBtn} ${entry === safePage ? styles.pageBtnActive : ""}`}
+                        onClick={() => setPage(entry)}
+                        aria-current={entry === safePage ? "page" : undefined}
+                      >
+                        {entry + 1}
+                      </button>
+                    ),
+                  )}
+                  <button
+                    type="button"
+                    className={styles.pageNav}
+                    onClick={() => setPage(Math.min(totalPages - 1, safePage + 1))}
+                    disabled={safePage >= totalPages - 1}
+                    aria-label="Página siguiente"
+                  >
+                    <ChevronRight size={14} aria-hidden />
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
           <table className={styles.table}>
             <thead>
               <tr>
@@ -311,6 +361,20 @@ export default function ExplorerView({
       </main>
     </section>
   );
+}
+
+function buildPageList(current: number, total: number): Array<number | "…"> {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i);
+  }
+  const pages: Array<number | "…"> = [0];
+  const start = Math.max(1, current - 1);
+  const end = Math.min(total - 2, current + 1);
+  if (start > 1) pages.push("…");
+  for (let i = start; i <= end; i += 1) pages.push(i);
+  if (end < total - 2) pages.push("…");
+  pages.push(total - 1);
+  return pages;
 }
 
 function computeRowState(caseFile: ExplorerCase): { tone: "verified" | "review" | "flag" | "unknown"; label: string } {

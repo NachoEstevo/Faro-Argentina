@@ -508,3 +508,65 @@
 .state_unknown {
   color: var(--cf-state-unknown);
 }
+
+.tableFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.tableFootLabel {
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  color: var(--cf-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pageNav,
+.pageBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--cf-border);
+  background: var(--cf-bg-elev);
+  color: var(--cf-text-secondary);
+  font-family: var(--cf-font-data);
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pageBtn:hover,
+.pageNav:hover:not(:disabled) {
+  border-color: var(--cf-border-strong);
+  color: var(--cf-text);
+}
+
+.pageBtnActive {
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+  background: var(--cf-accent-faint);
+}
+
+.pageNav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageGap {
+  color: var(--cf-text-muted);
+  padding: 0 4px;
+  font-family: var(--cf-font-data);
+  font-size: 12px;
+}
