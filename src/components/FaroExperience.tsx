@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
@@ -54,6 +54,7 @@ export default function FaroExperience({
   initialEntryOpen = true,
   initialMode = "map",
 }: Props) {
+  const router = useRouter();
   const allCases = useMemo(
     () => explorerCases ?? [...dataset.cases, ...crossCountryCases],
     [crossCountryCases, dataset.cases, explorerCases],
@@ -265,10 +266,21 @@ export default function FaroExperience({
       )}
 
       <div className={styles.overlayLayer}>
-        <Link href="/" className={styles.backToGlobal} aria-label="Volver al mapa general">
+        <button
+          type="button"
+          className={styles.backToGlobal}
+          onClick={() => {
+            if (selectedCaseId) {
+              setSelectedCaseId("");
+              return;
+            }
+            router.push("/");
+          }}
+          aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
+        >
           <ArrowLeft size={14} aria-hidden />
-          <span>Mapa general</span>
-        </Link>
+          <span>{selectedCaseId ? country.label : "Mapa general"}</span>
+        </button>
         <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
           <button
             type="button"
