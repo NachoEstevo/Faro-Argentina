@@ -435,6 +435,19 @@ function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: 
           })}
         </div>
       )}
+      {(() => {
+        const primary = signals.find((signal) => signal.kind === "watch");
+        if (!primary) return null;
+        return (
+          <article className={styles.detailReason}>
+            <p className={styles.detailReasonEyebrow}>Por qué esta señal</p>
+            <p className={styles.detailReasonBody}>{primary.summary}</p>
+            {primary.caveat && (
+              <p className={styles.detailReasonCaveat}>{primary.caveat}</p>
+            )}
+          </article>
+        );
+      })()}
       <div className={styles.detailGrid}>
         <div className={styles.detailCard}>
           <p className={styles.detailCardHead}>Datos</p>
