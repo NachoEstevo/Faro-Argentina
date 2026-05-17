@@ -95,7 +95,7 @@ export default function CountrySidebar({
               {countryName} · {sourceLabel}
             </p>
             <h2 className={styles.introTitle}>
-              {visibleCount.toLocaleString("es-AR")} obras observadas
+              {visibleCount.toLocaleString("es-AR")} expedientes
             </h2>
             <p className={styles.introBody}>
               Tocá un punto del mapa o una pista de la lista para abrir el expediente con los datos oficiales.

@@ -90,7 +90,7 @@ export default function CountryMap({ geojson }: Props) {
       layersRef.current.set(code, layer);
 
       const count = caseCountByCode.get(code) ?? 0;
-      const tooltipContent = `<strong>${name}</strong><span>${count} obras</span>`;
+      const tooltipContent = `<strong>${name}</strong><span>${count.toLocaleString("es-AR")} expedientes</span>`;
       layer.bindTooltip(tooltipContent, {
         direction: "top",
         sticky: true,
@@ -128,7 +128,7 @@ export default function CountryMap({ geojson }: Props) {
       if (element instanceof SVGElement) {
         element.setAttribute("role", "button");
         element.setAttribute("tabindex", "0");
-        element.setAttribute("aria-label", `Ver obras de ${name}`);
+        element.setAttribute("aria-label", `Ver expedientes de ${name}`);
         element.style.cursor = "pointer";
         element.style.outline = "none";
       }

@@ -16,7 +16,7 @@ export default function TrustStrip({ totalCases, lastUpdated }: Props) {
       <span className={`${styles.trustDivider} ${styles.trustExtras}`} aria-hidden />
       <span className={`${styles.trustItem} ${styles.trustExtras}`}>
         <Database size={12} aria-hidden className={styles.trustMuted} />
-        {totalCases.toLocaleString("es-AR")} obras observadas
+        {totalCases.toLocaleString("es-AR")} expedientes
       </span>
       <span className={`${styles.trustDivider} ${styles.trustExtras}`} aria-hidden />
       <span className={`${styles.trustItem} ${styles.trustExtras}`}>
