@@ -13,9 +13,14 @@ import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
 import {
   buildCaseSignalContext,
+  buildCaseSignals,
   getCaseAlertSeverity,
+  selectLeadCaseSignal,
+  type CaseSignalFamily,
+  type CaseSignalSeverity,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
+import type { CaseTypeOption } from "./RegionalMap/SidebarFilters";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import CasePanel from "./MapUI/CasePanel";
@@ -67,7 +72,11 @@ export default function FaroExperience({
   const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
   const [selectedCaseId, setSelectedCaseId] = useState<string>("");
   const [query, setQuery] = useState("");
-  const [year, setYear] = useState<number | null>(null);
+  const [yearFrom, setYearFrom] = useState<number | null>(null);
+  const [yearTo, setYearTo] = useState<number | null>(null);
+  const [selectedFamilies, setSelectedFamilies] = useState<Set<CaseSignalFamily>>(new Set());
+  const [selectedCaseTypes, setSelectedCaseTypes] = useState<Set<CaseTypeOption>>(new Set());
+  const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -87,58 +96,102 @@ export default function FaroExperience({
     return getYearBounds(pool);
   }, [crossCountryCases, dataset.cases, selectedCountry]);
 
+  // Clamp year range to current bounds whenever the country (and thus the
+  // available year span) changes. Null means "match the bound" — clearing
+  // any explicit pin so the range reads as wide as the country allows.
   useEffect(() => {
-    if (year === null) return;
-    if (year < yearBounds.min || year > yearBounds.max) setYear(null);
-  }, [year, yearBounds.min, yearBounds.max]);
-
-  const countryCases = useMemo(() => {
-    const filtered = filterExplorerCases({
-      countryCode: selectedCountry,
-      argentinaCases: dataset.cases,
-      crossCountryCases,
-      query,
-      year: null,
+    setYearFrom((current) => {
+      if (current === null) return null;
+      if (current < yearBounds.min || current > yearBounds.max) return null;
+      return current;
     });
-    if (year === null) return filtered;
-    return filtered.filter((caseFile) => caseFile.year === year);
-  }, [crossCountryCases, dataset.cases, query, selectedCountry, year]);
+    setYearTo((current) => {
+      if (current === null) return null;
+      if (current < yearBounds.min || current > yearBounds.max) return null;
+      return current;
+    });
+  }, [yearBounds.min, yearBounds.max]);
 
-  const countryReviewCases = useMemo(
-    () => filterCountryReviewCases({
-      cases: allCases,
-      countryCode: selectedCountry,
-      query,
-      year,
-    }),
-    [allCases, query, selectedCountry, year],
-  );
+  const effectiveYearFrom = yearFrom ?? yearBounds.min;
+  const effectiveYearTo = yearTo ?? yearBounds.max;
 
+  // Country review pool: country-scoped, NOT yet filtered by the UI's
+  // year / family / case-type / severity chips. Used to build the
+  // signal context so chip filters don't reshape signal computation.
   const countryReviewContextCases = useMemo(() => {
-    const filtered = filterCountryReviewCases({
+    return filterCountryReviewCases({
       cases: allCases,
       countryCode: selectedCountry,
       query: "",
-      year,
+      year: null,
     });
-    return filtered;
-  }, [allCases, selectedCountry, year]);
+  }, [allCases, selectedCountry]);
 
   const countrySignalContext = useMemo(
     () => buildCaseSignalContext(countryReviewContextCases as SignalCaseFile[]),
     [countryReviewContextCases],
   );
 
+  // Apply the active sidebar filters (year range, case type, family, severity)
+  // to produce the cases that drive both the map markers and the lead list.
+  const countryReviewCases = useMemo(() => {
+    const base = filterCountryReviewCases({
+      cases: allCases,
+      countryCode: selectedCountry,
+      query,
+      year: null,
+    }).filter((caseFile) => {
+      if (
+        caseFile.year !== null &&
+        (caseFile.year < effectiveYearFrom || caseFile.year > effectiveYearTo)
+      ) {
+        return false;
+      }
+      if (selectedCaseTypes.size > 0) {
+        const caseType = (caseFile as { caseType?: string }).caseType;
+        if (!caseType || !selectedCaseTypes.has(caseType as CaseTypeOption)) return false;
+      }
+      return true;
+    });
+
+    if (selectedFamilies.size === 0 && selectedSeverities.size === 0) {
+      return base;
+    }
+
+    return base.filter((caseFile) => {
+      if (selectedSeverities.size > 0) {
+        const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
+        if (!severity || !selectedSeverities.has(severity)) return false;
+      }
+      if (selectedFamilies.size > 0) {
+        const signals = buildCaseSignals(caseFile as SignalCaseFile, countrySignalContext);
+        const primary = selectLeadCaseSignal(signals);
+        if (!primary?.family || !selectedFamilies.has(primary.family)) return false;
+      }
+      return true;
+    });
+  }, [
+    allCases,
+    countrySignalContext,
+    effectiveYearFrom,
+    effectiveYearTo,
+    query,
+    selectedCaseTypes,
+    selectedCountry,
+    selectedFamilies,
+    selectedSeverities,
+  ]);
+
   const leads = useMemo(
-    () => buildCaseLeads(countryReviewContextCases as SignalCaseFile[], { query, limit: 8 }),
-    [countryReviewContextCases, query],
+    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 8 }),
+    [countryReviewCases, query],
   );
 
   const severityCounts = useMemo(() => {
     let high = 0;
     let medium = 0;
     let total = 0;
-    for (const caseFile of countryCases) {
+    for (const caseFile of countryReviewCases) {
       if (!caseFile.coordinates) continue;
       total += 1;
       const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
@@ -146,7 +199,7 @@ export default function FaroExperience({
       else if (severity === "medium") medium += 1;
     }
     return { high, medium, total };
-  }, [countryCases]);
+  }, [countryReviewCases]);
 
   useEffect(() => {
     const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
@@ -207,6 +260,52 @@ export default function FaroExperience({
     setSidebarCollapsed((value) => !value);
   }, []);
 
+  const handleToggleFamily = useCallback((family: CaseSignalFamily) => {
+    setSelectedFamilies((current) => {
+      const next = new Set(current);
+      if (next.has(family)) next.delete(family);
+      else next.add(family);
+      return next;
+    });
+  }, []);
+
+  const handleToggleCaseType = useCallback((caseType: CaseTypeOption) => {
+    setSelectedCaseTypes((current) => {
+      const next = new Set(current);
+      if (next.has(caseType)) next.delete(caseType);
+      else next.add(caseType);
+      return next;
+    });
+  }, []);
+
+  const handleToggleSeverity = useCallback((severity: CaseSignalSeverity) => {
+    setSelectedSeverities((current) => {
+      const next = new Set(current);
+      if (next.has(severity)) next.delete(severity);
+      else next.add(severity);
+      return next;
+    });
+  }, []);
+
+  const handleClearFilters = useCallback(() => {
+    setYearFrom(null);
+    setYearTo(null);
+    setSelectedFamilies(new Set());
+    setSelectedCaseTypes(new Set());
+    setSelectedSeverities(new Set());
+  }, []);
+
+  const filtersValue = useMemo(
+    () => ({
+      yearFrom: effectiveYearFrom,
+      yearTo: effectiveYearTo,
+      families: selectedFamilies,
+      caseTypes: selectedCaseTypes,
+      severities: selectedSeverities,
+    }),
+    [effectiveYearFrom, effectiveYearTo, selectedFamilies, selectedCaseTypes, selectedSeverities],
+  );
+
   useEffect(() => {
     setSidebarCollapsed(Boolean(selectedCaseId));
   }, [selectedCaseId]);
@@ -231,7 +330,7 @@ export default function FaroExperience({
         <div className={styles.leafletHost}>
           {viewMode === "map" ? (
             <CaseMap
-              cases={countryCases}
+              cases={countryReviewCases}
               selectedCaseId={selectedCase?.id ?? null}
               traceMode={traceMode}
               onSelectCase={setSelectedCaseId}
@@ -248,12 +347,21 @@ export default function FaroExperience({
       <CountrySidebar
         countryName={country.label}
         sourceLabel={country.status}
-        visibleCount={countryCases.length}
+        visibleCount={countryReviewCases.length}
         query={query}
         onQueryChange={setQuery}
-        year={year}
+        filters={filtersValue}
         yearBounds={yearBounds}
-        onYearChange={setYear}
+        onYearFromChange={(value) =>
+          setYearFrom(value === yearBounds.min ? null : value)
+        }
+        onYearToChange={(value) =>
+          setYearTo(value === yearBounds.max ? null : value)
+        }
+        onToggleFamily={handleToggleFamily}
+        onToggleCaseType={handleToggleCaseType}
+        onToggleSeverity={handleToggleSeverity}
+        onClearFilters={handleClearFilters}
         leads={leads}
         selectedCaseId={selectedCase?.id ?? null}
         onSelectCase={setSelectedCaseId}

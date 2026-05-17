@@ -15,10 +15,14 @@ import {
 } from "lucide-react";
 
 import type { CaseLead } from "@/lib/data/caseLeads";
-import type { CaseSignalFamily } from "@/lib/data/caseSignals";
+import type { CaseSignalFamily, CaseSignalSeverity } from "@/lib/data/caseSignals";
 import styles from "./RegionalMap.module.css";
 import SidebarBrand from "./SidebarBrand";
 import SyncFooter from "./SyncFooter";
+import SidebarFilters, {
+  type CaseTypeOption,
+  type SidebarFiltersValue,
+} from "./SidebarFilters";
 
 const FAMILY_ICONS: Record<CaseSignalFamily, LucideIcon> = {
   competition: Users,
@@ -42,9 +46,14 @@ interface Props {
   visibleCount: number;
   query: string;
   onQueryChange: (value: string) => void;
-  year: number | null;
+  filters: SidebarFiltersValue;
   yearBounds: { min: number; max: number };
-  onYearChange: (value: number | null) => void;
+  onYearFromChange: (year: number) => void;
+  onYearToChange: (year: number) => void;
+  onToggleFamily: (family: CaseSignalFamily) => void;
+  onToggleCaseType: (caseType: CaseTypeOption) => void;
+  onToggleSeverity: (severity: CaseSignalSeverity) => void;
+  onClearFilters: () => void;
   leads: CaseLead[];
   selectedCaseId: string | null;
   onSelectCase: (caseId: string) => void;
@@ -61,9 +70,14 @@ export default function CountrySidebar({
   visibleCount,
   query,
   onQueryChange,
-  year,
+  filters,
   yearBounds,
-  onYearChange,
+  onYearFromChange,
+  onYearToChange,
+  onToggleFamily,
+  onToggleCaseType,
+  onToggleSeverity,
+  onClearFilters,
   leads,
   selectedCaseId,
   onSelectCase,
@@ -119,20 +133,15 @@ export default function CountrySidebar({
           </section>
 
           <section className={styles.section} aria-labelledby="filter-heading">
-            <p className={styles.eyebrow} id="filter-heading">
-              Filtro · {year === null ? "Todos los años" : `Año ${year}`}
-            </p>
-            <input
-              type="range"
-              min={yearBounds.min}
-              max={yearBounds.max + 1}
-              value={year === null ? yearBounds.max + 1 : year}
-              onChange={(event) => {
-                const value = Number(event.target.value);
-                onYearChange(value > yearBounds.max ? null : value);
-              }}
-              className={styles.cpYearSlider}
-              aria-label="Filtrar por año"
+            <SidebarFilters
+              value={filters}
+              yearBounds={yearBounds}
+              onYearFromChange={onYearFromChange}
+              onYearToChange={onYearToChange}
+              onToggleFamily={onToggleFamily}
+              onToggleCaseType={onToggleCaseType}
+              onToggleSeverity={onToggleSeverity}
+              onClearAll={onClearFilters}
             />
           </section>
 
