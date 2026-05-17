@@ -17,6 +17,21 @@ test("AportesView submits private contributions with photo attachments", async (
   assert.doesNotMatch(source, /Publicar caso|Comunidad|Denuncia/);
 });
 
+test("AportesView keeps the form reference before async submission work", async () => {
+  const source = await readFile(aportesViewUrl, "utf8");
+
+  assert.match(source, /const formElement = event\.currentTarget;/);
+  assert.match(source, /formElement\.reset\(\)/);
+  assert.doesNotMatch(source, /event\.currentTarget\.reset\(\)/);
+});
+
+test("AportesView does not surface raw JavaScript errors to users", async () => {
+  const source = await readFile(aportesViewUrl, "utf8");
+
+  assert.match(source, /formatSubmitFailureMessage/);
+  assert.doesNotMatch(source, /setStatusText\(error instanceof Error \? error\.message/);
+});
+
 test("FaroExperience exposes Aportes beside Map and Explorer without treating it as a case mode", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
 

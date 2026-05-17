@@ -64,3 +64,43 @@ test("POST /api/aportes rejects invalid contribution payloads", async () => {
   assert.equal(response.status, 400);
   assert.deepEqual(payload.errors.map((error) => error.field), ["title", "explanation", "reviewAnchor"]);
 });
+
+test("POST /api/aportes hides internal storage failures from public responses", async () => {
+  const previousEnv = {
+    STORAGE_ENDPOINT: process.env.STORAGE_ENDPOINT,
+    STORAGE_BUCKET: process.env.STORAGE_BUCKET,
+    STORAGE_ACCESS_KEY: process.env.STORAGE_ACCESS_KEY,
+    STORAGE_SECRET_KEY: process.env.STORAGE_SECRET_KEY,
+  };
+  process.env.STORAGE_ENDPOINT = "http://127.0.0.1:9";
+  process.env.STORAGE_BUCKET = "faro-test";
+  process.env.STORAGE_ACCESS_KEY = "test-access-key";
+  process.env.STORAGE_SECRET_KEY = "test-secret-key";
+  const previousConsoleError = console.error;
+  console.error = () => undefined;
+
+  try {
+    const form = new FormData();
+    form.set("type", "add_source");
+    form.set("title", "Fuente publica para revisar");
+    form.set("jurisdiction", "AR");
+    form.set("explanation", "La fuente agrega contexto verificable para revision interna.");
+    form.set("publicSourceUrl", "https://example.com/fuente");
+    form.set("sourcePermissionConfirmed", "true");
+    form.set("reviewConfirmed", "true");
+
+    const response = await POST(new Request("http://localhost/api/aportes", { method: "POST", body: form }));
+    const payload = await response.json() as { error: string; message: string };
+
+    assert.equal(response.status, 500);
+    assert.equal(payload.error, "submission_failed");
+    assert.equal(payload.message, "No pudimos recibir el aporte en este momento. Proba nuevamente en unos minutos.");
+    assert.doesNotMatch(payload.message, /R2|fetch|127\.0\.0\.1|storage|Cannot|undefined|null/i);
+  } finally {
+    console.error = previousConsoleError;
+    for (const [key, value] of Object.entries(previousEnv)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+});

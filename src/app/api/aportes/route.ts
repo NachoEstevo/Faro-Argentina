@@ -52,11 +52,12 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
+    console.error("[api/aportes] submission failed", error);
     return Response.json(
       {
         ok: false,
         error: "submission_failed",
-        message: error instanceof Error ? error.message : "No se pudo recibir el aporte.",
+        message: "No pudimos recibir el aporte en este momento. Proba nuevamente en unos minutos.",
       },
       { status: 500 },
     );

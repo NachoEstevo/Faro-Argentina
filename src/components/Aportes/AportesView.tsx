@@ -73,7 +73,8 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     form.set("type", type);
     form.set("jurisdiction", jurisdiction);
     files.forEach((file) => form.append("attachments", file));
@@ -93,11 +94,11 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
       }
       setSubmitState("success");
       setStatusText(`Aporte recibido para revision: ${payload.submissionId}.`);
-      event.currentTarget.reset();
+      formElement.reset();
       setFiles([]);
     } catch (error) {
       setSubmitState("error");
-      setStatusText(error instanceof Error ? error.message : "No se pudo enviar el aporte.");
+      setStatusText(formatSubmitFailureMessage(error));
     }
   }
 
@@ -276,4 +277,15 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
 function formatBytes(bytes: number): string {
   if (bytes < 1_000_000) return `${Math.max(1, Math.round(bytes / 1000))} KB`;
   return `${(bytes / 1_000_000).toFixed(1)} MB`;
+}
+
+function formatSubmitFailureMessage(error: unknown): string {
+  const fallback = "No pudimos enviar el aporte. Revisa los datos y volve a intentar.";
+  if (!(error instanceof Error)) return fallback;
+  const message = error.message.trim();
+  if (!message) return fallback;
+  if (/cannot read|undefined|null|failed to fetch|networkerror|syntaxerror|json/i.test(message)) {
+    return fallback;
+  }
+  return message;
 }
