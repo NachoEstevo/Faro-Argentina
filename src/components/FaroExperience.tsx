@@ -6,7 +6,8 @@ import { ArrowLeft, FileSearch, Map as MapIcon } from "lucide-react";
 import Link from "next/link";
 
 import type { CaseDataset } from "@/lib/caseRepository";
-import { loadYearlyReleases } from "@/lib/data/wayback";
+import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
+import { resolveCaseYear } from "@/lib/data/caseYear";
 import type { WaybackState } from "./WaybackControl";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
@@ -187,12 +188,13 @@ export default function FaroExperience({
           setWaybackState({ status: "error", caseId, message: "Wayback no devolvio releases disponibles." });
           return;
         }
-        const latest = releases[releases.length - 1];
+        const targetYear = selectedCase ? resolveCaseYear(selectedCase) : null;
+        const initial = pickReleaseForYear(releases, targetYear) ?? releases[releases.length - 1];
         setWaybackState({
           status: "active",
           caseId,
           releases,
-          activeReleaseId: latest.releaseId,
+          activeReleaseId: initial.releaseId,
         });
       })
       .catch((error: unknown) => {

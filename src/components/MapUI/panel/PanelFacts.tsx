@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import { resolveCaseYear } from "@/lib/data/caseYear";
 import { formatAmountWithUsd, type AmountInput } from "@/lib/format/money";
 import styles from "../casePanel.module.css";
 
@@ -17,17 +18,6 @@ function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCas
 function formatSupplier(caseFile: ExplorerCase): string {
   if (isCrossCountryCase(caseFile)) {
     return caseFile.supplierName ?? caseFile.supplierDocument ?? "Sin dato";
-  }
-  return "Sin dato";
-}
-
-function resolveYear(caseFile: ExplorerCase): string {
-  if (caseFile.year) return String(caseFile.year);
-  if (isCrossCountryCase(caseFile)) {
-    const awarded = caseFile.awardedAt?.slice(0, 4);
-    if (awarded && /^\d{4}$/.test(awarded)) return awarded;
-    const published = caseFile.publishedAt?.slice(0, 4);
-    if (published && /^\d{4}$/.test(published)) return published;
   }
   return "Sin dato";
 }
@@ -48,7 +38,7 @@ export default function PanelFacts({ caseFile }: Props) {
   return (
     <div className={styles.facts}>
       <Fact label="Monto">{renderAmount(amount)}</Fact>
-      <Fact label="Año">{resolveYear(caseFile)}</Fact>
+      <Fact label="Año">{resolveCaseYear(caseFile) ?? "Sin dato"}</Fact>
       <Fact label="Organismo">{caseFile.agencyName ?? "Sin dato"}</Fact>
       <Fact label="Proveedor">{formatSupplier(caseFile)}</Fact>
     </div>

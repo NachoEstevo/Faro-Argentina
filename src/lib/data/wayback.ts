@@ -61,6 +61,30 @@ export function mapConfigRawToReleases(raw: Record<string, unknown>): WaybackRel
   return releases;
 }
 
+/**
+ * Picks the release that best matches `targetYear`. Prefers an exact year
+ * match. When no exact match exists, prefers the latest release at or before
+ * the target year (so we show how the place looked when the case was active,
+ * not a future snapshot). Falls back to the most recent release if nothing is
+ * at or before. Returns null only when `releases` is empty.
+ */
+export function pickReleaseForYear(
+  releases: WaybackRelease[],
+  targetYear: number | null | undefined,
+): WaybackRelease | null {
+  if (releases.length === 0) return null;
+  if (targetYear == null) return releases[releases.length - 1];
+  const exact = releases.find((release) => release.year === targetYear);
+  if (exact) return exact;
+  let candidate: WaybackRelease | null = null;
+  for (const release of releases) {
+    if (release.year <= targetYear && (!candidate || release.year > candidate.year)) {
+      candidate = release;
+    }
+  }
+  return candidate ?? releases[releases.length - 1];
+}
+
 export function pickYearlyReleases(releases: WaybackRelease[]): WaybackRelease[] {
   const latestPerYear = new Map<number, WaybackRelease>();
   for (const release of releases) {
