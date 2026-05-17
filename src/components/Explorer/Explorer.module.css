@@ -840,11 +840,12 @@
   }
   .mainHeader {
     flex-wrap: wrap;
-    padding: 20px 20px 0;
-    gap: 14px;
+    padding: 16px 16px 0;
+    gap: 10px;
   }
   .mainTitle {
-    font-size: 22px;
+    font-size: 18px;
+    letter-spacing: -0.2px;
   }
   .countrySelector {
     width: 100%;
