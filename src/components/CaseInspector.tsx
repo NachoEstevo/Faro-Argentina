@@ -1,17 +1,19 @@
 import { Download, ExternalLink, FileText, ShieldCheck } from "lucide-react";
 
 import { buildCaseInspector } from "@/lib/data/caseInspector";
+import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { CaseSignalChips } from "./CaseSignals";
 
 interface Props {
   caseFile: ExplorerCase;
+  signalContext?: CaseSignalContext;
   onOpenFull: () => void;
 }
 
-export default function CaseInspector({ caseFile, onOpenFull }: Props) {
-  const inspector = buildCaseInspector(caseFile as ExpedienteCaseFile);
+export default function CaseInspector({ caseFile, signalContext, onOpenFull }: Props) {
+  const inspector = buildCaseInspector(caseFile as ExpedienteCaseFile, signalContext);
 
   return (
     <div className="caseInspector">
@@ -23,7 +25,7 @@ export default function CaseInspector({ caseFile, onOpenFull }: Props) {
       <header className="inspectorHeader">
         <span>{inspector.kicker}</span>
         <h1>{inspector.title}</h1>
-        <CaseSignalChips caseFile={caseFile} limit={3} />
+        <CaseSignalChips caseFile={caseFile} limit={3} signalContext={signalContext} />
       </header>
 
       <section className="inspectorSummary">

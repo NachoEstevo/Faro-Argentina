@@ -1,5 +1,8 @@
 import {
+  buildCaseSignalContext,
+  buildCaseSignalContextsByCountry,
   buildCaseSignals,
+  type CaseSignalContext,
   type CaseSignal,
   type SignalCaseFile,
 } from "./caseSignals.ts";
@@ -92,7 +95,12 @@ export function buildInvestigatorExplorer(
   cases: InvestigatorExplorerCase[],
   filters: InvestigatorExplorerFilters = {},
 ): InvestigatorExplorerView {
-  const allRows = cases.map(toInvestigatorRow);
+  const contextCases = cases.filter((caseFile) => matchesContextScope(caseFile, filters));
+  const signalContexts = buildCaseSignalContextsByCountry(contextCases as SignalCaseFile[]);
+  const fallbackContext = buildCaseSignalContext(cases as SignalCaseFile[]);
+  const allRows = cases.map((caseFile) =>
+    toInvestigatorRow(caseFile, signalContexts.get(caseFile.countryCode) ?? fallbackContext),
+  );
   const filteredRows = allRows
     .filter((row) => matchesFilters(row, filters))
     .sort(compareRows);
@@ -114,8 +122,8 @@ export function buildInvestigatorExplorer(
   };
 }
 
-function toInvestigatorRow(caseFile: InvestigatorExplorerCase): InvestigatorCaseRow {
-  const signals = buildCaseSignals(caseFile as SignalCaseFile);
+function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: CaseSignalContext): InvestigatorCaseRow {
+  const signals = buildCaseSignals(caseFile as SignalCaseFile, signalContext);
   const primarySignal = signals[0] ?? null;
   const receipt = caseFile.receipt;
   const locator = describeReceiptLocator(receipt.locatorType);
@@ -161,6 +169,16 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase): InvestigatorCase
     ...row,
     searchText: buildSearchText(row, signals),
   };
+}
+
+function matchesContextScope(caseFile: InvestigatorExplorerCase, filters: InvestigatorExplorerFilters): boolean {
+  if (filters.countries?.length && !filters.countries.includes(caseFile.countryCode as CountryCode)) {
+    return false;
+  }
+  if (!filters.entity || filters.entity.type === "signal") return true;
+  if (filters.entity.type === "source") return (entityKey(caseFile.receipt.sourceId) ?? "") === filters.entity.key;
+  if (filters.entity.type === "agency") return (entityKey(caseFile.agencyName) ?? "") === filters.entity.key;
+  return entityKey(formatSupplier(caseFile)) === filters.entity.key;
 }
 
 function matchesFilters(row: InvestigatorCaseRow, filters: InvestigatorExplorerFilters): boolean {

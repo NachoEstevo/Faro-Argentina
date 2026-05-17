@@ -105,5 +105,5 @@ test("buildCaseLeads does not match nullish optional fields as query text", () =
 test("buildCaseLeads avoids accusation language", () => {
   const leads = buildCaseLeads([highPriorityCase], { limit: 10 });
 
-  assert.doesNotMatch(JSON.stringify(leads), /corrup|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(leads), /corrup|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });

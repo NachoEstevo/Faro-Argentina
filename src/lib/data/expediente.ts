@@ -1,5 +1,6 @@
 import {
   buildCaseSignals,
+  type CaseSignalContext,
   type CaseSignal,
   type SignalCaseFile,
 } from "./caseSignals.ts";
@@ -58,8 +59,8 @@ const verificationSteps = [
   "Cruzar pagos, avance fisico y documentos antes de publicar conclusiones.",
 ];
 
-export function buildExpediente(caseFile: ExpedienteCaseFile): ExpedienteView {
-  const signals = buildCaseSignals(caseFile);
+export function buildExpediente(caseFile: ExpedienteCaseFile, signalContext?: CaseSignalContext): ExpedienteView {
+  const signals = buildCaseSignals(caseFile, signalContext);
   const primaryReceipt = toExpedienteReceipt(caseFile.receipt);
   const relatedReceipts = (caseFile.relatedReceipts ?? []).map((receipt) =>
     toExpedienteReceipt(receipt),

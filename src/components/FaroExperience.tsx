@@ -16,7 +16,7 @@ import {
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
-import type { SignalCaseFile } from "@/lib/data/caseSignals";
+import { buildCaseSignalContext, type SignalCaseFile } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import CaseInspector from "./CaseInspector";
@@ -58,6 +58,10 @@ export default function FaroExperience({
     () => explorerCases ?? [...dataset.cases, ...crossCountryCases],
     [crossCountryCases, dataset.cases, explorerCases],
   );
+  const explorerSignalContext = useMemo(
+    () => buildCaseSignalContext(allCases as SignalCaseFile[]),
+    [allCases],
+  );
   const yearBounds = useMemo(() => getYearBounds(allCases), [allCases]);
   const isDemoMode = !initialEntryOpen && initialMode === "map";
   const [entryOpen, setEntryOpen] = useState(initialEntryOpen);
@@ -89,9 +93,24 @@ export default function FaroExperience({
     });
   }, [crossCountryCases, dataset.cases, query, selectedCountry, year]);
 
+  const countryContextCases = useMemo(() => {
+    return filterExplorerCases({
+      countryCode: selectedCountry,
+      argentinaCases: dataset.cases,
+      crossCountryCases,
+      query: "",
+      year,
+    });
+  }, [crossCountryCases, dataset.cases, selectedCountry, year]);
+
+  const countrySignalContext = useMemo(
+    () => buildCaseSignalContext(countryContextCases as SignalCaseFile[]),
+    [countryContextCases],
+  );
+
   const leads = useMemo(
-    () => buildCaseLeads(countryCases as SignalCaseFile[], { limit: 8 }),
-    [countryCases],
+    () => buildCaseLeads(countryContextCases as SignalCaseFile[], { query, limit: 8 }),
+    [countryContextCases, query],
   );
 
   useEffect(() => {
@@ -104,6 +123,7 @@ export default function FaroExperience({
   const selectedPool = viewMode === "explorer" ? allCases : countryCases;
   const selectedCase =
     selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
+  const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
   const countryExplorerCases = useMemo(
     () => selectedCountry === "AR"
       ? []
@@ -219,6 +239,7 @@ export default function FaroExperience({
         {selectedCase && viewMode === "explorer" && explorerPanelMode === "inspector" ? (
           <CaseInspector
             caseFile={selectedCase}
+            signalContext={activeSignalContext}
             onOpenFull={() => setExplorerPanelMode("expediente")}
           />
         ) : selectedCase ? (
@@ -233,6 +254,7 @@ export default function FaroExperience({
             <CaseDetails
               caseFile={selectedCase}
               dataset={dataset}
+              signalContext={activeSignalContext}
               traceMode={traceMode}
               onTraceModeChange={setTraceMode}
             />
@@ -241,6 +263,7 @@ export default function FaroExperience({
           <CountryExplorer
             selectedCountry={selectedCountry}
             cases={countryExplorerCases}
+            signalContext={countrySignalContext}
           />
         )}
       </aside>

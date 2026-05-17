@@ -7,6 +7,7 @@ import {
   buildInvestigatorExplorer,
   type InvestigatorExplorerCase,
 } from "../src/lib/data/investigatorExplorer.ts";
+import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import type { ArgentinaWorkCase } from "../src/lib/data/argentinaWorks.ts";
 import type { CrossCountryCaseFile } from "../src/lib/data/crossCountryCases.ts";
 
@@ -69,5 +70,83 @@ test("buildInvestigatorExplorer applies geometry, country, signal, and pivot fil
 test("buildInvestigatorExplorer keeps scanner copy non-accusatory", () => {
   const explorer = buildInvestigatorExplorer(allCases, { limit: 120 });
 
-  assert.doesNotMatch(JSON.stringify(explorer), /corrup|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(explorer), /corrup|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
+
+test("buildInvestigatorExplorer exposes collection-aware supplier signals as searchable facets", () => {
+  const recurringCases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1),
+    buildExplorerFixture("AR-CONTRACT-381-1003-CON21", 2),
+  ] as InvestigatorExplorerCase[];
+
+  const explorer = buildInvestigatorExplorer(recurringCases, {
+    signalCode: "repeat_single_bid_winner",
+    limit: 20,
+  });
+
+  assert.equal(explorer.rows.length, 3);
+  assert.equal(explorer.rows.every((row) => row.signalCodes.includes("repeat_single_bid_winner")), true);
+  assert.equal(
+    explorer.facets.some((facet) => facet.type === "signal" && facet.key === "recurring_supplier_agency"),
+    true,
+  );
+
+  const search = buildInvestigatorExplorer(recurringCases, { query: "ganador recurrente", limit: 20 });
+  assert.equal(search.rows.some((row) => row.primarySignal?.code === "repeat_single_bid_winner"), true);
+});
+
+test("buildInvestigatorExplorer scopes supplier recurrence by filtered country", () => {
+  const mixedCountryCases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1),
+    buildExplorerFixture("PE-CONTRACT-381-1003-CON21", 1, { countryCode: "PE" }),
+  ] as InvestigatorExplorerCase[];
+
+  const explorer = buildInvestigatorExplorer(mixedCountryCases, { countries: ["PE"], limit: 20 });
+
+  assert.equal(explorer.rows.length, 1);
+  assert.equal(explorer.rows[0]?.countryCode, "PE");
+  assert.equal(explorer.rows[0]?.signalCodes.includes("repeat_single_bid_winner"), false);
+});
+
+function buildExplorerFixture(
+  id: string,
+  bidderCount: number,
+  overrides: Partial<Pick<InvestigatorExplorerCase, "countryCode" | "agencyName">> = {},
+) {
+  return {
+    id,
+    countryCode: overrides.countryCode ?? "AR",
+    caseType: "procurement_contract",
+    title: `Contrato ${id}`,
+    workNumber: id.replace("AR-CONTRACT-", ""),
+    year: 2021,
+    procedureNumber: "381-0001-LPU21",
+    agencyName: overrides.agencyName ?? "Estado Mayor General de La Fuerza Aerea",
+    agencyCode: "381",
+    contractingUnit: "Compras",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -31.4201, lon: -64.1888 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 1_000_000, currency: "ARS", label: "monto_contrato" },
+    bidderCount,
+    offerCount: bidderCount,
+    supplierName: "ANSAL CONSTRUCCIONES SRL",
+    supplierDocument: "30-64071769-2",
+    receipt: createEvidenceReceipt({
+      sourceId: "AR-CONTRATAR-CONTRATOS",
+      sourceName: "CONTRAT.AR contratos",
+      sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+      rawPath: "data/official/ar/onc-contratar-contratos.csv",
+      snapshotHash: "sha256-snapshot",
+      recordId: id,
+      locatorType: "official_dataset",
+      extractedAt: "2026-05-16T00:00:00.000Z",
+      parserVersion: "investigator-explorer-test@1",
+      row: { contrato_numero: id },
+    }),
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+}

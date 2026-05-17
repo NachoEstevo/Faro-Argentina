@@ -1,5 +1,8 @@
 import {
+  buildCaseSignalContext,
+  buildCaseSignalContextsByCountry,
   buildCaseSignals,
+  type CaseSignalContext,
   type CaseSignal,
   type SignalCaseFile,
 } from "./caseSignals.ts";
@@ -34,16 +37,21 @@ export function buildCaseLeads(
   cases: SignalCaseFile[],
   filters: CaseLeadFilters = {},
 ): CaseLead[] {
+  const scopedCases = cases.filter((caseFile) => matchesScopeFilters(caseFile, filters));
+  const signalContexts = buildCaseSignalContextsByCountry(scopedCases);
   return cases
     .filter((caseFile) => matchesFilters(caseFile, filters))
-    .map(toCaseLead)
+    .map((caseFile) => toCaseLead(
+      caseFile,
+      signalContexts.get(caseFile.countryCode) ?? buildCaseSignalContext([caseFile]),
+    ))
     .filter((lead): lead is CaseLead => lead !== null)
     .sort((left, right) => right.sortScore - left.sortScore || left.caseId.localeCompare(right.caseId))
     .slice(0, clampLimit(filters.limit));
 }
 
-function toCaseLead(caseFile: SignalCaseFile): CaseLead | null {
-  const signals = buildCaseSignals(caseFile);
+function toCaseLead(caseFile: SignalCaseFile, signalContext: CaseSignalContext): CaseLead | null {
+  const signals = buildCaseSignals(caseFile, signalContext);
   const primarySignal = signals[0];
   if (!primarySignal) return null;
 
@@ -66,9 +74,7 @@ function toCaseLead(caseFile: SignalCaseFile): CaseLead | null {
 }
 
 function matchesFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters): boolean {
-  if (filters.countryCode && caseFile.countryCode !== filters.countryCode) return false;
-  if (filters.sourceId && caseFile.receipt.sourceId !== filters.sourceId) return false;
-  if (filters.caseType && caseFile.caseType !== filters.caseType) return false;
+  if (!matchesScopeFilters(caseFile, filters)) return false;
 
   const query = clean(filters.query).toLowerCase();
   if (query.length === 0) return true;
@@ -89,6 +95,13 @@ function matchesFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters): boo
     .join(" ")
     .toLowerCase()
     .includes(query);
+}
+
+function matchesScopeFilters(caseFile: SignalCaseFile, filters: CaseLeadFilters): boolean {
+  if (filters.countryCode && caseFile.countryCode !== filters.countryCode) return false;
+  if (filters.sourceId && caseFile.receipt.sourceId !== filters.sourceId) return false;
+  if (filters.caseType && caseFile.caseType !== filters.caseType) return false;
+  return true;
 }
 
 function clampLimit(limit: number | undefined): number {

@@ -2,6 +2,7 @@ import { Download, ExternalLink, FileSearch, Route, ShieldCheck } from "lucide-r
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
+import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
@@ -10,17 +11,19 @@ import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
 export function CaseDetails({
   caseFile,
   dataset,
+  signalContext,
   traceMode,
   onTraceModeChange,
 }: {
   caseFile: ExplorerCase;
   dataset: CaseDataset;
+  signalContext?: CaseSignalContext;
   traceMode: boolean;
   onTraceModeChange: (next: boolean) => void;
 }) {
   const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
   const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
-  const expediente = buildExpediente(caseFile as ExpedienteCaseFile);
+  const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext);
   const { hasOfficialGeometry } = expediente.investigationContext;
   const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
@@ -30,7 +33,7 @@ export function CaseDetails({
         Expediente verificable
       </div>
       <h1>{caseFile.title}</h1>
-      <CaseSignalChips caseFile={caseFile} limit={4} />
+      <CaseSignalChips caseFile={caseFile} limit={4} signalContext={signalContext} />
       <div className="caseMetaGrid">
         <Metric label={isContract ? "Contrato" : "Obra"} value={caseFile.workNumber} />
         <Metric label="Procedimiento" value={caseFile.procedureNumber || "Sin dato"} />
@@ -54,7 +57,7 @@ export function CaseDetails({
         <p>{expediente.summary.plainSummary}</p>
       </section>
 
-      <CaseSignalPanel caseFile={caseFile} />
+      <CaseSignalPanel caseFile={caseFile} signalContext={signalContext} />
 
       <section className="receiptBox">
         <h2>Rastro oficial</h2>
@@ -134,9 +137,11 @@ export function EmptyCountry({ selectedCountry }: { selectedCountry: "AR" | "PE"
 export function CountryExplorer({
   selectedCountry,
   cases,
+  signalContext,
 }: {
   selectedCountry: "PE" | "CL" | "AR";
   cases: CrossCountryCaseFile[];
+  signalContext?: CaseSignalContext;
 }) {
   if (selectedCountry === "AR") return null;
   const countryLabel = selectedCountry === "PE" ? "Peru" : "Chile";
@@ -169,7 +174,7 @@ export function CountryExplorer({
             <div>
               <span>{labelCaseType(caseFile.caseType)}</span>
               <h2>{caseFile.title}</h2>
-              <CaseSignalChips caseFile={caseFile} />
+              <CaseSignalChips caseFile={caseFile} signalContext={signalContext} />
             </div>
             <dl>
               <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />

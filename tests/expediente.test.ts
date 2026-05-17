@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+import { buildCaseSignalContext } from "../src/lib/data/caseSignals.ts";
 import { buildExpediente, type ExpedienteCaseFile } from "../src/lib/data/expediente.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import type { SignalCaseFile } from "../src/lib/data/caseSignals.ts";
@@ -139,6 +140,44 @@ test("buildExpediente marks cases without coordinates as missing official geomet
     expediente.whyItAppeared.some((signal) => signal.code === "missing_official_geometry"),
     true,
   );
+});
+
+test("buildExpediente includes contextual supplier patterns when context is provided", () => {
+  const caseFile: ExpedienteCaseFile = {
+    id: "AR-CONTRACT-381-1001-CON21",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: "Reparacion edificio operativo",
+    workNumber: "381-1001-CON21",
+    year: 2021,
+    procedureNumber: "381-0001-LPU21",
+    agencyName: "Estado Mayor General de La Fuerza Aerea",
+    agencyCode: "381",
+    contractingUnit: "Compras",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -31.4201, lon: -64.1888 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 1_000_000, currency: "ARS", label: "ARS 1.000.000" },
+    bidderCount: 1,
+    offerCount: 1,
+    supplierName: "ANSAL CONSTRUCCIONES SRL",
+    supplierDocument: "30-64071769-2",
+    receipt: primaryReceipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+  const context = buildCaseSignalContext([
+    caseFile,
+    { ...caseFile, id: "AR-CONTRACT-381-1002-CON21", workNumber: "381-1002-CON21" },
+    { ...caseFile, id: "AR-CONTRACT-381-1003-CON21", workNumber: "381-1003-CON21", bidderCount: 2 },
+  ]);
+
+  const expediente = buildExpediente(caseFile, context);
+
+  assert.equal(expediente.whyItAppeared[0]?.code, "repeat_single_bid_winner");
+  assert.equal(expediente.whyItAppeared.some((signal) => signal.code === "recurring_supplier_agency"), true);
+  assert.equal(expediente.caveats.some((caveat) => /no prueba/i.test(caveat)), true);
+  assert.doesNotMatch(JSON.stringify(expediente), /corrup|fraude|delito|culpable|estafa|abuso|favorit|incumpl|irregular/i);
 });
 
 const minimalSignalCaseFile: SignalCaseFile = {

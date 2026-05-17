@@ -15,10 +15,13 @@ import {
 import { buildCoverageReport, type CoverageReport } from "./data/coverage.ts";
 import type { CrossCountryCaseFile } from "./data/crossCountryCases.ts";
 import {
+  buildCaseSignalContext,
+  buildCaseSignalContextsByCountry,
   buildCaseSignalFeed,
   buildCaseSignals,
   type CaseSignal,
   type CaseSignalFeed,
+  type CaseSignalContext,
   type SignalCaseFile,
 } from "./data/caseSignals.ts";
 import {
@@ -99,6 +102,12 @@ export const investigatorCaseFiles: FaroCaseFile[] = [
   ...argentinaWorkCaseFiles,
   ...crossCountryCaseFiles,
 ];
+const investigatorSignalContext: CaseSignalContext = buildCaseSignalContext(
+  investigatorCaseFiles as SignalCaseFile[],
+);
+const investigatorSignalContextsByCountry = buildCaseSignalContextsByCountry(
+  investigatorCaseFiles as SignalCaseFile[],
+);
 
 export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   sources: sourceCatalogEntries,
@@ -122,7 +131,13 @@ export function buildCaseCollectionPack(filters: CaseCollectionFilters): CaseCol
 }
 
 export function buildSignalFeed(filters: CaseCollectionFilters): CaseSignalFeed {
-  return buildCaseSignalFeed(filterCaseFiles(filters) as SignalCaseFile[]);
+  const filteredCases = filterCaseFiles(filters) as SignalCaseFile[];
+  const contextCases = filterCaseFiles({
+    countryCode: filters.countryCode,
+    sourceId: filters.sourceId,
+    caseType: filters.caseType,
+  }) as SignalCaseFile[];
+  return buildCaseSignalFeed(filteredCases, contextCases);
 }
 
 export function buildLeadFeed(filters: CaseLeadFilters = {}): CaseLeadFeed {
@@ -148,7 +163,7 @@ export function buildLeadFeed(filters: CaseLeadFilters = {}): CaseLeadFeed {
 export function getExpedienteById(id: string): ExpedienteView | null {
   const caseFile = getCaseById(id);
   if (!caseFile) return null;
-  return buildExpediente(caseFile as ExpedienteCaseFile);
+  return buildExpediente(caseFile as ExpedienteCaseFile, signalContextForCase(caseFile));
 }
 
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
@@ -158,7 +173,7 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
     caseFile,
     receipt: caseFile.receipt,
     relatedReceipts: getRelatedReceipts(caseFile),
-    signals: buildCaseSignals(caseFile as SignalCaseFile),
+    signals: buildCaseSignals(caseFile as SignalCaseFile, signalContextForCase(caseFile)),
     caveats: caseFile.caveats,
     verificationSteps: [
       "Abrir la fuente oficial indicada en el receipt.",
@@ -168,6 +183,10 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
       "Si se usa Sentinel-2, revisar nubes, fecha de escena y resolucion antes de inferir avance.",
     ],
   };
+}
+
+function signalContextForCase(caseFile: FaroCaseFile): CaseSignalContext {
+  return investigatorSignalContextsByCountry.get(caseFile.countryCode) ?? investigatorSignalContext;
 }
 
 function allCaseFiles(): FaroCaseFile[] {

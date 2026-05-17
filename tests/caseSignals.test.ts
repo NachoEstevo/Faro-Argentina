@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildCaseSignalContext,
   buildCaseSignalFeed,
   buildCaseSignals,
 } from "../src/lib/data/caseSignals.ts";
@@ -51,7 +52,7 @@ test("buildCaseSignals explains why a low-competition contract is worth reviewin
   assert.match(signals[0]?.summary ?? "", /1 oferente/);
   assert.equal(signals.some((signal) => signal.code === "amount_over_official_budget"), true);
   assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), true);
-  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
 
 test("buildCaseSignals surfaces evidence gaps instead of inventing map context", () => {
@@ -104,7 +105,7 @@ test("buildCaseSignals does not treat invalid coordinates as official geometry",
   assert.equal(signals.some((signal) => signal.code === "official_geometry"), false);
   assert.equal(signals.some((signal) => signal.code === "sentinel_candidate"), false);
   assert.equal(signals.some((signal) => signal.code === "geometry_needs_review"), true);
-  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(signals), /corrupt|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
 
 test("buildCaseSignalFeed ranks concrete review leads across cases", () => {
@@ -141,3 +142,112 @@ test("buildCaseSignalFeed ranks concrete review leads across cases", () => {
   assert.equal(feed.signals[0]?.code, "high_claim_volume");
   assert.equal(feed.signals.some((signal) => signal.code === "official_award_act"), true);
 });
+
+test("buildCaseSignals uses collection context to surface recurring low-competition winners", () => {
+  const repeatedCases = [
+    buildSignalFixture({
+      id: "AR-CONTRACT-381-1001-CON21",
+      agencyName: "Estado Mayor General de La Fuerza Aerea",
+      supplierName: "ANSAL CONSTRUCCIONES SRL",
+      supplierDocument: "30-64071769-2",
+      bidderCount: 1,
+      amountValue: 4_014_549,
+    }),
+    buildSignalFixture({
+      id: "AR-CONTRACT-381-1002-CON21",
+      agencyName: "Estado Mayor General de La Fuerza Aerea",
+      supplierName: "ANSAL CONSTRUCCIONES SRL",
+      supplierDocument: "30-64071769-2",
+      bidderCount: 1,
+      amountValue: 9_500_000,
+    }),
+    buildSignalFixture({
+      id: "AR-CONTRACT-381-1003-CON21",
+      agencyName: "Estado Mayor General de La Fuerza Aerea",
+      supplierName: "ANSAL CONSTRUCCIONES SRL",
+      supplierDocument: "30-64071769-2",
+      bidderCount: 2,
+      amountValue: 12_000_000,
+    }),
+    buildSignalFixture({
+      id: "AR-CONTRACT-105-1004-CON21",
+      agencyName: "Comision Nacional de Energia Atomica",
+      supplierName: "OTRO PROVEEDOR SA",
+      supplierDocument: "30-11111111-1",
+      bidderCount: 5,
+      amountValue: 800_000,
+    }),
+  ];
+  const context = buildCaseSignalContext(repeatedCases);
+
+  const signals = buildCaseSignals(repeatedCases[0], context);
+
+  assert.equal(signals.some((signal) => signal.code === "repeat_single_bid_winner"), true);
+  assert.equal(signals.some((signal) => signal.code === "recurring_supplier_agency"), true);
+  assert.equal(signals.some((signal) => signal.code === "supplier_concentration"), true);
+  assert.equal(signals.find((signal) => signal.code === "repeat_single_bid_winner")?.family, "supplier");
+  assert.equal(signals.find((signal) => signal.code === "repeat_single_bid_winner")?.confidence, "medium");
+  assert.doesNotMatch(JSON.stringify(signals), /corrup|fraude|delito|culpable|estafa|abuso|favorit|incumpl|irregular/i);
+});
+
+test("buildCaseSignals marks missing amounts and possible supplier aliases as reviewable gaps", () => {
+  const aliasCases = [
+    buildSignalFixture({
+      id: "AR-CONTRACT-14-0001-CON22",
+      supplierName: "OBRAS DEL SUR S.A.",
+      supplierDocument: null,
+      bidderCount: 3,
+      amountValue: null,
+    }),
+    buildSignalFixture({
+      id: "AR-CONTRACT-14-0002-CON22",
+      supplierName: "OBRAS DEL SUR SRL",
+      supplierDocument: null,
+      bidderCount: 2,
+      amountValue: 1_000_000,
+    }),
+  ];
+  const context = buildCaseSignalContext(aliasCases);
+
+  const signals = buildCaseSignals(aliasCases[0], context);
+
+  assert.equal(signals.some((signal) => signal.code === "missing_amount"), true);
+  assert.equal(signals.some((signal) => signal.code === "possible_supplier_alias"), true);
+  assert.equal(signals.find((signal) => signal.code === "missing_amount")?.family, "data_gap");
+  assert.equal(signals.find((signal) => signal.code === "possible_supplier_alias")?.confidence, "low");
+});
+
+function buildSignalFixture(overrides: {
+  id: string;
+  agencyName?: string;
+  supplierName?: string | null;
+  supplierDocument?: string | null;
+  bidderCount?: number | null;
+  amountValue?: number | null;
+}) {
+  return {
+    id: overrides.id,
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: `Contrato ${overrides.id}`,
+    workNumber: overrides.id.replace("AR-CONTRACT-", ""),
+    year: 2021,
+    procedureNumber: "381-0001-LPU21",
+    agencyName: overrides.agencyName ?? "Estado Mayor General de La Fuerza Aerea",
+    agencyCode: "381",
+    contractingUnit: "Compras",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -31.4201, lon: -64.1888 },
+    evidenceLevel: "official_dataset",
+    amount: overrides.amountValue === null
+      ? null
+      : { value: overrides.amountValue ?? 1_000_000, currency: "ARS", label: "monto_contrato" },
+    bidderCount: overrides.bidderCount ?? 1,
+    offerCount: overrides.bidderCount ?? 1,
+    supplierName: "supplierName" in overrides ? overrides.supplierName : "ANSAL CONSTRUCCIONES SRL",
+    supplierDocument: "supplierDocument" in overrides ? overrides.supplierDocument : "30-64071769-2",
+    receipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+}

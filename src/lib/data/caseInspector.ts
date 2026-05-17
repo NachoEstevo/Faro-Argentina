@@ -1,4 +1,4 @@
-import type { CaseSignal } from "./caseSignals.ts";
+import type { CaseSignal, CaseSignalContext } from "./caseSignals.ts";
 import { buildExpediente, type ExpedienteCaseFile } from "./expediente.ts";
 
 export interface CaseInspectorFact {
@@ -31,8 +31,8 @@ export interface CaseInspectorView {
   nextAction: string;
 }
 
-export function buildCaseInspector(caseFile: ExpedienteCaseFile): CaseInspectorView {
-  const expediente = buildExpediente(caseFile);
+export function buildCaseInspector(caseFile: ExpedienteCaseFile, signalContext?: CaseSignalContext): CaseInspectorView {
+  const expediente = buildExpediente(caseFile, signalContext);
   const primarySignal = expediente.whyItAppeared[0] ?? null;
   const trail = expediente.officialTrail.primary;
 

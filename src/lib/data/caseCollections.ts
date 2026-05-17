@@ -1,5 +1,6 @@
 import type { CountryCode } from "./sourceCatalog.ts";
 import {
+  buildCaseSignalContextsByCountry,
   buildCaseSignals,
   type CaseSignal,
   type SignalCaseFile,
@@ -88,9 +89,15 @@ export function buildCaseCollectionPack(
   filters: CaseCollectionFilters,
 ): CaseCollectionPack {
   const filteredCases = filterCaseFiles(cases, filters);
+  const signalContextCases = filterCaseFiles(cases, {
+    countryCode: filters.countryCode,
+    sourceId: filters.sourceId,
+    caseType: filters.caseType,
+  });
+  const signalContexts = buildCaseSignalContextsByCountry(signalContextCases as SignalCaseFile[]);
   const casesWithSignals = filteredCases.map((caseFile) => ({
     ...caseFile,
-    signals: buildCaseSignals(caseFile as SignalCaseFile),
+    signals: buildCaseSignals(caseFile as SignalCaseFile, signalContexts.get(caseFile.countryCode)),
   }));
   const signals = casesWithSignals.flatMap((caseFile) =>
     caseFile.signals.map((signal) => ({
@@ -127,7 +134,7 @@ export function buildCaseCollectionPack(
       "Abrir cada fuente oficial indicada en los receipts.",
       "Reproducir el snapshot usando rawPath, hash y parserVersion.",
       "Cruzar contratos, presupuesto, pagos y avance antes de publicar conclusiones.",
-      "No publicar conclusiones de irregularidad sin revision documental adicional.",
+      "No publicar conclusiones fuertes sin revision documental adicional.",
     ],
   };
 }

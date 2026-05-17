@@ -3,11 +3,23 @@ import { AlertTriangle, CheckCircle2, CircleHelp, Info } from "lucide-react";
 import {
   buildCaseSignals,
   type CaseSignal,
+  type CaseSignalContext,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 
-export function CaseSignalPanel({ caseFile }: { caseFile: SignalCaseFile }) {
-  const signals = buildCaseSignals(caseFile).slice(0, 5);
+interface CaseSignalProps {
+  caseFile: SignalCaseFile;
+  limit?: number;
+  signalContext?: CaseSignalContext;
+  signals?: CaseSignal[];
+}
+
+export function CaseSignalPanel({
+  caseFile,
+  signalContext,
+  signals: providedSignals,
+}: CaseSignalProps) {
+  const signals = (providedSignals ?? buildCaseSignals(caseFile, signalContext)).slice(0, 5);
   if (signals.length === 0) return null;
 
   return (
@@ -48,11 +60,10 @@ export function CaseSignalPanel({ caseFile }: { caseFile: SignalCaseFile }) {
 export function CaseSignalChips({
   caseFile,
   limit = 3,
-}: {
-  caseFile: SignalCaseFile;
-  limit?: number;
-}) {
-  const signals = buildCaseSignals(caseFile).slice(0, limit);
+  signalContext,
+  signals: providedSignals,
+}: CaseSignalProps) {
+  const signals = (providedSignals ?? buildCaseSignals(caseFile, signalContext)).slice(0, limit);
   if (signals.length === 0) return null;
 
   return (

@@ -6,6 +6,7 @@ import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { 
 import {
   buildEvidencePack,
   buildLeadFeed,
+  buildSignalFeed,
   getCaseById,
   getExpedienteById,
 } from "../src/lib/caseRepository.ts";
@@ -91,6 +92,42 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
     pack.receipts.some((receipt) => receipt.sourceId === "AR-CONTRATAR-OFERTAS"),
     true,
   );
+});
+
+test("buildCaseCollectionPack includes collection-aware supplier review signals", () => {
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "AR",
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    caseType: "procurement_contract",
+  });
+
+  const repeatedCase = pack.cases.find((caseFile) => caseFile.id === "AR-CONTRACT-40/31-1005-CON20");
+  assert.ok(repeatedCase);
+  assert.equal(
+    repeatedCase.signals.some((signal) => signal.code === "repeat_single_bid_winner"),
+    true,
+  );
+  assert.equal(
+    pack.signals.some((signal) =>
+      signal.caseId === "AR-CONTRACT-40/31-1005-CON20" &&
+      signal.code === "repeat_single_bid_winner"
+    ),
+    true,
+  );
+});
+
+test("buildCaseCollectionPack keeps supplier context when query narrows the exported rows", () => {
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "AR",
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    caseType: "procurement_contract",
+    query: "40/31-1005-CON20",
+  });
+
+  assert.equal(pack.stats.caseFiles, 1);
+  assert.equal(pack.cases[0]?.id, "AR-CONTRACT-40/31-1005-CON20");
+  assert.equal(pack.cases[0]?.signals[0]?.code, "repeat_single_bid_winner");
+  assert.equal(pack.signals[0]?.code, "repeat_single_bid_winner");
 });
 
 test("buildCaseCollectionPack exports Chile award evidence with official act context", () => {
@@ -203,4 +240,30 @@ test("buildEvidencePack handles decoded slash-containing case ids", () => {
 
   assert.equal(pack.caseFile.id, "AR-CONTRACT-40/31-1003-CON21");
   assert.equal(pack.receipt.recordId, "40/31-1003-CON21");
+});
+
+test("buildEvidencePack includes repository-wide supplier review context", () => {
+  const sourceCaseFile = getCaseById("AR-CONTRACT-40/31-1005-CON20");
+  assert.ok(sourceCaseFile);
+
+  const pack = buildEvidencePack(sourceCaseFile);
+
+  assert.equal(
+    pack.signals.some((signal) => signal.code === "repeat_single_bid_winner"),
+    true,
+  );
+  assert.doesNotMatch(JSON.stringify(pack.signals), /fraude|delito|culpable|corrup|abuso|favorit|incumpl|irregular/i);
+});
+
+test("buildSignalFeed keeps comparison context when query narrows signal rows", () => {
+  const feed = buildSignalFeed({
+    countryCode: "AR",
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    caseType: "procurement_contract",
+    query: "40/31-1005-CON20",
+  });
+
+  assert.equal(feed.signals.length > 0, true);
+  assert.equal(feed.signals[0]?.caseId, "AR-CONTRACT-40/31-1005-CON20");
+  assert.equal(feed.signals[0]?.code, "repeat_single_bid_winner");
 });

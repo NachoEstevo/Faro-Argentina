@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+import { buildCaseSignalContext } from "../src/lib/data/caseSignals.ts";
 import { buildCaseInspector } from "../src/lib/data/caseInspector.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import type { ExpedienteCaseFile } from "../src/lib/data/expediente.ts";
@@ -91,5 +92,20 @@ test("buildCaseInspector keeps actions encoded and points to full expediente", (
 test("buildCaseInspector keeps compact copy non-accusatory", () => {
   const inspector = buildCaseInspector(caseFile);
 
-  assert.doesNotMatch(JSON.stringify(inspector), /corrup|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(inspector), /corrup|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
+});
+
+test("buildCaseInspector can prioritize contextual supplier signals", () => {
+  const relatedCases = [
+    caseFile,
+    { ...caseFile, id: "AR-CONTRACT-40/31-1004-CON21", workNumber: "40/31-1004-CON21" },
+    { ...caseFile, id: "AR-CONTRACT-40/31-1005-CON21", workNumber: "40/31-1005-CON21", bidderCount: 2 },
+  ];
+  const context = buildCaseSignalContext(relatedCases);
+
+  const inspector = buildCaseInspector(caseFile, context);
+
+  assert.equal(inspector.primarySignal?.code, "repeat_single_bid_winner");
+  assert.match(inspector.summary, /Contrato/);
+  assert.match(inspector.nextAction, /pliegos|oferentes|contratos/i);
 });

@@ -23,5 +23,5 @@ test("getEntryGateActions exposes the three first-visit choices", () => {
 });
 
 test("getEntryGateActions keeps entry copy non-accusatory", () => {
-  assert.doesNotMatch(JSON.stringify(getEntryGateActions()), /corrup|fraude|delito|culpable/i);
+  assert.doesNotMatch(JSON.stringify(getEntryGateActions()), /corrup|fraude|delito|culpable|abuso|favorit|incumpl|irregular/i);
 });
