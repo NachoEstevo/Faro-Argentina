@@ -400,8 +400,7 @@ a {
 .panelKicker,
 .statusStrip span,
 .actionRow a,
-.traceBox button,
-.satelliteBox > div:first-child {
+.traceBox button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -440,7 +439,6 @@ a {
 .metric,
 .whyBox,
 .signalsBox,
-.satelliteBox,
 .receiptBox,
 .traceBox,
 .nextStepsBox {
@@ -451,8 +449,7 @@ a {
 
 .metric span,
 .receiptBox dt,
-.signalProof dt,
-.satelliteGrid span {
+.signalProof dt {
   display: block;
   color: rgba(255, 255, 255, 0.48);
   font-size: 11px;
@@ -471,7 +468,6 @@ a {
 
 .whyBox h2,
 .signalsBox h2,
-.satelliteBox h2,
 .receiptBox h2,
 .nextStepsBox h2 {
   margin: 0 0 8px;
@@ -480,7 +476,6 @@ a {
 
 .whyBox p,
 .signalItem p,
-.satelliteBox p,
 .traceBox p,
 .explorerIntro,
 .emptyState p {
@@ -671,37 +666,6 @@ a {
   grid-template-columns: 1fr;
   gap: 8px;
   margin: 0;
-}
-
-.satelliteBox {
-  display: grid;
-  gap: 12px;
-}
-
-.satelliteBox h2 {
-  margin: 0;
-}
-
-.satelliteGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.satelliteGrid div {
-  min-height: 74px;
-  padding: 10px;
-  border: 1px solid rgba(243, 201, 105, 0.18);
-  background:
-    linear-gradient(135deg, rgba(16, 40, 24, 0.92), rgba(108, 91, 38, 0.7)),
-    radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.16), transparent 28%);
-}
-
-.satelliteGrid strong {
-  display: block;
-  margin-top: 12px;
-  color: var(--faro-amber-strong);
-  font-size: 15px;
 }
 
 .receiptBox dl {

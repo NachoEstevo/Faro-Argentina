@@ -41,7 +41,6 @@ export interface ExpedienteView {
   };
   investigationContext: {
     hasOfficialGeometry: boolean;
-    satelliteCandidate: boolean;
     relatedReceiptCount: number;
     sourceCount: number;
   };
@@ -94,7 +93,6 @@ export function buildExpediente(caseFile: ExpedienteCaseFile): ExpedienteView {
     },
     investigationContext: {
       hasOfficialGeometry: Boolean(caseFile.coordinates),
-      satelliteCandidate: signals.some((signal) => signal.code === "sentinel_candidate"),
       relatedReceiptCount: relatedReceipts.length,
       sourceCount: sourceIds.size,
     },

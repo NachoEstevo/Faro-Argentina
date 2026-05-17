@@ -98,6 +98,7 @@ function Body({
           }}
           disabled={releases.length <= 1}
           aria-label="Wayback release"
+          aria-valuetext={formatReleaseYear(activeRelease)}
         />
         <button
           type="button"
