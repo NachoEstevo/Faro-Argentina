@@ -840,6 +840,24 @@
   inset: 0;
   pointer-events: none;
   z-index: 12;
+  opacity: 1;
+  transition: opacity 360ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.featuredHostMuted {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcomeLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.welcomeLayer > * {
+  pointer-events: auto;
 }
 
 .vignetteTop {
