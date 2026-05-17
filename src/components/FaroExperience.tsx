@@ -198,6 +198,10 @@ export default function FaroExperience({
     setSidebarCollapsed((value) => !value);
   }, []);
 
+  useEffect(() => {
+    setSidebarCollapsed(Boolean(selectedCaseId));
+  }, [selectedCaseId]);
+
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
