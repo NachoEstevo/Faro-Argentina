@@ -20,7 +20,6 @@ import {
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 import FaroMark from "../FaroMark";
-import SyncFooter from "../RegionalMap/SyncFooter";
 import styles from "./Explorer.module.css";
 
 interface Props {
@@ -65,6 +64,17 @@ export default function ExplorerView({
     [cases, selectedCountry],
   );
 
+  const contractByWorkNumber = useMemo(() => {
+    const map = new Map<string, ExplorerCase>();
+    for (const candidate of countryAll) {
+      const publicWork = (candidate as AnyCase).publicWorkNumber;
+      if (typeof publicWork === "string" && publicWork.length > 0) {
+        if (!map.has(publicWork)) map.set(publicWork, candidate);
+      }
+    }
+    return map;
+  }, [countryAll]);
+
   const yearBounds = useMemo(() => {
     const years = countryAll
       .map((caseFile) => caseFile.year)
@@ -101,7 +111,7 @@ export default function ExplorerView({
 
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return countryAll.filter((caseFile) => {
+    const filtered = countryAll.filter((caseFile) => {
       const severity = getCaseAlertSeverity(caseFile as SignalCaseFile);
       const isReview = severity === "high" || severity === "medium";
       const isNoGeometry = caseFile.coordinates === null;
@@ -129,6 +139,9 @@ export default function ExplorerView({
         .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
+    return [...filtered].sort((a, b) =>
+      caseTimestampKey(b).localeCompare(caseTimestampKey(a)),
+    );
   }, [countryAll, query, stateFilters, yearFrom, yearTo]);
 
   const PAGE_SIZE = 8;
@@ -262,10 +275,6 @@ export default function ExplorerView({
           <Download size={14} aria-hidden />
           <span>Exportar resultados</span>
         </button>
-        <div className={styles.sidebarSpacer} />
-        <div className={styles.sidebarFooter}>
-          <SyncFooter label="Datos hasta mayo 2026" />
-        </div>
       </aside>
       <main className={styles.main}>
         {selectedCase ? (
@@ -304,7 +313,7 @@ export default function ExplorerView({
                   onClick={() => onSelectCountry(country.code)}
                   aria-pressed={isActive}
                 >
-                  <span className={styles.countryShort}>{country.short}</span>
+                  <CountryFlag code={country.code} />
                   <span className={styles.countryName}>{country.label}</span>
                 </button>
               );
@@ -407,9 +416,16 @@ export default function ExplorerView({
                 </tr>
               )}
               {pagedRows.map((caseFile) => {
-                const supplierName =
-                  "supplierName" in caseFile ? caseFile.supplierName ?? "—" : "—";
-                const amount = "amount" in caseFile ? caseFile.amount : null;
+                const related = contractByWorkNumber.get(caseFile.workNumber);
+                const supplierFromCase =
+                  "supplierName" in caseFile ? caseFile.supplierName : null;
+                const supplierFromRelated =
+                  related && "supplierName" in related ? related.supplierName : null;
+                const supplierName = supplierFromCase ?? supplierFromRelated ?? "—";
+                const amountFromCase = "amount" in caseFile ? caseFile.amount : null;
+                const amountFromRelated =
+                  related && "amount" in related ? related.amount : null;
+                const amount = amountFromCase ?? amountFromRelated;
                 const state = computeRowState(caseFile);
                 return (
                   <tr
@@ -466,6 +482,13 @@ function ExplorerDetail({
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
 }) {
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
+  const relatedContract =
+    pool.find(
+      (entry) =>
+        entry.id !== caseFile.id &&
+        typeof (entry as AnyCase).publicWorkNumber === "string" &&
+        (entry as AnyCase).publicWorkNumber === caseFile.workNumber,
+    ) ?? null;
   const supplierKey =
     "supplierName" in caseFile && caseFile.supplierName
       ? caseFile.supplierName.trim().toLowerCase()
@@ -535,12 +558,21 @@ function ExplorerDetail({
           </article>
         );
       })()}
+      {caseFile.workNumber.includes("OBR") &&
+        !relatedContract &&
+        !("amount" in caseFile && (caseFile as AnyCase).amount) && (
+          <p className={styles.detailNote}>
+            Esta obra aparece declarada en el catálogo oficial pero todavía no
+            tiene contrato adjudicatario emparejado en los datasets cruzados, por
+            eso no se ven proveedor ni monto.
+          </p>
+        )}
       <div className={styles.detailGrid}>
-        <MontoCard caseFile={caseFile} />
+        <MontoCard caseFile={caseFile} fallback={relatedContract} />
         <CronologiaCard caseFile={caseFile} />
         <CompetenciaCard caseFile={caseFile} />
         <UbicacionObraCard caseFile={caseFile} />
-        <ProveedorCard caseFile={caseFile} />
+        <ProveedorCard caseFile={caseFile} fallback={relatedContract} />
         <ProcedimientoCard caseFile={caseFile} />
         <EjecucionCard caseFile={caseFile} />
         <OrganismoCard caseFile={caseFile} />
@@ -632,6 +664,45 @@ function DetailRow({
   );
 }
 
+function CountryFlag({ code }: { code: CountryCode }) {
+  const props = {
+    width: 22,
+    height: 14,
+    viewBox: "0 0 22 14",
+    role: "img",
+    "aria-label": code,
+    className: styles.countryFlag,
+  } as const;
+  if (code === "AR") {
+    return (
+      <svg {...props}>
+        <rect width="22" height="14" fill="#74acdf" />
+        <rect y="4.66" width="22" height="4.68" fill="#ffffff" />
+        <circle cx="11" cy="7" r="1.6" fill="#f6b40e" />
+      </svg>
+    );
+  }
+  if (code === "CL") {
+    return (
+      <svg {...props}>
+        <rect width="22" height="7" fill="#ffffff" />
+        <rect y="7" width="22" height="7" fill="#d52b1e" />
+        <rect width="9" height="7" fill="#0039a6" />
+        <polygon
+          points="4.5,2.3 5.05,3.9 6.7,3.9 5.35,4.85 5.85,6.45 4.5,5.5 3.15,6.45 3.65,4.85 2.3,3.9 3.95,3.9"
+          fill="#ffffff"
+        />
+      </svg>
+    );
+  }
+  return (
+    <svg {...props}>
+      <rect width="22" height="14" fill="#d91023" />
+      <rect x="7.33" width="7.33" height="14" fill="#ffffff" />
+    </svg>
+  );
+}
+
 function RangeSlider({
   min,
   max,
@@ -702,9 +773,15 @@ function formatAmountInline(amount: Amount): string {
   return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
 }
 
-function MontoCard({ caseFile }: { caseFile: ExplorerCase }) {
-  const amount = getField<Amount>(caseFile, "amount");
-  const budget = getField<Amount>(caseFile, "officialBudget");
+function MontoCard({
+  caseFile,
+  fallback,
+}: {
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+}) {
+  const amount = getField<Amount>(caseFile, "amount") ?? (fallback ? getField<Amount>(fallback, "amount") : null);
+  const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
   if (!amount && !budget) return null;
   let overrun: string | null = null;
   if (amount && budget && budget.value > 0) {
@@ -779,11 +856,25 @@ function UbicacionObraCard({ caseFile }: { caseFile: ExplorerCase }) {
   );
 }
 
-function ProveedorCard({ caseFile }: { caseFile: ExplorerCase }) {
-  const name = getField<string>(caseFile, "supplierName");
-  const document = getField<string>(caseFile, "supplierDocument");
-  const locality = getField<string>(caseFile, "supplierLocality");
-  const province = getField<string>(caseFile, "supplierProvince");
+function ProveedorCard({
+  caseFile,
+  fallback,
+}: {
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+}) {
+  const name =
+    getField<string>(caseFile, "supplierName") ??
+    (fallback ? getField<string>(fallback, "supplierName") : null);
+  const document =
+    getField<string>(caseFile, "supplierDocument") ??
+    (fallback ? getField<string>(fallback, "supplierDocument") : null);
+  const locality =
+    getField<string>(caseFile, "supplierLocality") ??
+    (fallback ? getField<string>(fallback, "supplierLocality") : null);
+  const province =
+    getField<string>(caseFile, "supplierProvince") ??
+    (fallback ? getField<string>(fallback, "supplierProvince") : null);
   if (!name && !document) return null;
   return (
     <div className={styles.detailCard}>
@@ -853,6 +944,15 @@ function PuntoGeoCard({ caseFile }: { caseFile: ExplorerCase }) {
       <DetailRow label="Ver en mapa" value="Abrir en OpenStreetMap ↗" href={mapUrl} />
     </div>
   );
+}
+
+function caseTimestampKey(caseFile: ExplorerCase): string {
+  const awarded = getField<string>(caseFile, "awardedAt");
+  if (awarded) return awarded;
+  const published = getField<string>(caseFile, "publishedAt");
+  if (published) return published;
+  if (caseFile.year !== null) return `${caseFile.year}-12-31`;
+  return "0000-00-00";
 }
 
 function formatTableDate(caseFile: ExplorerCase): string {

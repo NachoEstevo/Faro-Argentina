@@ -16,18 +16,18 @@ const ESRI_ATTRIBUTION =
   "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 
 const DEFAULT_STYLE = {
-  color: "#7cc1ec",
-  weight: 2.6,
+  color: "#9bd0f5",
+  weight: 3.2,
   fillColor: "#5aa9e5",
-  fillOpacity: 0.22,
+  fillOpacity: 0.42,
   dashArray: "0",
 } as const;
 
 const HOVER_STYLE = {
-  color: "#e3f1fb",
-  weight: 3.2,
+  color: "#eaf4fc",
+  weight: 4,
   fillColor: "#5aa9e5",
-  fillOpacity: 0.5,
+  fillOpacity: 0.65,
 } as const;
 
 interface CountryProperties {

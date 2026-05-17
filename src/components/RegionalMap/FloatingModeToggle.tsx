@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Map as MapIcon, Table2 } from "lucide-react";
+import { FileSearch, Map as MapIcon } from "lucide-react";
 import styles from "./RegionalMap.module.css";
 
 export default function FloatingModeToggle() {
@@ -10,7 +10,7 @@ export default function FloatingModeToggle() {
         className={`${styles.floatingToggleButton} ${styles.active}`}
         aria-pressed="true"
       >
-        <MapIcon size={13} aria-hidden className={styles.floatingToggleIcon} />
+        <MapIcon size={13} aria-hidden />
         Mapa
       </button>
       <Link
@@ -18,7 +18,7 @@ export default function FloatingModeToggle() {
         className={styles.floatingToggleButton}
         aria-label="Abrir modo Explorer"
       >
-        <Table2 size={13} aria-hidden className={styles.floatingToggleIcon} />
+        <FileSearch size={13} aria-hidden />
         Explorer
       </Link>
     </div>

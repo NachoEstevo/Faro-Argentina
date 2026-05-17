@@ -16,8 +16,13 @@ export default function WelcomeOverlay({ dismissed, onCTA }: Props) {
         Un observatorio de obras públicas en Argentina, Chile y Perú.
       </h1>
       <button type="button" className={styles.welcomeCTA} onClick={onCTA}>
-        Ver el mapa
-        <ArrowRight size={17} aria-hidden />
+        <span className={styles.welcomeCTASource} aria-hidden>
+          <img src="/brand/faro-mark-transparent.svg" alt="" width={56} height={56} decoding="async" />
+        </span>
+        <span className={styles.welcomeCTALabel}>Ver el mapa</span>
+        <span className={styles.welcomeCTAArrow} aria-hidden>
+          <ArrowRight size={18} strokeWidth={1.9} />
+        </span>
       </button>
     </div>
   );

@@ -239,7 +239,7 @@ export default function FaroExperience({
             onClick={() => setViewMode("map")}
             aria-pressed={viewMode === "map"}
           >
-            <MapIcon size={13} aria-hidden className={styles.floatingToggleIcon} />
+            <MapIcon size={13} aria-hidden />
             Mapa
           </button>
           <button
@@ -248,7 +248,7 @@ export default function FaroExperience({
             onClick={() => setViewMode("explorer")}
             aria-pressed={viewMode === "explorer"}
           >
-            <FileSearch size={13} aria-hidden className={styles.floatingToggleIcon} />
+            <FileSearch size={13} aria-hidden />
             Explorer
           </button>
         </div>

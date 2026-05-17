@@ -711,14 +711,12 @@
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
   padding: 4px;
-  border-radius: var(--cf-radius-md);
-  background: rgba(13, 15, 19, 0.8);
+  border-radius: 999px;
+  background: var(--cf-bg-overlay);
   border: 1px solid var(--cf-border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: var(--cf-shadow-soft);
 }
 
 .backToGlobal {
@@ -759,18 +757,15 @@
 .floatingToggleButton {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 16px;
-  border: 0;
-  border-radius: var(--cf-radius-sm);
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
   background: transparent;
-  color: var(--cf-text-secondary);
-  font-family: var(--cf-font-heading);
-  font-size: 13px;
-  font-weight: 500;
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  border-radius: 999px;
   cursor: pointer;
-  text-decoration: none;
-  transition: background-color 160ms ease, color 160ms ease;
 }
 
 .floatingToggleButton:hover {
@@ -778,18 +773,9 @@
 }
 
 .floatingToggleButton.active {
-  background: var(--cf-bg-surface);
+  background: var(--cf-bg);
   color: var(--cf-text);
   border: 1px solid var(--cf-border-strong);
-  padding: 7px 15px;
-}
-
-.floatingToggleButton.active .floatingToggleIcon {
-  color: var(--cf-accent);
-}
-
-.floatingToggleIcon {
-  color: var(--cf-text-muted);
 }
 
 .welcomeOverlay {
@@ -818,27 +804,149 @@
 }
 
 .welcomeCTA {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 28px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--cf-accent);
-  color: var(--cf-on-accent);
+  justify-content: center;
+  gap: 13px;
+  min-height: 62px;
+  padding: 0 22px 0 0;
+  border: 1px solid rgba(184, 218, 240, 0.3);
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, rgba(243, 201, 105, 0.08), transparent 38%),
+    rgba(8, 12, 17, 0.78);
+  color: var(--cf-text);
   font-family: var(--cf-font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
   cursor: pointer;
   pointer-events: auto;
-  box-shadow: 0 8px 32px rgba(147, 201, 216, 0.34);
-  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    background-color 320ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease,
+    transform 220ms ease;
+}
+
+.welcomeCTA::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  width: 256px;
+  height: 82px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(243, 201, 105, 0.38), transparent 32%),
+    linear-gradient(90deg, rgba(243, 201, 105, 0.24), rgba(184, 218, 240, 0.11) 54%, transparent 84%);
+  clip-path: polygon(0 43%, 100% 12%, 100% 88%, 0 57%);
+  filter: blur(11px);
+  opacity: 0.28;
+  transform: translateY(-50%) scaleX(0.42);
+  transform-origin: left center;
+  transition: opacity 900ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.welcomeCTA::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 20px;
+  bottom: 13px;
+  height: 1px;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(243, 201, 105, 0.72), rgba(90, 169, 229, 0.28), transparent);
+  opacity: 0.18;
+  transform: scaleX(0.32);
+  transform-origin: left center;
+  transition: opacity 780ms ease, transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.welcomeCTASource {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 31px;
+  height: 60px;
+  margin-right: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.welcomeCTASource img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  max-width: none;
+  object-fit: cover;
+  transform: translate(-28px, 2px);
+  filter: drop-shadow(0 0 12px rgba(243, 201, 105, 0.24));
+}
+
+.welcomeCTALabel {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.38);
+}
+
+.welcomeCTAArrow {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--cf-accent-hi);
+  transition: color 240ms ease, transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .welcomeCTA:hover {
-  background: var(--cf-accent-hi);
   transform: translateY(-1px);
-  box-shadow: 0 12px 40px rgba(147, 201, 216, 0.5);
+  border-color: rgba(184, 218, 240, 0.58);
+  color: var(--cf-text);
+  box-shadow:
+    0 22px 62px rgba(0, 0, 0, 0.38),
+    0 0 34px rgba(90, 169, 229, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.welcomeCTA:hover::before {
+  opacity: 0.42;
+  transform: translateY(-50%) scaleX(1);
+}
+
+.welcomeCTA:hover::after {
+  opacity: 0.38;
+  transform: scaleX(1);
+}
+
+.welcomeCTA:hover .welcomeCTAArrow {
+  color: #f3c969;
+  transform: translateX(3px);
+}
+
+.welcomeCTA:focus-visible {
+  outline: 0;
+  border-color: var(--cf-accent-hi);
+  box-shadow:
+    0 0 0 3px rgba(184, 218, 240, 0.18),
+    0 20px 60px rgba(0, 0, 0, 0.38);
 }
 
 .trustStrip {
@@ -1038,8 +1146,27 @@
   }
 
   .welcomeCTA {
-    padding: 14px 22px;
-    font-size: 15px;
+    min-height: 56px;
+    gap: 12px;
+    padding: 0 18px 0 0;
+    font-size: 14px;
+  }
+
+  .welcomeCTA::before {
+    left: 0;
+    width: 210px;
+  }
+
+  .welcomeCTASource {
+    width: 29px;
+    height: 54px;
+    padding-right: 0;
+  }
+
+  .welcomeCTASource img {
+    width: 52px;
+    height: 52px;
+    transform: translate(-26px, 1px);
   }
 
   .trustStrip {
@@ -1094,8 +1221,38 @@
     font-size: clamp(16px, 4vh, 22px);
   }
   .welcomeCTA {
-    padding: 10px 18px;
-    font-size: 13px;
+    min-height: 50px;
+    gap: 10px;
+    padding: 0 14px 0 0;
+    font-size: 12.5px;
+  }
+
+  .welcomeCTA::before {
+    left: 0;
+    width: 184px;
+    height: 64px;
+  }
+
+  .welcomeCTA::after {
+    left: 0;
+    right: 16px;
+    bottom: 10px;
+  }
+
+  .welcomeCTASource {
+    width: 27px;
+    height: 48px;
+  }
+
+  .welcomeCTASource img {
+    width: 48px;
+    height: 48px;
+    transform: translate(-24px, 0);
+  }
+
+  .welcomeCTAArrow {
+    width: 21px;
+    height: 21px;
   }
   .trustStrip {
     bottom: 12px;
@@ -1136,5 +1293,14 @@
   }
   .trustItem strong {
     font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcomeCTA,
+  .welcomeCTA::before,
+  .welcomeCTA::after,
+  .welcomeCTAArrow {
+    transition: none;
   }
 }
