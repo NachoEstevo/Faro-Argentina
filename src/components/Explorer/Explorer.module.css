@@ -81,6 +81,84 @@
   color: var(--cf-accent);
 }
 
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterGroupLabel {
+  margin: 0;
+  font-size: 11px;
+  color: var(--cf-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkRow input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--cf-border-strong);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkRow input:checked {
+  background: var(--cf-accent);
+  border-color: var(--cf-accent);
+}
+
+.checkRow input:checked::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--cf-on-accent);
+  clip-path: polygon(15% 50%, 0 65%, 40% 100%, 100% 25%, 85% 10%, 40% 70%);
+}
+
+.checkDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dot_verified {
+  background: var(--cf-state-verified);
+}
+
+.dot_review {
+  background: var(--cf-state-caution);
+}
+
+.dot_no_geometry {
+  background: var(--cf-state-unknown);
+}
+
+.checkLabel {
+  flex: 1;
+  font-size: 13px;
+  color: var(--cf-text);
+}
+
+.checkCount {
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  color: var(--cf-text-muted);
+}
+
 .main {
   display: flex;
   flex-direction: column;
