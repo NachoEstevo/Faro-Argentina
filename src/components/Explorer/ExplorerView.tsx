@@ -20,7 +20,6 @@ import {
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 import FaroMark from "../FaroMark";
-import SyncFooter from "../RegionalMap/SyncFooter";
 import styles from "./Explorer.module.css";
 
 interface Props {
@@ -262,10 +261,6 @@ export default function ExplorerView({
           <Download size={14} aria-hidden />
           <span>Exportar resultados</span>
         </button>
-        <div className={styles.sidebarSpacer} />
-        <div className={styles.sidebarFooter}>
-          <SyncFooter label="Datos hasta mayo 2026" />
-        </div>
       </aside>
       <main className={styles.main}>
         {selectedCase ? (

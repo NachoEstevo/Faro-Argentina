@@ -21,7 +21,7 @@
   overscroll-behavior: contain;
 }
 
-.sidebar > *:not(.sidebarFooter) {
+.sidebar > * {
   flex-shrink: 0;
 }
 
@@ -295,16 +295,6 @@
   color: var(--cf-text);
 }
 
-.sidebarSpacer {
-  display: none;
-}
-
-.sidebarFooter {
-  margin-top: auto;
-  border-top: 1px solid var(--cf-border);
-  background: var(--cf-bg-elev);
-  flex-shrink: 0;
-}
 
 .main {
   display: flex;
