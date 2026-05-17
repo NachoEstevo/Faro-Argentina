@@ -248,6 +248,32 @@ test("buildCaseSignals marks missing amounts and possible supplier aliases as re
   assert.equal(signals.find((signal) => signal.code === "possible_supplier_alias")?.confidence, "low");
 });
 
+test("buildCaseSignals lowers recurrence confidence when supplier identity is name-only", () => {
+  const repeatedCases = [
+    buildSignalFixture({
+      id: "AR-CONTRACT-14-2001-CON21",
+      supplierName: "OBRAS DEL SUR S.A.",
+      supplierDocument: null,
+      bidderCount: 1,
+      amountValue: 1_000_000,
+    }),
+    buildSignalFixture({
+      id: "AR-CONTRACT-14-2002-CON21",
+      supplierName: "OBRAS DEL SUR SRL",
+      supplierDocument: null,
+      bidderCount: 1,
+      amountValue: 2_000_000,
+    }),
+  ];
+
+  const context = buildCaseSignalContext(repeatedCases);
+  const signals = buildCaseSignals(repeatedCases[0], context);
+  const recurrence = signals.find((signal) => signal.code === "repeat_single_bid_winner");
+
+  assert.equal(recurrence?.confidence, "low");
+  assert.match(recurrence?.caveat ?? "", /nombre normalizado/);
+});
+
 function buildSignalFixture(overrides: {
   id: string;
   agencyName?: string;

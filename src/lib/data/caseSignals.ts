@@ -315,18 +315,24 @@ function addAggregateSupplierSignals(
   const aliasGroup = metrics?.aliasGroup;
   if (!supplierProfile || !supplierAgencyProfile) return;
 
+  const isLowConfidenceSupplierIdentity = supplierProfile.identityConfidence === "low";
+  const supplierIdentityConfidence = isLowConfidenceSupplierIdentity ? "low" : "medium";
+  const identityCaveat = isLowConfidenceSupplierIdentity
+    ? " Faro agrupo este proveedor por nombre normalizado porque falta documento fiscal confiable."
+    : "";
+
   if (supplierAgencyProfile.singleBidCaseCount >= 2) {
     signals.push({
       code: "repeat_single_bid_winner",
       kind: "watch",
       family: "supplier",
       severity: "high",
-      confidence: "medium",
+      confidence: supplierIdentityConfidence,
       priority: 106,
       label: "Ganador recurrente con baja competencia",
       summary: `El proveedor aparece como ganador en ${supplierAgencyProfile.singleBidCaseCount} contratos del mismo organismo con 1 oferente registrado.`,
       evidence: `${supplierAgencyProfile.agencyLabel}: ${supplierAgencyProfile.singleBidCaseCount} contratos con 1 oferente; ${supplierAgencyProfile.caseCount} contratos del proveedor en ese organismo.`,
-      caveat: "La recurrencia con baja competencia prioriza revision; no alcanza para explicar el patron por si sola.",
+      caveat: `La recurrencia depende del alcance del dataset cargado y no prueba direccionamiento.${identityCaveat}`,
       action: "Comparar pliegos, oferentes, fechas y justificacion del organismo en los contratos relacionados.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
     });
@@ -338,12 +344,12 @@ function addAggregateSupplierSignals(
       kind: "watch",
       family: "supplier",
       severity: "medium",
-      confidence: "medium",
+      confidence: supplierIdentityConfidence,
       priority: 96,
       label: "Proveedor recurrente por organismo",
       summary: `El proveedor aparece en ${supplierAgencyProfile.caseCount} contratos del mismo organismo dentro del set analizado.`,
       evidence: `${supplierAgencyProfile.agencyLabel}: ${supplierAgencyProfile.caseCount} contratos; monto acumulado con monto informado: ${round(supplierAgencyProfile.totalAmount)}.`,
-      caveat: "Un proveedor recurrente puede reflejar especializacion o mercado chico; requiere comparar rubro, pliegos y competencia.",
+      caveat: `Un proveedor recurrente puede reflejar especializacion o mercado chico; requiere comparar rubro, pliegos y competencia.${identityCaveat}`,
       action: "Abrir los contratos relacionados y revisar si se repiten rubro, unidad compradora, requisitos y oferentes.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
     });
@@ -358,12 +364,12 @@ function addAggregateSupplierSignals(
       kind: "watch",
       family: "supplier",
       severity: "medium",
-      confidence: "medium",
+      confidence: supplierIdentityConfidence,
       priority: 90,
       label: "Concentracion proveedor-organismo",
       summary: `En este set, ${Math.round(concentrationRatio * 100)}% de los contratos del proveedor aparecen asociados al mismo organismo.`,
       evidence: `${supplierAgencyProfile.caseCount} de ${supplierProfile.caseCount} contratos del proveedor se concentran en ${supplierAgencyProfile.agencyLabel}.`,
-      caveat: "La concentracion depende del alcance del dataset cargado; debe validarse con mas fuentes y periodo completo.",
+      caveat: `La concentracion depende del alcance del dataset cargado; debe validarse con mas fuentes y periodo completo.${identityCaveat}`,
       action: "Ampliar periodo/fuentes y comparar contra otros proveedores del mismo rubro.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
     });

@@ -1,8 +1,16 @@
 import type { SignalCaseFile } from "./caseSignals.ts";
+import {
+  buildSupplierAliasKey,
+  resolveSupplierIdentity,
+  type SupplierIdentityConfidence,
+  type SupplierIdentityMethod,
+} from "./entityResolution.ts";
 
 export interface SupplierProfile {
   supplierKey: string;
   supplierLabel: string;
+  identityMethod: SupplierIdentityMethod;
+  identityConfidence: SupplierIdentityConfidence;
   caseCount: number;
   agencyCount: number;
   totalAmount: number;
@@ -48,10 +56,11 @@ export function buildCaseSignalContext(cases: SignalCaseFile[]): CaseSignalConte
   const aliasGroups = new Map<string, MutableSupplierAliasGroup>();
 
   for (const caseFile of cases) {
-    const supplierKey = buildSupplierKey(caseFile);
-    if (!supplierKey) continue;
+    const supplierIdentity = resolveSupplierIdentity(caseFile);
+    if (!supplierIdentity) continue;
 
-    const supplierLabel = firstPresent(caseFile.supplierName, caseFile.supplierDocument, "Proveedor sin nombre");
+    const supplierKey = supplierIdentity.key;
+    const supplierLabel = supplierIdentity.label;
     const agencyKey = normalizeKey(caseFile.agencyName);
     const agencyLabel = firstPresent(caseFile.agencyName, caseFile.agencyCode, "Organismo sin nombre");
     const amountValue = positiveAmount(caseFile.amount?.value);
@@ -62,6 +71,8 @@ export function buildCaseSignalContext(cases: SignalCaseFile[]): CaseSignalConte
     const supplierProfile = supplierProfiles.get(supplierKey) ?? {
       supplierKey,
       supplierLabel,
+      identityMethod: supplierIdentity.method,
+      identityConfidence: supplierIdentity.confidence,
       agencies: new Set<string>(),
       caseCount: 0,
       totalAmount: 0,
@@ -99,7 +110,7 @@ export function buildCaseSignalContext(cases: SignalCaseFile[]): CaseSignalConte
     if (isLowCompetition) supplierAgencyProfile.lowCompetitionCaseCount += 1;
     supplierAgencyProfiles.set(supplierAgencyKey, supplierAgencyProfile);
 
-    const aliasKey = buildAliasKey(caseFile.supplierName);
+    const aliasKey = buildSupplierAliasKey(caseFile.supplierName);
     if (aliasKey) {
       const aliasGroup = aliasGroups.get(aliasKey) ?? {
         aliasKey,
@@ -117,6 +128,8 @@ export function buildCaseSignalContext(cases: SignalCaseFile[]): CaseSignalConte
     finalizedSupplierProfiles.set(key, {
       supplierKey: profile.supplierKey,
       supplierLabel: profile.supplierLabel,
+      identityMethod: profile.identityMethod,
+      identityConfidence: profile.identityConfidence,
       caseCount: profile.caseCount,
       agencyCount: profile.agencies.size,
       totalAmount: profile.totalAmount,
@@ -181,9 +194,10 @@ function buildCaseMetrics(
 ) {
   const metrics = new Map<string, CaseContextMetrics>();
   for (const caseFile of cases) {
-    const supplierKey = buildSupplierKey(caseFile);
+    const supplierIdentity = resolveSupplierIdentity(caseFile);
+    const supplierKey = supplierIdentity?.key ?? null;
     const agencyKey = normalizeKey(caseFile.agencyName);
-    const aliasKey = buildAliasKey(caseFile.supplierName);
+    const aliasKey = buildSupplierAliasKey(caseFile.supplierName);
     metrics.set(caseFile.id, {
       supplierProfile: supplierKey ? supplierProfiles.get(supplierKey) ?? null : null,
       supplierAgencyProfile: supplierKey ? supplierAgencyProfiles.get(`${supplierKey}::${agencyKey}`) ?? null : null,
@@ -191,25 +205,6 @@ function buildCaseMetrics(
     });
   }
   return metrics;
-}
-
-function buildSupplierKey(caseFile: SignalCaseFile): string | null {
-  const document = normalizeDocument(caseFile.supplierDocument);
-  if (document) return `doc:${document}`;
-  const aliasKey = buildAliasKey(caseFile.supplierName);
-  return aliasKey ? `name:${aliasKey}` : null;
-}
-
-function buildAliasKey(value: string | null | undefined): string | null {
-  const normalized = normalizeKey(value)
-    .replace(/\bS A S\b/g, " ")
-    .replace(/\bS A\b/g, " ")
-    .replace(/\bS R L\b/g, " ")
-    .replace(/\b(SA|SAS|SRL|SACI|SCA|UTE|LTDA|EIRL)\b/g, " ")
-    .replace(/\b(SOCIEDAD|ANONIMA|RESPONSABILIDAD|LIMITADA)\b/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  return normalized.length >= 6 ? normalized : null;
 }
 
 function normalizeKey(value: string | null | undefined): string {
@@ -220,10 +215,6 @@ function normalizeKey(value: string | null | undefined): string {
     .toUpperCase()
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function normalizeDocument(value: string | null | undefined): string {
-  return clean(value).replace(/\D/g, "");
 }
 
 function positiveAmount(value: number | null | undefined): number | null {
@@ -245,6 +236,8 @@ function clean(value: string | null | undefined): string {
 interface MutableSupplierProfile {
   supplierKey: string;
   supplierLabel: string;
+  identityMethod: SupplierIdentityMethod;
+  identityConfidence: SupplierIdentityConfidence;
   agencies: Set<string>;
   caseCount: number;
   totalAmount: number;
