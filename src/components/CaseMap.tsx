@@ -102,7 +102,7 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           <TileLayer attribution={CARTODB_ATTRIBUTION} url={CARTODB_URL} />
         )}
         <ZoomControl position="bottomright" />
-        <MapFocus cases={mapCases} selectedCase={selectedCase} waybackActive={selectedCase?.coordinates != null} />
+        <MapFocus cases={mapCases} selectedCase={selectedCase} waybackActive={selectedCase?.coordinates != null && waybackState.status !== "error"} />
         {selectedCase?.coordinates && traceMode && (
           <Circle
             center={[selectedCase.coordinates.lat, selectedCase.coordinates.lon]}
