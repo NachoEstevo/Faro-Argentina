@@ -1,4 +1,6 @@
-import type { FxRateEntry, FxSeries, FxSourceMeta } from "./fx.ts";
+import { readFile } from "node:fs/promises";
+
+import type { FxRateEntry, FxSeries, FxSeriesRegistry, FxSourceMeta } from "./fx.ts";
 
 export interface FxSeriesProfile {
   currency: string;
@@ -58,4 +60,22 @@ function parseRate(raw: string | undefined, delimiter: "," | ";"): number | null
   const value = Number(normalized);
   if (!Number.isFinite(value) || value <= 0) return null;
   return value;
+}
+
+export interface FxSeriesFileProfile extends FxSeriesProfile {
+  relativePath: string;
+}
+
+export async function loadFxRegistryFromFiles(input: {
+  rootDir: URL;
+  profiles: FxSeriesFileProfile[];
+}): Promise<FxSeriesRegistry> {
+  const registry: FxSeriesRegistry = new Map();
+  for (const profile of input.profiles) {
+    const fileUrl = new URL(profile.relativePath, input.rootDir);
+    const text = await readFile(fileUrl, "utf8");
+    const series = parseFxCsv(text, profile);
+    registry.set(profile.currency, series);
+  }
+  return registry;
 }
