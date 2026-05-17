@@ -67,6 +67,20 @@ test("buildInvestigatorExplorer applies geometry, country, signal, and pivot fil
   assert.equal(pivoted.rows.every((row) => row.entities.supplierKey === supplierFacet?.key), true);
 });
 
+test("buildInvestigatorExplorer uses the coordinate quality gate for geometry status", () => {
+  const placeholderGeometryCase = buildExplorerFixture("AR-CONTRACT-381-1009-CON21", 2, {
+    coordinates: { lat: 0, lon: 0 },
+  }) as InvestigatorExplorerCase;
+
+  const explorer = buildInvestigatorExplorer([placeholderGeometryCase], {
+    geometry: "without",
+    limit: 20,
+  });
+
+  assert.equal(explorer.rows.length, 1);
+  assert.equal(explorer.rows[0]?.hasOfficialGeometry, false);
+});
+
 test("buildInvestigatorExplorer keeps scanner copy non-accusatory", () => {
   const explorer = buildInvestigatorExplorer(allCases, { limit: 120 });
 
@@ -140,7 +154,7 @@ test("buildInvestigatorExplorer scopes supplier recurrence by filtered country",
 function buildExplorerFixture(
   id: string,
   bidderCount: number,
-  overrides: Partial<Pick<InvestigatorExplorerCase, "countryCode" | "agencyName">> = {},
+  overrides: Partial<Pick<InvestigatorExplorerCase, "countryCode" | "agencyName" | "coordinates">> = {},
 ) {
   return {
     id,
@@ -155,7 +169,7 @@ function buildExplorerFixture(
     contractingUnit: "Compras",
     executionTerm: null,
     executionTermType: null,
-    coordinates: { lat: -31.4201, lon: -64.1888 },
+    coordinates: overrides.coordinates ?? { lat: -31.4201, lon: -64.1888 },
     evidenceLevel: "official_dataset",
     amount: { value: 1_000_000, currency: "ARS", label: "monto_contrato" },
     bidderCount,

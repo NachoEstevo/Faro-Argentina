@@ -55,10 +55,10 @@ El producto actual ya tiene una primera version funcional:
 
 Datos actuales en la app:
 
-- `633` expedientes;
+- `1608` expedientes;
 - `558` Argentina;
-- `50` Peru;
-- `25` Chile.
+- `525` Peru;
+- `525` Chile.
 
 ## Modos De Uso
 
@@ -72,7 +72,7 @@ Es ideal para obras publicas y casos donde la ubicacion agrega contexto real: te
 
 El scanner es evidencia primero. Permite buscar por proveedor, organismo, fuente, receipt, senal o texto libre, y despues pivotear entre entidades relacionadas.
 
-Este modo es clave para periodistas e investigadores porque no depende del mapa. Peru y Chile pueden tener expedientes utiles aunque todavia no tengan coordenadas confiables.
+Este modo es clave para periodistas e investigadores porque no depende del mapa. Peru y Chile pueden tener expedientes utiles aunque una parte importante todavia no sea dibujable en el mapa.
 
 ## Principios Del Producto
 
@@ -96,7 +96,7 @@ Prioridad recomendada:
 3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
 4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
 
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `413` casos elegibles para mapa sobre `633` expedientes totales.
+La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `1099` casos elegibles para mapa sobre `1608` expedientes totales: `413/558` Argentina, `469/525` Peru y `217/525` Chile.
 
 ## Fuentes Iniciales
 

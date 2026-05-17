@@ -143,9 +143,9 @@ npm run data:geo-report
 
 Expected current shape:
 
-- `633` total expedientes;
-- `413` map eligible;
-- PE and CL currently remain no-geometry expedientes;
+- `1608` total expedientes;
+- `1099` map eligible;
+- map eligibility by country: `413/558` AR, `469/525` PE, `217/525` CL;
 - invalid AR coordinates remain available as data gaps.
 
 ## Duplicate Official Rows

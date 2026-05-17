@@ -21,8 +21,8 @@ export interface ArgentinaHistoricalJudicialRecord {
   contractingUnit: string;
   supplierName?: string | null;
   supplierDocument?: string | null;
-  amount?: HistoricalAmount | null;
-  officialBudget?: HistoricalAmount | null;
+  amount?: HistoricalAmountInput | null;
+  officialBudget?: HistoricalAmountInput | null;
   judicialStatus: string;
   contextSummary: string;
   localMatchStatus: string;
@@ -46,6 +46,14 @@ export interface HistoricalAmount {
   currency: string;
   label: string;
   usdEquivalent: import("./fx.ts").FxConversion | null;
+  usdConversionNote?: import("./fx.ts").FxConversionNote;
+}
+
+export interface HistoricalAmountInput {
+  value: number;
+  currency: string;
+  label: string;
+  usdEquivalent?: import("./fx.ts").FxConversion | null;
   usdConversionNote?: import("./fx.ts").FxConversionNote;
 }
 
@@ -171,7 +179,7 @@ function buildRelatedReceipts(
 }
 
 function normalizeAmount(
-  amount: { value: number; currency: string; label: string } | HistoricalAmount | null | undefined,
+  amount: HistoricalAmountInput | null | undefined,
   year: number | null | undefined,
   fxRegistry: import("./fx.ts").FxSeriesRegistry | undefined,
 ): HistoricalAmount | null {

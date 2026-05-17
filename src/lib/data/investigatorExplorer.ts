@@ -12,6 +12,7 @@ import {
   describeReceiptLocator,
   type LocatorType,
 } from "./evidenceReceipts.ts";
+import { shouldExposeCaseOnMap } from "./uiGates.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 
 export type InvestigatorExplorerCase = ExplorerCase;
@@ -155,7 +156,7 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
     locatorType: receipt.locatorType,
     locatorLabel: locator.label,
     locatorNote: locator.note,
-    hasOfficialGeometry: caseFile.coordinates !== null,
+    hasOfficialGeometry: shouldExposeCaseOnMap(caseFile),
     primarySignal,
     signalCodes,
     signalLabels,

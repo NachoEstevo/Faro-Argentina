@@ -113,26 +113,34 @@ export default function FaroExperience({
     return filtered.filter((caseFile) => caseFile.year === year);
   }, [crossCountryCases, dataset.cases, query, selectedCountry, year]);
 
-  const countryContextCases = useMemo(() => {
-    const filtered = filterExplorerCases({
+  const countryReviewCases = useMemo(
+    () => filterCountryReviewCases({
+      cases: allCases,
       countryCode: selectedCountry,
-      argentinaCases: dataset.cases,
-      crossCountryCases,
+      query,
+      year,
+    }),
+    [allCases, query, selectedCountry, year],
+  );
+
+  const countryReviewContextCases = useMemo(() => {
+    const filtered = filterCountryReviewCases({
+      cases: allCases,
+      countryCode: selectedCountry,
       query: "",
-      year: null,
+      year,
     });
-    if (year === null) return filtered;
-    return filtered.filter((caseFile) => caseFile.year === year);
-  }, [crossCountryCases, dataset.cases, selectedCountry, year]);
+    return filtered;
+  }, [allCases, selectedCountry, year]);
 
   const countrySignalContext = useMemo(
-    () => buildCaseSignalContext(countryContextCases as SignalCaseFile[]),
-    [countryContextCases],
+    () => buildCaseSignalContext(countryReviewContextCases as SignalCaseFile[]),
+    [countryReviewContextCases],
   );
 
   const leads = useMemo(
-    () => buildCaseLeads(countryContextCases as SignalCaseFile[], { query, limit: 8 }),
-    [countryContextCases, query],
+    () => buildCaseLeads(countryReviewContextCases as SignalCaseFile[], { query, limit: 8 }),
+    [countryReviewContextCases, query],
   );
 
   const severityCounts = useMemo(() => {
@@ -150,13 +158,13 @@ export default function FaroExperience({
   }, [countryCases]);
 
   useEffect(() => {
-    const selectedPool = viewMode === "explorer" ? allCases : countryCases;
+    const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
     if (selectedCaseId && !selectedPool.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId("");
     }
-  }, [allCases, countryCases, selectedCaseId, viewMode]);
+  }, [allCases, countryReviewCases, selectedCaseId, viewMode]);
 
-  const selectedPool = viewMode === "explorer" ? allCases : countryCases;
+  const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
   const selectedCase =
     selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
@@ -318,4 +326,42 @@ function getYearBounds(cases: Array<{ year: number | null }>) {
     min: Math.min(...years),
     max: Math.max(...years),
   };
+}
+
+function filterCountryReviewCases({
+  cases,
+  countryCode,
+  query,
+  year,
+}: {
+  cases: ExplorerCase[];
+  countryCode: "AR" | "PE" | "CL";
+  query: string;
+  year: number | null;
+}): ExplorerCase[] {
+  const normalizedQuery = query.trim().toLowerCase();
+  return cases.filter((caseFile) => {
+    if (caseFile.countryCode !== countryCode) return false;
+    if (year !== null && caseFile.year !== year) return false;
+    if (normalizedQuery.length === 0) return true;
+    return searchableReviewText(caseFile).includes(normalizedQuery);
+  });
+}
+
+function searchableReviewText(caseFile: ExplorerCase): string {
+  return [
+    caseFile.id,
+    caseFile.title,
+    caseFile.workNumber,
+    caseFile.procedureNumber,
+    caseFile.agencyName,
+    caseFile.contractingUnit,
+    "supplierName" in caseFile ? caseFile.supplierName : undefined,
+    "supplierDocument" in caseFile ? caseFile.supplierDocument : undefined,
+    "judicialStatus" in caseFile ? caseFile.judicialStatus : undefined,
+    "contextSummary" in caseFile ? caseFile.contextSummary : undefined,
+  ]
+    .filter((value): value is string => value !== null && value !== undefined)
+    .join(" ")
+    .toLowerCase();
 }

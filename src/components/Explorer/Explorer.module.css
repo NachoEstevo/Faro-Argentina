@@ -102,6 +102,23 @@
   letter-spacing: 0.02em;
 }
 
+.filterSelect {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: 8px;
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  outline: none;
+}
+
+.filterSelect:focus {
+  border-color: var(--cf-accent);
+}
+
 .checkRow {
   display: flex;
   align-items: center;
@@ -288,11 +305,83 @@
   font-size: 13px;
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
 }
 
 .exportRow:hover {
   border-color: var(--cf-accent);
   color: var(--cf-text);
+}
+
+.activePivot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--cf-accent-dim);
+  border-radius: 8px;
+  background: var(--cf-accent-faint);
+}
+
+.activePivot span {
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cf-accent);
+}
+
+.activePivot strong {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--cf-text);
+}
+
+.facetList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.facetButton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 8px;
+  padding: 9px 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cf-text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.facetButton:hover {
+  border-color: var(--cf-accent);
+  background: var(--cf-bg-overlay);
+  color: var(--cf-text);
+}
+
+.facetMeta {
+  grid-column: 1 / -1;
+  font-family: var(--cf-font-data);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cf-text-muted);
+}
+
+.facetLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.facetCount {
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  color: var(--cf-accent);
 }
 
 
@@ -545,9 +634,32 @@
 }
 
 .cellId {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
   font-family: var(--cf-font-data);
   color: var(--cf-text-muted);
   font-size: 12px;
+}
+
+.sourceStack {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sourceStack span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sourceStack span:last-child {
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  letter-spacing: 0.05em;
 }
 
 .tableEmptyRow {

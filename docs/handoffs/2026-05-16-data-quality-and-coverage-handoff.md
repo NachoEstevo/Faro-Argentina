@@ -2,7 +2,8 @@
 
 Fecha: 2026-05-16
 Audiencia: datos, satelite, ingenieria
-Estado: handoff de analisis; gate geografico implementado, data spine pendiente
+Estado: handoff de analisis; gate geografico implementado. Nota 2026-05-17:
+las cifras y el data spine fueron superados por expansiones posteriores.
 
 ## Por Que Existe Este Handoff
 
@@ -16,12 +17,20 @@ Argentina, Chile y Peru con registros validados, utiles y cruzados.
 
 ## Snapshot Actual De Datos
 
-Case files generados:
+Case files generados en el snapshot original de este handoff:
 
 - 371 expedientes totales;
 - 296 Argentina;
 - 50 Peru;
 - 25 Chile.
+
+Snapshot actualizado 2026-05-17:
+
+- 1608 expedientes totales;
+- 558 Argentina;
+- 525 Peru;
+- 525 Chile;
+- 1099 casos elegibles para mapa: 413 AR, 469 PE y 217 CL.
 
 Fuentes principales generadas:
 
@@ -41,7 +50,9 @@ Receipts actuales:
 
 ### 1. Los Hashes Del Data Spine Estan Fuera De Sync
 
-`npm run data:verify` falla.
+`npm run data:verify` fallaba en este snapshot. En el estado actualizado del
+17/05/2026 vuelve a pasar y reporta 1608 case files, 3995 receipts y 15 raw
+files chequeados.
 
 Sintoma principal:
 
@@ -162,7 +173,9 @@ Comando disponible:
 npm run data:geo-report
 ```
 
-El reporte debe usarse antes de dar casos al mapa o al flujo satelital. En el estado actual reporta `371` expedientes totales y `247` casos elegibles para mapa.
+El reporte debe usarse antes de dar casos al mapa o al flujo satelital. En el
+estado actualizado del 17/05/2026 reporta `1608` expedientes totales y `1099`
+casos elegibles para mapa.
 
 ### Tarea 3: Canonicalizar Obras De Argentina
 

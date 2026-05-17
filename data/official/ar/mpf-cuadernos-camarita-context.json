@@ -11,7 +11,11 @@
       "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
       "supplierName": "Camara Argentina de Empresas Viales",
       "supplierDocument": null,
-      "amount": null,
+      "amount": {
+        "value": 30000000,
+        "currency": "USD",
+        "label": "recaudacion_total_aproximada_declarada_por_imputado_colaborador_en_requerimiento_mpf"
+      },
       "officialBudget": null,
       "judicialStatus": "Juicio oral en curso ante TOF 7; sin sentencia firme al 2026-05-17.",
       "contextSummary": "MPF informa que el tramo La Camarita trata una acusacion vinculada a obra publica civil y a la Camara Argentina de Empresas Viales.",
@@ -38,6 +42,7 @@
       "caveats": [
         "El juicio esta en curso; no tratar como sentencia ni como conclusion cerrada.",
         "Este expediente es de contexto de red, no de contrato individual Faro.",
+        "El monto USD 30.000.000 es una recaudacion total aproximada citada en el requerimiento MPF a partir de una declaracion de imputado colaborador; no es monto adjudicado, contrato individual ni pago probado por sentencia.",
         "Abrir MPF y el requerimiento antes de citar nombres, fechas o alcance."
       ]
     },

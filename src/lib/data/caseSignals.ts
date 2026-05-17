@@ -177,11 +177,11 @@ function addJudicialContextSignals(signals: CaseSignal[], caseFile: SignalCaseFi
     code: "official_judicial_context",
     kind: "context",
     family: "context",
-    severity: caseFile.caseType === "judicial_context" ? "medium" : "low",
+    severity: caseFile.caseType === "judicial_context" ? "high" : "low",
     confidence: "high",
     displayGroup: "context",
     leadEligible: true,
-    priority: caseFile.caseType === "judicial_context" ? 86 : 72,
+    priority: caseFile.caseType === "judicial_context" ? 112 : 72,
     label: "Contexto judicial oficial",
     summary,
     evidence: [

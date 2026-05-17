@@ -127,6 +127,49 @@ test("buildCaseLeads does not promote geometry or satellite capability as an inv
   assert.equal(leads.length, 0);
 });
 
+test("buildCaseLeads exposes official judicial context as a review lead", () => {
+  const judicialReceipt = createEvidenceReceipt({
+    sourceId: "AR-CIJ-VIALIDAD-VEREDICTO",
+    sourceName: "CIJ Causa Vialidad",
+    sourceUrl: "https://www.cij.gov.ar/login/d/sentencia.pdf",
+    rawPath: "data/official/ar/cij-vialidad-context.json",
+    snapshotHash: "sha256-judicial",
+    recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    locatorType: "official_detail",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "case-leads-test@1",
+    row: { recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME" },
+  });
+  const judicialCase = {
+    id: "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    countryCode: "AR",
+    caseType: "judicial_context",
+    title: "Causa Vialidad CFP 5048/2016/TO1",
+    workNumber: "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
+    year: 2025,
+    procedureNumber: "CFP 5048/2016/TO1",
+    agencyName: "Tribunal Oral en lo Criminal Federal Nro. 2",
+    agencyCode: "TOF2",
+    contractingUnit: "Poder Judicial de la Nacion",
+    coordinates: null,
+    evidenceLevel: "official_dataset",
+    amount: { value: 46_000_000_000, currency: "ARS", label: "monto contextual informado por MPF" },
+    supplierName: "Grupo Baez",
+    supplierDocument: null,
+    judicialStatus: "Sentencia firme desde 2025-06-10.",
+    contextSummary: "El Poder Judicial y el MPF documentan la Causa Vialidad.",
+    receipt: judicialReceipt,
+    caveats: ["Contexto judicial; abrir la fuente antes de citar."],
+  };
+
+  const leads = buildCaseLeads([judicialCase], { query: "baez", limit: 10 });
+
+  assert.equal(leads.length, 1);
+  assert.equal(leads[0]?.caseId, "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME");
+  assert.equal(leads[0]?.primarySignal.code, "official_judicial_context");
+  assert.equal(leads[0]?.primarySignal.kind, "context");
+});
+
 test("buildCaseLeads avoids accusation language", () => {
   const leads = buildCaseLeads([highPriorityCase], { limit: 10 });
 

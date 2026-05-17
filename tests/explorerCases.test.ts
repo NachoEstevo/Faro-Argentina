@@ -21,9 +21,11 @@ test("filterExplorerCases includes Argentina contracts only after official geo e
 
   const contractCases = cases.filter((caseFile) => caseFile.id.startsWith("AR-CONTRACT-"));
 
-  assert.equal(cases.length, 413);
+  assert.equal(cases.length, 411);
   assert.equal(contractCases.length, 190);
   assert.equal(contractCases.every((caseFile) => caseFile.coordinates !== null), true);
+  assert.equal(cases.some((caseFile) => caseFile.id === "AR-WORK-74-0001-OBR21"), false);
+  assert.equal(cases.some((caseFile) => caseFile.id === "AR-WORK-74-0005-OBR21"), false);
 });
 
 test("filterExplorerCases lets Argentina map search find suppliers", () => {

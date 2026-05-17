@@ -182,10 +182,10 @@ Implementado:
 
 Datos actuales:
 
-- 633 expedientes totales;
+- 1608 expedientes totales;
 - 558 Argentina;
-- 50 Peru;
-- 25 Chile.
+- 525 Peru;
+- 525 Chile.
 
 Bloqueos antes de llamarlo producto terminado:
 
@@ -197,7 +197,8 @@ Bloqueos antes de llamarlo producto terminado:
   verificable; no deben mezclarse con contratos actuales sin match documental
   exacto.
 - Peru y Chile ya prueban que Faro no depende del mapa, pero necesitan mas
-  cobertura y cruces oficiales de mayor valor.
+  cruces oficiales de mayor valor; el Explorer debe mostrar esos expedientes
+  aunque una parte no sea map-ready.
 
 ## Donde Esta El Valor
 

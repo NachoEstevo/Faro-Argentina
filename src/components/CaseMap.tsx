@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
-import { buildCaseMarkerKey } from "@/lib/data/mapMarkers";
+import { buildCaseMarkerKey, isMapMarkerEligible } from "@/lib/data/mapMarkers";
 import {
   getCaseAlertSeverity,
   type CaseAlertSeverity,
@@ -25,8 +25,10 @@ const CARTODB_ATTRIBUTION = "&copy; OpenStreetMap contributors &copy; CARTO";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 
 export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase }: Props) {
-  const selectedCase = cases.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
-  const mapCases = cases.filter((caseFile) => caseFile.coordinates !== null);
+  const selectedCase = cases.find(
+    (caseFile) => caseFile.id === selectedCaseId && isMapMarkerEligible(caseFile),
+  ) ?? null;
+  const mapCases = cases.filter(isMapMarkerEligible);
 
   const severityById = useMemo(() => {
     const map = new Map<string, CaseAlertSeverity | null>();
