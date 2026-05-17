@@ -465,6 +465,17 @@
   font-size: 12px;
 }
 
+.tableEmptyRow {
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.tableEmpty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--cf-text-muted);
+  font-size: 13px;
+}
+
 .cellMono {
   font-family: var(--cf-font-data);
   color: var(--cf-text-secondary);

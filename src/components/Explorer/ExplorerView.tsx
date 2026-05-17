@@ -378,6 +378,13 @@ export default function ExplorerView({
               </tr>
             </thead>
             <tbody>
+              {pagedRows.length === 0 && (
+                <tr className={styles.tableEmptyRow}>
+                  <td colSpan={7} className={styles.tableEmpty}>
+                    No hay expedientes que coincidan con los filtros actuales.
+                  </td>
+                </tr>
+              )}
               {pagedRows.map((caseFile) => {
                 const supplierName =
                   "supplierName" in caseFile ? caseFile.supplierName ?? "—" : "—";
