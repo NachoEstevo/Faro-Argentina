@@ -79,6 +79,10 @@ test("buildCaseInspector keeps actions encoded and points to full expediente", (
   const inspector = buildCaseInspector(caseFile);
 
   assert.equal(
+    inspector.actions.reportHref,
+    "/expediente/AR-CONTRACT-40%2F31-1003-CON21/informe",
+  );
+  assert.equal(
     inspector.actions.downloadEvidenceHref,
     "/api/export/AR-CONTRACT-40%2F31-1003-CON21",
   );

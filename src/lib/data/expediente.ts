@@ -52,6 +52,7 @@ export interface ExpedienteView {
   };
   actions: {
     officialSourceHref: string;
+    reportHref: string;
     downloadEvidenceHref: string;
     caseJsonHref: string;
   };
@@ -115,6 +116,7 @@ export function buildExpediente(
     },
     actions: {
       officialSourceHref: primaryReceipt.sourceUrl,
+      reportHref: `/expediente/${encodedCaseId}/informe`,
       downloadEvidenceHref: `/api/export/${encodedCaseId}`,
       caseJsonHref: `/api/cases/${encodedCaseId}`,
     },

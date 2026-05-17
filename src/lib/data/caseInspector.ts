@@ -23,6 +23,7 @@ export interface CaseInspectorView {
   };
   actions: {
     officialSourceHref: string;
+    reportHref: string;
     downloadEvidenceHref: string;
     caseJsonHref: string;
     canOpenFullExpediente: boolean;
@@ -61,6 +62,7 @@ export function buildCaseInspector(caseFile: ExpedienteCaseFile, signalContext?:
     },
     actions: {
       officialSourceHref: expediente.actions.officialSourceHref,
+      reportHref: expediente.actions.reportHref,
       downloadEvidenceHref: expediente.actions.downloadEvidenceHref,
       caseJsonHref: expediente.actions.caseJsonHref,
       canOpenFullExpediente: true,

@@ -15,6 +15,10 @@ import {
   type CaseCollectionPack,
 } from "./data/caseCollections.ts";
 import {
+  buildCaseReportView,
+  type CaseReportView,
+} from "./data/caseReport.ts";
+import {
   buildCaseLeads,
   type CaseLead,
   type CaseLeadFilters,
@@ -190,6 +194,16 @@ export function getExpedienteById(id: string): ExpedienteView | null {
   const caseFile = getCaseById(id);
   if (!caseFile) return null;
   return buildExpediente(
+    caseFile as ExpedienteCaseFile,
+    signalContextForCase(caseFile),
+    getContextualCitationsForCase(caseFile.id),
+  );
+}
+
+export function getCaseReportById(id: string): CaseReportView | null {
+  const caseFile = getCaseById(id);
+  if (!caseFile) return null;
+  return buildCaseReportView(
     caseFile as ExpedienteCaseFile,
     signalContextForCase(caseFile),
     getContextualCitationsForCase(caseFile.id),

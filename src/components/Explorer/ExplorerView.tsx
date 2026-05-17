@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  FileText,
   FileSearch,
   Map as MapIcon,
   PanelLeftClose,
@@ -532,16 +533,33 @@ function ExplorerDetail({
           <ChevronLeft size={14} aria-hidden />
           <span>Volver al listado</span>
         </button>
-        {sourceUrl && (
+        <div className={styles.detailActionGroup}>
           <a
             className={styles.detailPrimaryAction}
-            href={sourceUrl}
-            target="_blank"
-            rel="noreferrer"
+            href={buildReportHref(caseFile.id)}
           >
-            {receiptLocator?.actionLabel ?? "Abrir fuente"}
+            <FileText size={13} aria-hidden />
+            Informe PDF
           </a>
-        )}
+          {sourceUrl && (
+            <a
+              className={styles.detailSecondaryAction}
+              href={sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {receiptLocator?.actionLabel ?? "Abrir fuente"}
+            </a>
+          )}
+          <a
+            className={styles.detailSecondaryAction}
+            href={`/api/export/${encodeURIComponent(caseFile.id)}`}
+            download
+          >
+            <Download size={13} aria-hidden />
+            JSON técnico
+          </a>
+        </div>
       </div>
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
@@ -758,6 +776,10 @@ function isSameFacet(
   right: Pick<InvestigatorFacet, "type" | "key">,
 ): boolean {
   return left.type === right.type && left.key === right.key;
+}
+
+function buildReportHref(caseId: string): string {
+  return `/expediente/${encodeURIComponent(caseId)}/informe`;
 }
 
 function buildExportHref(countryScope: CountryScope, query: string): string {

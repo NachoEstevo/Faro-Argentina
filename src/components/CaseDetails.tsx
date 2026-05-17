@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Download, ExternalLink, FileSearch, Route, ShieldCheck } from "lucide-react";
+import { Download, ExternalLink, FileSearch, FileText, Route, ShieldCheck } from "lucide-react";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
@@ -87,13 +87,17 @@ export function CaseDetails({
           </div>
         ) : null}
         <div className="actionRow">
+          <a href={expediente.actions.reportHref}>
+            <FileText size={16} aria-hidden />
+            Informe PDF
+          </a>
           <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
             <ExternalLink size={16} aria-hidden />
             Fuente oficial
           </a>
           <a href={`/api/export/${encodedCaseId}`} download>
             <Download size={16} aria-hidden />
-            Descargar JSON
+            JSON técnico
           </a>
         </div>
       </section>
@@ -190,13 +194,17 @@ export function CountryExplorer({
               <ReceiptRow label="Competencia" value={formatBidderCount(caseFile)} />
             </dl>
             <div className="actionRow">
+              <a href={`/expediente/${encodeURIComponent(caseFile.id)}/informe`}>
+                <FileText size={16} aria-hidden />
+                Informe PDF
+              </a>
               <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
                 <ExternalLink size={16} aria-hidden />
                 Fuente oficial
               </a>
               <a href={`/api/export/${encodeURIComponent(caseFile.id)}`} download>
                 <Download size={16} aria-hidden />
-                Descargar JSON
+                JSON técnico
               </a>
             </div>
           </article>
