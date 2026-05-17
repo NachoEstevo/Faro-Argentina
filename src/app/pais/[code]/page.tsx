@@ -65,6 +65,7 @@ export default async function PaisPage({
 
   const search = (await searchParams) ?? {};
   const initialMode = readParam(search.mode) === "explorer" ? "explorer" : "map";
+  const initialCaseId = readParam(search.case);
 
   return (
     <FaroExperience
@@ -74,6 +75,7 @@ export default async function PaisPage({
       initialCountry={upper}
       initialEntryOpen={false}
       initialMode={initialMode}
+      initialCaseId={initialCaseId}
     />
   );
 }
