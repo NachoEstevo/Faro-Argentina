@@ -182,8 +182,8 @@ Implementado:
 
 Datos actuales:
 
-- 483 expedientes totales;
-- 408 Argentina;
+- 633 expedientes totales;
+- 558 Argentina;
 - 50 Peru;
 - 25 Chile.
 

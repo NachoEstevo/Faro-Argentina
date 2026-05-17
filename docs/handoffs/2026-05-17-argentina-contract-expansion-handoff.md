@@ -4,21 +4,21 @@ Date: 2026-05-17
 
 ## What Changed
 
-Faro now builds the first 150 Argentina CONTRAT.AR contract cases instead of the
+Faro now builds the first 300 Argentina CONTRAT.AR contract cases instead of the
 initial 50-case pilot batch.
 
 This is intentionally not the full 391 non-empty contract rows in the snapshot.
-The 150-case batch adds meaningful coverage while avoiding the noisier tail with
-more missing years and eventual duplicate contract numbers.
+The 300-case batch adds meaningful coverage while avoiding the later tail that
+introduces duplicate contract numbers.
 
 ## Current Shape
 
-- 483 total cases.
-- 408 Argentina cases.
-- 150 Argentina contract cases.
-- 305 map-eligible cases.
+- 633 total cases.
+- 558 Argentina cases.
+- 300 Argentina contract cases.
+- 413 map-eligible cases.
 - 8 datasets.
-- 1208 receipts.
+- 2046 receipts.
 - 14 raw files verified.
 
 Argentina contract year distribution:
@@ -26,26 +26,29 @@ Argentina contract year distribution:
 - 2017: 12
 - 2018: 26
 - 2019: 21
-- 2020: 8
-- 2021: 31
-- 2022: 29
-- 2023: 9
-- sin year: 14
+- 2020: 12
+- 2021: 59
+- 2022: 87
+- 2023: 31
+- sin year: 52
 
-## Why 150
+## Why 300
 
-The 150-case batch has:
+The 300-case batch has:
 
 - no duplicate contract ids;
 - all cases with supplier identity;
 - all cases with amount;
-- 97 cases with official coordinates;
-- 123 contract cases with a lead-eligible signal before repository-wide context;
-- 2023 coverage without importing the full low-quality tail.
+- 215 cases with official coordinates;
+- 254 contract cases with a lead-eligible signal before repository-wide context;
+- 2023 coverage without importing the duplicate-heavy tail.
 
 The full 391-row expansion is possible later, but it introduces duplicate contract
 numbers and 82 contracts without parseable year. That should be handled with a
 dedupe/canonicalization pass before promoting everything.
+
+The 350-case cut was also tested and rejected for this pass because it already
+introduced 2 duplicate contract ids / record ids.
 
 ## Validation
 

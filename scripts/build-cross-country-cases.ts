@@ -48,7 +48,7 @@ const outputPath = new URL("../src/data/crossCountryCaseFiles.json", import.meta
 const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
-const argentinaContractCaseLimit = 150;
+const argentinaContractCaseLimit = 300;
 const generatedAt = resolveDataBuildTimestamp({
   envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
   manifestTimestamp: manifest.generatedAt,

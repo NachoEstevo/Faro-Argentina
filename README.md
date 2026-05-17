@@ -55,8 +55,8 @@ El producto actual ya tiene una primera version funcional:
 
 Datos actuales en la app:
 
-- `483` expedientes;
-- `408` Argentina;
+- `633` expedientes;
+- `558` Argentina;
 - `50` Peru;
 - `25` Chile.
 
@@ -96,7 +96,7 @@ Prioridad recomendada:
 3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
 4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
 
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `305` casos elegibles para mapa sobre `483` expedientes totales.
+La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas o sospechosas quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `413` casos elegibles para mapa sobre `633` expedientes totales.
 
 ## Fuentes Iniciales
 
