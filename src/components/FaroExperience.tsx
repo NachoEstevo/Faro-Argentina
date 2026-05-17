@@ -71,7 +71,6 @@ export default function FaroExperience({
   const [viewMode, setViewMode] = useState<"map" | "explorer">(initialMode);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userToggledSidebar, setUserToggledSidebar] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const hasArmedWaybackRef = useRef(false);
@@ -91,21 +90,6 @@ export default function FaroExperience({
     if (year === null) return;
     if (year < yearBounds.min || year > yearBounds.max) setYear(null);
   }, [year, yearBounds.min, yearBounds.max]);
-
-  useEffect(() => {
-    if (userToggledSidebar) return;
-    const apply = () => {
-      const w = window.innerWidth;
-      if (w >= 901 && w <= 1180) {
-        setSidebarCollapsed(true);
-      } else if (w > 1180) {
-        setSidebarCollapsed(false);
-      }
-    };
-    apply();
-    window.addEventListener("resize", apply);
-    return () => window.removeEventListener("resize", apply);
-  }, [userToggledSidebar]);
 
   const countryCases = useMemo(() => {
     const filtered = filterExplorerCases({
@@ -211,7 +195,6 @@ export default function FaroExperience({
   }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, viewMode, waybackRetryToken]);
 
   const handleSidebarToggle = useCallback(() => {
-    setUserToggledSidebar(true);
     setSidebarCollapsed((value) => !value);
   }, []);
 
