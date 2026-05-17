@@ -733,6 +733,17 @@
   white-space: nowrap;
 }
 
+.receiptCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px;
+  margin-top: 8px;
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-border);
+  border-radius: 12px;
+}
+
 .similarSection {
   margin-top: 14px;
   display: flex;

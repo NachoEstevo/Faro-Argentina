@@ -527,6 +527,26 @@ function ExplorerDetail({
           <DetailRow label="Organismo" value={caseFile.agencyName || "—"} />
         </div>
       </div>
+      {caseFile.receipt && (
+        <article className={styles.receiptCard}>
+          <p className={styles.detailCardHead}>Recibo</p>
+          <DetailRow
+            label="Fuente"
+            value={caseFile.receipt.sourceName || caseFile.receipt.sourceId}
+          />
+          {caseFile.receipt.sourceUrl && (
+            <DetailRow label="URL" value={caseFile.receipt.sourceUrl} />
+          )}
+          <DetailRow
+            label="Snapshot"
+            value={caseFile.receipt.snapshotHash?.slice(0, 16) ?? "—"}
+          />
+          <DetailRow
+            label="Extraído"
+            value={caseFile.receipt.extractedAt?.slice(0, 10) ?? "—"}
+          />
+        </article>
+      )}
       {similar.length > 0 && (
         <section className={styles.similarSection} aria-label="Casos similares">
           <p className={styles.similarHead}>Casos similares</p>
