@@ -549,6 +549,16 @@ function ExplorerDetail({
         <ProveedorCard caseFile={caseFile} />
         <ProcedimientoCard caseFile={caseFile} />
       </div>
+      {caseFile.caveats && caseFile.caveats.length > 0 && (
+        <article className={styles.caveatCard}>
+          <p className={styles.detailCardHead}>Aclaraciones de la fuente</p>
+          <ul className={styles.caveatList}>
+            {caseFile.caveats.map((caveat, idx) => (
+              <li key={idx}>{caveat}</li>
+            ))}
+          </ul>
+        </article>
+      )}
       {caseFile.receipt && (
         <article className={styles.receiptCard}>
           <p className={styles.detailCardHead}>Recibo</p>
