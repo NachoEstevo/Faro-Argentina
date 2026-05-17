@@ -1007,4 +1007,19 @@
   .pageGap {
     display: none;
   }
+  .detail {
+    gap: 10px;
+    padding: 16px;
+  }
+  .detailTitle {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .detailSubtitle {
+    font-size: 12px;
+  }
+  .detailPrimaryAction {
+    padding: 6px 10px;
+    font-size: 11.5px;
+  }
 }
