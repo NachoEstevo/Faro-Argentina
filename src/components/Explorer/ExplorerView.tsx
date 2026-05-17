@@ -542,6 +542,9 @@ function ExplorerDetail({
         <UbicacionObraCard caseFile={caseFile} />
         <ProveedorCard caseFile={caseFile} />
         <ProcedimientoCard caseFile={caseFile} />
+        <EjecucionCard caseFile={caseFile} />
+        <OrganismoCard caseFile={caseFile} />
+        <PuntoGeoCard caseFile={caseFile} />
       </div>
       {caseFile.caveats && caseFile.caveats.length > 0 && (
         <article className={styles.caveatCard}>
@@ -806,6 +809,48 @@ function ProcedimientoCard({ caseFile }: { caseFile: ExplorerCase }) {
       {method && <DetailRow label="Modalidad" value={method} />}
       {awardNumber && <DetailRow label="Acto adjudicatario" value={awardNumber} />}
       {awardUrl && <DetailRow label="Acto oficial" value="Abrir documento ↗" href={awardUrl} />}
+    </div>
+  );
+}
+
+function EjecucionCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const term = getField<string>(caseFile, "executionTerm");
+  const termType = getField<string>(caseFile, "executionTermType");
+  if (!term && !termType) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Ejecución</p>
+      {term && <DetailRow label="Plazo declarado" value={term} />}
+      {termType && <DetailRow label="Unidad de plazo" value={termType} />}
+    </div>
+  );
+}
+
+function OrganismoCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const agency = caseFile.agencyName;
+  const code = getField<string>(caseFile, "agencyCode");
+  const unit = getField<string>(caseFile, "contractingUnit");
+  if (!agency && !code && !unit) return null;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Organismo contratante</p>
+      {agency && <DetailRow label="Nombre" value={agency} />}
+      {code && <DetailRow label="Código SAF" value={code} />}
+      {unit && <DetailRow label="Unidad operativa" value={unit} />}
+    </div>
+  );
+}
+
+function PuntoGeoCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const coords = caseFile.coordinates;
+  if (!coords) return null;
+  const mapUrl = `https://www.openstreetmap.org/?mlat=${coords.lat}&mlon=${coords.lon}#map=15/${coords.lat}/${coords.lon}`;
+  return (
+    <div className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Punto geográfico</p>
+      <DetailRow label="Latitud" value={coords.lat.toFixed(6)} />
+      <DetailRow label="Longitud" value={coords.lon.toFixed(6)} />
+      <DetailRow label="Ver en mapa" value="Abrir en OpenStreetMap ↗" href={mapUrl} />
     </div>
   );
 }
