@@ -931,19 +931,67 @@
     width: 100%;
   }
   .tableRow {
-    border: 1px solid var(--cf-border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    background: var(--cf-bg-elev);
+    border: none;
+    border-bottom: 1px solid var(--cf-border);
+    border-radius: 0;
+    padding: 12px 0;
+    margin-bottom: 0;
+    background: transparent;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "title amount"
+      "agency state";
+    column-gap: 12px;
+    row-gap: 4px;
   }
   .tableRow td {
-    padding: 4px 0;
+    padding: 0;
     border: none;
   }
-  .cellEllipsis {
+  .tableRow > td:nth-child(1),
+  .tableRow > td:nth-child(2),
+  .tableRow > td:nth-child(6) {
+    display: none;
+  }
+  .tableRow > td:nth-child(3) {
+    grid-area: title;
+    font-family: var(--cf-font-heading);
+    font-weight: 500;
+    color: var(--cf-text);
+    font-size: 13.5px;
+    line-height: 1.3;
     max-width: 100%;
     white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .tableRow > td:nth-child(4) {
+    grid-area: agency;
+    color: var(--cf-text-muted);
+    font-size: 11px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tableRow > td:nth-child(5) {
+    grid-area: amount;
+    font-family: var(--cf-font-data);
+    color: var(--cf-text);
+    font-size: 12px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .tableRow > td:nth-child(7) {
+    grid-area: state;
+    text-align: right;
+  }
+  .stateBadge {
+    font-size: 11px;
   }
   .detailGrid {
     grid-template-columns: 1fr;
