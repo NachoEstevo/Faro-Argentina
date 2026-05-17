@@ -9,7 +9,7 @@
     "start": "next start -H 127.0.0.1 -p 3002",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "data:fetch": "node --experimental-strip-types scripts/fetch-official-snapshots.ts",
+    "data:fetch": "node --experimental-strip-types scripts/fetch-official-snapshots.ts && node --experimental-strip-types scripts/fetch-fx-snapshots.ts",
     "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts && node --experimental-strip-types scripts/build-cross-country-cases.ts && node --experimental-strip-types scripts/build-argentina-historical-judicial-cases.ts",
     "data:geo-report": "node --experimental-strip-types scripts/report-coordinate-quality.ts",
     "data:quality-report": "node --experimental-strip-types scripts/report-data-quality.ts",

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-16T06:58:58.684Z",
+  "generatedAt": "2026-05-17T18:07:49.590Z",
   "datasets": [
     {
-      "generatedAt": "2026-05-16T06:58:58.684Z",
+      "generatedAt": "2026-05-17T18:07:49.590Z",
       "source": {
         "sourceId": "AR-CIJ-VIALIDAD-VEREDICTO",
         "sourceName": "CIJ Causa Vialidad",
@@ -45,7 +45,20 @@
           "amount": {
             "value": 46000000000,
             "currency": "ARS",
-            "label": "monto contextual informado por MPF"
+            "label": "monto contextual informado por MPF",
+            "usdEquivalent": {
+              "usd": 44552058.11,
+              "fxRate": 1032.5,
+              "fxDate": "2025-01-01",
+              "anchorDate": "2025-01-01",
+              "anchorField": "year",
+              "fxSource": {
+                "sourceId": "AR-BCRA-COM-A3500",
+                "sourceName": "AR-BCRA-COM-A3500",
+                "sourceUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+                "snapshotHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef"
+              }
+            }
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -65,7 +78,7 @@
             "rowHash": "sha256-091b5d95d9c7687c2bed32bc7ee63229dc6c4d0506bb07fce849abd98560d454",
             "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -80,7 +93,7 @@
               "rowHash": "sha256-6793368b1bb787ecd58fecbf3e6ff5b55fc4760bf271c5488fdec363100fdbbe",
               "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME:MPF-VIALIDAD-CASACION-2024-11-13",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -94,7 +107,7 @@
               "rowHash": "sha256-dda9601d8cef3517a5bab042dde399e72889b5195a42f1068465c64360bfb25d",
               "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -109,7 +122,7 @@
       ]
     },
     {
-      "generatedAt": "2026-05-16T06:58:58.684Z",
+      "generatedAt": "2026-05-17T18:07:49.590Z",
       "source": {
         "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
         "sourceName": "MPF Causa Vialidad alegato",
@@ -152,7 +165,9 @@
           "amount": {
             "value": 76817044.79,
             "currency": "USD",
-            "label": "USD 76.817.044,79 informado por MPF"
+            "label": "USD 76.817.044,79 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A.",
@@ -172,7 +187,7 @@
             "rowHash": "sha256-3c7f1d76f251be5de10954431ccc30bba865cc945deec14271d87206c746996a",
             "recordId": "VIALIDAD-DNV-9067-2007-RP9",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -187,7 +202,7 @@
               "rowHash": "sha256-ead5a22d1d9778bb20734c937eb0aad76c8d82c1eda1c8ed102d7554a244d7c4",
               "recordId": "VIALIDAD-DNV-9067-2007-RP9:INDICE-MPF-DNV-9067-2007",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -201,7 +216,7 @@
               "rowHash": "sha256-72f10a352573bd8dffaac82d7f234f964dec3797a0fa6f43c40e3151a6a80e4f",
               "recordId": "VIALIDAD-DNV-9067-2007-RP9:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -231,7 +246,9 @@
           "amount": {
             "value": 72802191.7,
             "currency": "USD",
-            "label": "USD 72.802.191,70 informado por MPF"
+            "label": "USD 72.802.191,70 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -251,7 +268,7 @@
             "rowHash": "sha256-099c3729df761be5926d794fb45c1b3362e16681d4e2dbbb063dc582c63a49e6",
             "recordId": "VIALIDAD-DNV-12309-2007-RN288",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -266,7 +283,7 @@
               "rowHash": "sha256-e90f1cf96be305399089ea4b1ee0f17696e74980655dc6bda1605ec16f880ed9",
               "recordId": "VIALIDAD-DNV-12309-2007-RN288:INDICE-MPF-DNV-12309-2007",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -280,7 +297,7 @@
               "rowHash": "sha256-36a8d32240b53e649fba0d2e707964ade13c8bb55340994ced3cae65ca06045b",
               "recordId": "VIALIDAD-DNV-12309-2007-RN288:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -310,7 +327,9 @@
           "amount": {
             "value": 23445670.9,
             "currency": "USD",
-            "label": "USD 23.445.670,90 informado por MPF"
+            "label": "USD 23.445.670,90 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
@@ -330,7 +349,7 @@
             "rowHash": "sha256-e46cd34b1ef664d2cadba95f6417a5f8a98857c8e5b12b99008c2acdc3845b9a",
             "recordId": "VIALIDAD-DNV-12328-2007-RP12",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -345,7 +364,7 @@
               "rowHash": "sha256-72c6ba448a18f89728cd8596c331ebb8b75944078d9f8ba172cee762a6b3664a",
               "recordId": "VIALIDAD-DNV-12328-2007-RP12:INDICE-MPF-DNV-12328-2007",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -359,7 +378,7 @@
               "rowHash": "sha256-e05837fb7b1e4ed3d44fbfceb526a6820919be1899d8a44b509ac230c7a2a11a",
               "recordId": "VIALIDAD-DNV-12328-2007-RP12:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -389,7 +408,9 @@
           "amount": {
             "value": 37519987.64,
             "currency": "USD",
-            "label": "USD 37.519.987,64 informado por MPF"
+            "label": "USD 37.519.987,64 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Grupo Baez",
@@ -409,7 +430,7 @@
             "rowHash": "sha256-486854e698a77d954d7760c76835310b93808c5da61bf9447619e735bcd07d31",
             "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -424,7 +445,7 @@
               "rowHash": "sha256-be973382bfc0ef0c75466ba6449de8b842e11cda10009008fe60b4882dd96f9c",
               "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3:INDICE-MPF-DNV-16751-2006",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -438,7 +459,7 @@
               "rowHash": "sha256-a96cf2de9dc4fc115f7ffd5329f3cb92900a6855a013ccbb5d55b367a0c42053",
               "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -468,7 +489,9 @@
           "amount": {
             "value": 26501228.02,
             "currency": "USD",
-            "label": "USD 26.501.228,02 informado por MPF"
+            "label": "USD 26.501.228,02 informado por MPF",
+            "usdEquivalent": null,
+            "usdConversionNote": "already_usd"
           },
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A.",
@@ -488,7 +511,7 @@
             "rowHash": "sha256-c9345cb567461a9040ac925a8cbdb4bf28a95dffa01a25afc6a59d35f0ae1b9f",
             "recordId": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -503,7 +526,7 @@
               "rowHash": "sha256-216eab9bd9fdfaf35381a804ee9276e6c997c0ff5e9048dcf7facfd2bf183996",
               "recordId": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -518,7 +541,7 @@
       ]
     },
     {
-      "generatedAt": "2026-05-16T06:58:58.684Z",
+      "generatedAt": "2026-05-17T18:07:49.590Z",
       "source": {
         "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
         "sourceName": "MPF Cuadernos La Camarita",
@@ -577,7 +600,7 @@
             "rowHash": "sha256-500bd7716ac1182ff5295f3623eb7c39bcfec2671d105be6ebe97ececd30dbeb",
             "recordId": "CUADERNOS-CAMARITA-TOF7-2026",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -592,7 +615,7 @@
               "rowHash": "sha256-99fbb0e4cd1c91c2bacdeffbf0c1aee944b09c05b34b8b8fa31d59535cfc8ee6",
               "recordId": "CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -606,7 +629,7 @@
               "rowHash": "sha256-e4a85a563f0466564871944d74e8d36164c8ea408222e1d0d5f0d0be3066b1db",
               "recordId": "CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             }
           ],
@@ -656,7 +679,7 @@
             "rowHash": "sha256-bdece67f342734d42fb5079c43a20aec44a525cf079a5dde3f5a72d497f0085f",
             "recordId": "CUADERNOS-CAMARITA-CONSTRUMEX",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -671,7 +694,7 @@
               "rowHash": "sha256-d977d45bf11e289602fe197aabe0064c539637c9e5cc0dd6c4b1860dbb597a64",
               "recordId": "CUADERNOS-CAMARITA-CONSTRUMEX:MPF-CAMARITA-LECTURA-2025-12-09",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -685,7 +708,7 @@
               "rowHash": "sha256-ba29db2c78091b9382c50f0ef76ca65b7fb0df23c56f0f3ebe58b72fb71ef4a3",
               "recordId": "451-1613-CON19",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             },
             {
@@ -699,7 +722,7 @@
               "rowHash": "sha256-96f83f61b2000907e0e7158281aff8f900fd0623d8979b2b5401b7aecc7cb978",
               "recordId": "501-0474-CON20",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             },
             {
@@ -713,7 +736,7 @@
               "rowHash": "sha256-2ba4a631154a8772c673e1ceed895984273f153182cdf4c979e3bae96c161248",
               "recordId": "451-1001-CON18",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             }
           ],
@@ -761,7 +784,7 @@
             "rowHash": "sha256-a1378e85ecc25ff4ca56f6208aeff406ac027c0e27688bb33173fa9bbf8adbcb",
             "recordId": "CUADERNOS-CAMARITA-MARCALBA",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -776,7 +799,7 @@
               "rowHash": "sha256-9111b4330c81843d877addf4d587a32bcae08c7aa1f0f92ab2a7917e94187afd",
               "recordId": "CUADERNOS-CAMARITA-MARCALBA:MPF-CAMARITA-LECTURA-2025-12-09",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -790,7 +813,7 @@
               "rowHash": "sha256-20f03d8b7faf5bf542525493c142a539bd6b3f71ae7c888d438ad252c757f8d6",
               "recordId": "451-1005-CON18",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             }
           ],
@@ -838,7 +861,7 @@
             "rowHash": "sha256-986b048b412b2cc7d4993d1ea515a3a3f3969db758f3494f391d65c91e594a54",
             "recordId": "CUADERNOS-CAMARITA-COARCO",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -853,7 +876,7 @@
               "rowHash": "sha256-636a3313d1e7a211d82892c3b0ee4d9b76301d5c63fa9f9e974938d91fcd5231",
               "recordId": "CUADERNOS-CAMARITA-COARCO:MPF-CAMARITA-REQUERIMIENTO-2019",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -867,7 +890,7 @@
               "rowHash": "sha256-013457ae5334726a93582269937972314ad6899dcd2ad72946f6b552e95e86ef",
               "recordId": "451-1003-CON18",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             }
           ],
@@ -915,7 +938,7 @@
             "rowHash": "sha256-64f99ba3e9b0d72b17d10a7cd71f10322e5da6e9b55e570e2e4c8f6f839450ef",
             "recordId": "CUADERNOS-CAMARITA-CONCRET-NOR",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -930,7 +953,7 @@
               "rowHash": "sha256-7fafacb6d4b96daeea9489f219250c2dcadbf91aa6f3d6014e3d03ecc6111831",
               "recordId": "CUADERNOS-CAMARITA-CONCRET-NOR:MPF-CAMARITA-LECTURA-2025-12-09",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -944,7 +967,7 @@
               "rowHash": "sha256-21bd5210240917f539b34a24431655025d79e883050e24e0a7d8a99dcc3ede16",
               "recordId": "451-1002-CON18",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             }
           ],
@@ -992,7 +1015,7 @@
             "rowHash": "sha256-e2e24cc4e5fdee3e9a497a6aafe1c2806469fc596aa2a801d3cd431c33b06e20",
             "recordId": "CUADERNOS-CAMARITA-CONORVIAL",
             "locatorType": "official_detail",
-            "extractedAt": "2026-05-16T06:58:58.684Z",
+            "extractedAt": "2026-05-17T18:07:49.590Z",
             "parserVersion": "argentina-historical-judicial@1"
           },
           "relatedReceipts": [
@@ -1007,7 +1030,7 @@
               "rowHash": "sha256-d432ea9e1ec9af64bacd0c4dd5092a0847bb91a15c4d0eb794a490c72af092e8",
               "recordId": "CUADERNOS-CAMARITA-CONORVIAL:MPF-CAMARITA-LECTURA-2025-12-09",
               "locatorType": "official_detail",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "argentina-historical-judicial@1"
             },
             {
@@ -1021,7 +1044,7 @@
               "rowHash": "sha256-c174bfcd1531fa5f0fd530c10582a56c664227e963400395d756977288dcc2cb",
               "recordId": "23-0003-CON17",
               "locatorType": "official_dataset",
-              "extractedAt": "2026-05-16T06:58:58.684Z",
+              "extractedAt": "2026-05-17T18:07:49.590Z",
               "parserVersion": "cross-country@1"
             }
           ],
@@ -1055,7 +1078,20 @@
       "amount": {
         "value": 46000000000,
         "currency": "ARS",
-        "label": "monto contextual informado por MPF"
+        "label": "monto contextual informado por MPF",
+        "usdEquivalent": {
+          "usd": 44552058.11,
+          "fxRate": 1032.5,
+          "fxDate": "2025-01-01",
+          "anchorDate": "2025-01-01",
+          "anchorField": "year",
+          "fxSource": {
+            "sourceId": "AR-BCRA-COM-A3500",
+            "sourceName": "AR-BCRA-COM-A3500",
+            "sourceUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+            "snapshotHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef"
+          }
+        }
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1075,7 +1111,7 @@
         "rowHash": "sha256-091b5d95d9c7687c2bed32bc7ee63229dc6c4d0506bb07fce849abd98560d454",
         "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1090,7 +1126,7 @@
           "rowHash": "sha256-6793368b1bb787ecd58fecbf3e6ff5b55fc4760bf271c5488fdec363100fdbbe",
           "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME:MPF-VIALIDAD-CASACION-2024-11-13",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1104,7 +1140,7 @@
           "rowHash": "sha256-dda9601d8cef3517a5bab042dde399e72889b5195a42f1068465c64360bfb25d",
           "recordId": "VIALIDAD-CFP-5048-SENTENCIA-FIRME:CIJ-VIALIDAD-FIRMEZA-2025-07-01",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1134,7 +1170,9 @@
       "amount": {
         "value": 76817044.79,
         "currency": "USD",
-        "label": "USD 76.817.044,79 informado por MPF"
+        "label": "USD 76.817.044,79 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A.",
@@ -1154,7 +1192,7 @@
         "rowHash": "sha256-3c7f1d76f251be5de10954431ccc30bba865cc945deec14271d87206c746996a",
         "recordId": "VIALIDAD-DNV-9067-2007-RP9",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1169,7 +1207,7 @@
           "rowHash": "sha256-ead5a22d1d9778bb20734c937eb0aad76c8d82c1eda1c8ed102d7554a244d7c4",
           "recordId": "VIALIDAD-DNV-9067-2007-RP9:INDICE-MPF-DNV-9067-2007",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1183,7 +1221,7 @@
           "rowHash": "sha256-72f10a352573bd8dffaac82d7f234f964dec3797a0fa6f43c40e3151a6a80e4f",
           "recordId": "VIALIDAD-DNV-9067-2007-RP9:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1213,7 +1251,9 @@
       "amount": {
         "value": 72802191.7,
         "currency": "USD",
-        "label": "USD 72.802.191,70 informado por MPF"
+        "label": "USD 72.802.191,70 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1233,7 +1273,7 @@
         "rowHash": "sha256-099c3729df761be5926d794fb45c1b3362e16681d4e2dbbb063dc582c63a49e6",
         "recordId": "VIALIDAD-DNV-12309-2007-RN288",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1248,7 +1288,7 @@
           "rowHash": "sha256-e90f1cf96be305399089ea4b1ee0f17696e74980655dc6bda1605ec16f880ed9",
           "recordId": "VIALIDAD-DNV-12309-2007-RN288:INDICE-MPF-DNV-12309-2007",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1262,7 +1302,7 @@
           "rowHash": "sha256-36a8d32240b53e649fba0d2e707964ade13c8bb55340994ced3cae65ca06045b",
           "recordId": "VIALIDAD-DNV-12309-2007-RN288:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1292,7 +1332,9 @@
       "amount": {
         "value": 23445670.9,
         "currency": "USD",
-        "label": "USD 23.445.670,90 informado por MPF"
+        "label": "USD 23.445.670,90 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
@@ -1312,7 +1354,7 @@
         "rowHash": "sha256-e46cd34b1ef664d2cadba95f6417a5f8a98857c8e5b12b99008c2acdc3845b9a",
         "recordId": "VIALIDAD-DNV-12328-2007-RP12",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1327,7 +1369,7 @@
           "rowHash": "sha256-72c6ba448a18f89728cd8596c331ebb8b75944078d9f8ba172cee762a6b3664a",
           "recordId": "VIALIDAD-DNV-12328-2007-RP12:INDICE-MPF-DNV-12328-2007",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1341,7 +1383,7 @@
           "rowHash": "sha256-e05837fb7b1e4ed3d44fbfceb526a6820919be1899d8a44b509ac230c7a2a11a",
           "recordId": "VIALIDAD-DNV-12328-2007-RP12:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1371,7 +1413,9 @@
       "amount": {
         "value": 37519987.64,
         "currency": "USD",
-        "label": "USD 37.519.987,64 informado por MPF"
+        "label": "USD 37.519.987,64 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Grupo Baez",
@@ -1391,7 +1435,7 @@
         "rowHash": "sha256-486854e698a77d954d7760c76835310b93808c5da61bf9447619e735bcd07d31",
         "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1406,7 +1450,7 @@
           "rowHash": "sha256-be973382bfc0ef0c75466ba6449de8b842e11cda10009008fe60b4882dd96f9c",
           "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3:INDICE-MPF-DNV-16751-2006",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1420,7 +1464,7 @@
           "rowHash": "sha256-a96cf2de9dc4fc115f7ffd5329f3cb92900a6855a013ccbb5d55b367a0c42053",
           "recordId": "VIALIDAD-DNV-16751-2006-CANTERAS-RN3:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1450,7 +1494,9 @@
       "amount": {
         "value": 26501228.02,
         "currency": "USD",
-        "label": "USD 26.501.228,02 informado por MPF"
+        "label": "USD 26.501.228,02 informado por MPF",
+        "usdEquivalent": null,
+        "usdConversionNote": "already_usd"
       },
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A.",
@@ -1470,7 +1516,7 @@
         "rowHash": "sha256-c9345cb567461a9040ac925a8cbdb4bf28a95dffa01a25afc6a59d35f0ae1b9f",
         "recordId": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1485,7 +1531,7 @@
           "rowHash": "sha256-216eab9bd9fdfaf35381a804ee9276e6c997c0ff5e9048dcf7facfd2bf183996",
           "recordId": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3:CIJ-VIALIDAD-VEREDICTO-2022-12-06",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1531,7 +1577,7 @@
         "rowHash": "sha256-500bd7716ac1182ff5295f3623eb7c39bcfec2671d105be6ebe97ececd30dbeb",
         "recordId": "CUADERNOS-CAMARITA-TOF7-2026",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1546,7 +1592,7 @@
           "rowHash": "sha256-99fbb0e4cd1c91c2bacdeffbf0c1aee944b09c05b34b8b8fa31d59535cfc8ee6",
           "recordId": "CUADERNOS-CAMARITA-TOF7-2026:MPF-CUADERNOS-CRONOGRAMA-2026-04-24",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1560,7 +1606,7 @@
           "rowHash": "sha256-e4a85a563f0466564871944d74e8d36164c8ea408222e1d0d5f0d0be3066b1db",
           "recordId": "CUADERNOS-CAMARITA-TOF7-2026:MPF-CAMARITA-REQUERIMIENTO-2019",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         }
       ],
@@ -1610,7 +1656,7 @@
         "rowHash": "sha256-bdece67f342734d42fb5079c43a20aec44a525cf079a5dde3f5a72d497f0085f",
         "recordId": "CUADERNOS-CAMARITA-CONSTRUMEX",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1625,7 +1671,7 @@
           "rowHash": "sha256-d977d45bf11e289602fe197aabe0064c539637c9e5cc0dd6c4b1860dbb597a64",
           "recordId": "CUADERNOS-CAMARITA-CONSTRUMEX:MPF-CAMARITA-LECTURA-2025-12-09",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1639,7 +1685,7 @@
           "rowHash": "sha256-ba29db2c78091b9382c50f0ef76ca65b7fb0df23c56f0f3ebe58b72fb71ef4a3",
           "recordId": "451-1613-CON19",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         },
         {
@@ -1653,7 +1699,7 @@
           "rowHash": "sha256-96f83f61b2000907e0e7158281aff8f900fd0623d8979b2b5401b7aecc7cb978",
           "recordId": "501-0474-CON20",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         },
         {
@@ -1667,7 +1713,7 @@
           "rowHash": "sha256-2ba4a631154a8772c673e1ceed895984273f153182cdf4c979e3bae96c161248",
           "recordId": "451-1001-CON18",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         }
       ],
@@ -1715,7 +1761,7 @@
         "rowHash": "sha256-a1378e85ecc25ff4ca56f6208aeff406ac027c0e27688bb33173fa9bbf8adbcb",
         "recordId": "CUADERNOS-CAMARITA-MARCALBA",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1730,7 +1776,7 @@
           "rowHash": "sha256-9111b4330c81843d877addf4d587a32bcae08c7aa1f0f92ab2a7917e94187afd",
           "recordId": "CUADERNOS-CAMARITA-MARCALBA:MPF-CAMARITA-LECTURA-2025-12-09",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1744,7 +1790,7 @@
           "rowHash": "sha256-20f03d8b7faf5bf542525493c142a539bd6b3f71ae7c888d438ad252c757f8d6",
           "recordId": "451-1005-CON18",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         }
       ],
@@ -1792,7 +1838,7 @@
         "rowHash": "sha256-986b048b412b2cc7d4993d1ea515a3a3f3969db758f3494f391d65c91e594a54",
         "recordId": "CUADERNOS-CAMARITA-COARCO",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1807,7 +1853,7 @@
           "rowHash": "sha256-636a3313d1e7a211d82892c3b0ee4d9b76301d5c63fa9f9e974938d91fcd5231",
           "recordId": "CUADERNOS-CAMARITA-COARCO:MPF-CAMARITA-REQUERIMIENTO-2019",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1821,7 +1867,7 @@
           "rowHash": "sha256-013457ae5334726a93582269937972314ad6899dcd2ad72946f6b552e95e86ef",
           "recordId": "451-1003-CON18",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         }
       ],
@@ -1869,7 +1915,7 @@
         "rowHash": "sha256-64f99ba3e9b0d72b17d10a7cd71f10322e5da6e9b55e570e2e4c8f6f839450ef",
         "recordId": "CUADERNOS-CAMARITA-CONCRET-NOR",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1884,7 +1930,7 @@
           "rowHash": "sha256-7fafacb6d4b96daeea9489f219250c2dcadbf91aa6f3d6014e3d03ecc6111831",
           "recordId": "CUADERNOS-CAMARITA-CONCRET-NOR:MPF-CAMARITA-LECTURA-2025-12-09",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1898,7 +1944,7 @@
           "rowHash": "sha256-21bd5210240917f539b34a24431655025d79e883050e24e0a7d8a99dcc3ede16",
           "recordId": "451-1002-CON18",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         }
       ],
@@ -1946,7 +1992,7 @@
         "rowHash": "sha256-e2e24cc4e5fdee3e9a497a6aafe1c2806469fc596aa2a801d3cd431c33b06e20",
         "recordId": "CUADERNOS-CAMARITA-CONORVIAL",
         "locatorType": "official_detail",
-        "extractedAt": "2026-05-16T06:58:58.684Z",
+        "extractedAt": "2026-05-17T18:07:49.590Z",
         "parserVersion": "argentina-historical-judicial@1"
       },
       "relatedReceipts": [
@@ -1961,7 +2007,7 @@
           "rowHash": "sha256-d432ea9e1ec9af64bacd0c4dd5092a0847bb91a15c4d0eb794a490c72af092e8",
           "recordId": "CUADERNOS-CAMARITA-CONORVIAL:MPF-CAMARITA-LECTURA-2025-12-09",
           "locatorType": "official_detail",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "argentina-historical-judicial@1"
         },
         {
@@ -1975,7 +2021,7 @@
           "rowHash": "sha256-c174bfcd1531fa5f0fd530c10582a56c664227e963400395d756977288dcc2cb",
           "recordId": "23-0003-CON17",
           "locatorType": "official_dataset",
-          "extractedAt": "2026-05-16T06:58:58.684Z",
+          "extractedAt": "2026-05-17T18:07:49.590Z",
           "parserVersion": "cross-country@1"
         }
       ],

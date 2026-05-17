@@ -8,6 +8,7 @@ import {
 import type { EvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import { resolveDataBuildTimestamp } from "../src/lib/data/dataBuildTimestamps.ts";
 import { profileJsonSnapshot } from "../src/lib/data/snapshots.ts";
+import { loadFxRegistryFromFiles } from "../src/lib/data/fxSeries.ts";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
@@ -47,10 +48,34 @@ const sourceConfigs: HistoricalSourceConfig[] = [
   },
 ];
 
-const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { generatedAt?: string };
+const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
+  generatedAt?: string;
+  snapshots: Array<{ sourceId: string; fileHash: string; fetchUrl: string }>;
+};
 const generatedAt = resolveDataBuildTimestamp({
   envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
   manifestTimestamp: manifest.generatedAt,
+});
+
+function fxMeta(sourceId: string) {
+  const entry = manifest.snapshots.find((s) => s.sourceId === sourceId);
+  if (!entry) throw new Error(`fx snapshot ${sourceId} missing from manifest`);
+  return { sourceId, sourceName: sourceId, sourceUrl: entry.fetchUrl, snapshotHash: entry.fileHash };
+}
+
+const fxRegistry = await loadFxRegistryFromFiles({
+  rootDir: new URL("../", import.meta.url),
+  profiles: [
+    {
+      currency: "ARS",
+      relativePath: "data/official/fx/ar-bcra-com-a3500.csv",
+      dateColumn: "indice_tiempo",
+      rateColumn: "dolar_referencia_com_3500",
+      dateFormat: "iso",
+      delimiter: ",",
+      sourceMeta: fxMeta("AR-BCRA-COM-A3500"),
+    },
+  ],
 });
 const localReceiptsByCaseId = buildLocalReceiptLookup();
 const datasets = [];
@@ -73,6 +98,7 @@ for (const source of sourceConfigs) {
     extractedAt: generatedAt,
     parserVersion: "argentina-historical-judicial@1",
     localReceiptsByCaseId,
+    fxRegistry,
   });
 
   datasets.push({

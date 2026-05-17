@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Download, ExternalLink, FileSearch, Route, ShieldCheck } from "lucide-react";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -6,6 +7,7 @@ import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import { formatAmountWithUsd, type AmountInput } from "@/lib/format/money";
 import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
 
 export function CaseDetails({
@@ -44,7 +46,7 @@ export function CaseDetails({
         />
         {isContract && (
           <>
-            <Metric label="Monto" value={formatAmount(caseFile)} />
+            <Metric label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
             <Metric label="Oferentes" value={formatBidderCount(caseFile)} />
             <Metric label="Estado" value={caseFile.procedureState ?? "Sin dato"} />
             <Metric label="Ubicacion" value={formatWorkLocation(caseFile)} />
@@ -179,7 +181,7 @@ export function CountryExplorer({
             <dl>
               <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />
               <ReceiptRow label="Proveedor" value={formatSupplier(caseFile)} />
-              <ReceiptRow label="Monto" value={formatAmount(caseFile)} />
+              <ReceiptRow label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
               <ReceiptRow label="Fecha" value={formatCaseDate(caseFile)} />
               <ReceiptRow label="Competencia" value={formatBidderCount(caseFile)} />
             </dl>
@@ -200,7 +202,7 @@ export function CountryExplorer({
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="metric">
       <span>{label}</span>
@@ -209,12 +211,30 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ReceiptRow({ label, value }: { label: string; value: string }) {
+function ReceiptRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div>
       <dt>{label}</dt>
       <dd>{value}</dd>
     </div>
+  );
+}
+
+function renderAmount(amount: AmountInput | null): ReactNode {
+  if (!amount) return "Sin dato";
+  const formatted = formatAmountWithUsd(amount);
+  return (
+    <span className="amountStack">
+      <span className="amountPrimary">{formatted.primary}</span>
+      {formatted.usdSegment && (
+        <span className="amountUsd">{formatted.usdSegment}</span>
+      )}
+      {formatted.showMissingChip && (
+        <span className="amountMissingChip" title={`Sin cotizacion oficial (${formatted.note ?? "sin dato"})`}>
+          sin cotizacion oficial para esta fecha
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -253,10 +273,6 @@ function describeTraceContext({
   return "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra.";
 }
 
-function formatAmount(caseFile: CrossCountryCaseFile): string {
-  if (!caseFile.amount) return "Sin dato";
-  return `${caseFile.amount.currency} ${Math.round(caseFile.amount.value).toLocaleString("es-AR")}`;
-}
 
 function formatBidderCount(
   caseFile: Pick<CrossCountryCaseFile, "bidderCount" | "offerCount">,

@@ -456,5 +456,53 @@
     "updateFrequency": "unknown",
     "keyFields": ["codreg", "codpro", "codcom", "nomreg", "nompro", "nomcom"],
     "caveats": ["Permite centroides comunales administrativos; no representa sitio exacto de ejecucion."]
+  },
+  {
+    "sourceId": "AR-BCRA-COM-A3500",
+    "countryCode": "AR",
+    "name": "BCRA Comunicacion A 3500 - Tipo de cambio mayorista",
+    "agency": "Banco Central de la Republica Argentina",
+    "category": "fx_reference_rate",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "csv",
+    "sourceUrl": "https://datos.gob.ar/dataset/sspm-tipos-cambio-historicos",
+    "downloadUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
+    "updateFrequency": "daily",
+    "keyFields": ["indice_tiempo", "tipo_cambio_a_3500_mayorista_referencia_compra_pesos_por_dolar"],
+    "caveats": ["Sin cotizacion los fines de semana y feriados; Faro no interpola."]
+  },
+  {
+    "sourceId": "CL-BCCH-DOLAR-OBSERVADO",
+    "countryCode": "CL",
+    "name": "BCCh Dolar observado (via mindicador.cl)",
+    "agency": "Banco Central de Chile",
+    "category": "fx_reference_rate",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "api_aggregator",
+    "format": "csv",
+    "sourceUrl": "https://si3.bcentral.cl/Indicadoressiete/secure/Indicadoresdiarios.aspx",
+    "downloadUrl": "https://mindicador.cl/api/dolar/{year}",
+    "updateFrequency": "daily",
+    "keyFields": ["fecha", "dolar_observado"],
+    "caveats": ["mindicador.cl es agregador comunitario; el valor original proviene del BCCh."]
+  },
+  {
+    "sourceId": "PE-BCRP-SBS-VENTA",
+    "countryCode": "PE",
+    "name": "BCRP - Tipo de cambio Sistema bancario SBS Venta",
+    "agency": "Banco Central de Reserva del Peru",
+    "category": "fx_reference_rate",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "direct_download",
+    "format": "csv",
+    "sourceUrl": "https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD04640PD/html",
+    "downloadUrl": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04640PD/json/{from}/{to}",
+    "updateFrequency": "daily",
+    "keyFields": ["fecha", "tipo_cambio_sbs_venta"],
+    "caveats": ["Sin cotizacion los dias no habiles; Faro no interpola."]
   }
 ]
