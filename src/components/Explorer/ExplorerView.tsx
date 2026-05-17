@@ -252,7 +252,12 @@ export default function ExplorerView({
       </aside>
       <main className={styles.main}>
         {selectedCase ? (
-          <ExplorerDetail caseFile={selectedCase} onBack={onClearSelection} />
+          <ExplorerDetail
+            caseFile={selectedCase}
+            pool={countryAll}
+            onBack={onClearSelection}
+            onSelectCase={onSelectCase}
+          />
         ) : (
         <>
         <header className={styles.mainHeader}>
@@ -405,8 +410,32 @@ export default function ExplorerView({
   );
 }
 
-function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: () => void }) {
+function ExplorerDetail({
+  caseFile,
+  pool,
+  onBack,
+  onSelectCase,
+}: {
+  caseFile: ExplorerCase;
+  pool: ExplorerCase[];
+  onBack: () => void;
+  onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+}) {
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
+  const supplierKey =
+    "supplierName" in caseFile && caseFile.supplierName
+      ? caseFile.supplierName.trim().toLowerCase()
+      : null;
+  const similar = pool
+    .filter((entry) => entry.id !== caseFile.id)
+    .filter((entry) => {
+      if (entry.agencyName === caseFile.agencyName) return true;
+      if (supplierKey && "supplierName" in entry && entry.supplierName) {
+        return entry.supplierName.trim().toLowerCase() === supplierKey;
+      }
+      return false;
+    })
+    .slice(0, 4);
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
       <button type="button" className={styles.detailBack} onClick={onBack}>
@@ -473,6 +502,25 @@ function ExplorerDetail({ caseFile, onBack }: { caseFile: ExplorerCase; onBack: 
           <DetailRow label="Organismo" value={caseFile.agencyName || "—"} />
         </div>
       </div>
+      {similar.length > 0 && (
+        <section className={styles.similarSection} aria-label="Casos similares">
+          <p className={styles.similarHead}>Casos similares</p>
+          <div className={styles.similarGrid}>
+            {similar.map((entry) => (
+              <button
+                key={entry.id}
+                type="button"
+                className={styles.similarCard}
+                onClick={() => onSelectCase(entry.id, entry.countryCode)}
+              >
+                <span className={styles.similarCardId}>#{entry.workNumber}</span>
+                <strong className={styles.similarCardTitle}>{entry.title}</strong>
+                <span className={styles.similarCardMeta}>{entry.agencyName}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
     </section>
   );
 }
