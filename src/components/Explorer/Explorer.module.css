@@ -742,9 +742,9 @@
 }
 
 .detailCardHead {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   font-family: var(--cf-font-data);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--cf-text-muted);
@@ -755,7 +755,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--cf-border-subtle, var(--cf-border));
 }
 
@@ -764,19 +764,43 @@
 }
 
 .detailRowLabel {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--cf-text-muted);
 }
 
 .detailRowValue {
   font-family: var(--cf-font-data);
-  font-size: 12.5px;
+  font-size: 15px;
   color: var(--cf-text);
   text-align: right;
-  max-width: 60%;
+  max-width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (min-width: 1280px) {
+  .detailCardHead {
+    font-size: 12px;
+  }
+  .detailRowLabel {
+    font-size: 14px;
+  }
+  .detailRowValue {
+    font-size: 17px;
+  }
+  .detailRow {
+    padding: 12px 0;
+  }
+}
+
+@media (min-width: 1680px) {
+  .detailRowValue {
+    font-size: 19px;
+  }
+  .detailRowLabel {
+    font-size: 15px;
+  }
 }
 
 .caveatCard {
