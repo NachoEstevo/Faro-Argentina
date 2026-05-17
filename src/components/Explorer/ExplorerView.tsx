@@ -90,6 +90,15 @@ export default function ExplorerView({
     setYearTo(yearBounds.max);
   }, [yearBounds.min, yearBounds.max]);
 
+  useEffect(() => {
+    if (!selectedCase) return;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClearSelection();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [selectedCase, onClearSelection]);
+
   const countryCases = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return countryAll.filter((caseFile) => {
