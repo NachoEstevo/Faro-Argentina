@@ -79,6 +79,51 @@ test("convertAmountToUsd uses the first cascade candidate when its date has FX",
   assert.equal(result.note, undefined);
 });
 
+test("convertAmountToUsd falls through to second candidate when first has no fx entry", () => {
+  const arsSeries: FxSeries = new Map([
+    ["2018-04-01", { rate: 20.6, sourceMeta: stubSourceMeta() }],
+  ]);
+  const registry: FxSeriesRegistry = new Map([["ARS", arsSeries]]);
+
+  const result = convertAmountToUsd({
+    amount: 1000,
+    currency: "ARS",
+    anchorCandidates: [
+      { field: "contract_signed", date: "2018-03-14" },
+      { field: "opening", date: "2018-04-01" },
+      { field: "published", date: null },
+      { field: "year", date: "2018-01-01" },
+    ],
+    series: registry,
+  });
+
+  assert.ok(result.conversion);
+  assert.equal(result.conversion!.fxDate, "2018-04-01");
+  assert.equal(result.conversion!.anchorField, "opening");
+});
+
+test("convertAmountToUsd returns no_fx_for_anchor_dates when every candidate misses", () => {
+  const arsSeries: FxSeries = new Map([
+    ["2018-12-31", { rate: 37.7, sourceMeta: stubSourceMeta() }],
+  ]);
+  const registry: FxSeriesRegistry = new Map([["ARS", arsSeries]]);
+
+  const result = convertAmountToUsd({
+    amount: 1000,
+    currency: "ARS",
+    anchorCandidates: [
+      { field: "contract_signed", date: "2018-03-14" },
+      { field: "opening", date: "2018-04-01" },
+      { field: "published", date: null },
+      { field: "year", date: "2018-01-01" },
+    ],
+    series: registry,
+  });
+
+  assert.equal(result.conversion, null);
+  assert.equal(result.note, "no_fx_for_anchor_dates");
+});
+
 function stubSourceMeta() {
   return {
     sourceId: "ar-bcra-com-a3500",
