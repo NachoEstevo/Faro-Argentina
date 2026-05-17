@@ -149,9 +149,7 @@ export default function FeaturedCasesOverlay() {
           <button
             key={`card-${fc.caseId}`}
             type="button"
-            className={`${styles.card} ${styles[`card_${fc.variant}`]} ${
-              p.visible ? "" : styles.hidden
-            }`}
+            className={`${styles.card} ${p.visible ? "" : styles.hidden}`}
             style={{
               transform: `translate(${p.cardX}px, ${p.cardY}px)`,
               animationDelay: `${delay}ms`,
