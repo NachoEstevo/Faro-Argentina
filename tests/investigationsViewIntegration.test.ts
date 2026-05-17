@@ -15,14 +15,14 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
     await readFile(investigationsChromeUrl, "utf8"),
   ].join("\n");
 
-  assert.match(source, /Carpeta de investigacion/);
+  assert.match(source, /Carpeta de investigación/);
   assert.match(source, /\/api\/investigations\/case-pack/);
   assert.match(source, /\/api\/investigations\/analyze/);
   assert.match(source, /localStorage/);
   assert.match(source, /buildInvestigationZip/);
   assert.match(source, /Exportar carpeta ZIP/);
-  assert.match(source, /Generar analisis de trabajo/);
-  assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupcion|Publicar caso/);
+  assert.match(source, /Generar análisis de trabajo/);
+  assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupción|Score de corrupcion|Publicar caso/);
 });
 
 test("FaroExperience exposes Investigaciones beside Map, Explorer and Aportes", async () => {

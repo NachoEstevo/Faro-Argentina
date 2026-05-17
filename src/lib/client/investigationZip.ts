@@ -50,7 +50,7 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     },
     {
       name: "analysis.md",
-      content: analysis || "# Analisis\n\nTodavia no se genero analisis de trabajo.",
+      content: analysis || "# Análisis\n\nTodavía no se generó análisis de trabajo.",
     },
     {
       name: "sources/links.json",
@@ -75,18 +75,18 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
 
 function buildReadme(workspace: InvestigationWorkspace): string {
   return [
-    "Carpeta de investigacion Faro",
+    "Carpeta de investigación Faro",
     "",
-    `Titulo: ${workspace.title}`,
-    `Pais: ${workspace.countryCode ?? "sin pais fijo"}`,
+    `Título: ${workspace.title}`,
+    `País: ${workspace.countryCode ?? "sin país fijo"}`,
     "",
-    "Este ZIP es una carpeta privada de trabajo. No es una publicacion de Faro,",
-    "no prueba wrongdoing y no reemplaza la revision de fuentes oficiales.",
+    "Este ZIP es una carpeta privada de trabajo. No es una publicación de Faro,",
+    "no prueba wrongdoing y no reemplaza la revisión de fuentes oficiales.",
     "",
     "Archivos principales:",
     "- workspace.json: datos estructurados de la carpeta.",
     "- notes.md: notas del usuario.",
-    "- analysis.md: analisis de trabajo si fue generado.",
+    "- analysis.md: análisis de trabajo si fue generado.",
     "- cases/: expedientes y evidence packs seleccionados.",
     "- sources/links.json: links cargados manualmente.",
   ].join("\n");

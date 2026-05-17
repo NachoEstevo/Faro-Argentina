@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error: "analysis_failed",
-        message: "No pudimos generar el analisis en este momento. Proba nuevamente en unos minutos.",
+        message: "No pudimos generar el análisis en este momento. Probá nuevamente en unos minutos.",
       },
       { status: 502 },
     );
@@ -94,7 +94,7 @@ interface AnalysisRequestBody {
 function buildWorkspace(workspace: AnalysisRequestBody["workspace"], caseIds: string[]) {
   return {
     ...createInvestigationWorkspace({
-      title: workspace?.title ?? "Carpeta de investigacion",
+      title: workspace?.title ?? "Carpeta de investigación",
       countryCode: workspace?.countryCode ?? null,
       description: workspace?.description ?? "",
       investigationQuestion: workspace?.investigationQuestion ?? null,

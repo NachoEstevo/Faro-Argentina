@@ -166,7 +166,7 @@ export default function InvestigationsView({
   async function handleAnalyze() {
     if (!workspace) return;
     setAnalysisState("loading");
-    setStatusText("Generando analisis de trabajo...");
+    setStatusText("Generando análisis de trabajo...");
     try {
       const response = await fetch("/api/investigations/analyze", {
         method: "POST",
@@ -185,10 +185,10 @@ export default function InvestigationsView({
       setWorkspace({ ...workspace, analyses: [...workspace.analyses, payload.analysis], updatedAt: payload.analysis.createdAt });
       setAggregate(payload.aggregate ?? null);
       setAnalysisState("success");
-      setStatusText("Analisis recibido. Revisalo antes de citarlo.");
+      setStatusText("Análisis recibido. Revisalo antes de citarlo.");
     } catch (error) {
       setAnalysisState("error");
-      setStatusText(error instanceof Error ? error.message : "No se pudo generar el analisis.");
+      setStatusText(error instanceof Error ? error.message : "No se pudo generar el análisis.");
     }
   }
 
@@ -237,7 +237,7 @@ export default function InvestigationsView({
               </div>
               <div className={styles.panel}>
                 <h3>Fuentes y entidades</h3>
-                <input className={styles.input} value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} placeholder="Link publico u oficial" />
+                <input className={styles.input} value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} placeholder="Link público u oficial" />
                 <button className={styles.secondary} type="button" onClick={handleAddSource}><LinkIcon size={14} aria-hidden />Agregar fuente</button>
                 <input className={styles.input} value={entityLabel} onChange={(event) => setEntityLabel(event.target.value)} placeholder="Proveedor, organismo, persona o expediente" />
                 <button className={styles.secondary} type="button" onClick={handleAddEntity}>Agregar entidad</button>
@@ -263,10 +263,10 @@ export default function InvestigationsView({
 }
 
 function labelAnalysisError(error?: string): string {
-  if (error === "invalid_access_code") return "Codigo no valido para generar analisis.";
-  if (error === "analysis_unavailable") return "Analisis no disponible en este entorno.";
+  if (error === "invalid_access_code") return "Código no válido para generar análisis.";
+  if (error === "analysis_unavailable") return "Análisis no disponible en este entorno.";
   if (error === "too_many_case_ids") return "La carpeta tiene demasiados expedientes para este corte.";
-  return "No se pudo generar el analisis.";
+  return "No se pudo generar el análisis.";
 }
 
 function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {

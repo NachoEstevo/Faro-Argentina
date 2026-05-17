@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         error: "submission_failed",
-        message: "No pudimos recibir el aporte en este momento. Proba nuevamente en unos minutos.",
+        message: "No pudimos recibir el aporte en este momento. Probá nuevamente en unos minutos.",
       },
       { status: 500 },
     );

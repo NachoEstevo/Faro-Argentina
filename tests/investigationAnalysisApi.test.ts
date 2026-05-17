@@ -76,7 +76,7 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
         {
           message: {
             content: [
-              "# Analisis de trabajo",
+              "# Análisis de trabajo",
               "La carpeta contiene evidencia oficial y huecos de verificacion.",
             ].join("\n\n"),
           },
@@ -105,7 +105,7 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
 
     assert.equal(response.status, 200);
     assert.equal(payload.aggregate.caseCount, 1);
-    assert.match(payload.analysis.markdown, /Analisis de trabajo/);
+    assert.match(payload.analysis.markdown, /Análisis de trabajo/);
     assert.match(payload.analysis.summary, /evidencia oficial/);
     assert.equal(calls.length, 1);
     assert.equal(calls[0]?.url, "https://api.minimax.io/v1/chat/completions");
@@ -140,7 +140,7 @@ test("POST /api/investigations/analyze hides provider failures from public respo
 
     assert.equal(response.status, 502);
     assert.equal(payload.error, "analysis_failed");
-    assert.equal(payload.message, "No pudimos generar el analisis en este momento. Proba nuevamente en unos minutos.");
+    assert.equal(payload.message, "No pudimos generar el análisis en este momento. Probá nuevamente en unos minutos.");
     assert.doesNotMatch(payload.message, /minimax-test-key|provider|upstream|trace/i);
   } finally {
     console.error = previousConsoleError;

@@ -12,7 +12,7 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
         title: "Causa Vialidad",
         countryCode: "AR",
         description: "Carpeta privada.",
-        investigationQuestion: "Que falta verificar?",
+        investigationQuestion: "Qué falta verificar?",
         tags: ["vialidad"],
       },
       new Date("2026-05-17T12:00:00.000Z"),
@@ -24,13 +24,13 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
       id: "ANALYSIS-1",
       createdAt: "2026-05-17T12:10:00.000Z",
       summary: "Resumen",
-      markdown: "# Analisis\n\nResumen de trabajo.",
+      markdown: "# Análisis\n\nResumen de trabajo.",
     }],
   };
   const zip = buildInvestigationZip({
     workspace,
     casePacks: [casePack("AR-CASE-1")],
-    analysisMarkdown: "# Analisis\n\nResumen de trabajo.",
+    analysisMarkdown: "# Análisis\n\nResumen de trabajo.",
   });
   const text = new TextDecoder().decode(zip.bytes);
 
@@ -45,7 +45,7 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /sources\/links\.json/);
   assert.match(text, /cases\/AR-CASE-1\.expediente\.json/);
   assert.match(text, /cases\/AR-CASE-1\.evidence\.json/);
-  assert.match(text, /Carpeta de investigacion Faro/);
+  assert.match(text, /Carpeta de investigación Faro/);
 });
 
 function casePack(caseId: string): InvestigationCasePack {
@@ -64,7 +64,7 @@ function casePack(caseId: string): InvestigationCasePack {
         organismLabel: "Vialidad",
         supplierLabel: "Proveedor",
         dateLabel: "2026",
-        locationLabel: "Sin geometria oficial",
+        locationLabel: "Sin geometría oficial",
         evidenceLevel: "official_dataset",
       },
       whyItAppeared: [],

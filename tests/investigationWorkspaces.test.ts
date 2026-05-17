@@ -15,7 +15,7 @@ test("createInvestigationWorkspace builds a neutral local workspace", () => {
       title: "Causa Vialidad",
       countryCode: "AR",
       description: "Revisar obras y fuentes oficiales asociadas.",
-      investigationQuestion: "Que esta sostenido por receipts oficiales?",
+      investigationQuestion: "Qué está sostenido por receipts oficiales?",
       tags: [" vialidad ", "Santa Cruz", ""],
     },
     new Date("2026-05-17T12:00:00.000Z"),

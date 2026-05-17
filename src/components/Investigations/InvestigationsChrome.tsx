@@ -62,7 +62,7 @@ export function InvestigationsSidebar({
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.modeSwitch} role="group" aria-label="Modo de exploracion">
+      <div className={styles.modeSwitch} role="group" aria-label="Modo de exploración">
         <button type="button" className={styles.modeButton} onClick={onSwitchToMap}>
           <MapIcon size={13} aria-hidden />
           Mapa
@@ -81,9 +81,9 @@ export function InvestigationsSidebar({
         </button>
       </div>
       <p className={styles.eyebrow}>Carpeta privada</p>
-      <h1 className={styles.title}>Carpeta de investigacion</h1>
+      <h1 className={styles.title}>Carpeta de investigación</h1>
       <p className={styles.intro}>
-        Arma una carpeta local con expedientes, fuentes, notas y entidades. Nada se publica automaticamente.
+        Armá una carpeta local con expedientes, fuentes, notas y entidades. Nada se publica automáticamente.
       </p>
       <div className={styles.rules}>
         <span>El trabajo se guarda en este navegador.</span>
@@ -97,15 +97,15 @@ export function CreateWorkspaceForm({ onSubmit }: CreateFormProps) {
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <label className={styles.field}>
-        <span>Titulo</span>
+        <span>Título</span>
         <input className={styles.input} name="title" required maxLength={120} placeholder="Causa Vialidad" />
       </label>
       <label className={styles.fieldWide}>
         <span>Pregunta de trabajo</span>
-        <textarea className={styles.textarea} name="question" placeholder="Que queremos verificar?" />
+        <textarea className={styles.textarea} name="question" placeholder="Qué queremos verificar?" />
       </label>
       <label className={styles.fieldWide}>
-        <span>Descripcion neutral</span>
+        <span>Descripción neutral</span>
         <textarea className={styles.textarea} name="description" />
       </label>
       <label className={styles.field}>
@@ -133,13 +133,13 @@ export function InvestigationAnalysisPanel({
 }: AnalysisPanelProps) {
   return (
     <section className={styles.panel}>
-      <h3>Analisis con Minimax</h3>
+      <h3>Análisis con Minimax</h3>
       <div className={styles.analysisControls}>
         <input
           className={styles.input}
           value={accessCode}
           onChange={(event) => onAccessCodeChange(event.target.value)}
-          placeholder="Codigo de acceso"
+          placeholder="Código de acceso"
         />
         <button
           className={styles.primary}
@@ -148,7 +148,7 @@ export function InvestigationAnalysisPanel({
           disabled={analysisLoading || caseCount === 0}
         >
           <Send size={15} aria-hidden />
-          Generar analisis de trabajo
+          Generar análisis de trabajo
         </button>
       </div>
       {statusText && <p className={isError ? styles.error : styles.status}>{statusText}</p>}
@@ -156,7 +156,7 @@ export function InvestigationAnalysisPanel({
         <div className={styles.metrics}>
           <span>{aggregate.caseCount} expedientes</span>
           <span>{aggregate.sourceIds.length} fuentes</span>
-          <span>{aggregate.geometryGaps.count} brechas de geometria</span>
+          <span>{aggregate.geometryGaps.count} brechas de geometría</span>
         </div>
       )}
       {analysisMarkdown && <pre className={styles.analysis}>{analysisMarkdown}</pre>}
@@ -208,7 +208,7 @@ export function SelectedCasesPanel({ selectedCases, onRemoveCase }: SelectedCase
       <h3>Expedientes seleccionados</h3>
       <div className={styles.caseList}>
         {selectedCases.length === 0 ? (
-          <p className={styles.empty}>Todavia no agregaste expedientes.</p>
+          <p className={styles.empty}>Todavía no agregaste expedientes.</p>
         ) : selectedCases.map((caseFile) => (
           <div key={caseFile.id} className={styles.caseRow}>
             <div>

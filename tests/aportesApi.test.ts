@@ -84,7 +84,7 @@ test("POST /api/aportes hides internal storage failures from public responses", 
     form.set("type", "add_source");
     form.set("title", "Fuente publica para revisar");
     form.set("jurisdiction", "AR");
-    form.set("explanation", "La fuente agrega contexto verificable para revision interna.");
+    form.set("explanation", "La fuente agrega contexto verificable para revisión interna.");
     form.set("publicSourceUrl", "https://example.com/fuente");
     form.set("sourcePermissionConfirmed", "true");
     form.set("reviewConfirmed", "true");
@@ -94,7 +94,7 @@ test("POST /api/aportes hides internal storage failures from public responses", 
 
     assert.equal(response.status, 500);
     assert.equal(payload.error, "submission_failed");
-    assert.equal(payload.message, "No pudimos recibir el aporte en este momento. Proba nuevamente en unos minutos.");
+    assert.equal(payload.message, "No pudimos recibir el aporte en este momento. Probá nuevamente en unos minutos.");
     assert.doesNotMatch(payload.message, /R2|fetch|127\.0\.0\.1|storage|Cannot|undefined|null/i);
   } finally {
     console.error = previousConsoleError;

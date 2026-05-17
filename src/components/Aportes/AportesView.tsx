@@ -32,13 +32,13 @@ const contributionTypes = [
   {
     id: "suggest_lead",
     label: "Sugerir pista",
-    description: "Un registro publico que deberiamos revisar.",
+    description: "Un registro público que deberíamos revisar.",
     icon: FileSearch,
   },
   {
     id: "add_source",
     label: "Agregar fuente",
-    description: "Un link oficial o documento publico faltante.",
+    description: "Un link oficial o documento público faltante.",
     icon: LinkIcon,
   },
   {
@@ -50,7 +50,7 @@ const contributionTypes = [
   {
     id: "add_photo",
     label: "Subir foto",
-    description: "Material propio para revision privada.",
+    description: "Material propio para revisión privada.",
     icon: Camera,
   },
   {
@@ -81,7 +81,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
     form.set("jurisdiction", jurisdiction);
     files.forEach((file) => form.append("attachments", file));
     setSubmitState("submitting");
-    setStatusText("Enviando aporte para revision privada...");
+    setStatusText("Enviando aporte para revisión privada...");
 
     try {
       const response = await fetch("/api/aportes", { method: "POST", body: form });
@@ -95,7 +95,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
         throw new Error(message || "No se pudo enviar el aporte.");
       }
       setSubmitState("success");
-      setStatusText(`Aporte recibido para revision: ${payload.submissionId}.`);
+      setStatusText(`Aporte recibido para revisión: ${payload.submissionId}.`);
       formElement.reset();
       setFiles([]);
     } catch (error) {
@@ -130,20 +130,20 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
             Investigaciones
           </button>
         </div>
-        <p className={styles.eyebrow}>Revision privada</p>
+        <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>
-          Aporta una fuente, subi una foto, corregi un dato o sugeri una pista verificable.
-          Todo lo enviado pasa por revision antes de usarse en Faro.
+          Aportá una fuente, subí una foto, corregí un dato o sugerí una pista verificable.
+          Todo lo enviado pasa por revisión antes de usarse en Faro.
         </p>
-        <div className={styles.rules} aria-label="Reglas de revision">
+        <div className={styles.rules} aria-label="Reglas de revisión">
           <div className={styles.rule}>
             <ShieldCheck size={18} aria-hidden />
             <span>Material aportado por usuario: privado hasta que el equipo lo revise.</span>
           </div>
           <div className={styles.rule}>
             <Flag size={18} aria-hidden />
-            <span>No se publica automaticamente en mapa, Explorer, informes o exports.</span>
+            <span>No se publica automáticamente en mapa, Explorer, informes o exports.</span>
           </div>
         </div>
       </aside>
@@ -152,7 +152,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           <section className={styles.section} aria-labelledby="aporte-tipo">
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle} id="aporte-tipo">Tipo de aporte</h2>
-              <p className={styles.sectionHint}>Elegi el camino mas cercano. Todo entra a la misma revision.</p>
+              <p className={styles.sectionHint}>Elegí el camino más cercano. Todo entra a la misma revisión.</p>
             </div>
             <div className={styles.typeGrid}>
               {contributionTypes.map((option) => {
@@ -177,11 +177,11 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
             <h2 className={styles.sectionTitle} id="aporte-datos">Datos para revisar</h2>
             <div className={styles.grid}>
               <label className={styles.field}>
-                <span className={styles.label}>Titulo neutral</span>
+                <span className={styles.label}>Título neutral</span>
                 <input className={styles.input} name="title" required maxLength={140} />
               </label>
               <label className={styles.field}>
-                <span className={styles.label}>Pais o jurisdiccion</span>
+                <span className={styles.label}>País o jurisdicción</span>
                 <select
                   className={styles.select}
                   value={jurisdiction}
@@ -193,11 +193,11 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 </select>
               </label>
               <label className={`${styles.field} ${styles.fieldWide}`}>
-                <span className={styles.label}>Que aporta o que deberiamos revisar</span>
+                <span className={styles.label}>Qué aporta o qué deberíamos revisar</span>
                 <textarea className={styles.textarea} name="explanation" required />
               </label>
               <label className={styles.field}>
-                <span className={styles.label}>Link publico u oficial</span>
+                <span className={styles.label}>Link público u oficial</span>
                 <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" />
               </label>
               <label className={styles.field}>
@@ -255,18 +255,18 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
             <div className={styles.checks}>
               <label className={styles.checkRow}>
                 <input name="sourcePermissionConfirmed" type="checkbox" value="true" required />
-                <span>La informacion viene de fuentes publicas o de material propio que puedo compartir con Faro.</span>
+                <span>La información viene de fuentes públicas o de material propio que puedo compartir con Faro.</span>
               </label>
               <label className={styles.checkRow}>
                 <input name="reviewConfirmed" type="checkbox" value="true" required />
-                <span>Entiendo que el aporte entra a revision y no se publica automaticamente.</span>
+                <span>Entiendo que el aporte entra a revisión y no se publica automáticamente.</span>
               </label>
             </div>
           </section>
           <div className={styles.actions}>
             <button className={styles.submit} type="submit" disabled={submitState === "submitting"}>
               {submitState === "success" ? <CheckCircle2 size={16} aria-hidden /> : <Send size={16} aria-hidden />}
-              Enviar aporte para revision
+              Enviar aporte para revisión
             </button>
             {statusText && (
               <p className={`${styles.status} ${submitState === "error" ? styles.statusError : ""} ${submitState === "success" ? styles.statusSuccess : ""}`}>
@@ -286,7 +286,7 @@ function formatBytes(bytes: number): string {
 }
 
 function formatSubmitFailureMessage(error: unknown): string {
-  const fallback = "No pudimos enviar el aporte. Revisa los datos y volve a intentar.";
+  const fallback = "No pudimos enviar el aporte. Revisá los datos y volvé a intentar.";
   if (!(error instanceof Error)) return fallback;
   const message = error.message.trim();
   if (!message) return fallback;

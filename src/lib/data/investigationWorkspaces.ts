@@ -91,7 +91,7 @@ export function createInvestigationWorkspace(
   return {
     id: createWorkspaceId(now),
     version: "faro_investigation_workspace_v1",
-    title: normalizeInvestigationText(input.title) || "Carpeta de investigacion",
+    title: normalizeInvestigationText(input.title) || "Carpeta de investigación",
     countryCode: input.countryCode ?? null,
     description: normalizeInvestigationText(input.description),
     investigationQuestion: optionalText(input.investigationQuestion),
