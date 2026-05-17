@@ -185,7 +185,7 @@ export default function FaroExperience({
   ]);
 
   const leads = useMemo(
-    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 50 }),
+    () => buildCaseLeads(countryReviewCases as SignalCaseFile[], { query, limit: 1000 }),
     [countryReviewCases, query],
   );
 
