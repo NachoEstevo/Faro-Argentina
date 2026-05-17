@@ -247,12 +247,19 @@
   overflow: hidden;
 }
 
-.placeholder {
+.mainHeader {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 1;
+  justify-content: space-between;
+  padding: 28px 40px 0;
+  gap: 24px;
+}
+
+.mainTitle {
+  margin: 0;
   font-family: var(--cf-font-heading);
-  font-size: 32px;
-  color: var(--cf-text-muted);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--cf-text);
 }

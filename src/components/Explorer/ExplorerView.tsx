@@ -163,7 +163,9 @@ export default function ExplorerView({ cases, selectedCountry }: Props) {
         </div>
       </aside>
       <main className={styles.main}>
-        <div className={styles.placeholder}>Explorer</div>
+        <header className={styles.mainHeader}>
+          <h1 className={styles.mainTitle}>Explorer</h1>
+        </header>
       </main>
     </section>
   );
