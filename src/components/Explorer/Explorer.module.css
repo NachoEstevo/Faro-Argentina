@@ -672,16 +672,23 @@
 }
 
 .detailBack {
-  border: none;
-  background: transparent;
-  color: var(--cf-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-border);
+  border-radius: 999px;
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
   font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0;
 }
 
 .detailBack:hover {
-  color: var(--cf-text);
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
 }
 
 .detailPrimaryAction {

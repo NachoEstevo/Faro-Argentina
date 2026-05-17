@@ -485,7 +485,8 @@ function ExplorerDetail({
     <section className={styles.detail} aria-label="Detalle de expediente">
       <div className={styles.detailTopBar}>
         <button type="button" className={styles.detailBack} onClick={onBack}>
-          ← Volver al listado
+          <ChevronLeft size={14} aria-hidden />
+          <span>Volver al listado</span>
         </button>
         {sourceUrl && (
           <a
