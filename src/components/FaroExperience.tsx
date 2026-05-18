@@ -35,6 +35,7 @@ import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import InvestigationsView from "./Investigations/InvestigationsView";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
+import LeadsPanel from "./RegionalMap/LeadsPanel";
 import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
 import styles from "./RegionalMap/RegionalMap.module.css";
@@ -93,6 +94,7 @@ export default function FaroExperience({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
+  const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
 
   const yearBounds = useMemo(() => {
@@ -336,6 +338,26 @@ export default function FaroExperience({
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
+  const handleSelectLead = useCallback(
+    (caseId: string) => {
+      setSelectedCaseId(caseId);
+      setLeadsPanelOpen(false);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (viewMode !== "map") setLeadsPanelOpen(false);
+  }, [viewMode]);
+
+  const handleToggleLeadsPanel = useCallback(() => {
+    setLeadsPanelOpen((open) => !open);
+  }, []);
+
+  const handleCloseLeadsPanel = useCallback(() => {
+    setLeadsPanelOpen(false);
+  }, []);
+
   const country = COUNTRY_META[selectedCountry];
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
@@ -394,14 +416,24 @@ export default function FaroExperience({
           onToggleFinding={handleToggleFinding}
           onToggleSeverity={handleToggleSeverity}
           onClearFilters={handleClearFilters}
-          leads={leads}
-          selectedCaseId={selectedCase?.id ?? null}
-          onSelectCase={setSelectedCaseId}
+          leadsCount={leads.length}
+          leadsPanelOpen={leadsPanelOpen}
+          onOpenLeadsPanel={handleToggleLeadsPanel}
           syncLabel={syncLabel}
           collapsed={sidebarCollapsed}
           onToggle={handleSidebarToggle}
           mobileOpen={mobileMenuOpen}
           onCloseMobile={handleCloseMobileMenu}
+        />
+      )}
+
+      {showMapChrome && (
+        <LeadsPanel
+          open={leadsPanelOpen}
+          leads={leads}
+          selectedCaseId={selectedCase?.id ?? null}
+          onSelectCase={handleSelectLead}
+          onClose={handleCloseLeadsPanel}
         />
       )}
 
