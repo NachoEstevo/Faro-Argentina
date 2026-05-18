@@ -4,7 +4,7 @@
    cap so it never overflows on small screens. */
 .panel {
   position: absolute;
-  top: 16px;
+  bottom: 16px;
   left: calc(var(--sidebar-width) + 12px);
   width: 320px;
   max-height: calc(100vh - 32px);
