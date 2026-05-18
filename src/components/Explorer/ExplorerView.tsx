@@ -48,8 +48,8 @@ const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }
 
 const GEOMETRY_OPTIONS: Array<{ id: InvestigatorGeometryFilter; label: string }> = [
   { id: "any", label: "Todas" },
-  { id: "with", label: "Con geometría oficial" },
-  { id: "without", label: "Sin geometría de mapa" },
+  { id: "with", label: "Con punto oficial" },
+  { id: "without", label: "Sin punto en mapa" },
 ];
 
 const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string; limit: number }> = [
@@ -58,6 +58,8 @@ const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string
   { type: "supplier", label: "Proveedor", limit: 4 },
   { type: "signal", label: "Señal", limit: 5 },
 ];
+
+const LEADING_AGENCY_CODE_PATTERN = /^\d+\s*-?\s*/;
 
 export default function ExplorerView({
   cases,
@@ -195,113 +197,119 @@ export default function ExplorerView({
             <PanelLeftClose size={16} aria-hidden />
           </button>
         </header>
-        <section className={styles.sidebarSection} aria-labelledby="explorer-filters-heading">
-          <div className={styles.sectionHead}>
-            <p className={styles.eyebrow} id="explorer-filters-heading">
-              Filtros
-            </p>
-            <button
-              type="button"
-              className={styles.sectionLink}
-              onClick={resetFilters}
-            >
-              Limpiar
-            </button>
-          </div>
-          <div className={styles.filterGroup}>
-            <p className={styles.filterGroupLabel}>Geometría</p>
-            {GEOMETRY_OPTIONS.map((option) => {
-              const isChecked = geometryFilter === option.id;
-              return (
-                <label key={option.id} className={styles.checkRow}>
-                  <input
-                    type="radio"
-                    name="explorer-geometry"
-                    checked={isChecked}
-                    onChange={() => setGeometryFilter(option.id)}
-                  />
-                  <span className={`${styles.checkDot} ${geometryDotClass(option.id, styles)}`} aria-hidden />
-                  <span className={styles.checkLabel}>{option.label}</span>
-                </label>
-              );
-            })}
-          </div>
-          <div className={styles.filterGroup}>
-            <div className={styles.filterRowHead}>
-              <span className={styles.filterGroupLabel}>Período</span>
-              <span className={styles.filterRowValue}>
-                {yearFrom} – {yearTo}
-              </span>
-            </div>
-            <RangeSlider
-              min={yearBounds.min}
-              max={yearBounds.max}
-              from={yearFrom}
-              to={yearTo}
-              onFromChange={setYearFrom}
-              onToChange={setYearTo}
-            />
-          </div>
-        </section>
-        <hr className={styles.sidebarDivider} />
-        <section className={styles.sidebarSection} aria-labelledby="explorer-pivots-heading">
-          <div className={styles.sectionHead}>
-            <p className={styles.eyebrow} id="explorer-pivots-heading">
-              Pivots
-            </p>
-            {activeFacets.length > 0 && (
-              <button type="button" className={styles.sectionLink} onClick={() => setActiveFacets([])}>
-                Quitar todo
+        <div className={styles.sidebarStaticFilters}>
+          <section className={styles.sidebarSection} aria-labelledby="explorer-filters-heading">
+            <div className={styles.sectionHead}>
+              <p className={styles.eyebrow} id="explorer-filters-heading">
+                Filtros
+              </p>
+              <button
+                type="button"
+                className={styles.sectionLink}
+                onClick={resetFilters}
+              >
+                Limpiar
               </button>
-            )}
-          </div>
-          {activeFacets.length > 0 && (
-            <div className={styles.activePivotList} aria-label="Pivots activos">
-              {activeFacets.map((facet) => (
-                <button
-                  key={`active-${facet.type}:${facet.key}`}
-                  type="button"
-                  className={styles.activePivotChip}
-                  onClick={() => toggleFacet(facet)}
-                >
-                  <span>{facetTypeLabel(facet.type)}</span>
-                  <span className={styles.activePivotLabel}>{facet.label}</span>
-                  <span className={styles.activePivotRemove} aria-hidden>×</span>
+            </div>
+            <div className={styles.filterGroup}>
+              <p className={styles.filterGroupLabel}>Ubicación en mapa</p>
+              {GEOMETRY_OPTIONS.map((option) => {
+                const isChecked = geometryFilter === option.id;
+                return (
+                  <label key={option.id} className={styles.checkRow}>
+                    <input
+                      type="radio"
+                      name="explorer-geometry"
+                      checked={isChecked}
+                      onChange={() => setGeometryFilter(option.id)}
+                    />
+                    <span className={`${styles.checkDot} ${geometryDotClass(option.id, styles)}`} aria-hidden />
+                    <span className={styles.checkLabel}>{option.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+            <div className={styles.filterGroup}>
+              <div className={styles.filterRowHead}>
+                <span className={styles.filterGroupLabel}>Período</span>
+                <span className={styles.filterRowValue}>
+                  {yearFrom} – {yearTo}
+                </span>
+              </div>
+              <RangeSlider
+                min={yearBounds.min}
+                max={yearBounds.max}
+                from={yearFrom}
+                to={yearTo}
+                onFromChange={setYearFrom}
+                onToChange={setYearTo}
+              />
+            </div>
+          </section>
+        </div>
+        <div className={styles.sidebarScrollRegion}>
+          <hr className={styles.sidebarDivider} />
+          <section className={styles.sidebarSection} aria-labelledby="explorer-pivots-heading">
+            <div className={styles.sectionHead}>
+              <p className={styles.eyebrow} id="explorer-pivots-heading">
+                Pivots
+              </p>
+              {activeFacets.length > 0 && (
+                <button type="button" className={styles.sectionLink} onClick={() => setActiveFacets([])}>
+                  Quitar todo
                 </button>
+              )}
+            </div>
+            {activeFacets.length > 0 && (
+              <div className={styles.activePivotList} aria-label="Pivots activos">
+                {activeFacets.map((facet) => (
+                  <button
+                    key={`active-${facet.type}:${facet.key}`}
+                    type="button"
+                    className={styles.activePivotChip}
+                    onClick={() => toggleFacet(facet)}
+                  >
+                    <span>{facetTypeLabel(facet.type)}</span>
+                    <span className={styles.activePivotLabel}>{formatFacetLabel(facet)}</span>
+                    <span className={styles.activePivotRemove} aria-hidden>×</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className={styles.facetGroups}>
+              {facetGroups.map((group) => (
+                <div key={group.type} className={styles.facetGroup}>
+                  <div className={styles.facetGroupHead}>
+                    <span>{group.label}</span>
+                  </div>
+                  <div className={styles.facetList}>
+                    {group.facets.map((facet) => {
+                      const isActive = activeFacets.some((active) => isSameFacet(active, facet));
+                      return (
+                        <button
+                          key={`${facet.type}:${facet.key}`}
+                          type="button"
+                          className={`${styles.facetButton} ${isActive ? styles.facetButtonActive : ""}`}
+                          onClick={() => toggleFacet(facet)}
+                          aria-pressed={isActive}
+                        >
+                          <span className={styles.facetLabel}>{formatFacetLabel(facet)}</span>
+                          {shouldShowFacetCount(group.type) && (
+                            <span className={styles.facetCount}>{facet.count}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
             </div>
-          )}
-          <div className={styles.facetGroups}>
-            {facetGroups.map((group) => (
-              <div key={group.type} className={styles.facetGroup}>
-                <div className={styles.facetGroupHead}>
-                  <span>{group.label}</span>
-                </div>
-                <div className={styles.facetList}>
-                  {group.facets.map((facet) => {
-                    const isActive = activeFacets.some((active) => isSameFacet(active, facet));
-                    return (
-                      <button
-                        key={`${facet.type}:${facet.key}`}
-                        type="button"
-                        className={`${styles.facetButton} ${isActive ? styles.facetButtonActive : ""}`}
-                        onClick={() => toggleFacet(facet)}
-                        aria-pressed={isActive}
-                      >
-                        <span className={styles.facetLabel}>{facet.label}</span>
-                        <span className={styles.facetCount}>{facet.count}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-        <a className={styles.exportRow} href={buildExportHref(countryScope, query)}>
-          <Download size={14} aria-hidden />
-          <span>Exportar resultados</span>
-        </a>
+          </section>
+          <a className={styles.exportRow} href={buildExportHref(countryScope, query)}>
+            <Download size={14} aria-hidden />
+            <span>Exportar resultados</span>
+          </a>
+        </div>
       </aside>
       <main className={styles.main}>
         {selectedCase ? (
@@ -757,6 +765,17 @@ function facetTypeLabel(type: InvestigatorFacet["type"]): string {
   if (type === "agency") return "Organismo";
   if (type === "source") return "Fuente";
   return "Señal";
+}
+
+function formatFacetLabel(facet: Pick<InvestigatorFacet, "type" | "label">): string {
+  const label = facet.label.trim();
+  if (facet.type === "agency") return label.replace(LEADING_AGENCY_CODE_PATTERN, "");
+  if (facet.type === "supplier") return label.split(" / ")[0] ?? label;
+  return label;
+}
+
+function shouldShowFacetCount(type: InvestigatorFacet["type"]): boolean {
+  return type !== "agency" && type !== "supplier";
 }
 
 function isSameFacet(

@@ -17,8 +17,7 @@
   height: 100%;
   max-height: 100%;
   min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
 }
 
 .sidebar > * {
@@ -56,6 +55,18 @@
   flex-direction: column;
   gap: 10px;
   padding: 14px 12px 10px;
+}
+
+.sidebarStaticFilters {
+  flex-shrink: 0;
+}
+
+.sidebarScrollRegion {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 14px;
 }
 
 .sectionHead {
