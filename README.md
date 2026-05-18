@@ -1,123 +1,139 @@
 # Faro
 
-**Faro convierte datos publicos en expedientes verificables para seguir el dinero, mirar el territorio y exigir rendicion de cuentas.**
+**El poder deja rastros. Faro los ordena.**
 
-Faro no acusa. Faro muestra donde mirar, por que mirar ahi y con que evidencia.
+Faro convierte datos oficiales de gasto publico en expedientes verificables para
+seguir obras, contratos, organismos, proveedores y fuentes sin saltar a
+conclusiones.
 
-Es un mapa y scanner investigativo del dinero publico: toma fuentes oficiales dispersas y las transforma en casos navegables con obras, compras, proveedores, organismos, montos, fechas, receipts, caveats y export de evidencia.
+Faro no acusa. Faro muestra donde mirar, por que mirar ahi, que fuente oficial
+lo sostiene y que falta verificar.
 
 ![Faro landing](docs/assets/faro-landing.jpg)
 
-_Entrada a Faro: presentacion del observatorio antes de abrir el mapa._
+_Entrada a Faro: una capa publica y directa antes de entrar al mapa o al
+Explorer._
 
 ![Faro Explorer](docs/assets/faro-explorer.jpg)
 
-_Explorer investigador: busqueda, pivots y expedientes verificables a partir de fuentes oficiales._
+_Explorer investigador: busqueda por pais, pivots, receipts, fuentes oficiales y
+expedientes exportables._
 
-## El Problema
+## Por Que Existe
 
-La informacion sobre gasto publico suele estar repartida entre portales, CSVs, APIs, XLSX, PDFs y datasets con nombres inconsistentes. Para pasar de una sospecha a una verificacion hay que encontrar la fuente, entender el registro, cruzar IDs, revisar montos, ubicar territorio y guardar evidencia reproducible.
+La informacion sobre gasto publico existe, pero esta dispersa en portales,
+CSVs, XLSX, APIs, PDFs y datasets con campos inconsistentes. Para verificar una
+pista hay que encontrar la fuente, entender el registro, cruzar identificadores,
+revisar montos, ubicar territorio, guardar hashes y explicar los caveats.
 
-Ese trabajo es lento incluso para periodistas, auditores y equipos tecnicos. Para ciudadanos es casi inaccesible.
+Ese trabajo es lento para periodistas, auditores y equipos tecnicos. Para la
+mayoria de los ciudadanos es casi inaccesible.
 
-Faro busca reducir ese tiempo:
+Faro reduce esa distancia:
 
 ```text
-mapa o scanner -> pista -> expediente -> evidencia -> export -> accion
+datos oficiales -> pista -> expediente -> fuente oficial -> evidence pack
 ```
 
-## La Promesa
+## Que Hace
 
-Tocas un punto del mapa o una fila del scanner y Faro arma un expediente verificable:
+Tocas un punto del mapa o una fila del Explorer y Faro arma un expediente con:
 
-- que es el caso;
-- que organismo interviene;
-- que proveedor aparece, si existe;
-- que monto y fechas figuran;
-- por que Faro lo muestra como pista;
-- que fuente oficial lo sostiene;
-- que receipts y hashes permiten reproducirlo;
-- que falta verificar antes de concluir;
-- que paquete de evidencia se puede descargar.
+- resumen del caso en lenguaje claro;
+- organismo, proveedor, monto, fecha y territorio cuando existen;
+- senales investigativas sin lenguaje acusatorio;
+- fuente oficial publica para abrir en el portal original;
+- receipts reproducibles con raw path, snapshot hash, row hash y parser version;
+- caveats sobre lo que la fuente no prueba;
+- siguientes pasos de verificacion;
+- informe imprimible y export JSON tecnico.
 
-## Para Quien Es
+## Lo Que Lo Hace Diferente
 
-- **Ciudadanos:** entienden el gasto publico sin leer bases de datos.
-- **Periodistas:** encuentran pistas y descargan evidencia para investigar.
-- **Auditores y watchdogs:** revisan patrones, brechas y trazabilidad.
-- **Instituciones:** detectan donde falta rendicion de cuentas o cobertura.
+Faro no es un mapa decorativo ni una tabla cruda. Su valor esta en la
+trazabilidad:
 
-## Que Hace Hoy
+- **Fuente oficial primero:** la UI abre paginas oficiales de catalogo o detalle;
+  los links directos a datasets quedan para reproducibilidad tecnica.
+- **Receipts verificables:** cada caso conserva hashes, paths y version de parser.
+- **Explorer antes que sospecha:** se puede seguir el rastro por pais, fuente,
+  organismo, proveedor, senal o identificador.
+- **Mapa con prudencia:** solo se dibuja geometria validada; lo debil queda como
+  brecha de datos, no como punto inventado.
+- **Caveats visibles:** contratos y adjudicaciones no se presentan como pagos si
+  no hay una fuente que lo pruebe.
 
-El producto actual ya tiene una primera version funcional:
+## Demo Para Hackathon
 
-- pantalla inicial de entrada a Faro;
-- mapa territorial para casos con geometria oficial o referencia administrativa oficial claramente caveateada;
-- modo investigador tipo scanner con busqueda, filtros compactos y pivots acumulables por fuente, organismo, proveedor y senal;
-- inspector lateral compacto para revisar casos rapido;
-- expediente completo con senales, evidencia, caveats y siguientes pasos;
-- receipts oficiales con source, raw path, hashes, locator y parser version;
-- export JSON de expediente o coleccion;
-- catalogo de fuentes para Argentina, Peru y Chile;
-- pipeline local para snapshot, build y verificacion de datos.
+El recorrido recomendado para mostrar Faro:
 
-Datos actuales en la app:
+1. Abrir la landing y explicar la regla: **Faro no acusa**.
+2. Entrar al Explorer y buscar por pais.
+3. Usar pivots por organismo, proveedor o senal.
+4. Abrir un expediente.
+5. Mostrar la fuente oficial publica.
+6. Mostrar receipt, hash y raw path.
+7. Abrir el informe imprimible o exportar JSON tecnico.
 
-- `1867` expedientes;
-- `558` Argentina;
-- `609` Peru;
-- `700` Chile.
+El momento clave no es "mira un punto en el mapa". Es:
 
-## Modos De Uso
+```text
+esta pista -> esta fuente oficial -> este receipt -> este paquete verificable
+```
+
+## Estado Actual
+
+Corpus versionado en el repo:
+
+- `17` datasets;
+- `1.867` expedientes;
+- `4.510` receipts;
+- `24` raw files verificados;
+- `0` errores en el data spine actual.
+
+Cobertura por pais:
+
+| Pais | Expedientes | Map-ready | Nota |
+| --- | ---: | ---: | --- |
+| Argentina | 558 | 411 | Obras, contratos y contexto judicial verificable. |
+| Peru | 609 | 550 | Contratos OECE, historicos seleccionados y presupuesto MEF. |
+| Chile | 700 | 0 | Procesos ChileCompra/OCDS en Explorer; sin geometria map-ready actual. |
+
+Chile conserva evidencia administrativa para una parte de los registros, pero
+Faro no la dibuja como punto porque no prueba sitio exacto de ejecucion. Esa es
+una decision de confianza, no una limitacion cosmetica.
+
+## Superficies Del Producto
+
+### Explorer
+
+El Explorer es el modo principal de investigacion. Permite buscar por pais,
+proveedor, organismo, fuente, receipt, senal o texto libre, y combinar pivots
+sin depender del mapa.
 
 ### Mapa
 
-El mapa es territorio primero. Solo deberia mostrar casos con geometria oficial validada o centroides administrativos oficiales rotulados como referencia, no como sitio exacto.
+El mapa orienta territorialmente solo cuando la geometria pasa controles de
+calidad. Coordenadas placeholder, duplicadas, fuera de bounds, sospechosas o
+marcadas como malas quedan fuera del mapa y siguen disponibles en
+Explorer/export.
 
-Es ideal para obras publicas y casos donde la ubicacion agrega contexto real: territorio, before/after satelital, jurisdiccion y entorno.
+### Expediente
 
-En Peru y Chile muchos puntos actuales son centroides administrativos del distrito/comuna o del comprador. Sirven para orientacion territorial y navegacion, pero no prueban el sitio de ejecucion ni habilitan evidencia satelital directa.
+El expediente es la unidad central: explica por que el caso aparece, que fuente
+lo sostiene, que caveats aplican y que deberia verificarse despues.
 
-### Modo Investigador
+### Evidence Pack
 
-El scanner es evidencia primero. Permite buscar por proveedor, organismo, fuente, receipt, senal o texto libre, y despues pivotear entre entidades relacionadas.
-
-Este modo es clave para periodistas e investigadores porque no depende del mapa. Peru y Chile pueden tener expedientes utiles aunque una parte importante todavia no sea dibujable en el mapa.
-
-## Principios Del Producto
-
-- Faro no acusa.
-- Faro separa evidencia de opinion.
-- Faro no infiere ubicaciones debiles para llenar el mapa.
-- Faro muestra caveats cerca de cada afirmacion.
-- Faro distingue una URL de dataset de un detalle oficial directo.
-- Faro prioriza trazabilidad sobre volumen.
-- Faro no convierte adjudicaciones o contratos en pagos sin una fuente que lo sostenga.
-- Faro debe ser simple de navegar aunque el usuario sea avanzado.
-
-## Estado Actual Y Proxima Prioridad
-
-La base es buena para continuar, pero todavia no esta al nivel de producto terminado. El siguiente bloque de trabajo no deberia ser mas UI: deberia ser confianza de datos.
-
-Prioridad recomendada:
-
-1. Dedupear obras y casos repetidos preservando receipts.
-2. Expandir datos de Argentina, Chile y Peru con fuentes oficiales, cruces reproducibles y valor investigativo real.
-3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
-4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
-
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas, sospechosas o marcadas como geometria mala conocida quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `1253` casos elegibles para mapa sobre `1867` expedientes totales: `411/558` Argentina, `550/609` Peru y `292/700` Chile. Los centroides administrativos deben leerse como referencias territoriales, no como ubicaciones exactas de obra o servicio.
+El export tecnico conserva el rastro reproducible: caso, receipt, fuentes
+relacionadas, senales, caveats, hashes y pasos de verificacion.
 
 ## Fuentes Iniciales
 
 Argentina:
 
-- CONTRAT.AR obras;
-- CONTRAT.AR contratos;
-- CONTRAT.AR procedimientos;
-- CONTRAT.AR ofertas;
-- CONTRAT.AR ubicacion geografica;
-- CONTRAT.AR actas de apertura;
+- CONTRAT.AR obras, contratos, procedimientos, ofertas, ubicacion geografica y
+  actas de apertura;
 - SIPRO proveedores;
 - CIJ Causa Vialidad;
 - MPF Causa Vialidad;
@@ -134,21 +150,30 @@ Peru:
 Chile:
 
 - Mercado Publico API;
-- ChileCompra / OCDS procesos, incluyendo una muestra controlada de enero por ano 2019-2025 y enero 2026;
-- DIPRES pagos como siguiente cruce.
+- ChileCompra / OCDS procesos, con muestra controlada 2019-2026;
+- DIPRES pagos como siguiente cruce previsto.
 
-## Estructura Relevante
+## Stack
+
+- Next.js 16;
+- React 19;
+- TypeScript;
+- Leaflet / React Leaflet;
+- datos generados y versionados en el repo;
+- sin base de datos runtime para la demo publica.
+
+## Estructura
 
 ```text
 src/lib/caseRepository.ts              # fachada de datos para UI y APIs
 src/lib/data/                          # normalizacion, senales, receipts, explorer
-src/components/                        # experiencia mapa, explorer, inspector, expediente
+src/components/                        # landing, mapa, explorer, inspector, expediente
 src/app/api/                           # endpoints thin para casos, leads, export, readiness
 scripts/                               # fetch/build/verify de datos oficiales
 data/official/                         # snapshots oficiales locales
-data/sources/source-catalog.json       # catalogo de fuentes
+data/sources/source-catalog.json       # catalogo de fuentes oficiales
 src/data/                              # artefactos generados para la app
-docs/                                  # specs, planes y handoffs
+docs/                                  # documentacion publica e interna
 ```
 
 ## Correr Localmente
@@ -158,22 +183,17 @@ npm install
 npm run dev
 ```
 
-Por defecto el script usa:
+Por defecto:
 
 ```text
 http://127.0.0.1:3002
 ```
 
-En este workspace tambien se estuvo usando `3003` cuando `3002` estaba ocupado.
+Si el puerto esta ocupado, Next puede ofrecer otro puerto local.
 
-## Comandos De Datos Y Verificacion
+## Verificacion
 
 ```bash
-# solo cuando se quiera refrescar snapshots oficiales completos:
-npm run data:fetch:all
-# solo cuando se quiera refrescar la seleccion historica de Peru:
-npm run data:fetch:pe-historical
-npm run data:build
 npm run data:verify
 npm run data:geo-report
 npm run data:quality-report
@@ -182,24 +202,34 @@ npm run typecheck
 npm run build
 ```
 
-`npm run data:build` reconstruye los artefactos generados desde snapshots oficiales locales. `npm run data:fetch:all` refresca snapshots oficiales, FX y la seleccion historica de Peru antes de volver a buildear. `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts. `npm run data:geo-report` revisa calidad de coordenadas y elegibilidad de mapa. `npm run data:quality-report` resume cobertura por pais, fuente, monto, proveedor, geometria y senales.
+`npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts.
+`npm run data:geo-report` valida elegibilidad de mapa. `npm run
+data:quality-report` resume cobertura por pais, fuente, monto, proveedor,
+geometria, senales y blockers.
 
-No usar `npm run data:fetch` como reparacion rutinaria. Puede refrescar fuentes externas y cambiar la linea base de evidencia.
+No usar fetch de datos como reparacion rutinaria:
 
-## Docs Para Continuar
+```bash
+npm run data:fetch:all
+```
 
+Ese comando refresca fuentes externas y puede cambiar la linea base de
+evidencia.
+
+## Documentacion
+
+Para jueces, colaboradores y futuras sesiones:
+
+- [Mapa de documentacion](docs/README.md)
 - [Contexto de producto](docs/product/faro-product-context.md)
-- [Handoff UI/UX del expediente](docs/handoffs/2026-05-16-ui-ux-expediente-faro-v1.md)
-- [Handoff de datos, calidad y cobertura](docs/handoffs/2026-05-16-data-quality-and-coverage-handoff.md)
-- [Handoff del sprint de integridad de datos](docs/handoffs/2026-05-17-data-integrity-and-quality-sprint-handoff.md)
-- [Handoff de senales, filtros y Explorer](docs/handoffs/2026-05-17-investigation-signals-and-filters-ui-handoff.md)
-- [Plan del data spine](docs/plans/2026-05-16-data-spine.md)
-- [Spec del modo investigador](docs/superpowers/specs/2026-05-16-investigator-explorer-design.md)
+- [Onboarding tecnico](docs/agent-onboarding.md)
+- [Deployment](docs/deployment.md)
 
-## Descripcion Corta Para GitHub
+Los handoffs siguen en `docs/handoffs/` y los planes largos viven en
+`docs/internal/`. La vitrina publica debe ser este README y `docs/README.md`.
 
-Faro convierte datos oficiales de gasto publico en expedientes verificables con mapa, Explorer, receipts, caveats y export de evidencia.
+## Descripcion Corta
 
-## Frase Central
-
-Faro convierte datos publicos en expedientes verificables para seguir el dinero, mirar el territorio y exigir rendicion de cuentas.
+Faro convierte datos oficiales de gasto publico en expedientes verificables con
+Explorer, mapa prudente, fuentes oficiales, receipts, caveats e informes
+exportables.

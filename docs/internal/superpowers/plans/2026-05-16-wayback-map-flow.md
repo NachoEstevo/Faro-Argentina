@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 16 App Router, React 19, TypeScript, react-leaflet, native `fetch`, Lucide icons. No new npm packages. No unit tests (user-approved exception).
 
-**Spec:** `docs/superpowers/specs/2026-05-16-wayback-map-flow-design.md`
+**Spec:** `docs/internal/superpowers/specs/2026-05-16-wayback-map-flow-design.md`
 
 ---
 

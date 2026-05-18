@@ -10,7 +10,7 @@
 
 **Pre-flight for the engineer:**
 - Branch: `feat/best-known-cases`. Never push to remote unless asked. Never commit to `main`.
-- Spec: `docs/superpowers/specs/2026-05-17-featured-cases-landing-design.md` — read it first.
+- Spec: `docs/internal/superpowers/specs/2026-05-17-featured-cases-landing-design.md` — read it first.
 - Tokens live in `src/app/globals.css` as `--cf-*` vars; reuse them.
 - Dev server: `npm run dev` → `http://127.0.0.1:3002`.
 - Project uses `node --test`; no jsdom. UI is verified manually in browser.
@@ -726,7 +726,7 @@ git commit -m "feat: mount FeaturedCasesOverlay inside the landing CountryMap"
 ## Notes for the implementer
 
 1. **Branch is `feat/best-known-cases`.** Never push to remote unless asked. Never commit to `main`.
-2. **Read the spec first**: `docs/superpowers/specs/2026-05-17-featured-cases-landing-design.md`.
+2. **Read the spec first**: `docs/internal/superpowers/specs/2026-05-17-featured-cases-landing-design.md`.
 3. **Don't touch** any file outside the three listed under "Modified" + the three under "New". Specifically: `CountrySidebar`, `SidebarFilters`, `MapLegend`, `MobileHeader`, `RegionalSidebar`, the entire `MapUI/` folder, `CaseMap.tsx`, `CaseDetails.tsx`, and the `Explorer/` folder.
 4. After each task, run `npm run typecheck`. After Task 3, walk the manual smoke matrix in a browser.
 5. If a `caseId` from `featuredCases.ts` doesn't resolve in data, `FaroExperience` clears `selectedCaseId` automatically — the URL still navigates to the country, just without the panel open. That's acceptable graceful degradation.

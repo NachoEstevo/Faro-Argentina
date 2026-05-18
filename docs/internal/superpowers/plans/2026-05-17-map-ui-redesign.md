@@ -1183,7 +1183,7 @@ git commit -m "feat: add panel entry animation and reduce-motion guard"
 
 1. **Branch:** `feat/ui-map`. Never `main`.
 2. **Never push** without explicit user request.
-3. **Read the spec first**: `docs/superpowers/specs/2026-05-17-map-ui-redesign-design.md` (note: that spec described a wider scope; this plan implements only the click panel + Wayback inline. Ignore spec sections about MapDock, popovers, basemap toggle, MarkerTooltip, marker halos.)
+3. **Read the spec first**: `docs/internal/superpowers/specs/2026-05-17-map-ui-redesign-design.md` (note: that spec described a wider scope; this plan implements only the click panel + Wayback inline. Ignore spec sections about MapDock, popovers, basemap toggle, MarkerTooltip, marker halos.)
 4. **Do NOT touch:** `CaseDetails.tsx` (Explorer uses it potentially), `CountrySidebar`, `RegionalSidebar`, `ExplorerView`, `MobileHeader`, `WaybackControl.tsx` itself (we only wrap it). `MapLegend` stays. Markers and Tooltips in `CaseMap` stay. ZoomControl stays.
 5. **typecheck** after every task. Manual browser smoke at Task 9 and Task 11.
 6. **If a line number from the plan drifted**, use Grep/Read to relocate by content.

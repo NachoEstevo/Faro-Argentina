@@ -10,7 +10,7 @@
 
 **Pre-flight for the engineer:**
 - Branch: `feat/casos-revisar-panel`. Never push to remote without explicit request. Never commit to `main`.
-- Spec lives at `docs/superpowers/specs/2026-05-17-casos-revisar-panel-design.md`. Read it first.
+- Spec lives at `docs/internal/superpowers/specs/2026-05-17-casos-revisar-panel-design.md`. Read it first.
 - Tokens in `src/app/globals.css` (`--cf-*`).
 - Dev server: `npm run dev` → `http://127.0.0.1:3002`.
 - No UI test harness; verification is manual via dev server + `npm run typecheck`.
@@ -854,7 +854,7 @@ git commit -m "feat(landing): mount LeadsPanel and wire it through FaroExperienc
 ## Notes for the implementer
 
 1. **Branch:** `feat/casos-revisar-panel`. Never `main`. Never push without explicit user request.
-2. **Spec first**: `docs/superpowers/specs/2026-05-17-casos-revisar-panel-design.md`.
+2. **Spec first**: `docs/internal/superpowers/specs/2026-05-17-casos-revisar-panel-design.md`.
 3. **Don't touch** any file outside the three listed under "Modified" + the two under "New".
 4. The pagination state moves OUT of `CountrySidebar` and INTO `LeadsPanel`. Don't leave it behind in both.
 5. `LeadsPanel` Esc keypress only listens while `open === true`. If the user has the expediente CasePanel and the LeadsPanel open simultaneously, an Esc fires both close handlers — acceptable.

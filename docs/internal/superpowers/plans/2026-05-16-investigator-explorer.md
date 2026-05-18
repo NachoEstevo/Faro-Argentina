@@ -17,7 +17,7 @@
 - Create `src/components/InvestigatorExplorer.tsx`: client scanner UI with controls, pivot chips, and row selection.
 - Modify `src/components/FaroExperience.tsx`: adds Map / Explorer mode and keeps selected expediente state coherent across modes.
 - Modify `src/app/globals.css`: adds focused scanner styling.
-- Document scope in `docs/superpowers/specs/2026-05-16-investigator-explorer-design.md`.
+- Document scope in `docs/internal/superpowers/specs/2026-05-16-investigator-explorer-design.md`.
 
 ## Tasks
 

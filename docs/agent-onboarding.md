@@ -1,8 +1,8 @@
 # Faro Agent Onboarding
 
-Date: 2026-05-17
+Date: 2026-05-18
 Audience: new agents, engineers and collaborators cloning this repo
-Status: current handoff after compact Explorer pivots and known-bad geometry gate
+Status: current handoff after hackathon docs polish, public official source links and geography gate updates
 
 ## What Faro Is
 
@@ -68,10 +68,15 @@ Main files:
 - `src/lib/data/expediente.ts`
 - `src/lib/data/caseSignals.ts`
 - `src/lib/data/evidenceReceipts.ts`
+- `src/lib/data/receiptOfficialSource.ts`
 - `src/lib/caseRepository.ts`
 
 The expediente explains why a case appeared, what official trail supports it,
 what caveats apply and what should be checked next.
+
+Public UI actions should use `getPublicOfficialSourceHref` so dataset receipts
+open the official catalog/portal page instead of downloading raw CSV/XLSX/API
+files. Raw receipt URLs remain part of exports and reproducibility.
 
 ## Data Architecture
 
@@ -149,11 +154,13 @@ npm run data:geo-report
 
 Expected current shape:
 
-- `1608` total expedientes;
-- `1097` map eligible;
-- map eligibility by country: `411/558` AR, `469/525` PE, `217/525` CL;
+- `1867` total expedientes;
+- `961` map eligible;
+- map eligibility by country: `411/558` AR, `550/609` PE, `0/700` CL;
 - invalid and known-bad AR coordinates remain available as data gaps in
   Explorer/export, but must not be drawn on the map.
+- Chile currently has Explorer-first records and administrative context, but no
+  map-ready geometry.
 
 ## Duplicate Official Rows
 
@@ -205,8 +212,9 @@ Full test suite:
 npm test
 ```
 
-Current state: full `npm test`, `npm run typecheck`, `npm run build` and the
-data spine verifier pass in the checked-in snapshot.
+Run the full suite before release work that changes code or data. If `npm test`
+fails in `tests/dataSpineVerifier.test.ts`, treat it as a data-trust blocker
+around raw snapshots and generated receipt hashes, not as a routine UI failure.
 
 ## Current Priorities
 

@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 16 App Router, React 19, TypeScript, Node test runner with `--experimental-strip-types`, Python 3.11+ with `pystac-client`, `planetary-computer`, `rasterio`, `pillow`, `numpy`.
 
-**Spec:** `docs/superpowers/specs/2026-05-16-sentinel-satellite-layer-design.md`
+**Spec:** `docs/internal/superpowers/specs/2026-05-16-sentinel-satellite-layer-design.md`
 
 ---
 
