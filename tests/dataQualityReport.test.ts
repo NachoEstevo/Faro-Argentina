@@ -103,6 +103,67 @@ test("buildDataQualityReport keeps verification failures visible as blockers", (
   ]);
 });
 
+test("buildDataQualityReport aggregates repeated source ids across snapshot periods", () => {
+  const report = buildDataQualityReport({
+    generatedAt: "2026-05-17T00:00:00.000Z",
+    verification: {
+      checkedDatasets: 2,
+      checkedCases: 2,
+      checkedReceipts: 2,
+      checkedRawFiles: 2,
+      errors: [],
+    },
+    datasets: [
+      {
+        source: { sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS", countryCode: "CL" },
+        stats: { rawRows: 25, caseFiles: 25, mapReadyCases: 7 },
+        cases: [{
+          id: "CL-OCDS-2019",
+          countryCode: "CL",
+          caseType: "procurement_process",
+          title: "Proceso ChileCompra 2019",
+          year: 2019,
+          workNumber: "2019",
+          procedureNumber: "2019",
+          agencyName: "Municipalidad",
+          coordinates: null,
+          amount: null,
+          bidderCount: null,
+          supplierName: null,
+          supplierDocument: null,
+          receipt: { ...receipt, sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS" },
+          caveats: ["Release oficial; falta monto."],
+        }],
+      },
+      {
+        source: { sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS", countryCode: "CL" },
+        stats: { rawRows: 500, caseFiles: 500, mapReadyCases: 200 },
+        cases: [{
+          id: "CL-OCDS-2026",
+          countryCode: "CL",
+          caseType: "procurement_process",
+          title: "Proceso ChileCompra 2026",
+          year: 2026,
+          workNumber: "2026",
+          procedureNumber: "2026",
+          agencyName: "Municipalidad",
+          coordinates: null,
+          amount: null,
+          bidderCount: null,
+          supplierName: null,
+          supplierDocument: null,
+          receipt: { ...receipt, sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS" },
+          caveats: ["Release oficial; falta monto."],
+        }],
+      },
+    ],
+  });
+
+  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].rawRows, 525);
+  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].cases, 2);
+  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].mapReadyCases, 207);
+});
+
 test("buildDataQualityReport counts collection-aware supplier signals", () => {
   const report = buildDataQualityReport({
     generatedAt: "2026-05-17T00:00:00.000Z",

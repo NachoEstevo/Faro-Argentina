@@ -470,7 +470,7 @@ export function buildPeruContractCases(
           "Contrato oficial OECE/SEACE; no confirma devengado ni pago efectivo por si solo.",
           ...(ocdsInfo ? ["Release OCDS oficial enlazado por codigo de convocatoria; revisar documentos antes de publicar."] : []),
           ...(mapEvidence ? ["La ubicacion en mapa es un centroide administrativo oficial, no el sitio exacto de ejecucion."] : []),
-          "El snapshot XLSX se conserva completo para reproducibilidad; la UI usa una muestra parseada.",
+          "El snapshot raw se conserva para reproducibilidad; la UI usa una muestra parseada.",
         ],
       };
     });

@@ -183,13 +183,16 @@ Implementado:
 
 Datos actuales:
 
-- 1608 expedientes totales;
+- 1867 expedientes totales;
 - 558 Argentina;
-- 525 Peru;
-- 525 Chile.
-- 1097 expedientes elegibles para mapa: 411 Argentina, 469 Peru y 217 Chile.
+- 609 Peru;
+- 700 Chile.
+- 1253 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 292 Chile.
 - 2 casos de Argentina marcados como `known_bad_geometry` siguen disponibles
   para Explorer/export, pero no se dibujan en el mapa.
+- En Peru y Chile una parte relevante de los puntos son centroides
+  administrativos oficiales. Son referencias territoriales para navegar, no
+  sitios exactos de ejecucion ni evidencia satelital directa.
 
 Bloqueos antes de llamarlo producto terminado:
 
@@ -203,7 +206,7 @@ Bloqueos antes de llamarlo producto terminado:
   exacto.
 - Peru y Chile ya prueban que Faro no depende del mapa, pero necesitan mas
   cruces oficiales de mayor valor; el Explorer debe mostrar esos expedientes
-  aunque una parte no sea map-ready.
+  aunque una parte no sea map-ready o solo tenga referencia administrativa.
 
 ## Donde Esta El Valor
 

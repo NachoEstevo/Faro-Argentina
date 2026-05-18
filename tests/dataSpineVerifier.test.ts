@@ -20,10 +20,10 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
   });
 
   assert.deepEqual(report.errors, []);
-  assert.equal(report.checkedDatasets, 9);
-  assert.equal(report.checkedCases, 1608);
-  assert.equal(report.checkedReceipts, 3995);
-  assert.equal(report.checkedRawFiles, 15);
+  assert.equal(report.checkedDatasets, 17);
+  assert.equal(report.checkedCases, 1867);
+  assert.equal(report.checkedReceipts, 4510);
+  assert.equal(report.checkedRawFiles, 24);
 });
 
 test("verifyDataSpine reports a receipt hash mismatch", async () => {

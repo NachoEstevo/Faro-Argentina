@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
-import { inflateRawSync } from "node:zlib";
+import { Readable } from "node:stream";
+import { StringDecoder } from "node:string_decoder";
+import { createInflateRaw, inflateRawSync } from "node:zlib";
 
 export interface XlsxReadOptions {
   sheetPath?: string;
@@ -10,6 +12,19 @@ export interface XlsxSheetRows {
   sheetPath: string;
   dimension: string | null;
   rows: Array<Record<string, string>>;
+}
+
+export interface XlsxStreamOptions {
+  sheetPath?: string;
+  limit?: number;
+  selectRow?: (row: Record<string, string>, rowIndex: number) => boolean;
+}
+
+export interface XlsxVisitSummary {
+  sheetPath: string;
+  dimension: string | null;
+  rowCount: number;
+  columns: string[];
 }
 
 export interface XlsxSnapshotProfile {
@@ -43,6 +58,71 @@ export function readXlsxRows(buffer: Buffer, options: XlsxReadOptions = {}): Xls
   const headers = (parsedRows[0] ?? []).map((header) => header.trim());
   const rows = parsedRows.slice(1).map((row) => rowToObject(headers, row));
   return { sheetPath, dimension, rows };
+}
+
+export async function readXlsxRowsStreamed(
+  buffer: Buffer,
+  options: XlsxStreamOptions = {},
+): Promise<XlsxSheetRows> {
+  const rows: Array<Record<string, string>> = [];
+  const summary = await visitXlsxRows(buffer, (row, rowIndex) => {
+    if (options.selectRow && !options.selectRow(row, rowIndex)) return;
+    rows.push(row);
+    if (options.limit !== undefined && rows.length >= options.limit) return false;
+  }, options);
+
+  return { sheetPath: summary.sheetPath, dimension: summary.dimension, rows };
+}
+
+export async function visitXlsxRows(
+  buffer: Buffer,
+  onRow: (row: Record<string, string>, rowIndex: number) => boolean | void,
+  options: XlsxStreamOptions = {},
+): Promise<XlsxVisitSummary> {
+  const directory = readZipDirectory(buffer);
+  const sheetPath = options.sheetPath ?? "xl/worksheets/sheet1.xml";
+  const sharedStrings = directory.has("xl/sharedStrings.xml")
+    ? readSharedStrings(readZipEntryText(buffer, directory, "xl/sharedStrings.xml"))
+    : [];
+  let headers: string[] = [];
+  let dimension: string | null = null;
+  let rowIndex = 0;
+  let xmlBuffer = "";
+  let shouldStop = false;
+  const decoder = new StringDecoder("utf8");
+
+  for await (const chunk of streamZipEntry(buffer, directory, sheetPath)) {
+    if (shouldStop) break;
+    const text = decoder.write(chunk);
+    if (!dimension) dimension = text.match(/<dimension[^>]*ref="([^"]+)"/)?.[1] ?? null;
+    xmlBuffer += text;
+
+    while (!shouldStop) {
+      const rowEnd = xmlBuffer.indexOf("</row>");
+      if (rowEnd === -1) break;
+      const rowCloseEnd = rowEnd + "</row>".length;
+      const rowStart = xmlBuffer.lastIndexOf("<row", rowEnd);
+      if (rowStart === -1) {
+        xmlBuffer = xmlBuffer.slice(rowCloseEnd);
+        continue;
+      }
+
+      const rowXml = xmlBuffer.slice(rowStart, rowCloseEnd);
+      xmlBuffer = xmlBuffer.slice(rowCloseEnd);
+      const body = rowXml.match(/<row\b[^>]*>([\s\S]*?)<\/row>/)?.[1] ?? "";
+      const values = parseRow(body, sharedStrings);
+      if (headers.length === 0) {
+        headers = values.map((header) => header.trim());
+        continue;
+      }
+
+      rowIndex += 1;
+      const result = onRow(rowToObject(headers, values), rowIndex);
+      if (result === false) shouldStop = true;
+    }
+  }
+
+  return { sheetPath, dimension, rowCount: rowIndex, columns: headers };
 }
 
 export function profileXlsxSnapshot({
@@ -145,6 +225,22 @@ function readZipText(entries: Map<string, Buffer>, path: string): string {
 
 function readZipEntries(buffer: Buffer): Map<string, Buffer> {
   const entries = new Map<string, Buffer>();
+  const directory = readZipDirectory(buffer);
+  for (const entry of directory.values()) {
+    entries.set(entry.fileName, readLocalFile(buffer, entry.localHeaderOffset, entry.compressedSize, entry.method));
+  }
+  return entries;
+}
+
+interface ZipDirectoryEntry {
+  fileName: string;
+  compressedSize: number;
+  localHeaderOffset: number;
+  method: number;
+}
+
+function readZipDirectory(buffer: Buffer): Map<string, ZipDirectoryEntry> {
+  const entries = new Map<string, ZipDirectoryEntry>();
   const directoryOffset = findCentralDirectoryOffset(buffer);
   const totalEntries = buffer.readUInt16LE(directoryOffset + 10);
   let cursor = buffer.readUInt32LE(directoryOffset + 16);
@@ -158,11 +254,34 @@ function readZipEntries(buffer: Buffer): Map<string, Buffer> {
     const commentLength = buffer.readUInt16LE(cursor + 32);
     const localHeaderOffset = buffer.readUInt32LE(cursor + 42);
     const fileName = buffer.toString("utf8", cursor + 46, cursor + 46 + fileNameLength);
-    entries.set(fileName, readLocalFile(buffer, localHeaderOffset, compressedSize, method));
+    entries.set(fileName, { fileName, compressedSize, localHeaderOffset, method });
     cursor += 46 + fileNameLength + extraLength + commentLength;
   }
 
   return entries;
+}
+
+function readZipEntryText(
+  buffer: Buffer,
+  directory: Map<string, ZipDirectoryEntry>,
+  path: string,
+): string {
+  const entry = directory.get(path);
+  if (!entry) throw new Error(`Missing XLSX entry: ${path}`);
+  return readLocalFile(buffer, entry.localHeaderOffset, entry.compressedSize, entry.method).toString("utf8");
+}
+
+function streamZipEntry(
+  buffer: Buffer,
+  directory: Map<string, ZipDirectoryEntry>,
+  path: string,
+): AsyncIterable<Buffer> {
+  const entry = directory.get(path);
+  if (!entry) throw new Error(`Missing XLSX entry: ${path}`);
+  const compressed = readLocalFileCompressed(buffer, entry.localHeaderOffset, entry.compressedSize);
+  if (entry.method === 0) return Readable.from([compressed]);
+  if (entry.method === 8) return Readable.from([compressed]).pipe(createInflateRaw());
+  throw new Error(`Unsupported ZIP compression method: ${entry.method}`);
 }
 
 function readLocalFile(
@@ -181,6 +300,20 @@ function readLocalFile(
   if (method === 0) return compressed;
   if (method === 8) return inflateRawSync(compressed);
   throw new Error(`Unsupported ZIP compression method: ${method}`);
+}
+
+function readLocalFileCompressed(
+  buffer: Buffer,
+  localHeaderOffset: number,
+  compressedSize: number,
+): Buffer {
+  if (buffer.readUInt32LE(localHeaderOffset) !== 0x04034b50) {
+    throw new Error("Invalid ZIP local file");
+  }
+  const fileNameLength = buffer.readUInt16LE(localHeaderOffset + 26);
+  const extraLength = buffer.readUInt16LE(localHeaderOffset + 28);
+  const start = localHeaderOffset + 30 + fileNameLength + extraLength;
+  return buffer.subarray(start, start + compressedSize);
 }
 
 function findCentralDirectoryOffset(buffer: Buffer): number {

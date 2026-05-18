@@ -85,13 +85,18 @@ export function buildDataQualityReport({
     totalRawRows += dataset.stats.rawRows;
     const datasetCountryCode = getDatasetCountryCode(dataset);
 
-    bySource[dataset.source.sourceId] = {
+    const source = bySource[dataset.source.sourceId] ?? {
       sourceId: dataset.source.sourceId,
       countryCode: datasetCountryCode,
-      rawRows: dataset.stats.rawRows,
-      cases: dataset.cases.length,
-      mapReadyCases: dataset.stats.mapReadyCases,
+      rawRows: 0,
+      cases: 0,
+      mapReadyCases: 0,
     };
+    source.rawRows += dataset.stats.rawRows;
+    source.cases += dataset.cases.length;
+    source.mapReadyCases += dataset.stats.mapReadyCases;
+    if (!source.countryCode) source.countryCode = datasetCountryCode;
+    bySource[dataset.source.sourceId] = source;
 
     if (datasetCountryCode) {
       const country = byCountry[datasetCountryCode] ?? emptyCountry();

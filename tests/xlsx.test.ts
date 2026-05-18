@@ -6,6 +6,7 @@ import {
   inferXlsxRowCount,
   profileXlsxSnapshot,
   readXlsxRows,
+  readXlsxRowsStreamed,
 } from "../src/lib/data/xlsx.ts";
 
 const contractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
@@ -35,4 +36,18 @@ test("profileXlsxSnapshot captures OECE schema and hash", async () => {
   assert.equal(profile.columns.includes("codigoentidad"), true);
   assert.equal(profile.columns.includes("ruc_contratista"), true);
   assert.equal(profile.columns.includes("monto_contratado_total"), true);
+});
+
+test("readXlsxRowsStreamed selects OECE rows without materializing the full sheet", async () => {
+  const buffer = await readFile(contractsPath);
+  const sheet = await readXlsxRowsStreamed(buffer, {
+    limit: 2,
+    selectRow: (row) => Number(row.monto_contratado_total) >= 100_000,
+  });
+
+  assert.equal(sheet.sheetPath, "xl/worksheets/sheet1.xml");
+  assert.equal(inferXlsxRowCount(sheet.dimension), 63234);
+  assert.equal(sheet.rows.length, 2);
+  assert.equal(sheet.rows[0]?.codigo_contrato, "2328678");
+  assert.equal(sheet.rows[1]?.codigo_contrato, "2310233");
 });

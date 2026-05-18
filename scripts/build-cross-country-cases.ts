@@ -39,8 +39,16 @@ const arOpeningActsPath = new URL(
   import.meta.url,
 );
 const peContractsPath = new URL("../data/official/pe/oece-contratos-2025.xlsx", import.meta.url);
+const peHistoricalContractsPath = new URL(
+  "../data/official/pe/oece-contratos-historicos-seleccionados.json",
+  import.meta.url,
+);
 const peOcdsPath = new URL(
   "../data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
+  import.meta.url,
+);
+const peHistoricalOcdsPath = new URL(
+  "../data/official/pe/oece-ocds-seace-v3-historical-releases.sample.json",
   import.meta.url,
 );
 const peDistrictCentroidsPath = new URL(
@@ -49,10 +57,6 @@ const peDistrictCentroidsPath = new URL(
 );
 const clPath = new URL(
   "../data/official/cl/mercado-publico-licitaciones-adjudicadas-2026-05-15.sample.json",
-  import.meta.url,
-);
-const clOcdsPath = new URL(
-  "../data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
   import.meta.url,
 );
 const clCommuneCentroidsPath = new URL(
@@ -64,7 +68,7 @@ const manifestPath = new URL("../data/official/snapshot-manifest.json", import.m
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
   generatedAt?: string;
-  snapshots: Array<{ sourceId: string; fileHash: string; fetchUrl: string }>;
+  snapshots: Array<{ sourceId: string; rawPath?: string; fileHash: string; fetchUrl: string }>;
 };
 const argentinaContractCaseLimit = 300;
 
@@ -116,6 +120,16 @@ const generatedAt = resolveDataBuildTimestamp({
   envTimestamp: process.env.FARO_DATA_BUILD_TIMESTAMP,
   manifestTimestamp: manifest.generatedAt,
 });
+const chileOcdsManifestEntries = manifest.snapshots
+  .filter((snapshot): snapshot is { sourceId: string; rawPath: string; fileHash: string; fetchUrl: string } =>
+    snapshot.sourceId === "CL-CHILECOMPRA-OCDS-PROCESOS" &&
+    typeof snapshot.rawPath === "string" &&
+    snapshot.rawPath.includes("chilecompra-ocds-procesos-"),
+  )
+  .sort((left, right) => left.rawPath.localeCompare(right.rawPath));
+if (chileOcdsManifestEntries.length === 0) {
+  throw new Error("No CL-CHILECOMPRA-OCDS-PROCESOS snapshots found in manifest");
+}
 const peText = await readFile(pePath, "utf8");
 const arWorksText = await readFile(arWorksPath, "utf8");
 const arContractsText = await readFile(arContractsPath, "utf8");
@@ -125,10 +139,15 @@ const arOffersText = await readFile(arOffersPath, "utf8");
 const arLocationsText = await readFile(arLocationsPath, "utf8");
 const arOpeningActsText = await readFile(arOpeningActsPath, "utf8");
 const peContractsBuffer = await readFile(peContractsPath);
+const peHistoricalContractsText = await readFile(peHistoricalContractsPath, "utf8");
 const peOcdsText = await readFile(peOcdsPath, "utf8");
+const peHistoricalOcdsText = await readFile(peHistoricalOcdsPath, "utf8");
 const peDistrictCentroidsText = await readFile(peDistrictCentroidsPath, "utf8");
 const clText = await readFile(clPath, "utf8");
-const clOcdsText = await readFile(clOcdsPath, "utf8");
+const clOcdsSnapshotTexts = await Promise.all(chileOcdsManifestEntries.map(async (entry) => ({
+  entry,
+  text: await readFile(new URL(`../${entry.rawPath}`, import.meta.url), "utf8"),
+})));
 const clCommuneCentroidsText = await readFile(clCommuneCentroidsPath, "utf8");
 const arWorksProfile = profileCsvSnapshot({
   sourceId: "AR-CONTRATAR-OBRAS",
@@ -189,21 +208,37 @@ const clProfile = profileJsonSnapshot({
   text: clText,
   recordPath: ["details"],
 });
-const clOcdsProfile = profileJsonSnapshot({
-  sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
-  rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-  text: clOcdsText,
-  recordPath: ["records"],
-});
+const clOcdsProfiles = clOcdsSnapshotTexts.map(({ entry, text }) => ({
+  entry,
+  text,
+  profile: profileJsonSnapshot({
+    sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+    rawPath: entry.rawPath,
+    text,
+    recordPath: ["records"],
+  }),
+}));
 const peContractsProfile = profileXlsxSnapshot({
   sourceId: "PE-OECE-CONTRATOS",
   rawPath: "data/official/pe/oece-contratos-2025.xlsx",
   buffer: peContractsBuffer,
 });
+const peHistoricalContractsProfile = profileJsonSnapshot({
+  sourceId: "PE-OECE-CONTRATOS-HISTORICOS",
+  rawPath: "data/official/pe/oece-contratos-historicos-seleccionados.json",
+  text: peHistoricalContractsText,
+  recordPath: ["selected"],
+});
 const peOcdsProfile = profileJsonSnapshot({
   sourceId: "PE-OECE-OCDS",
   rawPath: "data/official/pe/oece-ocds-seace-v3-contract-releases.sample.json",
   text: peOcdsText,
+  recordPath: ["releases"],
+});
+const peHistoricalOcdsProfile = profileJsonSnapshot({
+  sourceId: "PE-OECE-OCDS",
+  rawPath: "data/official/pe/oece-ocds-seace-v3-historical-releases.sample.json",
+  text: peHistoricalOcdsText,
   recordPath: ["releases"],
 });
 const peDistrictCentroidsProfile = profileJsonSnapshot({
@@ -342,6 +377,51 @@ const peContractCases = buildPeruContractCases(peContractRows, {
 }, {
   adminCentroids,
 });
+const peHistoricalSnapshot = JSON.parse(peHistoricalContractsText) as {
+  selected: Array<{ row: PeruContractRow }>;
+};
+const peHistoricalRows = peHistoricalSnapshot.selected.map((item) => item.row);
+const existingPeCaseIds = new Set([...peCases, ...peContractCases].map((caseFile) => caseFile.id));
+const peHistoricalContractCases = buildPeruContractCases(peHistoricalRows, {
+  sourceId: "PE-OECE-CONTRATOS-HISTORICOS",
+  sourceName: "OECE contratos historicos seleccionados",
+  sourceUrl: "https://www.datosabiertos.gob.pe/dataset/contratos-de-las-entidades-organismo-supervisor-de-las-contrataciones-del-estado-osce",
+  rawPath: "data/official/pe/oece-contratos-historicos-seleccionados.json",
+  fileHash: peHistoricalContractsProfile.fileHash,
+  extractedAt: generatedAt,
+  parserVersion: "peru-historical-contracts@1",
+  fxRegistry,
+}, peHistoricalRows.length, {
+  releases: (JSON.parse(peHistoricalOcdsText) as { releases: [] }).releases,
+  source: {
+    sourceId: "PE-OECE-OCDS",
+    sourceName: "Portal de contrataciones abiertas OCDS",
+    sourceUrl: "https://contratacionesabiertas.oece.gob.pe/descargas",
+    rawPath: "data/official/pe/oece-ocds-seace-v3-historical-releases.sample.json",
+    fileHash: peHistoricalOcdsProfile.fileHash,
+    extractedAt: generatedAt,
+    parserVersion: "peru-ocds@1",
+  },
+}, {
+  adminCentroids,
+}).filter((caseFile) => !existingPeCaseIds.has(caseFile.id));
+const chileOcdsCaseGroups = dedupeCaseGroupsByCaseId(clOcdsProfiles.map(({ entry, text, profile }) => ({
+  entry,
+  profile,
+  cases: buildChileCompraOcdsCases(JSON.parse(text) as ChileCompraOcdsSnapshot, {
+    sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
+    sourceName: "ChileCompra descargas OCDS procesos",
+    sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
+    rawPath: entry.rawPath,
+    fileHash: profile.fileHash,
+    extractedAt: generatedAt,
+    parserVersion: "chilecompra-ocds@1",
+    fxRegistry,
+  }, {
+    adminCentroids,
+  }),
+})));
+const clOcdsCases = chileOcdsCaseGroups.flatMap((group) => group.cases);
 const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot, {
   sourceId: "CL-MERCADO-PUBLICO-API",
   sourceName: "API de Mercado Publico",
@@ -350,18 +430,6 @@ const clCases = buildChileCompraCases(JSON.parse(clText) as ChileCompraSnapshot,
   fileHash: clProfile.fileHash,
   extractedAt: generatedAt,
   parserVersion: "cross-country@1",
-  fxRegistry,
-}, {
-  adminCentroids,
-});
-const clOcdsCases = buildChileCompraOcdsCases(JSON.parse(clOcdsText) as ChileCompraOcdsSnapshot, {
-  sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
-  sourceName: "ChileCompra descargas OCDS procesos",
-  sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-  rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-  fileHash: clOcdsProfile.fileHash,
-  extractedAt: generatedAt,
-  parserVersion: "chilecompra-ocds@1",
   fxRegistry,
 }, {
   adminCentroids,
@@ -401,6 +469,16 @@ const payload = {
       cases: peContractCases,
     }),
     buildDataset({
+      sourceId: "PE-OECE-CONTRATOS-HISTORICOS",
+      sourceName: "OECE contratos historicos seleccionados",
+      sourceUrl: "https://www.datosabiertos.gob.pe/dataset/contratos-de-las-entidades-organismo-supervisor-de-las-contrataciones-del-estado-osce",
+      filePath: "data/official/pe/oece-contratos-historicos-seleccionados.json",
+      fileHash: peHistoricalContractsProfile.fileHash,
+      snapshotProfile: peHistoricalContractsProfile,
+      rawRows: peHistoricalContractsProfile.recordCount,
+      cases: peHistoricalContractCases,
+    }),
+    buildDataset({
       sourceId: "CL-MERCADO-PUBLICO-API",
       sourceName: "API de Mercado Publico",
       sourceUrl: "https://api.mercadopublico.cl/modules/api.aspx",
@@ -410,22 +488,38 @@ const payload = {
       rawRows: clProfile.recordCount,
       cases: clCases,
     }),
-    buildDataset({
+    ...chileOcdsCaseGroups.map((group) => buildDataset({
       sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
       sourceName: "ChileCompra descargas OCDS procesos",
       sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-      filePath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-      fileHash: clOcdsProfile.fileHash,
-      snapshotProfile: clOcdsProfile,
-      rawRows: clOcdsProfile.recordCount,
-      cases: clOcdsCases,
-    }),
+      filePath: group.entry.rawPath,
+      fileHash: group.profile.fileHash,
+      snapshotProfile: group.profile,
+      rawRows: group.profile.recordCount,
+      cases: group.cases,
+    })),
   ],
-  cases: [...arContractCases, ...peCases, ...peContractCases, ...clCases, ...clOcdsCases],
+  cases: [...arContractCases, ...peCases, ...peContractCases, ...peHistoricalContractCases, ...clCases, ...clOcdsCases],
 };
 
 await mkdir(new URL("../src/data/", import.meta.url), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+
+function dedupeCaseGroupsByCaseId<T extends {
+  cases: Array<{ id: string }>;
+}>(groups: T[]): T[] {
+  const winningGroupByCaseId = new Map<string, number>();
+  groups.forEach((group, groupIndex) => {
+    group.cases.forEach((caseFile) => {
+      winningGroupByCaseId.set(caseFile.id, groupIndex);
+    });
+  });
+
+  return groups.map((group, groupIndex) => ({
+    ...group,
+    cases: group.cases.filter((caseFile) => winningGroupByCaseId.get(caseFile.id) === groupIndex),
+  }));
+}
 
 function buildDataset({
   sourceId,

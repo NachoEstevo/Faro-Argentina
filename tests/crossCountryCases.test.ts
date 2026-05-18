@@ -793,7 +793,7 @@ test("buildChileCompraOcdsCases turns OCDS releases into supplier-aware cases wi
       sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
       sourceName: "ChileCompra descargas OCDS procesos",
       sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-      rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
+      rawPath: "data/official/cl/chilecompra-ocds-procesos-2025-01.sample.json",
     },
     {
       adminCentroids: [
@@ -815,6 +815,8 @@ test("buildChileCompraOcdsCases turns OCDS releases into supplier-aware cases wi
   assert.equal(caseFile?.bidderCount, 1);
   assert.equal(caseFile?.amount?.value, 19000000);
   assert.equal(caseFile?.awardActUrl, "https://www.mercadopublico.cl/award");
+  assert.equal(caseFile?.receipt.rawPath, "data/official/cl/chilecompra-ocds-procesos-2025-01.sample.json");
+  assert.equal(caseFile?.relatedReceipts?.[0]?.rawPath, "data/official/cl/chilecompra-ocds-procesos-2025-01.sample.json");
   assert.deepEqual(caseFile?.coordinates, { lat: -52.25, lon: -71.92 });
   assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
   assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /comprador/i);

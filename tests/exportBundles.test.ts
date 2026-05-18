@@ -44,9 +44,14 @@ test("buildCaseCollectionPack creates a country export with receipts and source 
 
   assert.equal(pack.packType, "faro_case_collection");
   assert.equal(pack.filters.countryCode, "PE");
-  assert.equal(pack.stats.caseFiles, 525);
-  assert.equal(pack.stats.receipts, 1024);
-  assert.deepEqual(pack.sourceIds.sort(), ["PE-MEF-GASTO-DIARIO", "PE-OECE-CONTRATOS", "PE-OECE-OCDS"]);
+  assert.equal(pack.stats.caseFiles, 609);
+  assert.equal(pack.stats.receipts, 1192);
+  assert.deepEqual(pack.sourceIds.sort(), [
+    "PE-MEF-GASTO-DIARIO",
+    "PE-OECE-CONTRATOS",
+    "PE-OECE-CONTRATOS-HISTORICOS",
+    "PE-OECE-OCDS",
+  ]);
   assert.equal(pack.cases.every((caseFile) => caseFile.countryCode === "PE"), true);
   assert.equal(pack.receipts[0]?.sourceId.startsWith("PE-"), true);
   assert.equal(

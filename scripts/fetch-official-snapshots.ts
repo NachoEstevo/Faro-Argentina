@@ -1,6 +1,12 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
+import {
+  buildChileOcdsListUrl,
+  buildChileOcdsRawPath,
+  buildChileOcdsSnapshotPlan,
+  type ChileOcdsSnapshotPeriod,
+} from "../src/lib/data/chileOcdsSnapshots.ts";
 import { readXlsxRows } from "../src/lib/data/xlsx.ts";
 
 const chileCompraTicket =
@@ -12,10 +18,25 @@ const chileCompraDetailDelayMs = Number(process.env.CHILECOMPRA_DETAIL_DELAY_MS 
 const chileCompraOcdsYear = Number(process.env.CHILECOMPRA_OCDS_YEAR ?? "2026");
 const chileCompraOcdsMonth = Number(process.env.CHILECOMPRA_OCDS_MONTH ?? "1");
 const chileCompraOcdsLimit = Number(process.env.CHILECOMPRA_OCDS_LIMIT ?? "500");
+const chileCompraOcdsHistoricalYears = parseNumberList(
+  process.env.CHILECOMPRA_OCDS_HISTORICAL_YEARS ?? "2019,2020,2021,2022,2023,2024,2025",
+);
+const chileCompraOcdsHistoricalMonth = Number(process.env.CHILECOMPRA_OCDS_HISTORICAL_MONTH ?? "1");
+const chileCompraOcdsHistoricalLimit = Number(process.env.CHILECOMPRA_OCDS_HISTORICAL_LIMIT ?? "25");
+const chileCompraOcdsPeriods = process.env.CHILECOMPRA_OCDS_PERIODS;
 const chileCompraOcdsDelayMs = Number(process.env.CHILECOMPRA_OCDS_DELAY_MS ?? "75");
 const peruRange = process.env.PERU_MEF_RANGE ?? "bytes=0-120000";
 const peruOeceContractLimit = Number(process.env.PERU_OECE_CONTRACT_LIMIT ?? "500");
 const reuseFetchedSnapshots = process.env.FARO_REUSE_SNAPSHOTS === "1";
+const chileOcdsSnapshotPlan = buildChileOcdsSnapshotPlan({
+  override: chileCompraOcdsPeriods,
+  currentYear: chileCompraOcdsYear,
+  currentMonth: chileCompraOcdsMonth,
+  currentLimit: chileCompraOcdsLimit,
+  historicalYears: chileCompraOcdsHistoricalYears,
+  historicalMonth: chileCompraOcdsHistoricalMonth,
+  historicalLimit: chileCompraOcdsHistoricalLimit,
+});
 
 const peOutputPath = new URL(
   "../data/official/pe/mef-2026-gasto-diario.sample.csv",
@@ -69,10 +90,6 @@ const clCommuneCentroidsOutputPath = new URL(
   "../data/official/cl/ciren-commune-centroids.json",
   import.meta.url,
 );
-const clOcdsOutputPath = new URL(
-  "../data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-  import.meta.url,
-);
 const manifestPath = new URL("../data/official/snapshot-manifest.json", import.meta.url);
 
 const peMefUrl = "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv";
@@ -93,8 +110,6 @@ const arSuppliersUrl =
 const peOeceContractsUrl =
   "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx";
 const clListUrl = `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?fecha=${chileCompraDate}&estado=${chileCompraState}&ticket=${chileCompraTicket}`;
-const clOcdsListUrl =
-  `https://api.mercadopublico.cl/APISOCDS/OCDS/listaOCDSAgnoMes/${chileCompraOcdsYear}/${chileCompraOcdsMonth}/0/${chileCompraOcdsLimit}`;
 const peDistrictLayerUrl =
   "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5";
 const clCommuneLayerUrl =
@@ -151,7 +166,7 @@ const peContractsSnapshot = await fetchPeruOeceContracts();
 const peDistrictCentroidsSnapshot = await fetchPeruDistrictCentroids();
 const peOcdsSnapshot = await fetchPeruOcdsContractReleases();
 const clCommuneCentroidsSnapshot = await fetchChileCommuneCentroids();
-const clOcdsSnapshot = await fetchChileCompraOcdsProcesses();
+const clOcdsSnapshots = await fetchChileCompraOcdsProcesses();
 const clSnapshot = await fetchChileCompraSample();
 
 await writeFile(manifestPath, `${JSON.stringify({
@@ -169,7 +184,7 @@ await writeFile(manifestPath, `${JSON.stringify({
     peDistrictCentroidsSnapshot,
     peOcdsSnapshot,
     clCommuneCentroidsSnapshot,
-    clOcdsSnapshot,
+    ...clOcdsSnapshots,
     clSnapshot,
   ],
 }, null, 2)}\n`, "utf8");
@@ -465,21 +480,32 @@ async function fetchChileCompraSample() {
 }
 
 async function fetchChileCompraOcdsProcesses() {
+  const snapshots = [];
+  for (const period of chileOcdsSnapshotPlan) {
+    snapshots.push(await fetchChileCompraOcdsPeriod(period));
+  }
+  return snapshots;
+}
+
+async function fetchChileCompraOcdsPeriod(period: ChileOcdsSnapshotPeriod) {
+  const rawPath = buildChileOcdsRawPath(period);
+  const outputPath = new URL(`../${rawPath}`, import.meta.url);
+  const fetchUrl = buildChileOcdsListUrl(period);
   const reused = await reuseJsonSnapshot({
     sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
-    outputPath: clOcdsOutputPath,
-    rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-    fetchUrl: clOcdsListUrl,
+    outputPath,
+    rawPath,
+    fetchUrl,
     recordKey: "records",
     failedKeyPath: ["selection", "failedRecords"],
   });
   if (reused) return reused;
 
-  const list = await fetchJson<ChileOcdsListResponse>(clOcdsListUrl, {
+  const list = await fetchJson<ChileOcdsListResponse>(fetchUrl, {
     retries: 3,
     retryDelayMs: 5_000,
   });
-  const entries = list.data.slice(0, chileCompraOcdsLimit);
+  const entries = list.data.slice(0, period.limit);
   const fetchedAt = new Date().toISOString();
   const records = [];
   const failedRecords = [];
@@ -519,24 +545,24 @@ async function fetchChileCompraOcdsProcesses() {
     sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
     sourceName: "ChileCompra descargas OCDS procesos",
     sourceUrl: "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-    fetchUrl: clOcdsListUrl,
+    fetchUrl,
     fetchedAt,
     selection: {
-      year: chileCompraOcdsYear,
-      month: chileCompraOcdsMonth,
-      limit: chileCompraOcdsLimit,
+      year: period.year,
+      month: period.month,
+      limit: period.limit,
       totalAvailable: list.pagination.total,
       failedRecords,
     },
     records,
   };
   const text = `${JSON.stringify(payload)}\n`;
-  await writeFile(clOcdsOutputPath, text, "utf8");
+  await writeFile(outputPath, text, "utf8");
 
   return {
     sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS",
-    rawPath: "data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json",
-    fetchUrl: clOcdsListUrl,
+    rawPath,
+    fetchUrl,
     fetchedAt,
     contentType: "application/json",
     recordCount: records.length,
@@ -545,6 +571,13 @@ async function fetchChileCompraOcdsProcesses() {
     fileHash: hashText(text),
     byteSize: Buffer.byteLength(text, "utf8"),
   };
+}
+
+function parseNumberList(value: string): number[] {
+  return value
+    .split(",")
+    .map((item) => Number(item.trim()))
+    .filter((item) => Number.isInteger(item));
 }
 
 function buildChileSnapshotEntry(text: string, recordCount: number) {

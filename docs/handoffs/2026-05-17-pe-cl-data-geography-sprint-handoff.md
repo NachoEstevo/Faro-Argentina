@@ -12,15 +12,17 @@ Ampliar Peru y Chile sin convertir Faro en una demo de puntos inventados. El spr
 
 - Peru:
   - `PE-OECE-CONTRATOS` sube a 500 contratos OECE.
+  - `PE-OECE-CONTRATOS-HISTORICOS` agrega 84 contratos seleccionados, 12 por ano entre 2018 y 2024.
   - `PE-OECE-OCDS` sube a 494 releases oficiales enlazados; 1 convocatoria devolvio 404 y queda registrada como fallo de cobertura.
+  - El snapshot OCDS historico agrega 79 releases relacionados para los contratos historicos seleccionados.
   - `PE-IDEP-LIMITE-DISTRITAL` agrega 1891 centroides distritales oficiales desde IDEP.
-  - 469 contratos PE ahora tienen `geoEvidence` y coordenada de mapa como centroide distrital oficial.
+  - 550 contratos PE tienen `geoEvidence` y coordenada de mapa como centroide distrital oficial.
 
 - Chile:
-  - `CL-CHILECOMPRA-OCDS-PROCESOS` agrega 500 procesos OCDS de enero 2026.
+  - `CL-CHILECOMPRA-OCDS-PROCESOS` agrega 675 procesos OCDS: una muestra controlada de enero 2019-2025 con 25 registros por ano, mas 500 registros de enero 2026.
   - `CL-CIREN-LIMITE-COMUNAL` agrega 345 centroides comunales oficiales desde CIREN.
   - Mercado Publico clasico se mantiene como muestra de detalle/API con 25 casos porque el ticket puede responder 429.
-  - 217 casos CL tienen `geoEvidence` y coordenada de mapa como centroide comunal del comprador.
+  - 292 casos CL tienen `geoEvidence` y coordenada de mapa como centroide comunal del comprador.
 
 ## Modelo Nuevo
 
@@ -54,10 +56,15 @@ Para UI/UX:
 
 Despues de regenerar datos:
 
-- Total: 1608 casos, 9 datasets, 3995 receipts, 0 errores de data spine.
-- Argentina: 558 casos, 413 map-eligible.
-- Peru: 525 casos, 469 map-eligible, 469 con `geoEvidence`.
-- Chile: 525 casos, 217 map-eligible, 217 con `geoEvidence`.
+- Total: 1867 casos, 17 datasets, 4510 receipts, 0 errores de data spine.
+- Argentina: 558 casos, 411 map-eligible.
+- Peru: 609 casos, 550 map-eligible, 550 con `geoEvidence`.
+- Chile: 700 casos, 292 map-eligible, 292 con `geoEvidence`.
+
+Importante: Chile no es cobertura historica completa. Es una muestra oficial
+controlada por periodos que prueba el pipeline y suma expedientes reales para
+Explorer; cualquier UI o doc debe evitar presentarla como universo completo de
+ChileCompra.
 
 ## Fuentes Nuevas
 
@@ -70,8 +77,17 @@ Despues de regenerar datos:
   - Uso: centroides comunales del comprador para procesos ChileCompra.
 
 - `CL-CHILECOMPRA-OCDS-PROCESOS`
-  - Archivo: `data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json`
-  - Uso: procesos OCDS masivos sin depender del ticket de la API clasica.
+  - Archivos: `data/official/cl/chilecompra-ocds-procesos-2019-01.sample.json`
+    hasta `data/official/cl/chilecompra-ocds-procesos-2026-01.sample.json`.
+  - Uso: procesos OCDS por periodos sin depender del ticket de la API clasica.
+
+- `PE-OECE-CONTRATOS-HISTORICOS`
+  - Archivo: `data/official/pe/oece-contratos-historicos-seleccionados.json`
+  - Uso: seleccion reproducible de contratos de alto monto 2018-2024.
+
+- `PE-OECE-OCDS` historico
+  - Archivo: `data/official/pe/oece-ocds-seace-v3-historical-releases.sample.json`
+  - Uso: releases OCDS relacionados con los contratos historicos seleccionados.
 
 ## Decisiones Tecnicas
 
@@ -89,6 +105,9 @@ Comandos usados:
 
 ```bash
 npm run data:fetch
+npm run data:fetch:pe-historical
+# o, para refrescar todo el set oficial actual:
+npm run data:fetch:all
 FARO_REUSE_SNAPSHOTS=1 npm run data:fetch
 npm run data:build
 npm run data:verify

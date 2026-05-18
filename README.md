@@ -52,7 +52,7 @@ Tocas un punto del mapa o una fila del scanner y Faro arma un expediente verific
 El producto actual ya tiene una primera version funcional:
 
 - pantalla inicial de entrada a Faro;
-- mapa territorial para casos con geometria oficial;
+- mapa territorial para casos con geometria oficial o referencia administrativa oficial claramente caveateada;
 - modo investigador tipo scanner con busqueda, filtros compactos y pivots acumulables por fuente, organismo, proveedor y senal;
 - inspector lateral compacto para revisar casos rapido;
 - expediente completo con senales, evidencia, caveats y siguientes pasos;
@@ -63,18 +63,20 @@ El producto actual ya tiene una primera version funcional:
 
 Datos actuales en la app:
 
-- `1608` expedientes;
+- `1867` expedientes;
 - `558` Argentina;
-- `525` Peru;
-- `525` Chile.
+- `609` Peru;
+- `700` Chile.
 
 ## Modos De Uso
 
 ### Mapa
 
-El mapa es territorio primero. Solo deberia mostrar casos con geometria oficial validada.
+El mapa es territorio primero. Solo deberia mostrar casos con geometria oficial validada o centroides administrativos oficiales rotulados como referencia, no como sitio exacto.
 
 Es ideal para obras publicas y casos donde la ubicacion agrega contexto real: territorio, before/after satelital, jurisdiccion y entorno.
+
+En Peru y Chile muchos puntos actuales son centroides administrativos del distrito/comuna o del comprador. Sirven para orientacion territorial y navegacion, pero no prueban el sitio de ejecucion ni habilitan evidencia satelital directa.
 
 ### Modo Investigador
 
@@ -104,7 +106,7 @@ Prioridad recomendada:
 3. Cruzar pagos, avance o ejecucion solo cuando exista fuente oficial que lo sostenga.
 4. Profundizar expedientes historico-judiciales solo cuando el join documental sea verificable.
 
-La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas, sospechosas o marcadas como geometria mala conocida quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `1097` casos elegibles para mapa sobre `1608` expedientes totales: `411/558` Argentina, `469/525` Peru y `217/525` Chile.
+La regla geografica de Faro ya es conservadora: una coordenada oficial solo llega al mapa si pasa QA por pais. Coordenadas placeholder, fuera de bounds, duplicadas, sospechosas o marcadas como geometria mala conocida quedan como brecha de datos y no se corrigen automaticamente. El reporte actual muestra `1253` casos elegibles para mapa sobre `1867` expedientes totales: `411/558` Argentina, `550/609` Peru y `292/700` Chile. Los centroides administrativos deben leerse como referencias territoriales, no como ubicaciones exactas de obra o servicio.
 
 ## Fuentes Iniciales
 
@@ -125,13 +127,14 @@ Argentina:
 Peru:
 
 - OECE contratos;
+- OECE contratos historicos seleccionados 2018-2024;
 - OECE OCDS;
 - MEF presupuesto y ejecucion de gasto diario.
 
 Chile:
 
 - Mercado Publico API;
-- ChileCompra / OCDS procesos;
+- ChileCompra / OCDS procesos, incluyendo una muestra controlada de enero por ano 2019-2025 y enero 2026;
 - DIPRES pagos como siguiente cruce.
 
 ## Estructura Relevante
@@ -166,6 +169,10 @@ En este workspace tambien se estuvo usando `3003` cuando `3002` estaba ocupado.
 ## Comandos De Datos Y Verificacion
 
 ```bash
+# solo cuando se quiera refrescar snapshots oficiales completos:
+npm run data:fetch:all
+# solo cuando se quiera refrescar la seleccion historica de Peru:
+npm run data:fetch:pe-historical
 npm run data:build
 npm run data:verify
 npm run data:geo-report
@@ -175,7 +182,7 @@ npm run typecheck
 npm run build
 ```
 
-`npm run data:build` reconstruye los artefactos generados desde snapshots oficiales locales. `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts. `npm run data:geo-report` revisa calidad de coordenadas y elegibilidad de mapa. `npm run data:quality-report` resume cobertura por pais, fuente, monto, proveedor, geometria y senales.
+`npm run data:build` reconstruye los artefactos generados desde snapshots oficiales locales. `npm run data:fetch:all` refresca snapshots oficiales, FX y la seleccion historica de Peru antes de volver a buildear. `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts. `npm run data:geo-report` revisa calidad de coordenadas y elegibilidad de mapa. `npm run data:quality-report` resume cobertura por pais, fuente, monto, proveedor, geometria y senales.
 
 No usar `npm run data:fetch` como reparacion rutinaria. Puede refrescar fuentes externas y cambiar la linea base de evidencia.
 

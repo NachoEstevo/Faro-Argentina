@@ -298,6 +298,33 @@
     "caveats": ["Contrato no confirma devengado ni pago; usar MEF para contexto presupuestario."]
   },
   {
+    "sourceId": "PE-OECE-CONTRATOS-HISTORICOS",
+    "countryCode": "PE",
+    "name": "OECE contratos historicos seleccionados",
+    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
+    "category": "procurement_contracts",
+    "priority": "mvp",
+    "official": true,
+    "accessMode": "derived_snapshot",
+    "format": "json",
+    "sourceUrl": "https://www.datosabiertos.gob.pe/dataset/contratos-de-las-entidades-organismo-supervisor-de-las-contrataciones-del-estado-osce",
+    "downloadUrl": null,
+    "updateFrequency": "manual_selection",
+    "keyFields": [
+      "codigoentidad",
+      "codigoconvocatoria",
+      "codigo_contrato",
+      "num_contrato",
+      "ruc_contratista",
+      "monto_contratado_item",
+      "fecha_suscripcion_contrato"
+    ],
+    "caveats": [
+      "Snapshot compacto seleccionado desde XLSX oficiales 2018-2024; no es catalogo completo.",
+      "Contrato no confirma devengado ni pago; usar MEF u otra fuente de ejecucion para contexto presupuestario."
+    ]
+  },
+  {
     "sourceId": "PE-MEF-GASTO-DIARIO",
     "countryCode": "PE",
     "name": "MEF presupuesto y ejecucion de gasto diario",
@@ -388,10 +415,10 @@
     "accessMode": "portal_api",
     "format": "json_ocds",
     "sourceUrl": "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-    "downloadUrl": "https://api.mercadopublico.cl/APISOCDS/OCDS/listaOCDSAgnoMes/2026/1/0/1000",
+    "downloadUrl": "https://api.mercadopublico.cl/APISOCDS/OCDS/listaOCDSAgnoMes",
     "updateFrequency": "unknown",
     "keyFields": ["ocid", "tender.id", "buyer.id", "parties.identifier", "awards.value"],
-    "caveats": ["Usar paginacion por mes y conservar release package original como receipt."]
+    "caveats": ["Usar paginacion por mes y conservar release package original como receipt; la cobertura cargada es una muestra historica controlada por periodo."]
   },
   {
     "sourceId": "CL-MERCADO-PUBLICO-API",
