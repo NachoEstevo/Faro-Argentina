@@ -1,12 +1,13 @@
 /* Floating panel, Google-Maps-search-results style: anchored just
-   inside the map edge next to the sidebar with a small inset so it
-   reads as floating, not flush. Narrower than a full drawer. */
+   inside the map edge next to the sidebar. Height is content-driven
+   (only as tall as the cards + header + footer need) with a viewport
+   cap so it never overflows on small screens. */
 .panel {
   position: absolute;
   top: 16px;
-  bottom: 16px;
   left: calc(var(--sidebar-width) + 12px);
   width: 320px;
+  max-height: calc(100vh - 32px);
   z-index: 9;
   display: flex;
   flex-direction: column;
