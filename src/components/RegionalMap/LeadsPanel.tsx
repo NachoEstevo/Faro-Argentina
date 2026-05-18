@@ -37,7 +37,7 @@ const SEVERITY_CLASS: Record<"high" | "medium" | "low", string> = {
   low: styles.leadIconLow,
 };
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 6;
 
 interface Props {
   open: boolean;

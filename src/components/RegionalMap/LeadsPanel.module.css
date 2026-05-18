@@ -1,21 +1,26 @@
+/* Floating panel, Google-Maps-search-results style: anchored just
+   inside the map edge next to the sidebar with a small inset so it
+   reads as floating, not flush. Narrower than a full drawer. */
 .panel {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--sidebar-width);
-  width: 400px;
+  top: 16px;
+  bottom: 16px;
+  left: calc(var(--sidebar-width) + 12px);
+  width: 320px;
   z-index: 9;
   display: flex;
   flex-direction: column;
   background: var(--cf-bg-elev);
-  border-right: 1px solid var(--cf-border);
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
   opacity: 1;
   transform: translateX(0);
   transition:
     opacity 280ms cubic-bezier(0.32, 0.72, 0, 1),
     transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
   visibility: visible;
+  overflow: hidden;
 }
 
 @starting-style {
@@ -40,7 +45,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--cf-border);
   flex-shrink: 0;
 }
@@ -48,7 +53,7 @@
 .title {
   margin: 0;
   font-family: var(--cf-font-heading);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--cf-text);
 }
@@ -81,10 +86,10 @@
 .list {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 16px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
@@ -99,10 +104,10 @@
 
 .leadCard {
   display: grid;
-  grid-template-columns: 28px 1fr 14px;
+  grid-template-columns: 24px 1fr 12px;
   gap: 10px;
   align-items: start;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 1px solid var(--cf-border);
   background: var(--cf-bg-surface);
   border-radius: var(--cf-radius-sm);
@@ -128,8 +133,8 @@
 .leadIcon {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   color: var(--cf-text-muted);
   border: 1px solid var(--cf-border-strong);
   background: var(--cf-bg-overlay);
