@@ -19,3 +19,10 @@ test("CaseMap labels administrative centroid markers as references", async () =>
   assert.match(source, /Referencia comunal, no ubicacion exacta/);
   assert.match(source, /dashArray/);
 });
+
+test("CaseMap keeps selected case zoom independent from Wayback state", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+
+  assert.match(source, /map\.flyTo\(\[selectedCase\.coordinates\.lat, selectedCase\.coordinates\.lon\], WAYBACK_TARGET_ZOOM/);
+  assert.doesNotMatch(source, /const targetZoom = waybackActive \? WAYBACK_TARGET_ZOOM : 8/);
+});

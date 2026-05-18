@@ -209,8 +209,7 @@ function MapFocus({
     lastFlightTargetRef.current = targetKey;
 
     if (selectedCase?.coordinates) {
-      const targetZoom = waybackActive ? WAYBACK_TARGET_ZOOM : 8;
-      map.flyTo([selectedCase.coordinates.lat, selectedCase.coordinates.lon], targetZoom, {
+      map.flyTo([selectedCase.coordinates.lat, selectedCase.coordinates.lon], WAYBACK_TARGET_ZOOM, {
         animate: true,
         duration: WAYBACK_FLY_DURATION_SECONDS,
       });
