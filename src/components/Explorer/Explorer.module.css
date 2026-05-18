@@ -1011,6 +1011,7 @@
   background: var(--cf-bg-elev);
   border: 1px solid var(--cf-border);
   border-radius: 12px;
+  min-width: 0;
 }
 
 .detailCardHead {
@@ -1029,6 +1030,7 @@
   gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid var(--cf-border-subtle, var(--cf-border));
+  min-width: 0;
 }
 
 .detailRow:last-child {
@@ -1038,6 +1040,7 @@
 .detailRowLabel {
   font-size: 13px;
   color: var(--cf-text-muted);
+  flex-shrink: 0;
 }
 
 .detailRowValue {
@@ -1045,10 +1048,10 @@
   font-size: 15px;
   color: var(--cf-text);
   text-align: right;
-  max-width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .detailRowLink {
@@ -1057,10 +1060,10 @@
   color: var(--cf-accent);
   text-decoration: none;
   text-align: right;
-  max-width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   cursor: pointer;
 }
 
