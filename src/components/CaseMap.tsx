@@ -73,7 +73,7 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
         <MapFocus
           cases={mapCases}
           selectedCase={selectedCase}
-          waybackActive={selectedCase?.coordinates != null && waybackState.status !== "error"}
+          waybackActive={selectedCase?.coordinates != null && waybackState.status !== "off" && waybackState.status !== "error"}
           onDeselect={handleClose}
         />
         {selectedCase?.coordinates && traceMode && (
@@ -94,10 +94,13 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           const severity = severityById.get(caseFile.id) ?? null;
           const coordinates = caseFile.coordinates;
           if (!coordinates) return null;
+          const mapGeoEvidence = getMapGeoEvidence(caseFile);
+          const isAdminReference = mapGeoEvidence?.precision === "official_admin_centroid";
+          const referenceLabel = buildReferenceLabel(mapGeoEvidence);
           const colors = pickMarkerColors(isSelected, severity);
-          const radius = isSelected ? 9 : severity === "high" ? 8 : severity === "medium" ? 7 : 6;
-          const weight = isSelected ? 3 : severity === "high" ? 2.2 : severity === "medium" ? 1.8 : 1.5;
-          const fillOpacity = isSelected ? 0.95 : severity === "high" ? 0.88 : severity === "medium" ? 0.82 : 0.7;
+          const radius = isSelected ? 9 : isAdminReference ? 5.5 : severity === "high" ? 8 : severity === "medium" ? 7 : 6;
+          const weight = isSelected ? 3 : isAdminReference ? 1.4 : severity === "high" ? 2.2 : severity === "medium" ? 1.8 : 1.5;
+          const fillOpacity = isSelected ? 0.95 : isAdminReference ? 0.46 : severity === "high" ? 0.88 : severity === "medium" ? 0.82 : 0.7;
           return (
             <CircleMarker
               key={buildCaseMarkerKey(caseFile, index)}
@@ -110,11 +113,13 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
                 fillOpacity,
                 opacity: 0.95,
                 weight,
+                dashArray: isAdminReference ? "3 4" : undefined,
               }}
             >
               <Tooltip direction="top" offset={[0, -8]}>
                 <strong>{caseFile.title}</strong>
                 <span>{buildCaseSubtitle(caseFile)}</span>
+                {referenceLabel ? <span>{referenceLabel}</span> : null}
               </Tooltip>
             </CircleMarker>
           );
@@ -150,6 +155,26 @@ function buildCaseSubtitle(caseFile: ExplorerCase): string {
   }
   if (caseFile.year) parts.push(String(caseFile.year));
   return parts.length > 0 ? parts.join(" · ") : caseFile.workNumber;
+}
+
+function getMapGeoEvidence(caseFile: ExplorerCase) {
+  if (!("geoEvidence" in caseFile)) return null;
+  return caseFile.geoEvidence?.find((evidence) =>
+    evidence.exposeOnMap && evidence.coordinates,
+  ) ?? null;
+}
+
+function buildReferenceLabel(
+  evidence: ReturnType<typeof getMapGeoEvidence>,
+): string | null {
+  if (evidence?.precision !== "official_admin_centroid") return null;
+  if (evidence.granularity === "commune") {
+    return "Referencia comunal, no ubicacion exacta";
+  }
+  if (evidence.granularity === "district") {
+    return "Referencia distrital, no ubicacion exacta";
+  }
+  return "Referencia administrativa, no ubicacion exacta";
 }
 
 const WAYBACK_TARGET_ZOOM = 17;

@@ -41,8 +41,31 @@ export default function PanelFacts({ caseFile }: Props) {
       <Fact label="Año">{resolveCaseYear(caseFile) ?? "Sin dato"}</Fact>
       <Fact label="Organismo">{caseFile.agencyName ?? "Sin dato"}</Fact>
       <Fact label="Proveedor">{formatSupplier(caseFile)}</Fact>
+      <Fact label="Territorio">{renderTerritory(caseFile)}</Fact>
     </div>
   );
+}
+
+function renderTerritory(caseFile: ExplorerCase): ReactNode {
+  if (!isCrossCountryCase(caseFile)) return "Sin dato";
+
+  const mapEvidence = caseFile.geoEvidence?.find((evidence) =>
+    evidence.exposeOnMap && evidence.coordinates,
+  );
+  if (mapEvidence?.precision === "official_admin_centroid") {
+    return (
+      <>
+        <span>{caseFile.locationName ?? mapEvidence.label}</span>
+        <span className={styles.factSub}>
+          {mapEvidence.granularity === "commune"
+            ? "Referencia comunal, no sitio exacto"
+            : "Referencia administrativa, no sitio exacto"}
+        </span>
+      </>
+    );
+  }
+
+  return caseFile.locationName ?? (caseFile.coordinates ? "Coordenada oficial" : "Sin dato");
 }
 
 function Fact({ label, children }: { label: string; children: ReactNode }) {

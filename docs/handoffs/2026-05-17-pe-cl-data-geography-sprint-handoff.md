@@ -22,7 +22,7 @@ Ampliar Peru y Chile sin convertir Faro en una demo de puntos inventados. El spr
   - `CL-CHILECOMPRA-OCDS-PROCESOS` agrega 675 procesos OCDS: una muestra controlada de enero 2019-2025 con 25 registros por ano, mas 500 registros de enero 2026.
   - `CL-CIREN-LIMITE-COMUNAL` agrega 345 centroides comunales oficiales desde CIREN.
   - Mercado Publico clasico se mantiene como muestra de detalle/API con 25 casos porque el ticket puede responder 429.
-  - 292 casos CL tienen `geoEvidence` como referencia comunal oficial del comprador, pero 0 son map-eligible porque esa referencia no prueba el sitio exacto de ejecucion.
+  - 292 casos CL tienen `geoEvidence` y coordenada de mapa como referencia comunal oficial del comprador. No prueban sitio exacto de ejecucion ni habilitan evidencia satelital.
 
 ## Modelo Nuevo
 
@@ -41,16 +41,16 @@ Campos importantes:
 
 En este sprint, PE/CL usan `official_admin_centroid` y `satelliteEligible: false`.
 Peru puede exponer centroides distritales como referencia territorial de mapa.
-Chile conserva centroides comunales del comprador solo como referencia
-administrativa en Explorer/export (`exposeOnMap: false`), porque no prueba el
-sitio exacto de ejecucion.
+Chile expone centroides comunales del comprador como referencia territorial
+caveateada (`exposeOnMap: true`, `satelliteEligible: false`), porque es mejor
+mostrar cobertura territorial honesta que dejar el pais sin mapa.
 
 ## Semantica UX
 
 Para UI/UX:
 
 - En Peru, mostrar estos puntos como "referencia territorial" o "centroide administrativo".
-- En Chile, mostrar la referencia comunal como metadata/caveat de territorio, no como punto de mapa.
+- En Chile, mostrar la referencia comunal como punto caveateado de territorio, no como sitio exacto.
 - No mostrarlos como "ubicacion exacta".
 - No habilitar comparacion satelital automatica sobre estos puntos.
 - En expediente o inspector, el copy deberia decir:
@@ -64,7 +64,7 @@ Despues de regenerar datos:
 - Total: 1867 casos, 17 datasets, 4510 receipts, 0 errores de data spine.
 - Argentina: 558 casos, 411 map-eligible.
 - Peru: 609 casos, 550 map-eligible, 550 con `geoEvidence`.
-- Chile: 700 casos, 0 map-eligible, 292 con `geoEvidence` administrativo no dibujable.
+- Chile: 700 casos, 292 map-eligible como referencia comunal, 292 con `geoEvidence`.
 
 Importante: Chile no es cobertura historica completa. Es una muestra oficial
 controlada por periodos que prueba el pipeline y suma expedientes reales para

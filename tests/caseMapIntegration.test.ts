@@ -11,3 +11,11 @@ test("CaseMap filters markers through the map eligibility gate", async () => {
   assert.match(source, /cases\.filter\(isMapMarkerEligible\)/);
   assert.doesNotMatch(source, /caseFile\.coordinates !== null/);
 });
+
+test("CaseMap labels administrative centroid markers as references", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+
+  assert.match(source, /official_admin_centroid/);
+  assert.match(source, /Referencia comunal, no ubicacion exacta/);
+  assert.match(source, /dashArray/);
+});

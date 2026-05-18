@@ -97,11 +97,11 @@ Cobertura por pais:
 | --- | ---: | ---: | --- |
 | Argentina | 558 | 411 | Obras, contratos y contexto judicial verificable. |
 | Peru | 609 | 550 | Contratos OECE, historicos seleccionados y presupuesto MEF. |
-| Chile | 700 | 0 | Procesos ChileCompra/OCDS en Explorer; sin geometria map-ready actual. |
+| Chile | 700 | 292 | Procesos ChileCompra/OCDS; mapa como referencia comunal caveateada. |
 
-Chile conserva evidencia administrativa para una parte de los registros, pero
-Faro no la dibuja como punto porque no prueba sitio exacto de ejecucion. Esa es
-una decision de confianza, no una limitacion cosmetica.
+Chile conserva evidencia administrativa para una parte de los registros y la
+dibuja como referencia comunal oficial del comprador. No es sitio exacto de
+ejecucion y no habilita comparacion satelital automatica.
 
 ## Superficies Del Producto
 

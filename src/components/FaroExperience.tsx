@@ -247,13 +247,14 @@ export default function FaroExperience({
   const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
   const selectedCase =
     selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
+  const selectedCaseWaybackEligible = shouldEnableWaybackForCase(selectedCase);
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
 
   useEffect(() => {
     let cancelled = false;
     const coordinates = selectedCase?.coordinates;
     const caseId = selectedCase?.id;
-    if (!caseId || !coordinates || viewMode !== "map") {
+    if (!caseId || !coordinates || viewMode !== "map" || !selectedCaseWaybackEligible) {
       setWaybackState({ status: "off" });
       hasArmedWaybackRef.current = true;
       return;
@@ -290,7 +291,7 @@ export default function FaroExperience({
     return () => {
       cancelled = true;
     };
-  }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, viewMode, waybackRetryToken]);
+  }, [selectedCase?.id, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, selectedCaseWaybackEligible, viewMode, waybackRetryToken]);
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarCollapsed((value) => !value);
@@ -580,6 +581,16 @@ function getYearBounds(cases: Array<{ year: number | null }>) {
     min: Math.min(...years),
     max: Math.max(Math.max(...years), currentYear),
   };
+}
+
+function shouldEnableWaybackForCase(caseFile: ExplorerCase | null): boolean {
+  if (!caseFile?.coordinates) return false;
+  if (!("geoEvidence" in caseFile) || !caseFile.geoEvidence?.length) return true;
+
+  const mapEvidence = caseFile.geoEvidence.find((evidence) =>
+    evidence.exposeOnMap && evidence.coordinates,
+  );
+  return mapEvidence ? mapEvidence.satelliteEligible : true;
 }
 
 function filterCountryReviewCases({

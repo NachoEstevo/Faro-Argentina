@@ -192,15 +192,15 @@ Datos actuales:
 - 558 Argentina;
 - 609 Peru;
 - 700 Chile.
-- 961 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 0 Chile.
+- 1253 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 292 Chile.
 - 2 casos de Argentina marcados como `known_bad_geometry` siguen disponibles
   para Explorer/export, pero no se dibujan en el mapa.
 - En Peru los puntos actuales son centroides distritales oficiales cuando pasan
   el gate de mapa. Son referencias territoriales para navegar, no sitios exactos
   de ejecucion ni evidencia satelital directa.
-- En Chile hay evidencia administrativa para orientar investigacion en Explorer,
-  pero no hay geometria map-ready actual; por eso no se dibuja ningun punto de
-  Chile en el mapa.
+- En Chile los puntos actuales son centroides comunales oficiales del comprador.
+  Se dibujan como referencia comunal caveateada, no como ubicacion exacta ni
+  evidencia satelital de ejecucion.
 
 Bloqueos antes de llamarlo producto terminado:
 

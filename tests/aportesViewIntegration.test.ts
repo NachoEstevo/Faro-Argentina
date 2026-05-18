@@ -42,6 +42,14 @@ test("FaroExperience keeps Aportes routeable but hides the public Aportes tab", 
   assert.doesNotMatch(source, /aria-pressed=\{false\}[\s\S]*?Aportes[\s\S]*?<\/button>/);
 });
 
+test("FaroExperience only enables Wayback for satellite-eligible map evidence", async () => {
+  const source = await readFile(faroExperienceUrl, "utf8");
+
+  assert.match(source, /shouldEnableWaybackForCase/);
+  assert.match(source, /satelliteEligible/);
+  assert.match(source, /!selectedCaseWaybackEligible/);
+});
+
 test("country route can open the aportes mode directly", async () => {
   const source = await readFile(countryPageUrl, "utf8");
 
