@@ -74,6 +74,13 @@ test("ExplorerView keeps filter controls fixed while pivots scroll", async () =>
   assert.match(css, /\.sidebarScrollRegion\s*\{[\s\S]*flex: 1 1 auto;[\s\S]*min-height: 0;[\s\S]*overflow-y: auto;/);
 });
 
+test("ExplorerView opens public official source pages instead of raw receipt dataset URLs", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /getPublicOfficialSourceHref\(caseFile\.receipt\)/);
+  assert.doesNotMatch(source, /href=\{caseFile\.receipt\.sourceUrl\}/);
+});
+
 test("ExplorerView shows article citations as context, not as official trail", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 

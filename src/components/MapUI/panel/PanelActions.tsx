@@ -21,7 +21,7 @@ export default function PanelActions({ caseFile, signalContext, traceMode, onTra
     <div className={styles.actions}>
       <div className={styles.actionRow}>
         <a
-          href={caseFile.receipt.sourceUrl}
+          href={expediente.actions.officialSourceHref}
           target="_blank"
           rel="noreferrer"
           className={styles.actionButton}

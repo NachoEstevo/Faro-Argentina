@@ -158,7 +158,7 @@ function toReportReceipt(
     receiptId: receipt.receiptId,
     sourceId: receipt.sourceId,
     sourceName: receipt.sourceName,
-    sourceUrl: options.includeUrl ? receipt.sourceUrl : undefined,
+    sourceUrl: options.includeUrl ? receipt.publicSourceUrl : undefined,
     recordId: receipt.recordId,
     locatorLabel: receipt.locator.label,
     locatorNote: receipt.locator.note,

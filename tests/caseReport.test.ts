@@ -5,6 +5,9 @@ import {
   getCaseReportById,
   getExpedienteById,
 } from "../src/lib/caseRepository.ts";
+import { buildCaseReportView } from "../src/lib/data/caseReport.ts";
+import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
+import type { ExpedienteCaseFile } from "../src/lib/data/expediente.ts";
 
 const vialidadCaseId = "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME";
 
@@ -74,4 +77,50 @@ test("expediente actions expose a report href distinct from technical JSON", () 
   assert.ok(expediente);
   assert.equal(expediente.actions.reportHref, `/expediente/${encodeURIComponent(vialidadCaseId)}/informe`);
   assert.equal(expediente.actions.downloadEvidenceHref, `/api/export/${encodeURIComponent(vialidadCaseId)}`);
+});
+
+test("case report shows the official catalog page instead of direct dataset downloads", () => {
+  const receipt = createEvidenceReceipt({
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    sourceName: "CONTRAT.AR contratos",
+    sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
+    rawPath: "data/official/ar/onc-contratar-contratos.csv",
+    snapshotHash: "sha256-snapshot",
+    recordId: "14-1002-CON21",
+    locatorType: "official_dataset",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "case-report-test@1",
+    row: { contrato_numero: "14-1002-CON21" },
+  });
+  const caseFile: ExpedienteCaseFile = {
+    id: "AR-CONTRACT-14-1002-CON21",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: "Construccion de puente",
+    workNumber: "14-1002-CON21",
+    year: 2021,
+    procedureNumber: "14-0007-LPU20",
+    agencyName: "Comision Nacional de Energia Atomica",
+    agencyCode: "105",
+    contractingUnit: "Compras CNEA",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -34.585722, lon: -58.389361 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 120, currency: "ARS", label: "ARS 120" },
+    supplierName: "Proveedor de prueba",
+    supplierDocument: "30-70043585-3",
+    receipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+
+  const report = buildCaseReportView(caseFile);
+
+  assert.equal(
+    report.officialTrail.primary.sourceUrl,
+    "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+  );
+  assert.equal(report.officialTrail.primary.sourceUrl.includes("/download/"), false);
+  assert.equal(report.actions.officialSourceHref, report.officialTrail.primary.sourceUrl);
+  assert.equal(report.technicalAppendix.receipts[0]?.sourceUrl, undefined);
 });

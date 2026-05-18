@@ -66,8 +66,16 @@ test("buildExpediente creates a procurement contract expediente from official re
   assert.match(expediente.summary.plainSummary, /Contrato/);
   assert.equal(expediente.whyItAppeared.length > 0, true);
   assert.equal(expediente.officialTrail.primary.locator.label, "Dataset oficial");
+  assert.equal(
+    expediente.officialTrail.primary.publicSourceUrl,
+    "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+  );
   assert.equal(expediente.officialTrail.related.length, 1);
   assert.equal(expediente.officialTrail.related[0]?.sourceId, "AR-CONTRATAR-OFERTAS");
+  assert.equal(
+    expediente.actions.officialSourceHref,
+    "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+  );
   assert.equal(expediente.actions.downloadEvidenceHref, "/api/export/AR-CONTRACT-14-1002-CON21");
   assert.equal(expediente.actions.caseJsonHref, "/api/cases/AR-CONTRACT-14-1002-CON21");
   assert.equal(expediente.nextVerification.length > 0, true);

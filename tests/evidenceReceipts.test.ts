@@ -5,6 +5,7 @@ import {
   createEvidenceReceipt,
   shouldExposeReceiptInUi,
 } from "../src/lib/data/evidenceReceipts.ts";
+import { getPublicOfficialSourceHref } from "../src/lib/data/receiptOfficialSource.ts";
 
 test("createEvidenceReceipt builds deterministic dataset-level receipts with row hash", () => {
   const receipt = createEvidenceReceipt({
@@ -43,4 +44,45 @@ test("shouldExposeReceiptInUi hides missing locators", () => {
   });
 
   assert.equal(shouldExposeReceiptInUi(receipt), false);
+});
+
+test("getPublicOfficialSourceHref maps dataset downloads to official catalog pages", () => {
+  const receipt = createEvidenceReceipt({
+    sourceId: "AR-CONTRATAR-OBRAS",
+    sourceName: "CONTRAT.AR obras",
+    sourceUrl: "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
+    rawPath: "data/official/ar/onc-contratar-obras.csv",
+    snapshotHash: "sha256-snapshot",
+    recordId: "81-0009-OBR18",
+    locatorType: "official_dataset",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "argentina-works@1",
+    row: { numero_obra: "81-0009-OBR18" },
+  });
+
+  assert.equal(
+    getPublicOfficialSourceHref(receipt),
+    "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+  );
+  assert.equal(
+    receipt.sourceUrl,
+    "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
+  );
+});
+
+test("getPublicOfficialSourceHref preserves direct official record links", () => {
+  const receipt = createEvidenceReceipt({
+    sourceId: "CL-MERCADO-PUBLICO-API",
+    sourceName: "API de Mercado Publico",
+    sourceUrl: "https://www.mercadopublico.cl/award-act",
+    rawPath: "data/official/cl/sample.json",
+    snapshotHash: "sha256-snapshot",
+    recordId: "4052-3-LE26",
+    locatorType: "official_detail",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "chilecompra@1",
+    row: { CodigoExterno: "4052-3-LE26" },
+  });
+
+  assert.equal(getPublicOfficialSourceHref(receipt), "https://www.mercadopublico.cl/award-act");
 });

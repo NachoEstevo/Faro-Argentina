@@ -9,6 +9,7 @@ import {
   type EvidenceReceipt,
   type ReceiptLocatorPresentation,
 } from "./evidenceReceipts.ts";
+import { getPublicOfficialSourceHref } from "./receiptOfficialSource.ts";
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
 import type { ArticleCitation } from "./articleCitations.ts";
 import type { GeoEvidenceItem } from "./geoEvidence.ts";
@@ -20,6 +21,7 @@ export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceip
 
 export type ExpedienteReceipt = EvidenceReceipt & {
   locator: ReceiptLocatorPresentation;
+  publicSourceUrl: string;
 };
 
 export interface ExpedienteView {
@@ -115,7 +117,7 @@ export function buildExpediente(
       contextualCitations,
     },
     actions: {
-      officialSourceHref: primaryReceipt.sourceUrl,
+      officialSourceHref: primaryReceipt.publicSourceUrl,
       reportHref: `/expediente/${encodedCaseId}/informe`,
       downloadEvidenceHref: `/api/export/${encodedCaseId}`,
       caseJsonHref: `/api/cases/${encodedCaseId}`,
@@ -132,6 +134,7 @@ function toExpedienteReceipt(receipt: EvidenceReceipt): ExpedienteReceipt {
   return {
     ...receipt,
     locator: describeReceiptLocator(receipt.locatorType),
+    publicSourceUrl: getPublicOfficialSourceHref(receipt),
   };
 }
 

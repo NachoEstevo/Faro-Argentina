@@ -25,6 +25,7 @@ import {
   type InvestigatorGeometryFilter,
 } from "@/lib/data/investigatorExplorer";
 import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
+import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 import { ContextualCitationsPanel } from "../ContextualCitations";
 import FaroMark from "../FaroMark";
@@ -518,7 +519,9 @@ function ExplorerDetail({
       return false;
     })
     .slice(0, 4);
-  const sourceUrl = caseFile.receipt?.sourceUrl ?? null;
+  const sourceUrl = caseFile.receipt
+    ? getPublicOfficialSourceHref(caseFile.receipt)
+    : null;
   const receiptLocator = caseFile.receipt
     ? describeReceiptLocator(caseFile.receipt.locatorType)
     : null;
@@ -640,9 +643,9 @@ function ExplorerDetail({
           <DetailRow label="Raw path" value={caseFile.receipt.rawPath} />
           {caseFile.receipt.sourceUrl && (
             <DetailRow
-              label="URL"
+              label="Página oficial"
               value={`${receiptLocator?.actionLabel ?? "Abrir fuente"} ↗`}
-              href={caseFile.receipt.sourceUrl}
+              href={getPublicOfficialSourceHref(caseFile.receipt)}
             />
           )}
           <DetailRow

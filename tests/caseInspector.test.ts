@@ -79,6 +79,10 @@ test("buildCaseInspector keeps actions encoded and points to full expediente", (
   const inspector = buildCaseInspector(caseFile);
 
   assert.equal(
+    inspector.actions.officialSourceHref,
+    "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+  );
+  assert.equal(
     inspector.actions.reportHref,
     "/expediente/AR-CONTRACT-40%2F31-1003-CON21/informe",
   );

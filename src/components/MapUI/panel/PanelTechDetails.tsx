@@ -5,6 +5,7 @@ import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
+import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { CaseSignalPanel } from "@/components/CaseSignals";
 import { ContextualCitationsPanel } from "@/components/ContextualCitations";
 import styles from "../casePanel.module.css";
@@ -65,7 +66,7 @@ export default function PanelTechDetails({ caseFile, signalContext }: Props) {
               {relatedReceipts.slice(0, 6).map((receipt) => (
                 <a
                   key={receipt.receiptId}
-                  href={receipt.sourceUrl}
+                  href={getPublicOfficialSourceHref(receipt)}
                   target="_blank"
                   rel="noreferrer"
                   className={styles.relatedReceiptLink}

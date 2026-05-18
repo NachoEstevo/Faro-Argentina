@@ -7,6 +7,7 @@ import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { formatAmountWithUsd, type AmountInput } from "@/lib/format/money";
 import { CaseSignalChips, CaseSignalPanel } from "./CaseSignals";
 import { ContextualCitationsPanel } from "./ContextualCitations";
@@ -80,7 +81,7 @@ export function CaseDetails({
           <div className="relatedReceiptList">
             <span>Evidencia cruzada</span>
             {relatedReceipts.slice(0, 6).map((receipt) => (
-              <a key={receipt.receiptId} href={receipt.sourceUrl} target="_blank" rel="noreferrer">
+              <a key={receipt.receiptId} href={getPublicOfficialSourceHref(receipt)} target="_blank" rel="noreferrer">
                 {shortSource(receipt.sourceId)}
               </a>
             ))}
@@ -91,7 +92,7 @@ export function CaseDetails({
             <FileText size={16} aria-hidden />
             Informe PDF
           </a>
-          <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
+          <a href={expediente.actions.officialSourceHref} target="_blank" rel="noreferrer">
             <ExternalLink size={16} aria-hidden />
             Fuente oficial
           </a>
@@ -198,7 +199,7 @@ export function CountryExplorer({
                 <FileText size={16} aria-hidden />
                 Informe PDF
               </a>
-              <a href={caseFile.receipt.sourceUrl} target="_blank" rel="noreferrer">
+              <a href={getPublicOfficialSourceHref(caseFile.receipt)} target="_blank" rel="noreferrer">
                 <ExternalLink size={16} aria-hidden />
                 Fuente oficial
               </a>
