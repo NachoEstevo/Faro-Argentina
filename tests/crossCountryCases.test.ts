@@ -667,7 +667,7 @@ test("buildChileCompraCases turns API details into exportable procurement cases"
   assert.equal(chileCase?.receipt.sourceUrl, awardActUrl);
 });
 
-test("buildChileCompraCases can expose official buyer commune centroid as administrative geo evidence", () => {
+test("buildChileCompraCases keeps buyer commune centroids as non-map administrative references", () => {
   const snapshot: ChileCompraSnapshot = {
     details: [
       {
@@ -717,10 +717,11 @@ test("buildChileCompraCases can expose official buyer commune centroid as admini
     },
   );
 
-  assert.deepEqual(caseFile?.coordinates, { lat: -29.9, lon: -71.25 });
+  assert.equal(caseFile?.coordinates, null);
   assert.equal(caseFile?.locationName, "La Serena / Región de Coquimbo");
   assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
   assert.equal(caseFile?.geoEvidence?.[0]?.granularity, "commune");
+  assert.equal(caseFile?.geoEvidence?.[0]?.exposeOnMap, false);
   assert.equal(caseFile?.geoEvidence?.[0]?.satelliteEligible, false);
   assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /comprador/i);
 });
@@ -817,8 +818,9 @@ test("buildChileCompraOcdsCases turns OCDS releases into supplier-aware cases wi
   assert.equal(caseFile?.awardActUrl, "https://www.mercadopublico.cl/award");
   assert.equal(caseFile?.receipt.rawPath, "data/official/cl/chilecompra-ocds-procesos-2025-01.sample.json");
   assert.equal(caseFile?.relatedReceipts?.[0]?.rawPath, "data/official/cl/chilecompra-ocds-procesos-2025-01.sample.json");
-  assert.deepEqual(caseFile?.coordinates, { lat: -52.25, lon: -71.92 });
+  assert.equal(caseFile?.coordinates, null);
   assert.equal(caseFile?.geoEvidence?.[0]?.precision, "official_admin_centroid");
+  assert.equal(caseFile?.geoEvidence?.[0]?.exposeOnMap, false);
   assert.match(caseFile?.geoEvidence?.[0]?.caveat ?? "", /comprador/i);
 });
 

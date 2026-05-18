@@ -851,7 +851,8 @@ function buildChileGeoEvidence(
 
   return [{
     ...evidence,
-    caveat: "Centroide comunal oficial del comprador; no es sitio exacto de ejecucion ni prueba visual de avance.",
+    exposeOnMap: false,
+    caveat: "Referencia comunal oficial del comprador; no es sitio exacto de ejecucion, no debe dibujarse como punto del caso ni usarse como prueba visual de avance.",
   }];
 }
 
@@ -884,7 +885,8 @@ function buildChileOcdsGeoEvidence({
 
   return [{
     ...evidence,
-    caveat: "Centroide comunal oficial del comprador; no es sitio exacto de ejecucion ni prueba visual de avance.",
+    exposeOnMap: false,
+    caveat: "Referencia comunal oficial del comprador; no es sitio exacto de ejecucion, no debe dibujarse como punto del caso ni usarse como prueba visual de avance.",
   }];
 }
 

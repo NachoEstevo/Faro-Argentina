@@ -1,8 +1,8 @@
 # Contexto De Producto: Faro
 
-Fecha: 2026-05-17
+Fecha: 2026-05-18
 Audiencia: producto, UI/UX, datos, satelite, ingenieria
-Estado: contexto de trabajo vigente despues de Explorer compacto y limpieza de geometria
+Estado: contexto vigente para demo de hackathon, Explorer compacto y fuentes oficiales publicas
 
 ## Definicion Corta
 
@@ -26,7 +26,7 @@ Los datos de gasto publico existen, pero estan fragmentados:
 
 - CSVs, XLSX, APIs y portales;
 - nombres de entidades inconsistentes;
-- links de dataset en lugar de paginas directas de cada caso;
+- links de dataset en lugar de paginas oficiales comprensibles;
 - geolocalizacion debil o ausente;
 - contratos separados de pagos, avance y proveedores;
 - registros publicos dificiles de citar fuera del portal original.
@@ -123,7 +123,8 @@ Campos importantes:
 
 - source id;
 - source name;
-- source URL;
+- source URL cruda para reproducibilidad;
+- public source URL para abrir la pagina oficial en la UI;
 - raw path;
 - snapshot hash;
 - row hash;
@@ -138,6 +139,10 @@ La UI debe distinguir entre:
 - busqueda oficial;
 - URL de dataset oficial;
 - sin URL exacta.
+
+Cuando un receipt conserva un link descargable a CSV/XLSX/API, la UI publica
+debe abrir la pagina oficial del catalogo o portal cuando exista. El link crudo
+queda para export tecnico y reproducibilidad.
 
 ### Punto En El Mapa
 
@@ -187,12 +192,15 @@ Datos actuales:
 - 558 Argentina;
 - 609 Peru;
 - 700 Chile.
-- 1253 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 292 Chile.
+- 961 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 0 Chile.
 - 2 casos de Argentina marcados como `known_bad_geometry` siguen disponibles
   para Explorer/export, pero no se dibujan en el mapa.
-- En Peru y Chile una parte relevante de los puntos son centroides
-  administrativos oficiales. Son referencias territoriales para navegar, no
-  sitios exactos de ejecucion ni evidencia satelital directa.
+- En Peru los puntos actuales son centroides distritales oficiales cuando pasan
+  el gate de mapa. Son referencias territoriales para navegar, no sitios exactos
+  de ejecucion ni evidencia satelital directa.
+- En Chile hay evidencia administrativa para orientar investigacion en Explorer,
+  pero no hay geometria map-ready actual; por eso no se dibuja ningun punto de
+  Chile en el mapa.
 
 Bloqueos antes de llamarlo producto terminado:
 
