@@ -16,18 +16,18 @@ export default function FloatingModeToggle() {
       <Link
         href="/pais/AR?mode=explorer"
         className={styles.floatingToggleButton}
-        aria-label="Abrir modo Explorer"
+        aria-label="Abrir explorador de expedientes"
       >
         <FileSearch size={13} aria-hidden />
-        Explorer
+        Explorar
       </Link>
       <Link
         href="/pais/AR?mode=investigations"
         className={styles.floatingToggleButton}
-        aria-label="Abrir carpetas de investigación"
+        aria-label="Abrir mis carpetas"
       >
         <FolderOpen size={13} aria-hidden />
-        Carpetas
+        Mis carpetas
       </Link>
     </div>
   );

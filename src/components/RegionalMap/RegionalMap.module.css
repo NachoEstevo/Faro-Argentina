@@ -941,6 +941,9 @@
   font-size: 12px;
   border-radius: 999px;
   cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .floatingToggleButton:hover {

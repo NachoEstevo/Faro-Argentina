@@ -7,6 +7,7 @@ const investigationsChromeUrl = new URL("../src/components/Investigations/Invest
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
+const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", import.meta.url);
 
 test("InvestigationsView manages local workspaces, analysis and ZIP export", async () => {
@@ -38,7 +39,7 @@ test("FaroExperience exposes Carpetas from the main mode toggle", async () => {
   assert.match(source, /viewMode === "investigations"/);
   assert.match(source, /FolderOpen/);
   assert.match(source, /setViewMode\("investigations"\)/);
-  assert.match(source, /Carpetas/);
+  assert.match(source, /Mis carpetas/);
 });
 
 test("FaroExperience keeps private modes isolated from the map sidebar", async () => {
@@ -59,10 +60,13 @@ test("country route can open investigations mode directly", async () => {
 
 test("regional landing exposes Carpetas while aportes mode can still link to it", async () => {
   const floatingSource = await readFile(floatingToggleUrl, "utf8");
+  const stylesSource = await readFile(regionalMapStylesUrl, "utf8");
   const aportesSource = await readFile(aportesViewUrl, "utf8");
 
   assert.match(floatingSource, /mode=investigations/);
-  assert.match(floatingSource, /Carpetas/);
+  assert.match(floatingSource, /Mis carpetas/);
+  assert.match(floatingSource, /Explorar/);
+  assert.match(stylesSource, /text-decoration: none/);
   assert.match(floatingSource, /FolderOpen/);
   assert.match(aportesSource, /onSwitchToInvestigations/);
   assert.match(aportesSource, /Investigaciones/);

@@ -479,7 +479,7 @@ export default function FaroExperience({
               aria-pressed={viewMode === "explorer"}
             >
               <FileSearch size={13} aria-hidden />
-              Explorer
+              Explorar
             </button>
             <button
               type="button"
@@ -488,7 +488,7 @@ export default function FaroExperience({
               aria-pressed={false}
             >
               <FolderOpen size={13} aria-hidden />
-              Carpetas
+              Mis carpetas
             </button>
           </div>
           {viewMode === "map" && !selectedCase && (
