@@ -29,7 +29,8 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Resumen de carpeta/);
   assert.match(source, /Motivos declarados/);
   assert.match(source, /AnalysisMarkdown/);
-  assert.match(source, /cleanInvestigationAnalysisMarkdown/);
+  assert.match(source, /parseInvestigationAnalysisBlocks/);
+  assert.match(source, /analysisTable/);
   assert.doesNotMatch(source, /<pre className=\{styles\.analysis\}/);
   assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupción|Score de corrupcion|Publicar caso/);
 });

@@ -19,7 +19,7 @@ import {
   type InvestigationCaseRelationReason,
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
-import { cleanInvestigationAnalysisMarkdown } from "@/lib/data/investigationAnalysisText";
+import { parseInvestigationAnalysisBlocks } from "@/lib/data/investigationAnalysisText";
 import styles from "./InvestigationsView.module.css";
 
 interface SidebarProps {
@@ -66,11 +66,6 @@ interface SelectedCasesPanelProps {
   workspace: InvestigationWorkspace;
   onRemoveCase: (caseId: string) => void;
 }
-
-type AnalysisBlock =
-  | { type: "heading"; text: string }
-  | { type: "paragraph"; text: string }
-  | { type: "list"; items: string[] };
 
 export function InvestigationsSidebar({
   onSwitchToMap,
@@ -182,7 +177,7 @@ export function InvestigationAnalysisPanel({
 }
 
 function AnalysisMarkdown({ markdown }: { markdown: string }) {
-  const blocks = parseAnalysisBlocks(cleanInvestigationAnalysisMarkdown(markdown));
+  const blocks = parseInvestigationAnalysisBlocks(markdown);
   return (
     <article className={styles.analysisReport} aria-label="Informe de análisis">
       {blocks.map((block, index) => {
@@ -196,60 +191,34 @@ function AnalysisMarkdown({ markdown }: { markdown: string }) {
             </ul>
           );
         }
+        if (block.type === "table") {
+          return (
+            <div className={styles.analysisTableWrap} key={`${block.type}-${index}`}>
+              <table className={styles.analysisTable}>
+                <thead>
+                  <tr>
+                    {block.headers.map((header, headerIndex) => (
+                      <th key={`${header}-${headerIndex}`}>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={`row-${rowIndex}`}>
+                      {row.map((cell, cellIndex) => (
+                        <td key={`${cell}-${cellIndex}`}>{cell}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
         return <p key={`${block.type}-${index}`}>{block.text}</p>;
       })}
     </article>
   );
-}
-
-function parseAnalysisBlocks(markdown: string): AnalysisBlock[] {
-  const blocks: AnalysisBlock[] = [];
-  let paragraph: string[] = [];
-  let listItems: string[] = [];
-
-  function flushParagraph() {
-    if (paragraph.length === 0) return;
-    blocks.push({ type: "paragraph", text: paragraph.join(" ") });
-    paragraph = [];
-  }
-
-  function flushList() {
-    if (listItems.length === 0) return;
-    blocks.push({ type: "list", items: listItems });
-    listItems = [];
-  }
-
-  for (const rawLine of markdown.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line) {
-      flushParagraph();
-      flushList();
-      continue;
-    }
-    const heading = line.match(/^#{1,6}\s+(.+)$/);
-    if (heading?.[1]) {
-      flushParagraph();
-      flushList();
-      blocks.push({ type: "heading", text: stripMarkdownEmphasis(heading[1]) });
-      continue;
-    }
-    const listItem = line.match(/^[-*]\s+(.+)$/);
-    if (listItem?.[1]) {
-      flushParagraph();
-      listItems.push(stripMarkdownEmphasis(listItem[1]));
-      continue;
-    }
-    flushList();
-    paragraph.push(stripMarkdownEmphasis(line));
-  }
-
-  flushParagraph();
-  flushList();
-  return blocks;
-}
-
-function stripMarkdownEmphasis(value: string): string {
-  return value.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
 }
 
 export function WorkspaceHeader({ workspace, onExport }: WorkspaceHeaderProps) {

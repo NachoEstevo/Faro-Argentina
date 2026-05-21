@@ -356,6 +356,43 @@
   padding-left: 18px;
 }
 
+.analysisTableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+}
+
+.analysisTable {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.analysisTable th,
+.analysisTable td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--cf-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.analysisTable th {
+  background: rgba(13, 15, 19, 0.64);
+  color: var(--cf-text);
+  font-weight: 700;
+}
+
+.analysisTable td {
+  color: var(--cf-text-secondary);
+}
+
+.analysisTable tr:last-child td {
+  border-bottom: 0;
+}
+
 .error {
   color: var(--cf-state-flag);
   font-size: 13px;

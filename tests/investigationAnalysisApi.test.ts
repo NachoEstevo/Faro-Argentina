@@ -124,6 +124,8 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
     assert.equal(calls[0]?.authorization, "Bearer minimax-test-key");
     assert.doesNotMatch(calls[0]?.body ?? "", /minimax-test-key/);
     assert.match(calls[0]?.body ?? "", /No inventes fuentes/);
+    assert.match(calls[0]?.body ?? "", /matriz de trabajo/i);
+    assert.match(calls[0]?.body ?? "", /próximo paso concreto/i);
     assert.match(calls[0]?.body ?? "", /caseRelations/);
     assert.match(calls[0]?.body ?? "", /same_judicial_context/);
     assert.match(calls[0]?.body ?? "", /Contexto judicial oficial compartido/);
