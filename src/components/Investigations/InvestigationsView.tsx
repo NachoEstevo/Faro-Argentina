@@ -6,10 +6,13 @@ import { Link as LinkIcon } from "lucide-react";
 import type { InvestigationCasePack } from "@/lib/caseRepository";
 import {
   addCaseToWorkspace,
+  buildInvestigationAggregate,
   createInvestigationWorkspace,
+  INVESTIGATION_RELATION_REASON_OPTIONS,
   removeCaseFromWorkspace,
   type InvestigationAggregate,
   type InvestigationAnalysis,
+  type InvestigationCaseRelationReason,
   type InvestigationEntity,
   type InvestigationSourceLink,
   type InvestigationWorkspace,
@@ -21,6 +24,7 @@ import {
   CaseSearchPanel,
   CreateWorkspaceForm,
   InvestigationAnalysisPanel,
+  InvestigationSummaryPanel,
   InvestigationsSidebar,
   SelectedCasesPanel,
   WorkspaceHeader,
@@ -48,6 +52,8 @@ export default function InvestigationsView({
 }: Props) {
   const [workspace, setWorkspace] = useState<InvestigationWorkspace | null>(null);
   const [query, setQuery] = useState("");
+  const [relationReason, setRelationReason] = useState<InvestigationCaseRelationReason>("same_judicial_context");
+  const [relationNote, setRelationNote] = useState("");
   const [noteText, setNoteText] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [entityLabel, setEntityLabel] = useState("");
@@ -96,6 +102,19 @@ export default function InvestigationsView({
     () => workspace?.caseIds.map((caseId) => cases.find((caseFile) => caseFile.id === caseId)).filter(Boolean) as ExplorerCase[] ?? [],
     [cases, workspace?.caseIds],
   );
+  const selectedCasePacks = useMemo(
+    () => workspace?.caseIds.map((caseId) => casePacks[caseId]).filter(Boolean) as InvestigationCasePack[] ?? [],
+    [casePacks, workspace?.caseIds],
+  );
+  const workspaceAggregate = useMemo(
+    () => {
+      if (!workspace) return null;
+      if (workspace.caseIds.length > 0 && selectedCasePacks.length === 0) return null;
+      return buildInvestigationAggregate(workspace, selectedCasePacks.map((pack) => pack.evidencePack));
+    },
+    [selectedCasePacks, workspace],
+  );
+  const visibleAggregate = workspaceAggregate ?? aggregate;
   const results = useMemo(() => {
     const trimmed = query.trim();
     if (trimmed.length < 2) return [];
@@ -118,10 +137,11 @@ export default function InvestigationsView({
     }));
   }
 
-  function handleAddCase(caseId: string) {
+  function handleAddCase(caseId: string, reason: InvestigationCaseRelationReason, note: string) {
     if (!workspace) return;
-    setWorkspace(addCaseToWorkspace(workspace, caseId));
+    setWorkspace(addCaseToWorkspace(workspace, caseId, { reason, note }));
     setQuery("");
+    setRelationNote("");
   }
 
   function handleRemoveCase(caseId: string) {
@@ -223,11 +243,21 @@ export default function InvestigationsView({
             <WorkspaceHeader workspace={workspace} onExport={handleExport} />
             <CaseSearchPanel
               query={query}
+              relationReason={relationReason}
+              relationNote={relationNote}
               results={results}
+              relationReasonOptions={INVESTIGATION_RELATION_REASON_OPTIONS}
               onQueryChange={setQuery}
+              onRelationReasonChange={setRelationReason}
+              onRelationNoteChange={setRelationNote}
               onAddCase={handleAddCase}
             />
-            <SelectedCasesPanel selectedCases={selectedCases} onRemoveCase={handleRemoveCase} />
+            <SelectedCasesPanel
+              selectedCases={selectedCases}
+              workspace={workspace}
+              onRemoveCase={handleRemoveCase}
+            />
+            <InvestigationSummaryPanel aggregate={visibleAggregate} />
 
             <section className={styles.grid}>
               <div className={styles.panel}>
@@ -252,7 +282,7 @@ export default function InvestigationsView({
               caseCount={workspace.caseIds.length}
               statusText={statusText}
               isError={analysisState === "error"}
-              aggregate={aggregate}
+              aggregate={visibleAggregate}
               analysisMarkdown={latestAnalysis?.markdown}
             />
           </div>

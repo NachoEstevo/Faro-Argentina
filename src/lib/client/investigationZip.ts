@@ -1,5 +1,9 @@
 import type { InvestigationCasePack } from "../caseRepository.ts";
-import type { InvestigationWorkspace } from "../data/investigationWorkspaces.ts";
+import {
+  buildInvestigationAggregate,
+  type InvestigationAggregate,
+  type InvestigationWorkspace,
+} from "../data/investigationWorkspaces.ts";
 
 export interface BuildInvestigationZipInput {
   workspace: InvestigationWorkspace;
@@ -35,6 +39,10 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
   const analysis = input.analysisMarkdown ??
     input.workspace.analyses[input.workspace.analyses.length - 1]?.markdown ??
     "";
+  const aggregate = buildInvestigationAggregate(
+    input.workspace,
+    input.casePacks.map((pack) => pack.evidencePack),
+  );
   const files: Array<{ name: string; content: string }> = [
     {
       name: "workspace.json",
@@ -43,6 +51,18 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     {
       name: "README.txt",
       content: buildReadme(input.workspace),
+    },
+    {
+      name: "summary.md",
+      content: buildSummary(input.workspace, aggregate),
+    },
+    {
+      name: "timeline.md",
+      content: buildTimeline(aggregate),
+    },
+    {
+      name: "entities.md",
+      content: buildEntities(input.workspace, aggregate),
     },
     {
       name: "notes.md",
@@ -81,14 +101,108 @@ function buildReadme(workspace: InvestigationWorkspace): string {
     `País: ${workspace.countryCode ?? "sin país fijo"}`,
     "",
     "Este ZIP es una carpeta privada de trabajo. No es una publicación de Faro,",
-    "no prueba wrongdoing y no reemplaza la revisión de fuentes oficiales.",
+    "no prueba hechos y no reemplaza la revisión de fuentes oficiales.",
     "",
     "Archivos principales:",
     "- workspace.json: datos estructurados de la carpeta.",
+    "- summary.md: resumen determinístico de expedientes, vínculos y brechas.",
+    "- timeline.md: línea temporal de expedientes seleccionados.",
+    "- entities.md: entidades cargadas y coincidencias detectadas.",
     "- notes.md: notas del usuario.",
     "- analysis.md: análisis de trabajo si fue generado.",
     "- cases/: expedientes y evidence packs seleccionados.",
     "- sources/links.json: links cargados manualmente.",
+  ].join("\n");
+}
+
+function buildSummary(workspace: InvestigationWorkspace, aggregate: InvestigationAggregate): string {
+  return [
+    `# ${workspace.title}`,
+    "",
+    workspace.investigationQuestion ? `Pregunta de trabajo: ${workspace.investigationQuestion}` : null,
+    workspace.description ? `Descripción: ${workspace.description}` : null,
+    "",
+    `Expedientes seleccionados: ${aggregate.caseCount}`,
+    `Fuentes oficiales: ${aggregate.sourceIds.length}`,
+    `Sin geometría oficial: ${formatCount(aggregate.geometryGaps.count, "expediente")}`,
+    "",
+    "## Motivos de relación",
+    "",
+    ...formatEmptyableList(
+      aggregate.relationReasons,
+      (item) => `- ${item.label}: ${formatCount(item.count, "expediente")} (${formatCaseIds(item.caseIds)})`,
+      "- Sin motivos cargados.",
+    ),
+    "",
+    "## Notas de relación",
+    "",
+    ...formatEmptyableList(
+      aggregate.caseRelationNotes,
+      (item) => `- ${item.caseId}: ${item.label}. ${item.note}`,
+      "- Sin notas de relación.",
+    ),
+    "",
+    "## Repeticiones detectadas",
+    "",
+    ...formatEmptyableList(
+      aggregate.repeatedSuppliers,
+      (item) => `- Proveedor: ${item.label} (${formatCount(item.count, "expediente")})`,
+      "- Sin proveedores repetidos.",
+    ),
+    ...formatEmptyableList(
+      aggregate.repeatedAgencies,
+      (item) => `- Organismo: ${item.label} (${formatCount(item.count, "expediente")})`,
+      "- Sin organismos repetidos.",
+    ),
+    "",
+    "## Señales",
+    "",
+    ...formatEmptyableList(
+      aggregate.signals,
+      (item) => `- ${item.label}: ${formatCount(item.count, "expediente")} (${formatCaseIds(item.caseIds)})`,
+      "- Sin señales cargadas.",
+    ),
+  ].filter((line): line is string => line !== null).join("\n");
+}
+
+function buildTimeline(aggregate: InvestigationAggregate): string {
+  if (aggregate.timeline.length === 0) return "# Línea temporal\n\nSin años disponibles.";
+  return [
+    "# Línea temporal",
+    "",
+    ...aggregate.timeline.map((bucket) =>
+      `- ${bucket.year}: ${formatCount(bucket.count, "expediente")} (${formatCaseIds(bucket.caseIds)})`
+    ),
+  ].join("\n");
+}
+
+function buildEntities(workspace: InvestigationWorkspace, aggregate: InvestigationAggregate): string {
+  return [
+    "# Entidades",
+    "",
+    "## Cargadas por el usuario",
+    "",
+    ...formatEmptyableList(
+      workspace.entities,
+      (entity) => `- ${entity.label} (${entity.kind})${entity.note ? `: ${entity.note}` : ""}`,
+      "- Sin entidades cargadas.",
+    ),
+    "",
+    "## Coincidencias en expedientes",
+    "",
+    ...formatEmptyableList(
+      aggregate.entityMatches,
+      (match) => `- ${match.entityLabel}: ${formatCaseIds(match.caseIds)}`,
+      "- Sin coincidencias detectadas.",
+    ),
+    "",
+    "## Montos",
+    "",
+    ...formatEmptyableList(
+      aggregate.amountsByCurrency,
+      (amount) => `- ${amount.currency}: ${amount.total} (${formatCount(amount.count, "expediente")})`,
+      "- Sin montos estructurados.",
+    ),
   ].join("\n");
 }
 
@@ -236,4 +350,17 @@ function slugify(value: string): string {
 
 function fileSafeId(value: string): string {
   return value.replace(/[^a-zA-Z0-9._-]+/g, "-");
+}
+
+function formatEmptyableList<T>(items: T[], formatter: (item: T) => string, emptyText: string): string[] {
+  if (items.length === 0) return [emptyText];
+  return items.map(formatter);
+}
+
+function formatCount(count: number, singular: string): string {
+  return `${count} ${singular}${count === 1 ? "" : "s"}`;
+}
+
+function formatCaseIds(caseIds: string[]): string {
+  return caseIds.join(", ");
 }

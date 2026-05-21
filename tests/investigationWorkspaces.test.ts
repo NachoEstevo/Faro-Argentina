@@ -51,6 +51,40 @@ test("addCaseToWorkspace dedupes case ids and removeCaseToWorkspace updates time
   assert.equal(removed.updatedAt, "2026-05-17T12:15:00.000Z");
 });
 
+test("addCaseToWorkspace stores why a case belongs in the folder", () => {
+  const workspace = createInvestigationWorkspace(
+    { title: "Carpeta", countryCode: "AR", description: "", tags: [] },
+    new Date("2026-05-17T12:00:00.000Z"),
+  );
+
+  const withCase = addCaseToWorkspace(workspace, "AR-CASE-1", {
+    reason: "same_supplier",
+    note: "Mismo proveedor mencionado en la pregunta de trabajo.",
+    now: new Date("2026-05-17T12:05:00.000Z"),
+  });
+  const updated = addCaseToWorkspace(withCase, "AR-CASE-1", {
+    reason: "same_judicial_context",
+    note: "Relacionado por contexto judicial oficial.",
+    now: new Date("2026-05-17T12:10:00.000Z"),
+  });
+  const removed = removeCaseFromWorkspace(updated, "AR-CASE-1", new Date("2026-05-17T12:15:00.000Z"));
+
+  assert.deepEqual(withCase.caseRelations, [{
+    caseId: "AR-CASE-1",
+    reason: "same_supplier",
+    note: "Mismo proveedor mencionado en la pregunta de trabajo.",
+    addedAt: "2026-05-17T12:05:00.000Z",
+  }]);
+  assert.deepEqual(updated.caseIds, ["AR-CASE-1"]);
+  assert.deepEqual(updated.caseRelations, [{
+    caseId: "AR-CASE-1",
+    reason: "same_judicial_context",
+    note: "Relacionado por contexto judicial oficial.",
+    addedAt: "2026-05-17T12:10:00.000Z",
+  }]);
+  assert.deepEqual(removed.caseRelations, []);
+});
+
 test("buildInvestigationAggregate summarizes repeated entities, amounts, signals and gaps", () => {
   const workspace = {
     ...createInvestigationWorkspace(
@@ -58,6 +92,26 @@ test("buildInvestigationAggregate summarizes repeated entities, amounts, signals
       new Date("2026-05-17T12:00:00.000Z"),
     ),
     caseIds: ["AR-CASE-1", "AR-CASE-2", "AR-CASE-3"],
+    caseRelations: [
+      {
+        caseId: "AR-CASE-1",
+        reason: "same_judicial_context" as const,
+        note: "Caso judicial usado como ancla.",
+        addedAt: "2026-05-17T12:01:00.000Z",
+      },
+      {
+        caseId: "AR-CASE-2",
+        reason: "same_supplier" as const,
+        note: "Comparar proveedor.",
+        addedAt: "2026-05-17T12:02:00.000Z",
+      },
+      {
+        caseId: "AR-CASE-3",
+        reason: "same_agency" as const,
+        note: "",
+        addedAt: "2026-05-17T12:03:00.000Z",
+      },
+    ],
     entities: [
       { id: "ENT-1", label: "Austral Construcciones", kind: "supplier" as const, note: "" },
       { id: "ENT-2", label: "Dirección Nacional de Vialidad", kind: "agency" as const, note: "" },
@@ -119,6 +173,40 @@ test("buildInvestigationAggregate summarizes repeated entities, amounts, signals
   assert.equal(aggregate.signals.find((signal) => signal.code === "single_bidder")?.count, 2);
   assert.equal(aggregate.geometryGaps.count, 2);
   assert.deepEqual(aggregate.timeline.find((bucket) => bucket.year === 2008)?.caseIds, ["AR-CASE-2", "AR-CASE-3"]);
+  assert.deepEqual(aggregate.relationReasons, [
+    {
+      reason: "same_judicial_context",
+      label: "Mismo contexto judicial",
+      count: 1,
+      caseIds: ["AR-CASE-1"],
+    },
+    {
+      reason: "same_agency",
+      label: "Mismo organismo",
+      count: 1,
+      caseIds: ["AR-CASE-3"],
+    },
+    {
+      reason: "same_supplier",
+      label: "Mismo proveedor",
+      count: 1,
+      caseIds: ["AR-CASE-2"],
+    },
+  ]);
+  assert.deepEqual(aggregate.caseRelationNotes, [
+    {
+      caseId: "AR-CASE-1",
+      reason: "same_judicial_context",
+      label: "Mismo contexto judicial",
+      note: "Caso judicial usado como ancla.",
+    },
+    {
+      caseId: "AR-CASE-2",
+      reason: "same_supplier",
+      label: "Mismo proveedor",
+      note: "Comparar proveedor.",
+    },
+  ]);
   assert.deepEqual(aggregate.entityMatches.map((match) => match.entityLabel), [
     "Austral Construcciones",
     "Dirección Nacional de Vialidad",

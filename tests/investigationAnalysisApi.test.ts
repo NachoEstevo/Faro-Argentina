@@ -93,6 +93,12 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
         title: "Causa Vialidad",
         countryCode: "AR",
         description: "Carpeta privada de prueba.",
+        caseRelations: [{
+          caseId: vialidadCaseId,
+          reason: "same_judicial_context",
+          note: "Contexto judicial oficial compartido.",
+          addedAt: "2026-05-17T12:05:00.000Z",
+        }],
         sourceLinks: [{ id: "SRC-1", url: "https://example.test", label: "Fuente", note: "nota" }],
         notes: [{ id: "NOTE-1", body: "Cruzar obras mencionadas.", createdAt: "2026-05-17T12:00:00.000Z" }],
         entities: [{ id: "ENT-1", label: "Vialidad", kind: "agency", note: "" }],
@@ -112,6 +118,9 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
     assert.equal(calls[0]?.authorization, "Bearer minimax-test-key");
     assert.doesNotMatch(calls[0]?.body ?? "", /minimax-test-key/);
     assert.match(calls[0]?.body ?? "", /No inventes fuentes/);
+    assert.match(calls[0]?.body ?? "", /caseRelations/);
+    assert.match(calls[0]?.body ?? "", /same_judicial_context/);
+    assert.match(calls[0]?.body ?? "", /Contexto judicial oficial compartido/);
   } finally {
     globalThis.fetch = originalFetch;
     restoreEnv(env);

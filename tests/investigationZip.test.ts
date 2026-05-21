@@ -18,8 +18,15 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
       new Date("2026-05-17T12:00:00.000Z"),
     ),
     caseIds: ["AR-CASE-1"],
+    caseRelations: [{
+      caseId: "AR-CASE-1",
+      reason: "same_judicial_context" as const,
+      note: "Expediente agregado por contexto judicial oficial compartido.",
+      addedAt: "2026-05-17T12:05:00.000Z",
+    }],
     sourceLinks: [{ id: "SRC-1", url: "https://example.test", label: "Fuente", note: "Nota" }],
     notes: [{ id: "NOTE-1", body: "Cruzar fuente oficial.", createdAt: "2026-05-17T12:00:00.000Z" }],
+    entities: [{ id: "ENT-1", label: "Proveedor", kind: "supplier" as const, note: "Entidad a revisar" }],
     analyses: [{
       id: "ANALYSIS-1",
       createdAt: "2026-05-17T12:10:00.000Z",
@@ -40,12 +47,19 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.equal(zip.bytes[1], 0x4b);
   assert.match(text, /workspace\.json/);
   assert.match(text, /README\.txt/);
+  assert.match(text, /summary\.md/);
+  assert.match(text, /timeline\.md/);
+  assert.match(text, /entities\.md/);
   assert.match(text, /notes\.md/);
   assert.match(text, /analysis\.md/);
   assert.match(text, /sources\/links\.json/);
   assert.match(text, /cases\/AR-CASE-1\.expediente\.json/);
   assert.match(text, /cases\/AR-CASE-1\.evidence\.json/);
   assert.match(text, /Carpeta de investigación Faro/);
+  assert.match(text, /Mismo contexto judicial/);
+  assert.match(text, /Expediente agregado por contexto judicial oficial compartido/);
+  assert.match(text, /Sin geometría oficial: 1 expediente/);
+  assert.match(text, /Proveedor/);
 });
 
 function casePack(caseId: string): InvestigationCasePack {
@@ -109,6 +123,12 @@ function casePack(caseId: string): InvestigationCasePack {
         id: caseId,
         countryCode: "AR",
         title: "Caso de prueba",
+        supplierName: "Proveedor",
+        supplierDocument: "30-70000000-0",
+        agencyName: "Vialidad",
+        amount: { currency: "ARS", value: 100 },
+        year: 2026,
+        coordinates: null,
         receipt: {
           receiptId: "REC-1",
           sourceId: "SRC",
@@ -141,7 +161,7 @@ function casePack(caseId: string): InvestigationCasePack {
       },
       relatedReceipts: [],
       contextualCitations: [],
-      signals: [],
+      signals: [{ code: "official_dataset", label: "Dataset oficial", severity: "info" }],
       caveats: [],
       verificationSteps: [],
     },

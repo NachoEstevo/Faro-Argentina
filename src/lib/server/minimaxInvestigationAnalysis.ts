@@ -87,6 +87,7 @@ export function buildInvestigationPrompt(input: MinimaxInvestigationAnalysisInpu
         countryCode: input.workspace.countryCode,
         description: input.workspace.description,
         investigationQuestion: input.workspace.investigationQuestion,
+        caseRelations: input.workspace.caseRelations,
         sourceLinks: input.workspace.sourceLinks,
         notes: input.workspace.notes,
         entities: input.workspace.entities,

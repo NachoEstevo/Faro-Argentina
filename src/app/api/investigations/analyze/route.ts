@@ -2,6 +2,9 @@ import { getInvestigationCasePacks } from "../../../../lib/caseRepository.ts";
 import {
   buildInvestigationAggregate,
   createInvestigationWorkspace,
+  INVESTIGATION_RELATION_REASON_OPTIONS,
+  type InvestigationCaseRelation,
+  type InvestigationCaseRelationReason,
   type InvestigationEntity,
   type InvestigationNote,
   type InvestigationSourceLink,
@@ -85,6 +88,7 @@ interface AnalysisRequestBody {
     countryCode: "AR";
     description: string;
     investigationQuestion: string | null;
+    caseRelations: InvestigationCaseRelation[];
     sourceLinks: InvestigationSourceLink[];
     notes: InvestigationNote[];
     entities: InvestigationEntity[];
@@ -101,6 +105,7 @@ function buildWorkspace(workspace: AnalysisRequestBody["workspace"], caseIds: st
       tags: [],
     }),
     caseIds,
+    caseRelations: sanitizeCaseRelations(workspace?.caseRelations, caseIds),
     sourceLinks: sanitizeSourceLinks(workspace?.sourceLinks),
     notes: sanitizeNotes(workspace?.notes),
     entities: sanitizeEntities(workspace?.entities),
@@ -129,6 +134,23 @@ function sanitizeSourceLinks(value: unknown): InvestigationSourceLink[] {
   }).filter((item) => item.url || item.note || item.label);
 }
 
+function sanitizeCaseRelations(value: unknown, caseIds: string[]): InvestigationCaseRelation[] {
+  if (!Array.isArray(value)) return [];
+  const selectedCaseIds = new Set(caseIds);
+  const relations = new Map<string, InvestigationCaseRelation>();
+  for (const item of value.slice(0, maxCaseIds)) {
+    const record = item as Partial<InvestigationCaseRelation>;
+    const relation = {
+      caseId: String(record.caseId ?? "").trim().slice(0, 200),
+      reason: sanitizeRelationReason(record.reason),
+      note: String(record.note ?? "").slice(0, 1000),
+      addedAt: String(record.addedAt ?? new Date().toISOString()),
+    };
+    if (relation.caseId && selectedCaseIds.has(relation.caseId)) relations.set(relation.caseId, relation);
+  }
+  return [...relations.values()];
+}
+
 function sanitizeNotes(value: unknown): InvestigationNote[] {
   if (!Array.isArray(value)) return [];
   return value.slice(0, 30).map((item, index) => {
@@ -152,6 +174,13 @@ function sanitizeEntities(value: unknown): InvestigationEntity[] {
       note: String(record.note ?? "").slice(0, 1000),
     };
   }).filter((item) => item.label);
+}
+
+function sanitizeRelationReason(value: unknown): InvestigationCaseRelationReason {
+  const reason = String(value ?? "manual_hypothesis") as InvestigationCaseRelationReason;
+  return INVESTIGATION_RELATION_REASON_OPTIONS.some((option) => option.value === reason)
+    ? reason
+    : "manual_hypothesis";
 }
 
 function optionalEnv(key: string): string | null {

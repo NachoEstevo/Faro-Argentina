@@ -13,7 +13,12 @@ import {
 } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
-import type { InvestigationAggregate, InvestigationWorkspace } from "@/lib/data/investigationWorkspaces";
+import {
+  getInvestigationRelationReasonLabel,
+  type InvestigationAggregate,
+  type InvestigationCaseRelationReason,
+  type InvestigationWorkspace,
+} from "@/lib/data/investigationWorkspaces";
 import styles from "./InvestigationsView.module.css";
 
 interface SidebarProps {
@@ -45,13 +50,19 @@ interface WorkspaceHeaderProps {
 
 interface CaseSearchPanelProps {
   query: string;
+  relationReason: InvestigationCaseRelationReason;
+  relationNote: string;
   results: ExplorerCase[];
+  relationReasonOptions: Array<{ value: InvestigationCaseRelationReason; label: string }>;
   onQueryChange: (value: string) => void;
-  onAddCase: (caseId: string) => void;
+  onRelationReasonChange: (value: InvestigationCaseRelationReason) => void;
+  onRelationNoteChange: (value: string) => void;
+  onAddCase: (caseId: string, reason: InvestigationCaseRelationReason, note: string) => void;
 }
 
 interface SelectedCasesPanelProps {
   selectedCases: ExplorerCase[];
+  workspace: InvestigationWorkspace;
   onRemoveCase: (caseId: string) => void;
 }
 
@@ -180,7 +191,17 @@ export function WorkspaceHeader({ workspace, onExport }: WorkspaceHeaderProps) {
   );
 }
 
-export function CaseSearchPanel({ query, results, onQueryChange, onAddCase }: CaseSearchPanelProps) {
+export function CaseSearchPanel({
+  query,
+  relationReason,
+  relationNote,
+  results,
+  relationReasonOptions,
+  onQueryChange,
+  onRelationReasonChange,
+  onRelationNoteChange,
+  onAddCase,
+}: CaseSearchPanelProps) {
   return (
     <section className={styles.panel}>
       <h3>Agregar expedientes Faro</h3>
@@ -190,9 +211,37 @@ export function CaseSearchPanel({ query, results, onQueryChange, onAddCase }: Ca
         onChange={(event) => onQueryChange(event.target.value)}
         placeholder="Buscar por proveedor, organismo, señal o id"
       />
+      <div className={styles.relationControls}>
+        <label className={styles.field}>
+          <span>Motivo de relación</span>
+          <select
+            className={styles.select}
+            value={relationReason}
+            onChange={(event) => onRelationReasonChange(event.target.value as InvestigationCaseRelationReason)}
+          >
+            {relationReasonOptions.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className={styles.field}>
+          <span>Nota de relación</span>
+          <input
+            className={styles.input}
+            value={relationNote}
+            onChange={(event) => onRelationNoteChange(event.target.value)}
+            placeholder="Por qué entra en esta carpeta"
+          />
+        </label>
+      </div>
       <div className={styles.results}>
         {results.map((caseFile) => (
-          <button key={caseFile.id} type="button" className={styles.result} onClick={() => onAddCase(caseFile.id)}>
+          <button
+            key={caseFile.id}
+            type="button"
+            className={styles.result}
+            onClick={() => onAddCase(caseFile.id, relationReason, relationNote)}
+          >
             <span>{caseFile.title}</span>
             <small>{caseFile.id}</small>
           </button>
@@ -202,25 +251,88 @@ export function CaseSearchPanel({ query, results, onQueryChange, onAddCase }: Ca
   );
 }
 
-export function SelectedCasesPanel({ selectedCases, onRemoveCase }: SelectedCasesPanelProps) {
+export function SelectedCasesPanel({ selectedCases, workspace, onRemoveCase }: SelectedCasesPanelProps) {
   return (
     <section className={styles.panel}>
       <h3>Expedientes seleccionados</h3>
       <div className={styles.caseList}>
         {selectedCases.length === 0 ? (
           <p className={styles.empty}>Todavía no agregaste expedientes.</p>
-        ) : selectedCases.map((caseFile) => (
-          <div key={caseFile.id} className={styles.caseRow}>
-            <div>
-              <strong>{caseFile.title}</strong>
-              <small>{caseFile.id}</small>
+        ) : selectedCases.map((caseFile) => {
+          const relation = (workspace.caseRelations ?? []).find((item) => item.caseId === caseFile.id);
+          return (
+            <div key={caseFile.id} className={styles.caseRow}>
+              <div>
+                <strong>{caseFile.title}</strong>
+                <small>{caseFile.id}</small>
+                <small>
+                  {getInvestigationRelationReasonLabel(relation?.reason ?? "manual_hypothesis")}
+                  {relation?.note ? ` · ${relation.note}` : ""}
+                </small>
+              </div>
+              <button type="button" onClick={() => onRemoveCase(caseFile.id)} aria-label="Quitar expediente">
+                <Trash2 size={14} aria-hidden />
+              </button>
             </div>
-            <button type="button" onClick={() => onRemoveCase(caseFile.id)} aria-label="Quitar expediente">
-              <Trash2 size={14} aria-hidden />
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
+  );
+}
+
+export function InvestigationSummaryPanel({ aggregate }: { aggregate: InvestigationAggregate | null }) {
+  if (!aggregate) return null;
+  return (
+    <section className={styles.panel}>
+      <h3>Resumen de carpeta</h3>
+      <div className={styles.metrics}>
+        <span>{aggregate.caseCount} expedientes</span>
+        <span>{aggregate.sourceIds.length} fuentes</span>
+        <span>{aggregate.geometryGaps.count} sin geometría oficial</span>
+      </div>
+      <div className={styles.summaryGrid}>
+        <SummaryList
+          title="Motivos declarados"
+          emptyText="Sin motivos cargados."
+          items={aggregate.relationReasons.map((item) =>
+            `${item.label}: ${item.count} expediente${item.count === 1 ? "" : "s"}`
+          )}
+        />
+        <SummaryList
+          title="Repeticiones"
+          emptyText="Sin repeticiones detectadas."
+          items={[
+            ...aggregate.repeatedSuppliers.map((item) => `Proveedor: ${item.label} (${item.count})`),
+            ...aggregate.repeatedAgencies.map((item) => `Organismo: ${item.label} (${item.count})`),
+          ]}
+        />
+        <SummaryList
+          title="Señales"
+          emptyText="Sin señales."
+          items={aggregate.signals.slice(0, 4).map((item) => `${item.label}: ${item.count}`)}
+        />
+        <SummaryList
+          title="Línea temporal"
+          emptyText="Sin años disponibles."
+          items={aggregate.timeline.slice(0, 4).map((item) => `${item.year}: ${item.count}`)}
+        />
+      </div>
+    </section>
+  );
+}
+
+function SummaryList({ title, items, emptyText }: { title: string; items: string[]; emptyText: string }) {
+  return (
+    <div className={styles.summaryList}>
+      <h4>{title}</h4>
+      {items.length === 0 ? (
+        <p>{emptyText}</p>
+      ) : (
+        <ul>
+          {items.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      )}
+    </div>
   );
 }

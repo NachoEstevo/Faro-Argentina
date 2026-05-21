@@ -45,6 +45,23 @@ export interface InvestigationAnalysis {
   markdown: string;
 }
 
+export type InvestigationCaseRelationReason =
+  | "same_supplier"
+  | "same_agency"
+  | "same_procedure"
+  | "same_location"
+  | "same_judicial_context"
+  | "same_source"
+  | "manual_hypothesis"
+  | "other";
+
+export interface InvestigationCaseRelation {
+  caseId: string;
+  reason: InvestigationCaseRelationReason;
+  note: string;
+  addedAt: string;
+}
+
 export interface InvestigationWorkspace {
   id: string;
   version: "faro_investigation_workspace_v1";
@@ -56,6 +73,7 @@ export interface InvestigationWorkspace {
   createdAt: string;
   updatedAt: string;
   caseIds: string[];
+  caseRelations: InvestigationCaseRelation[];
   sourceLinks: InvestigationSourceLink[];
   notes: InvestigationNote[];
   entities: InvestigationEntity[];
@@ -74,6 +92,18 @@ export interface CreateInvestigationWorkspaceInput {
 export interface InvestigationAggregate {
   caseCount: number;
   sourceIds: string[];
+  relationReasons: Array<{
+    reason: InvestigationCaseRelationReason;
+    label: string;
+    count: number;
+    caseIds: string[];
+  }>;
+  caseRelationNotes: Array<{
+    caseId: string;
+    reason: InvestigationCaseRelationReason;
+    label: string;
+    note: string;
+  }>;
   repeatedSuppliers: Array<{ label: string; document: string | null; count: number; caseIds: string[] }>;
   repeatedAgencies: Array<{ label: string; count: number; caseIds: string[] }>;
   amountsByCurrency: Array<{ currency: string; total: number; count: number }>;
@@ -82,6 +112,26 @@ export interface InvestigationAggregate {
   geometryGaps: { count: number; caseIds: string[] };
   entityMatches: Array<{ entityId: string; entityLabel: string; kind: InvestigationEntityKind; caseIds: string[] }>;
 }
+
+export interface AddCaseToWorkspaceOptions {
+  reason?: InvestigationCaseRelationReason;
+  note?: string;
+  now?: Date;
+}
+
+export const INVESTIGATION_RELATION_REASON_OPTIONS: Array<{
+  value: InvestigationCaseRelationReason;
+  label: string;
+}> = [
+  { value: "same_supplier", label: "Mismo proveedor" },
+  { value: "same_agency", label: "Mismo organismo" },
+  { value: "same_procedure", label: "Mismo procedimiento" },
+  { value: "same_location", label: "Misma ubicación" },
+  { value: "same_judicial_context", label: "Mismo contexto judicial" },
+  { value: "same_source", label: "Misma fuente" },
+  { value: "manual_hypothesis", label: "Hipótesis de trabajo" },
+  { value: "other", label: "Otra relación" },
+];
 
 export function createInvestigationWorkspace(
   input: CreateInvestigationWorkspaceInput,
@@ -99,6 +149,7 @@ export function createInvestigationWorkspace(
     createdAt,
     updatedAt: createdAt,
     caseIds: [],
+    caseRelations: [],
     sourceLinks: [],
     notes: [],
     entities: [],
@@ -110,13 +161,25 @@ export function createInvestigationWorkspace(
 export function addCaseToWorkspace(
   workspace: InvestigationWorkspace,
   caseId: string,
-  now = new Date(),
+  input: Date | AddCaseToWorkspaceOptions = new Date(),
 ): InvestigationWorkspace {
+  const options = resolveAddCaseOptions(input);
   const normalizedCaseId = normalizeInvestigationText(caseId);
   const caseIds = normalizedCaseId && !workspace.caseIds.includes(normalizedCaseId)
     ? [...workspace.caseIds, normalizedCaseId]
     : [...workspace.caseIds];
-  return { ...workspace, caseIds, updatedAt: now.toISOString() };
+  const caseRelations = normalizedCaseId
+    ? [
+      ...(workspace.caseRelations ?? []).filter((relation) => relation.caseId !== normalizedCaseId),
+      {
+        caseId: normalizedCaseId,
+        reason: normalizeRelationReason(options.reason),
+        note: normalizeInvestigationText(options.note),
+        addedAt: options.now.toISOString(),
+      },
+    ]
+    : [...(workspace.caseRelations ?? [])];
+  return { ...workspace, caseIds, caseRelations, updatedAt: options.now.toISOString() };
 }
 
 export function removeCaseFromWorkspace(
@@ -127,6 +190,7 @@ export function removeCaseFromWorkspace(
   return {
     ...workspace,
     caseIds: workspace.caseIds.filter((id) => id !== caseId),
+    caseRelations: (workspace.caseRelations ?? []).filter((relation) => relation.caseId !== caseId),
     updatedAt: now.toISOString(),
   };
 }
@@ -142,12 +206,19 @@ export function buildInvestigationAggregate(
   const timeline = new Map<number, { year: number; caseIds: string[] }>();
   const signals = new Map<string, { code: string; label: string; caseIds: string[] }>();
   const geometryGapCaseIds: string[] = [];
+  const relationReasons = new Map<InvestigationCaseRelationReason, {
+    reason: InvestigationCaseRelationReason;
+    label: string;
+    caseIds: string[];
+  }>();
   const entityMatches = new Map<string, {
     entityId: string;
     entityLabel: string;
     kind: InvestigationEntityKind;
     caseIds: string[];
   }>();
+  const selectedCaseIds = new Set(packs.map((pack) => pack.caseFile.id));
+  const relationNotes: InvestigationAggregate["caseRelationNotes"] = [];
 
   for (const pack of packs) {
     const caseFile = pack.caseFile;
@@ -167,9 +238,34 @@ export function buildInvestigationAggregate(
     matchWorkspaceEntities(entityMatches, workspace.entities, caseFile);
   }
 
+  const relationsByCaseId = new Map<string, InvestigationCaseRelation>();
+  for (const relation of workspace.caseRelations ?? []) {
+    if (!selectedCaseIds.has(relation.caseId)) continue;
+    relationsByCaseId.set(relation.caseId, relation);
+  }
+
+  for (const relation of relationsByCaseId.values()) {
+    const reason = normalizeRelationReason(relation.reason);
+    const label = getInvestigationRelationReasonLabel(reason);
+    const current = relationReasons.get(reason) ?? { reason, label, caseIds: [] };
+    current.caseIds.push(relation.caseId);
+    relationReasons.set(reason, current);
+    const note = normalizeInvestigationText(relation.note);
+    if (note) relationNotes.push({ caseId: relation.caseId, reason, label, note });
+  }
+
   return {
     caseCount: packs.length,
     sourceIds: [...sourceIds],
+    relationReasons: [...relationReasons.values()]
+      .map((item) => ({
+        reason: item.reason,
+        label: item.label,
+        count: item.caseIds.length,
+        caseIds: item.caseIds,
+      }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+    caseRelationNotes: relationNotes,
     repeatedSuppliers: repeatedFromMap(suppliers).map((item) => ({
       label: item.label,
       document: item.document,
@@ -200,6 +296,10 @@ export function normalizeInvestigationText(value: string | null | undefined): st
   return String(value ?? "").trim().replace(/\s+/g, " ");
 }
 
+export function getInvestigationRelationReasonLabel(reason: InvestigationCaseRelationReason): string {
+  return INVESTIGATION_RELATION_REASON_OPTIONS.find((option) => option.value === reason)?.label ?? "Relación";
+}
+
 function createWorkspaceId(now: Date): string {
   const date = now.toISOString().slice(0, 10).replace(/-/g, "");
   const random = globalThis.crypto?.randomUUID?.().slice(0, 8).toUpperCase() ??
@@ -214,6 +314,26 @@ function optionalText(value: string | null | undefined): string | null {
 
 function uniqueStrings(values: string[]): string[] {
   return [...new Set(values)];
+}
+
+function resolveAddCaseOptions(input: Date | AddCaseToWorkspaceOptions): Required<AddCaseToWorkspaceOptions> {
+  if (input instanceof Date) {
+    return { reason: "manual_hypothesis", note: "", now: input };
+  }
+  return {
+    reason: normalizeRelationReason(input.reason),
+    note: normalizeInvestigationText(input.note),
+    now: input.now ?? new Date(),
+  };
+}
+
+function normalizeRelationReason(
+  reason: InvestigationCaseRelationReason | null | undefined,
+): InvestigationCaseRelationReason {
+  const candidate = reason ?? "manual_hypothesis";
+  return INVESTIGATION_RELATION_REASON_OPTIONS.some((option) => option.value === candidate)
+    ? candidate
+    : "manual_hypothesis";
 }
 
 function addSupplier(
