@@ -31,7 +31,7 @@ test("filterCaseFiles filters by country, source and case type", () => {
     caseType: "procurement_contract",
   });
 
-  assert.equal(argentinaContracts.length, 300);
+  assert.equal(argentinaContracts.length, 389);
   assert.equal(argentinaContracts.every((caseFile) => caseFile.countryCode === "AR"), true);
   assert.equal(
     argentinaContracts.every((caseFile) => caseFile.receipt.sourceId === "AR-CONTRATAR-CONTRATOS"),
@@ -65,7 +65,7 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
     caseType: "procurement_contract",
   });
 
-  assert.equal(pack.stats.caseFiles, 300);
+  assert.equal(pack.stats.caseFiles, 389);
   assert.equal(pack.stats.receipts > pack.stats.caseFiles, true);
   assert.deepEqual(pack.sourceIds, [
     "AR-CONTRATAR-ACTAS-APERTURA",

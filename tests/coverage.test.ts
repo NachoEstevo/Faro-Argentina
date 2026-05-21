@@ -21,8 +21,8 @@ test("buildCoverageReport summarizes source readiness and case evidence coverage
   assert.equal(report.countries.AR.mvpSources >= 6, true);
   assert.equal(report.countries.AR.sourcesWithSnapshots, 5);
   assert.equal(report.countries.AR.rawRows, 650);
-  assert.equal(report.countries.AR.caseFiles, 558);
-  assert.equal(report.countries.AR.caseFilesWithReceipts, 558);
-  assert.equal(report.countries.AR.caseFilesWithCoordinates, 461);
+  assert.equal(report.countries.AR.caseFiles, 647);
+  assert.equal(report.countries.AR.caseFilesWithReceipts, 647);
+  assert.equal(report.countries.AR.caseFilesWithCoordinates, 491);
   assert.deepEqual(Object.keys(report.countries), ["AR"]);
 });

@@ -23,7 +23,7 @@ const arProceduresPath = new URL("data/official/ar/onc-contratar-procedimientos.
 const arOffersPath = new URL("data/official/ar/onc-contratar-ofertas.csv", rootDir);
 const arLocationsPath = new URL("data/official/ar/onc-contratar-ubicacion-geografica.csv", rootDir);
 const arOpeningActsPath = new URL("data/official/ar/onc-contratar-actas-apertura.csv", rootDir);
-const argentinaContractCaseLimit = 300;
+const argentinaContractCaseLimit = Number.POSITIVE_INFINITY;
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
   generatedAt?: string;

@@ -78,10 +78,10 @@ Tocas un punto del mapa o una fila del Explorer y Faro arma un expediente con:
 Corpus versionado en el repo:
 
 - `5` datasets generados;
-- `558` expedientes de Argentina;
-- `1.946` receipts;
+- `647` expedientes de Argentina;
+- `2.332` receipts;
 - `8` snapshots oficiales en el manifest;
-- `411` expedientes elegibles para mapa despues del gate de geometria.
+- `435` expedientes elegibles para mapa despues del gate de geometria.
 
 La cobertura se concentra en:
 

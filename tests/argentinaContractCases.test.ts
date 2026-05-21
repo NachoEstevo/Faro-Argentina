@@ -54,10 +54,32 @@ test("buildArgentinaContractCases keeps cases available when geometry is missing
   assert.equal(caseFile?.caveats.some((caveat) => /ubicacion|mapa/i.test(caveat)), true);
 });
 
+test("buildArgentinaContractCases canonicalizes duplicate contract numbers before limiting", () => {
+  const cases = buildArgentinaContractCases(duplicateContractCsv(), options, {
+    ...argentinaContext(),
+    limit: 10,
+  });
+
+  assert.deepEqual(cases.map((caseFile) => caseFile.id), [
+    "AR-CONTRACT-CON-1",
+    "AR-CONTRACT-CON-2",
+  ]);
+  assert.equal(cases[0]?.receipt.recordId, "CON-1");
+});
+
 function contractCsv(): string {
   return [
     "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
     "CON-1,PROC-1,Procedimiento generico,1,UOC Obras,604,Ministerio de Obras,EX-1,OBRA-1,Hospital modular,2022-04-10,30-12345678-9,Constructora Sur S.A.,1234567.89,ARS",
+  ].join("\n");
+}
+
+function duplicateContractCsv(): string {
+  return [
+    "contrato_numero,procedimiento_numero,procedimiento_nombre,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,contrato_perfeccionamiento_fecha,contratista_cuit,contratista_razon_social,contrato_monto,contrato_moneda",
+    "CON-1,PROC-1,Procedimiento generico,1,UOC Obras,604,Ministerio de Obras,EX-1,OBRA-1,Hospital modular,2022-04-10,30-12345678-9,Constructora Sur S.A.,1234567.89,ARS",
+    "CON-1,PROC-1,Procedimiento generico,1,UOC Obras,604,Ministerio de Obras,EX-1,OBRA-1,Hospital modular,2022-04-10,30-12345678-9,Constructora Sur S.A.,1234567.89,ARS",
+    "CON-2,PROC-1,Procedimiento generico,1,UOC Obras,604,Ministerio de Obras,EX-1,OBRA-1,Hospital modular,2022-04-10,30-12345678-9,Constructora Sur S.A.,2234567.89,ARS",
   ].join("\n");
 }
 

@@ -126,8 +126,8 @@ sign, classify it as `sign_suspect` and leave it out of the map.
 
 Current expected shape:
 
-- `558` total expedientes;
-- `411` map eligible after the gate;
+- `647` total expedientes;
+- `435` map eligible after the gate;
 - invalid and known-bad Argentina coordinates remain available as data gaps in
   Explorer/export, but must not be drawn on the map.
 
@@ -135,14 +135,14 @@ Current expected shape:
 
 Some official Argentina work rows repeat the same official `numero_obra`.
 
-`src/lib/caseRepository.ts` assigns runtime ids such as:
+`src/lib/data/argentinaWorks.ts` assigns stable generated ids such as:
 
 ```text
 AR-WORK-501-0003-OBR22--row-2
 ```
 
-This prevents one duplicate row from hiding another in `/api/cases/[id]` or
-`/api/export/[id]`.
+This prevents one duplicate row from hiding another in reports, `/api/cases/[id]`
+or `/api/export/[id]`.
 
 The official identity is still preserved in:
 

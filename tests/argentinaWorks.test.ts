@@ -46,3 +46,26 @@ test("buildArgentinaWorkCases turns official work rows into map-ready case files
   assert.equal(cases[0]?.evidenceLevel, "official_dataset");
   assert.match(cases[0]?.caveats[0] ?? "", /No confirma pagos/);
 });
+
+test("buildArgentinaWorkCases assigns stable ids to duplicate official rows", () => {
+  const rows = parseCsv<RawArgentinaWorkRow>([
+    "procedimiento_numero,uoc_codigo,uoc_descripcion,organismo_codigo_saf,organismo_nombre,expediente_procedimiento_numero,numero_obra,nombre_obra,ues_nombre,plazo_ejecucion_obra,plazo_ejecucion_obra_tipo,latitud_1,longitud_1,latitud_2,longitud_2",
+    "501-0001-LPU22,501/0,UOC,501,Ministerio,EX-1,501-0003-OBR22,Obra repetida,2026,18,4,-34.6,-58.4,,",
+    "501-0002-LPU22,501/0,UOC,501,Ministerio,EX-2,501-0003-OBR22,Obra repetida,2026,18,4,-34.61,-58.41,,",
+  ].join("\n"));
+  const cases = buildArgentinaWorkCases(rows, {
+    sourceId: "AR-CONTRATAR-OBRAS",
+    sourceName: "CONTRAT.AR obras",
+    sourceUrl: "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar/archivo/jgm_30.5",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    fileHash: "sha256-test",
+    rawPath: "data/official/ar/onc-contratar-obras.csv",
+    parserVersion: "argentina-works@1",
+  });
+
+  assert.deepEqual(cases.map((caseFile) => caseFile.id), [
+    "AR-WORK-501-0003-OBR22",
+    "AR-WORK-501-0003-OBR22--row-2",
+  ]);
+  assert.equal(cases[1]?.receipt.recordId, "501-0003-OBR22");
+});

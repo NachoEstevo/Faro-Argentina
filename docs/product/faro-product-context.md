@@ -181,20 +181,20 @@ Implementado:
 
 Datos actuales:
 
-- `558` expedientes de Argentina;
-- `300` contratos CONTRAT.AR;
+- `647` expedientes de Argentina;
+- `389` contratos CONTRAT.AR canonicos;
 - `250` obras publicas CONTRAT.AR;
-- `8` expedientes historico-judiciales;
-- `411` expedientes elegibles para mapa despues del gate;
-- `1.946` receipts.
+- `12` expedientes historico-judiciales;
+- `435` expedientes elegibles para mapa despues del gate;
+- `2.332` receipts.
 
 Bloqueos antes de llamarlo producto terminado:
 
 - Algunas coordenadas de Argentina son invalidas, duplicadas, placeholders o
   parecen tener signos negativos faltantes; esos casos deben seguir como brechas
   de datos, no como puntos corregidos manualmente.
-- Las obras publicas de Argentina tienen case ids duplicados que deben
-  canonicalizarse.
+- Las obras publicas de Argentina conservan filas oficiales duplicadas con ids
+  estables tipo `--row-2`; el `numero_obra` oficial sigue en el receipt.
 - Los expedientes historico-judiciales cargados para Argentina son contexto
   verificable; no deben mezclarse con contratos actuales sin match documental
   exacto.

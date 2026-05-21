@@ -69,7 +69,7 @@ export function buildArgentinaWorkCases(
   rows: RawArgentinaWorkRow[],
   options: BuildOptions,
 ): ArgentinaWorkCase[] {
-  return rows
+  const cases: ArgentinaWorkCase[] = rows
     .filter((row) => clean(row.numero_obra).length > 0)
     .map((row) => {
       const workNumber = clean(row.numero_obra);
@@ -105,6 +105,28 @@ export function buildArgentinaWorkCases(
         ],
       };
     });
+  return withStableDuplicateCaseIds(cases);
+}
+
+function withStableDuplicateCaseIds(cases: ArgentinaWorkCase[]): ArgentinaWorkCase[] {
+  const totals = new Map<string, number>();
+  cases.forEach((caseFile) => {
+    totals.set(caseFile.id, (totals.get(caseFile.id) ?? 0) + 1);
+  });
+
+  const seen = new Map<string, number>();
+  return cases.map((caseFile) => {
+    const total = totals.get(caseFile.id) ?? 0;
+    if (total <= 1) return caseFile;
+
+    const index = (seen.get(caseFile.id) ?? 0) + 1;
+    seen.set(caseFile.id, index);
+    if (index === 1) return caseFile;
+    return {
+      ...caseFile,
+      id: `${caseFile.id}--row-${index}`,
+    };
+  });
 }
 
 function parseCsvRows(text: string): string[][] {

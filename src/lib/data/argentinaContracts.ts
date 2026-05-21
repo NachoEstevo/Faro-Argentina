@@ -139,8 +139,7 @@ export function buildArgentinaContractCases(
   );
   const offerStatsByProcedure = buildOfferStats(context.offers?.rows ?? []);
 
-  return parseCsv<ArgentinaContractRow>(text)
-    .filter((row) => clean(row.contrato_numero).length > 0)
+  return uniqueContractRows(parseCsv<ArgentinaContractRow>(text))
     .slice(0, context.limit)
     .map((row) =>
       buildCase({
@@ -155,6 +154,18 @@ export function buildArgentinaContractCases(
         offerStatsByProcedure,
       })
     );
+}
+
+function uniqueContractRows(rows: ArgentinaContractRow[]): ArgentinaContractRow[] {
+  const seen = new Set<string>();
+  const uniqueRows: ArgentinaContractRow[] = [];
+  for (const row of rows) {
+    const contractNumber = clean(row.contrato_numero);
+    if (!contractNumber || seen.has(contractNumber)) continue;
+    seen.add(contractNumber);
+    uniqueRows.push(row);
+  }
+  return uniqueRows;
 }
 
 function buildCase({

@@ -27,6 +27,8 @@ Estos documentos sirven para continuar el producto sin re-derivar cada decision:
 - [Argentina contract expansion](handoffs/2026-05-17-argentina-contract-expansion-handoff.md)
 - [Argentina historical-judicial cases](handoffs/2026-05-17-argentina-historical-judicial-cases-handoff.md)
 - [Data integrity and quality](handoffs/2026-05-17-data-integrity-and-quality-sprint-handoff.md)
+- [Argentina data spine expansion](handoffs/2026-05-21-argentina-data-spine-expansion.md)
+- [Two week professionalization roadmap](roadmap/2026-05-21-two-week-faro-professionalization.md)
 
 Los handoffs son documentos historicos de trabajo. Si un conteo o ruta difiere
 del README, confiar en el README y volver a correr el reporte relevante.
