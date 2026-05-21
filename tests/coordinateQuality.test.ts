@@ -21,8 +21,8 @@ test("assessCoordinateQuality accepts official coordinates inside Argentina boun
 
 test("assessCoordinateQuality treats missing coordinates as a data gap", () => {
   const quality = assessCoordinateQuality({
-    caseId: "PE-CONTRACT-NO-GEO",
-    countryCode: "PE",
+    caseId: "AR-CONTRACT-NO-GEO",
+    countryCode: "AR",
     coordinates: null,
   });
 
@@ -82,8 +82,8 @@ test("assessCoordinateQuality identifies duplicated coordinate values", () => {
 
 test("assessCoordinateQuality blocks coordinates outside expected country bounds", () => {
   const quality = assessCoordinateQuality({
-    caseId: "CL-TENDER-USA",
-    countryCode: "CL",
+    caseId: "AR-WORK-USA",
+    countryCode: "AR",
     coordinates: { lat: 38.8977, lon: -77.0365 },
   });
 

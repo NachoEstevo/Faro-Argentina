@@ -4,7 +4,7 @@ Fecha: 2026-05-17
 
 ## Objetivo
 
-Este sprint convierte la base chica de Faro en una base verificable y medible. Antes de sumar mas paises, fuentes o detectores, Faro debe poder demostrar que sus snapshots, hashes, receipts, geometria y agrupacion de proveedores son reproducibles.
+Este sprint convierte la base chica de Faro en una base verificable y medible. Antes de sumar mas fuentes o detectores, Faro debe poder demostrar que sus snapshots, hashes, receipts, geometria y agrupacion de proveedores son reproducibles.
 
 ## Que Cambio
 
@@ -18,8 +18,8 @@ Este sprint convierte la base chica de Faro en una base verificable y medible. A
 
 - `npm run data:verify` pasa con `errors: []`.
 - `npm run data:quality-report` no muestra blockers.
-- La base actual tiene 8 datasets, 633 casos, 2046 receipts y 14 raw files verificados.
-- El reporte de calidad muestra cobertura por Argentina, Peru y Chile sin convertir gaps en acusaciones.
+- La base actual tiene 5 datasets generados, 558 casos, 1946 receipts y 8 snapshots en el manifest.
+- El reporte de calidad muestra cobertura de Argentina sin convertir gaps en acusaciones.
 
 ## Como Interpretar Proveedor Recurrente
 

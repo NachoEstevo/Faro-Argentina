@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import { Download, ExternalLink, FileSearch, FileText, Route, ShieldCheck } from "lucide-react";
+import { Download, ExternalLink, FileText, Route, ShieldCheck } from "lucide-react";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
-import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
@@ -25,8 +25,8 @@ export function CaseDetails({
   traceMode: boolean;
   onTraceModeChange: (next: boolean) => void;
 }) {
-  const isContract = isCrossCountryCase(caseFile) && caseFile.caseType === "procurement_contract";
-  const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
+  const isContract = isArgentinaContractCase(caseFile) && caseFile.caseType === "procurement_contract";
+  const relatedReceipts = "relatedReceipts" in caseFile ? caseFile.relatedReceipts ?? [] : [];
   const contextualCitations = caseFile.contextualCitations ?? [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext, contextualCitations);
   const { hasOfficialGeometry } = expediente.investigationContext;
@@ -132,89 +132,6 @@ export function CaseDetails({
   );
 }
 
-export function EmptyCountry({ selectedCountry }: { selectedCountry: "AR" | "PE" | "CL" }) {
-  return (
-    <div className="emptyState">
-      <FileSearch size={28} aria-hidden />
-      <h1>{selectedCountry === "PE" ? "Peru" : "Chile"} esta en cola de ingesta</h1>
-      <p>
-        La demo abre con Argentina porque ya hay obras geolocalizadas. Peru y Chile se cargan
-        como fuentes oficiales comparables, no como datos de relleno.
-      </p>
-    </div>
-  );
-}
-
-export function CountryExplorer({
-  selectedCountry,
-  cases,
-  signalContext,
-}: {
-  selectedCountry: "PE" | "CL" | "AR";
-  cases: CrossCountryCaseFile[];
-  signalContext?: CaseSignalContext;
-}) {
-  if (selectedCountry === "AR") return null;
-  const countryLabel = selectedCountry === "PE" ? "Peru" : "Chile";
-  return (
-    <div className="countryExplorer">
-      <div className="panelKicker">
-        <FileSearch size={16} aria-hidden />
-        Explorer verificable
-      </div>
-      <h1>{countryLabel}</h1>
-      <p className="explorerIntro">
-        Casos con fuente oficial, hash local y descarga. No se dibujan en mapa hasta tener
-        geometria oficial suficiente.
-      </p>
-      <div className="collectionDownloads">
-        <a href={`/api/export?country=${selectedCountry}`} download>
-          <Download size={16} aria-hidden />
-          Descargar pais
-        </a>
-        {Array.from(new Set(cases.map((caseFile) => caseFile.receipt.sourceId))).map((sourceId) => (
-          <a key={sourceId} href={`/api/export?country=${selectedCountry}&sourceId=${sourceId}`} download>
-            <Download size={16} aria-hidden />
-            {shortSource(sourceId)}
-          </a>
-        ))}
-      </div>
-      <div className="caseRows">
-        {cases.slice(0, 14).map((caseFile) => (
-          <article key={caseFile.id} className="caseRow">
-            <div>
-              <span>{labelCaseType(caseFile.caseType)}</span>
-              <h2>{caseFile.title}</h2>
-              <CaseSignalChips caseFile={caseFile} signalContext={signalContext} />
-            </div>
-            <dl>
-              <ReceiptRow label="Organismo" value={caseFile.agencyName || "Sin dato"} />
-              <ReceiptRow label="Proveedor" value={formatSupplier(caseFile)} />
-              <ReceiptRow label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
-              <ReceiptRow label="Fecha" value={formatCaseDate(caseFile)} />
-              <ReceiptRow label="Competencia" value={formatBidderCount(caseFile)} />
-            </dl>
-            <div className="actionRow">
-              <a href={`/expediente/${encodeURIComponent(caseFile.id)}/informe`}>
-                <FileText size={16} aria-hidden />
-                Informe PDF
-              </a>
-              <a href={getPublicOfficialSourceHref(caseFile.receipt)} target="_blank" rel="noreferrer">
-                <ExternalLink size={16} aria-hidden />
-                Fuente oficial
-              </a>
-              <a href={`/api/export/${encodeURIComponent(caseFile.id)}`} download>
-                <Download size={16} aria-hidden />
-                JSON técnico
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function Metric({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="metric">
@@ -256,18 +173,12 @@ function formatExecutionTerm(caseFile: Pick<ExplorerCase, "executionTerm" | "exe
   return `${caseFile.executionTerm} ${caseFile.executionTermType ?? ""}`.trim();
 }
 
-function labelCaseType(caseType: CrossCountryCaseFile["caseType"]): string {
-  if (caseType === "procurement_contract") return "Contrato";
-  if (caseType === "procurement_process") return "Adjudicacion";
-  return "Ejecucion presupuestaria";
-}
-
-function formatSupplier(caseFile: CrossCountryCaseFile): string {
+function formatSupplier(caseFile: ArgentinaContractCaseFile): string {
   return caseFile.supplierName ?? caseFile.supplierDocument ?? "Sin dato";
 }
 
-function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {
-  return "caseType" in caseFile;
+function isArgentinaContractCase(caseFile: ExplorerCase): caseFile is ArgentinaContractCaseFile {
+  return "caseType" in caseFile && caseFile.caseType === "procurement_contract";
 }
 
 function describeTraceContext({
@@ -288,7 +199,7 @@ function describeTraceContext({
 
 
 function formatBidderCount(
-  caseFile: Pick<CrossCountryCaseFile, "bidderCount" | "offerCount">,
+  caseFile: Pick<ArgentinaContractCaseFile, "bidderCount" | "offerCount">,
 ): string {
   if (caseFile.bidderCount === null || caseFile.bidderCount === undefined) return "Sin dato";
   const bidderLabel = caseFile.bidderCount === 1 ? "oferente" : "oferentes";
@@ -299,17 +210,11 @@ function formatBidderCount(
 }
 
 function formatWorkLocation(
-  caseFile: Pick<CrossCountryCaseFile, "workLocality" | "workDepartment" | "workProvince" | "locationName">,
+  caseFile: Pick<ArgentinaContractCaseFile, "workLocality" | "workDepartment" | "workProvince" | "locationName">,
 ): string {
   const parts = [caseFile.workLocality, caseFile.workDepartment, caseFile.workProvince]
     .filter((value): value is string => Boolean(value));
   return parts.length > 0 ? parts.join(", ") : caseFile.locationName ?? "Sin dato";
-}
-
-function formatCaseDate(
-  caseFile: Pick<CrossCountryCaseFile, "awardedAt" | "publishedAt" | "year">,
-): string {
-  return caseFile.awardedAt ?? caseFile.publishedAt ?? String(caseFile.year ?? "Sin dato");
 }
 
 function shortSource(sourceId: string): string {
@@ -319,8 +224,5 @@ function shortSource(sourceId: string): string {
   if (sourceId.includes("PROCEDIMIENTOS")) return "Procedimiento";
   if (sourceId.includes("UBICACION")) return "Ubicacion";
   if (sourceId.includes("SIPRO")) return "SIPRO";
-  if (sourceId.includes("OCDS")) return "OCDS";
-  if (sourceId.includes("GASTO")) return "Presupuesto";
-  if (sourceId.includes("MERCADO")) return "Adjudicaciones";
   return "Fuente";
 }

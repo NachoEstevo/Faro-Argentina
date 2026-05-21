@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { buildLeadFeed } from "@/lib/caseRepository";
 import type { CountryCode } from "@/lib/data/sourceCatalog";
 
-const countries: CountryCode[] = ["AR", "PE", "CL"];
+const countries: CountryCode[] = ["AR"];
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

@@ -1,5 +1,5 @@
 {
-  "name": "faro-indies",
+  "name": "faro-argentina",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,9 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "data:fetch": "node --experimental-strip-types scripts/fetch-official-snapshots.ts && node --experimental-strip-types scripts/fetch-fx-snapshots.ts",
-    "data:fetch:all": "npm run data:fetch && npm run data:fetch:pe-historical",
-    "data:fetch:pe-historical": "node --experimental-strip-types scripts/fetch-peru-historical-contracts.ts",
-    "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts && node --experimental-strip-types scripts/build-cross-country-cases.ts && node --experimental-strip-types scripts/build-argentina-historical-judicial-cases.ts && node --experimental-strip-types scripts/build-article-citations.ts",
+    "data:fetch:all": "npm run data:fetch",
+    "data:build": "node --experimental-strip-types scripts/build-argentina-work-cases.ts && node --experimental-strip-types scripts/build-argentina-contract-cases.ts && node --experimental-strip-types scripts/build-argentina-historical-judicial-cases.ts && node --experimental-strip-types scripts/build-article-citations.ts",
     "data:geo-report": "node --experimental-strip-types scripts/report-coordinate-quality.ts",
     "data:quality-report": "node --experimental-strip-types scripts/report-data-quality.ts",
     "data:verify": "node --experimental-strip-types scripts/verify-data-spine.ts",

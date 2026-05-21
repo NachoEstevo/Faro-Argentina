@@ -716,7 +716,7 @@
               "recordId": "451-1613-CON19",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             },
             {
               "receiptId": "AR-CONTRATAR-CONTRATOS-501-0474-CON20",
@@ -730,7 +730,7 @@
               "recordId": "501-0474-CON20",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             },
             {
               "receiptId": "AR-CONTRATAR-CONTRATOS-451-1001-CON18",
@@ -744,7 +744,7 @@
               "recordId": "451-1001-CON18",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             }
           ],
           "caveats": [
@@ -821,7 +821,7 @@
               "recordId": "451-1005-CON18",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             }
           ],
           "caveats": [
@@ -898,7 +898,7 @@
               "recordId": "451-1003-CON18",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             }
           ],
           "caveats": [
@@ -975,7 +975,7 @@
               "recordId": "451-1002-CON18",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             }
           ],
           "caveats": [
@@ -1052,7 +1052,7 @@
               "recordId": "23-0003-CON17",
               "locatorType": "official_dataset",
               "extractedAt": "2026-05-18T00:19:46.421Z",
-              "parserVersion": "cross-country@1"
+              "parserVersion": "argentina-contracts@1"
             }
           ],
           "caveats": [
@@ -1700,7 +1700,7 @@
           "recordId": "451-1613-CON19",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         },
         {
           "receiptId": "AR-CONTRATAR-CONTRATOS-501-0474-CON20",
@@ -1714,7 +1714,7 @@
           "recordId": "501-0474-CON20",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         },
         {
           "receiptId": "AR-CONTRATAR-CONTRATOS-451-1001-CON18",
@@ -1728,7 +1728,7 @@
           "recordId": "451-1001-CON18",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         }
       ],
       "caveats": [
@@ -1805,7 +1805,7 @@
           "recordId": "451-1005-CON18",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         }
       ],
       "caveats": [
@@ -1882,7 +1882,7 @@
           "recordId": "451-1003-CON18",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         }
       ],
       "caveats": [
@@ -1959,7 +1959,7 @@
           "recordId": "451-1002-CON18",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         }
       ],
       "caveats": [
@@ -2036,7 +2036,7 @@
           "recordId": "23-0003-CON17",
           "locatorType": "official_dataset",
           "extractedAt": "2026-05-18T00:19:46.421Z",
-          "parserVersion": "cross-country@1"
+          "parserVersion": "argentina-contracts@1"
         }
       ],
       "caveats": [

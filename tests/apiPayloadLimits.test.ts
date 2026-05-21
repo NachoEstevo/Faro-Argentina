@@ -19,15 +19,9 @@ const vercelFunctionPayloadLimit = 4_500_000;
 
 test("/api/cases defaults to paginated country collections", async () => {
   const ar = paginateItems(getCasesByCountry("AR"), { offset: 0, limit: 100 });
-  const pe = paginateItems(getCasesByCountry("PE"), { offset: 0, limit: 100 });
-  const cl = paginateItems(getCasesByCountry("CL"), { offset: 0, limit: 100 });
 
   assert.equal(ar.items.length, 100);
-  assert.equal(pe.items.length, 100);
-  assert.equal(cl.items.length, 100);
   assert.equal(ar.pagination.hasMore, true);
-  assert.equal(pe.pagination.hasMore, true);
-  assert.equal(cl.pagination.hasMore, true);
 });
 
 test("/api/signals defaults to a bounded response under Vercel's Function payload cap", async () => {
@@ -48,14 +42,14 @@ test("/api/export can map core exports to deterministic static artifact paths", 
     fileName: buildStaticExportFileName(filters),
     href: `/exports/${buildStaticExportFileName(filters)}`,
   }));
-  const artifact = findStaticExportArtifact({ countryCode: "PE" }, artifacts);
+  const artifact = findStaticExportArtifact({ countryCode: "AR" }, artifacts);
 
-  assert.equal(artifact?.fileName, "faro-pe-all-sources-all-types.evidence.json");
-  assert.equal(artifact?.href, "/exports/faro-pe-all-sources-all-types.evidence.json");
+  assert.equal(artifact?.fileName, "faro-ar-all-sources-all-types.evidence.json");
+  assert.equal(artifact?.href, "/exports/faro-ar-all-sources-all-types.evidence.json");
 });
 
 test("/api/export returns a bounded manifest for non-static large exports", async () => {
-  const pack = buildCaseCollectionPack({ countryCode: "PE", query: "CONTRATO" });
+  const pack = buildCaseCollectionPack({ countryCode: "AR", query: "CONTRATO" });
   const body = JSON.stringify(buildCollectionExportManifest(pack, null));
   const payload = JSON.parse(body) as {
     packType: string;

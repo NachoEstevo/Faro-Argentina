@@ -1,12 +1,12 @@
-# Contexto De Producto: Faro
+# Contexto De Producto: Faro Argentina
 
-Fecha: 2026-05-18
+Fecha: 2026-05-21
 Audiencia: producto, UI/UX, datos, satelite, ingenieria
-Estado: contexto vigente para demo de hackathon, Explorer compacto y fuentes oficiales publicas
+Estado: contexto vigente para fork privado enfocado en Argentina
 
 ## Definicion Corta
 
-Faro es un mapa y explorer investigativo del dinero publico.
+Faro Argentina es un mapa y explorer investigativo del dinero publico.
 
 Convierte datos oficiales en expedientes verificables: obras publicas,
 contrataciones, proveedores, organismos, montos, fechas, fuentes, caveats,
@@ -24,7 +24,7 @@ priorizar una pista, pero no debe insinuar culpabilidad.
 
 Los datos de gasto publico existen, pero estan fragmentados:
 
-- CSVs, XLSX, APIs y portales;
+- CSVs, APIs y portales;
 - nombres de entidades inconsistentes;
 - links de dataset en lugar de paginas oficiales comprensibles;
 - geolocalizacion debil o ausente;
@@ -42,7 +42,7 @@ verificacion.
 La ruta ideal de Faro es:
 
 ```text
-pregunta -> mapa/scanner -> pista -> expediente -> rastro oficial -> export -> accion
+pregunta -> mapa/explorer -> pista -> expediente -> rastro oficial -> export -> accion
 ```
 
 El usuario deberia poder responder rapido:
@@ -133,16 +133,9 @@ Campos importantes:
 - parser version;
 - extracted timestamp.
 
-La UI debe distinguir entre:
-
-- detalle oficial directo;
-- busqueda oficial;
-- URL de dataset oficial;
-- sin URL exacta.
-
-Cuando un receipt conserva un link descargable a CSV/XLSX/API, la UI publica
-debe abrir la pagina oficial del catalogo o portal cuando exista. El link crudo
-queda para export tecnico y reproducibilidad.
+Cuando un receipt conserva un link descargable a CSV/API, la UI publica debe
+abrir la pagina oficial del catalogo o portal cuando exista. El link crudo queda
+para export tecnico y reproducibilidad.
 
 ### Punto En El Mapa
 
@@ -174,7 +167,7 @@ Implementado:
 
 - pantalla inicial;
 - modo mapa;
-- scanner investigador con filtros compactos y pivots por fuente, organismo,
+- Explorer investigador con filtros compactos y pivots por fuente, organismo,
   proveedor y senal;
 - inspector compacto;
 - panel de expediente completo;
@@ -188,19 +181,12 @@ Implementado:
 
 Datos actuales:
 
-- 1867 expedientes totales;
-- 558 Argentina;
-- 609 Peru;
-- 700 Chile.
-- 1253 expedientes elegibles para mapa: 411 Argentina, 550 Peru y 292 Chile.
-- 2 casos de Argentina marcados como `known_bad_geometry` siguen disponibles
-  para Explorer/export, pero no se dibujan en el mapa.
-- En Peru los puntos actuales son centroides distritales oficiales cuando pasan
-  el gate de mapa. Son referencias territoriales para navegar, no sitios exactos
-  de ejecucion ni evidencia satelital directa.
-- En Chile los puntos actuales son centroides comunales oficiales del comprador.
-  Se dibujan como referencia comunal caveateada, no como ubicacion exacta ni
-  evidencia satelital de ejecucion.
+- `558` expedientes de Argentina;
+- `300` contratos CONTRAT.AR;
+- `250` obras publicas CONTRAT.AR;
+- `8` expedientes historico-judiciales;
+- `411` expedientes elegibles para mapa despues del gate;
+- `1.946` receipts.
 
 Bloqueos antes de llamarlo producto terminado:
 
@@ -212,9 +198,6 @@ Bloqueos antes de llamarlo producto terminado:
 - Los expedientes historico-judiciales cargados para Argentina son contexto
   verificable; no deben mezclarse con contratos actuales sin match documental
   exacto.
-- Peru y Chile ya prueban que Faro no depende del mapa, pero necesitan mas
-  cruces oficiales de mayor valor; el Explorer debe mostrar esos expedientes
-  aunque una parte no sea map-ready o solo tenga referencia administrativa.
 
 ## Donde Esta El Valor
 
@@ -237,8 +220,7 @@ Antes de mas polish visual, la proxima fase debe probar confianza de datos:
 1. La app debe saber que coordenadas son seguras.
 2. El evidence pack debe reproducir contra raw snapshots.
 3. Cada caso visible debe explicar la calidad de su fuente.
-4. Chile, Peru y Argentina deben tener pocos casos fuertes, validados y utiles
-   antes que muchos casos debiles.
+4. Los casos nuevos deben ser fuertes, validados y utiles antes que numerosos.
 5. El modo investigador debe permitir seguir proveedores, organismos y receipts
    sin convertirse en una tabla cruda.
 

@@ -18,10 +18,10 @@ test("buildCoordinateQualityReport counts statuses by country", () => {
       coordinates: null,
     },
     {
-      id: "PE-VALID",
-      countryCode: "PE",
-      title: "Valid Peru case",
-      coordinates: { lat: -12.046374, lon: -77.042793 },
+      id: "AR-ADMIN-REF",
+      countryCode: "AR",
+      title: "Argentina administrative reference",
+      coordinates: { lat: -31.4201, lon: -64.1888 },
       geoEvidence: [
         {
           exposeOnMap: true,
@@ -29,9 +29,9 @@ test("buildCoordinateQualityReport counts statuses by country", () => {
       ],
     },
     {
-      id: "CL-OUTSIDE",
-      countryCode: "CL",
-      title: "Chile outside bounds",
+      id: "AR-OUTSIDE",
+      countryCode: "AR",
+      title: "Argentina outside bounds",
       coordinates: { lat: 38.8977, lon: -77.0365 },
     },
   ]);
@@ -40,27 +40,12 @@ test("buildCoordinateQualityReport counts statuses by country", () => {
   assert.equal(report.mapEligibleCases, 2);
   assert.match(report.generatedAt, /^\d{4}-\d{2}-\d{2}T/);
   assert.deepEqual(report.byCountry.AR, {
-    totalCases: 2,
-    mapEligibleCases: 1,
-    geoEvidenceCases: 0,
-    byStatus: {
-      valid_official_geometry: 1,
-      missing_geometry: 1,
-    },
-  });
-  assert.deepEqual(report.byCountry.PE, {
-    totalCases: 1,
-    mapEligibleCases: 1,
+    totalCases: 4,
+    mapEligibleCases: 2,
     geoEvidenceCases: 1,
     byStatus: {
-      valid_official_geometry: 1,
-    },
-  });
-  assert.deepEqual(report.byCountry.CL, {
-    totalCases: 1,
-    mapEligibleCases: 0,
-    geoEvidenceCases: 0,
-    byStatus: {
+      valid_official_geometry: 2,
+      missing_geometry: 1,
       outside_country_bounds: 1,
     },
   });

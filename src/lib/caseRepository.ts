@@ -1,6 +1,6 @@
 import payload from "../data/argentinaWorkCases.json" with { type: "json" };
 import historicalJudicialPayload from "../data/argentinaHistoricalJudicialCases.json" with { type: "json" };
-import crossCountryPayload from "../data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractPayload from "../data/argentinaContractCases.json" with { type: "json" };
 import articleCitationPayload from "../data/articleCitations.json" with { type: "json" };
 import type { ArgentinaHistoricalJudicialCase } from "./data/argentinaHistoricalJudicial.ts";
 import type { ArgentinaWorkCase } from "./data/argentinaWorks.ts";
@@ -24,7 +24,7 @@ import {
   type CaseLeadFilters,
 } from "./data/caseLeads.ts";
 import { buildCoverageReport, type CoverageReport } from "./data/coverage.ts";
-import type { CrossCountryCaseFile } from "./data/crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "./data/argentinaContractCases.ts";
 import {
   buildCaseSignalContext,
   buildCaseSignalContextsByCountry,
@@ -50,7 +50,7 @@ import sourceCatalogPayload from "../../data/sources/source-catalog.json" with {
 
 export type FaroCaseFile =
   | ArgentinaWorkCase
-  | CrossCountryCaseFile
+  | ArgentinaContractCaseFile
   | ArgentinaHistoricalJudicialCase;
 
 export interface CaseDataset<TCase extends FaroCaseFile = FaroCaseFile> {
@@ -100,10 +100,10 @@ export interface InvestigationCasePack {
   evidencePack: EvidencePack;
 }
 
-interface CrossCountryPayload {
+interface ArgentinaContractPayload {
   generatedAt: string;
-  datasets: Array<CaseDataset<CrossCountryCaseFile>>;
-  cases: CrossCountryCaseFile[];
+  datasets: Array<CaseDataset<ArgentinaContractCaseFile>>;
+  cases: ArgentinaContractCaseFile[];
 }
 
 interface ArgentinaHistoricalJudicialPayload {
@@ -113,7 +113,7 @@ interface ArgentinaHistoricalJudicialPayload {
 }
 
 const rawArgentinaWorkDataset = payload as CaseDataset<ArgentinaWorkCase>;
-const crossCountryCasePayload = crossCountryPayload as CrossCountryPayload;
+const argentinaContractCasePayload = argentinaContractPayload as ArgentinaContractPayload;
 const argentinaHistoricalJudicialPayload = historicalJudicialPayload as ArgentinaHistoricalJudicialPayload;
 const articleCitations = articleCitationPayload.citations as ArticleCitation[];
 const argentinaWorkCaseFiles = withStableDuplicateCaseIds(rawArgentinaWorkDataset.cases);
@@ -125,13 +125,13 @@ const normalizedArgentinaWorkDataset: CaseDataset<ArgentinaWorkCase> = {
 export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[];
 
 export const argentinaWorkDataset = buildExplorerDataset(normalizedArgentinaWorkDataset);
-export const crossCountryDatasets = crossCountryCasePayload.datasets;
-export const crossCountryCaseFiles = crossCountryCasePayload.cases;
+export const argentinaContractDatasets = argentinaContractCasePayload.datasets;
+export const argentinaContractCaseFiles = argentinaContractCasePayload.cases;
 export const argentinaHistoricalJudicialDatasets = argentinaHistoricalJudicialPayload.datasets;
 export const argentinaHistoricalJudicialCaseFiles = argentinaHistoricalJudicialPayload.cases;
 export const investigatorCaseFiles: FaroCaseFile[] = withContextualCitations([
   ...argentinaWorkCaseFiles,
-  ...crossCountryCaseFiles,
+  ...argentinaContractCaseFiles,
   ...argentinaHistoricalJudicialCaseFiles,
 ]);
 const investigatorSignalContext: CaseSignalContext = buildCaseSignalContext(
@@ -145,7 +145,7 @@ export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   sources: sourceCatalogEntries,
   caseDatasets: [
     rawArgentinaWorkDataset,
-    ...crossCountryDatasets,
+    ...argentinaContractDatasets,
     ...argentinaHistoricalJudicialDatasets,
   ],
 });

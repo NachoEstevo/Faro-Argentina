@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import articleCitationPayload from "../src/data/articleCitations.json" with { type: "json" };
 import {
   ARTICLE_CONTEXT_CAVEAT,
@@ -22,7 +22,7 @@ assert.ok(vialidadCase);
 
 const verifiableArticleCases = [
   ...historicalJudicialDataset.cases,
-  ...crossCountryDataset.cases,
+  ...argentinaContractDataset.cases,
 ];
 
 const vialidadFamilyCaseIds = [

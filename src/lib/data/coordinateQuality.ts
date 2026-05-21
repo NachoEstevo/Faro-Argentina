@@ -41,8 +41,6 @@ type Bounds = {
 
 const countryBounds: Record<CountryCode, Bounds> = {
   AR: { minLat: -56, maxLat: -21, minLon: -74, maxLon: -53 },
-  PE: { minLat: -19, maxLat: 1, minLon: -82, maxLon: -68 },
-  CL: { minLat: -56, maxLat: -17, minLon: -76, maxLon: -66 },
 };
 
 const coordinateTolerance = 0.000001;
@@ -167,7 +165,7 @@ function isPlaceholderCoordinate(coordinates: GeoPoint): boolean {
 }
 
 function getCountryBounds(countryCode: string): Bounds | null {
-  if (countryCode === "AR" || countryCode === "PE" || countryCode === "CL") {
+  if (countryCode === "AR") {
     return countryBounds[countryCode];
   }
 

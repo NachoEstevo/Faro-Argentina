@@ -1,6 +1,6 @@
 import type { EvidencePack } from "../caseRepository.ts";
 
-export type InvestigationCountryCode = "AR" | "PE" | "CL";
+export type InvestigationCountryCode = "AR";
 
 export type InvestigationEntityKind =
   | "supplier"

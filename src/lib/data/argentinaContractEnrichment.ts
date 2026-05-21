@@ -1,5 +1,5 @@
 import { createEvidenceReceipt, type EvidenceReceipt } from "./evidenceReceipts.ts";
-import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "./argentinaContractCases.ts";
 import type {
   ArgentinaContractBuildContext,
   ArgentinaLocationRow,

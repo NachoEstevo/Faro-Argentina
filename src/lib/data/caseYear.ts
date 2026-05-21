@@ -1,8 +1,8 @@
 import type { ExplorerCase } from "./explorerCases";
-import type { CrossCountryCaseFile } from "./crossCountryCases";
+import type { ArgentinaContractCaseFile } from "./argentinaContractCases";
 
-function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {
-  return "caseType" in caseFile;
+function isArgentinaContractCase(caseFile: ExplorerCase): caseFile is ArgentinaContractCaseFile {
+  return "caseType" in caseFile && caseFile.caseType === "procurement_contract";
 }
 
 function parseYearString(value: string | null | undefined): number | null {
@@ -20,7 +20,7 @@ function parseYearString(value: string | null | undefined): number | null {
  */
 export function resolveCaseYear(caseFile: ExplorerCase): number | null {
   if (caseFile.year) return caseFile.year;
-  if (isCrossCountryCase(caseFile)) {
+  if (isArgentinaContractCase(caseFile)) {
     return parseYearString(caseFile.awardedAt) ?? parseYearString(caseFile.publishedAt);
   }
   return null;

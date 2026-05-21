@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import FaroExperience from "@/components/FaroExperience";
 import {
   argentinaWorkDataset,
-  crossCountryCaseFiles,
+  argentinaContractCaseFiles,
   investigatorCaseFiles,
 } from "@/lib/caseRepository";
 import { getCountryConfig, isCountryCode } from "@/lib/data/countries";
@@ -77,7 +77,7 @@ export default async function PaisPage({
   return (
     <FaroExperience
       dataset={argentinaWorkDataset}
-      crossCountryCases={crossCountryCaseFiles}
+      argentinaContractCases={argentinaContractCaseFiles}
       explorerCases={investigatorCaseFiles}
       initialCountry={upper}
       initialEntryOpen={false}
@@ -92,5 +92,5 @@ function readParam(value: string | string[] | undefined): string | undefined {
 }
 
 export function generateStaticParams() {
-  return [{ code: "AR" }, { code: "PE" }, { code: "CL" }];
+  return [{ code: "AR" }];
 }

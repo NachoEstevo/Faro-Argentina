@@ -12,8 +12,15 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.1/download/onc-contratar-procedimientos.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["procedimiento_numero", "organismo_codigo_saf", "uoc_codigo", "procedimiento_estado"],
-    "caveats": ["Un proyecto puede aparecer como varios procedimientos; no asumir relacion uno a uno con obra."]
+    "keyFields": [
+      "procedimiento_numero",
+      "organismo_codigo_saf",
+      "uoc_codigo",
+      "procedimiento_estado"
+    ],
+    "caveats": [
+      "Un proyecto puede aparecer como varios procedimientos; no asumir relacion uno a uno con obra."
+    ]
   },
   {
     "sourceId": "AR-CONTRATAR-OFERTAS",
@@ -28,8 +35,15 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.3/download/onc-contratar-ofertas.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["procedimiento_numero", "oferente_cuit", "oferente_razon_social", "oferta_monto"],
-    "caveats": ["Usar para competencia/ofertas; no equivale a adjudicacion ni pago."]
+    "keyFields": [
+      "procedimiento_numero",
+      "oferente_cuit",
+      "oferente_razon_social",
+      "oferta_monto"
+    ],
+    "caveats": [
+      "Usar para competencia/ofertas; no equivale a adjudicacion ni pago."
+    ]
   },
   {
     "sourceId": "AR-CONTRATAR-OBRAS",
@@ -44,7 +58,13 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.5/download/onc-contratar-obras.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["numero_obra", "procedimiento_numero", "organismo_codigo_saf", "latitud_1", "longitud_1"],
+    "keyFields": [
+      "numero_obra",
+      "procedimiento_numero",
+      "organismo_codigo_saf",
+      "latitud_1",
+      "longitud_1"
+    ],
     "caveats": [
       "Dataset de obras declaradas; no prueba pagos ni avance fisico por si solo.",
       "Las coordenadas pueden requerir verificacion puntual antes de usar Sentinel-2."
@@ -63,8 +83,15 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.4/download/onc-contratar-contratos.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["numero_obra", "procedimiento_numero", "contratista_cuit", "contrato_monto"],
-    "caveats": ["Debe cruzarse con obras y ubicacion para lectura territorial."]
+    "keyFields": [
+      "numero_obra",
+      "procedimiento_numero",
+      "contratista_cuit",
+      "contrato_monto"
+    ],
+    "caveats": [
+      "Debe cruzarse con obras y ubicacion para lectura territorial."
+    ]
   },
   {
     "sourceId": "AR-CONTRATAR-UBICACION",
@@ -79,8 +106,16 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.6/download/onc-contratar-ubicacion-geografica.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["numero_obra", "provincia_nombre", "departamento_nombre", "localidad_nombre", "renglon_numero"],
-    "caveats": ["Una obra puede tener multiples ubicaciones; no colapsar sin conservar relacion 1:N."]
+    "keyFields": [
+      "numero_obra",
+      "provincia_nombre",
+      "departamento_nombre",
+      "localidad_nombre",
+      "renglon_numero"
+    ],
+    "caveats": [
+      "Una obra puede tener multiples ubicaciones; no colapsar sin conservar relacion 1:N."
+    ]
   },
   {
     "sourceId": "AR-SIPRO-PROVEEDORES",
@@ -95,8 +130,14 @@
     "sourceUrl": "https://datos.gob.ar/dataset/modernizacion-sistema-informacion-proveedores-sipro",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["cuit___nit", "razon_social", "provincia"],
-    "caveats": ["La provincia del proveedor no equivale necesariamente al lugar de ejecucion de una obra."]
+    "keyFields": [
+      "cuit___nit",
+      "razon_social",
+      "provincia"
+    ],
+    "caveats": [
+      "La provincia del proveedor no equivale necesariamente al lugar de ejecucion de una obra."
+    ]
   },
   {
     "sourceId": "AR-CONTRATAR-ACTAS-APERTURA",
@@ -111,8 +152,14 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/jgm/dataset/30/distribution/30.8/download/onc-contratar-actas-apertura.csv",
     "updateFrequency": "unknown",
-    "keyFields": ["procedimiento_numero", "fecha_creacion", "cantidad_ofertas_confirmadas"],
-    "caveats": ["Documento de proceso; no usar como prueba de ejecucion de obra."]
+    "keyFields": [
+      "procedimiento_numero",
+      "fecha_creacion",
+      "cantidad_ofertas_confirmadas"
+    ],
+    "caveats": [
+      "Documento de proceso; no usar como prueba de ejecucion de obra."
+    ]
   },
   {
     "sourceId": "AR-MAPA-INVERSIONES-OBRAS",
@@ -127,8 +174,19 @@
     "sourceUrl": "https://datos.gob.ar/dataset/obras-mapa-inversiones-argentina",
     "downloadUrl": "https://mapainversiones.obraspublicas.gob.ar/opendata/dataset_mop.csv",
     "updateFrequency": "monthly_claimed",
-    "keyFields": ["id", "nombre", "contratista", "provincia", "latitud", "longitud", "avance_fisico", "avance_financiero"],
-    "caveats": ["Usar con health-check y snapshot cache; si el endpoint falla, mostrarlo como brecha de cobertura."]
+    "keyFields": [
+      "id",
+      "nombre",
+      "contratista",
+      "provincia",
+      "latitud",
+      "longitud",
+      "avance_fisico",
+      "avance_financiero"
+    ],
+    "caveats": [
+      "Usar con health-check y snapshot cache; si el endpoint falla, mostrarlo como brecha de cobertura."
+    ]
   },
   {
     "sourceId": "AR-GEOREF",
@@ -143,8 +201,18 @@
     "sourceUrl": "https://www.argentina.gob.ar/georef",
     "downloadUrl": "https://apis.datos.gob.ar/georef/api/provincias",
     "updateFrequency": "unknown",
-    "keyFields": ["provincia_id", "provincia_nombre", "departamento_id", "municipio_id", "localidad_id", "lat", "lon"],
-    "caveats": ["Normaliza territorio; no prueba ubicacion exacta de una obra."]
+    "keyFields": [
+      "provincia_id",
+      "provincia_nombre",
+      "departamento_id",
+      "municipio_id",
+      "localidad_id",
+      "lat",
+      "lon"
+    ],
+    "caveats": [
+      "Normaliza territorio; no prueba ubicacion exacta de una obra."
+    ]
   },
   {
     "sourceId": "AR-CONTRATAR-HISTORICO-OBRAS",
@@ -159,7 +227,13 @@
     "sourceUrl": "https://datos.gob.ar/dataset/jgm-contratar-historico",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/modernizacion/dataset/12/distribution/12.2/download/onc_obras_decreto_1169_18.csv",
     "updateFrequency": "archived",
-    "keyFields": ["proceso_de_seleccion_numero", "obra_nombre", "contratista_cuit_1", "monto_certificado", "avance_fisico"],
+    "keyFields": [
+      "proceso_de_seleccion_numero",
+      "obra_nombre",
+      "contratista_cuit_1",
+      "monto_certificado",
+      "avance_fisico"
+    ],
     "caveats": [
       "Fuente historica auxiliar; no equivale a expediente judicial.",
       "No mezclar con CONTRAT.AR moderno sin preservar periodo, campos y caveats."
@@ -178,7 +252,11 @@
     "sourceUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
     "downloadUrl": "https://www.cij.gov.ar/login/d/sentencia-SGU-f6fc6932-0023-41b8-bbb2-aec18b2d2a39.pdf",
     "updateFrequency": "case_event",
-    "keyFields": ["contextId", "procedureNumber", "judicialStatus"],
+    "keyFields": [
+      "contextId",
+      "procedureNumber",
+      "judicialStatus"
+    ],
     "caveats": [
       "Fuente judicial; usar para contexto y estado procesal, no para mapear obras.",
       "No atribuir alcance a contratos Faro modernos sin match documental exacto."
@@ -197,7 +275,12 @@
     "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-vialidad-confirmaron-la-condena-a-la-expresidenta-cristina-fernandez-y-a-otros-funcionarios-por-administracion-fraudulenta/",
     "downloadUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2022/12/Indice-del-alegato-fiscal-Causa-5048-Vialidad.pdf",
     "updateFrequency": "case_event",
-    "keyFields": ["contextId", "procedureNumber", "supplierName", "amount"],
+    "keyFields": [
+      "contextId",
+      "procedureNumber",
+      "supplierName",
+      "amount"
+    ],
     "caveats": [
       "Fuente fiscal y judicial; verificar contra expediente administrativo antes de publicar una obra individual.",
       "No mapear sin traza o geometria oficial validada."
@@ -216,273 +299,16 @@
     "sourceUrl": "https://www.fiscales.gob.ar/fiscalias/causa-cuadernos-comenzo-la-lectura-de-la-acusacion-por-la-cartelizacion-de-la-obra-publica-civil-en-cabeza-de-la-camara-argentina-de-empresas-viales/",
     "downloadUrl": "https://www.fiscales.gob.ar/wp-content/uploads/2025/11/5-CAUSA-CAMARITA-CFP-13816-2018-TO01-REQUERIMIENTO-DE-ELEVACION-A-JUICIO-NOVIEMBRE-2019.pdf",
     "updateFrequency": "case_event",
-    "keyFields": ["contextId", "procedureNumber", "supplierName", "relatedLocalCaseIds"],
+    "keyFields": [
+      "contextId",
+      "procedureNumber",
+      "supplierName",
+      "relatedLocalCaseIds"
+    ],
     "caveats": [
       "Juicio oral en curso; no tratar como sentencia.",
       "Los cruces de proveedor son contexto, no prueba sobre los contratos relacionados."
     ]
-  },
-  {
-    "sourceId": "PE-OECE-DATOS-ABIERTOS",
-    "countryCode": "PE",
-    "name": "OECE datos abiertos SEACE",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "csv_xlsx",
-    "sourceUrl": "https://www.gob.pe/14272-acceder-al-portal-de-datos-abiertos-del-oece",
-    "downloadUrl": null,
-    "updateFrequency": "monthly",
-    "keyFields": ["ruc_proveedor", "entidad", "procedimiento", "monto_adjudicado", "fecha", "ubigeo"],
-    "caveats": [
-      "La fuente indica actualizacion mensual y cobertura acumulada desde 2018.",
-      "No muestra procedimientos en marcha, con informacion incompleta, desiertos, nulos o cancelados."
-    ]
-  },
-  {
-    "sourceId": "PE-OECE-CONVOCATORIAS",
-    "countryCode": "PE",
-    "name": "OECE datos de convocatoria",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement_processes",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "csv_xlsx",
-    "sourceUrl": "https://datosabiertos.gob.pe/dataset/datos-de-la-convocatoria-o-invitaci%C3%B3n-de-las-entidades-organismo-supervisor-de-las-1",
-    "downloadUrl": null,
-    "updateFrequency": "monthly",
-    "keyFields": ["nomenclatura", "entidad", "fecha_convocatoria", "objeto_contractual", "ubigeo"],
-    "caveats": ["Convocatoria no equivale a adjudicacion ni pago; usar como inicio del expediente."]
-  },
-  {
-    "sourceId": "PE-OECE-ADJUDICACIONES",
-    "countryCode": "PE",
-    "name": "OECE datos de adjudicacion",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement_awards",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "csv_xlsx",
-    "sourceUrl": "https://datosabiertos.gob.pe/dataset/datos-de-la-adjudicaci%C3%B3n-organismo-supervisor-de-las-contrataciones-del-estado-osce",
-    "downloadUrl": null,
-    "updateFrequency": "monthly",
-    "keyFields": ["nomenclatura", "ruc_proveedor", "razon_social", "monto_adjudicado", "fecha_adjudicacion"],
-    "caveats": ["La adjudicacion muestra proveedor ganador; debe cruzarse con contrato y ejecucion antes de inferir gasto efectivo."]
-  },
-  {
-    "sourceId": "PE-OECE-CONTRATOS",
-    "countryCode": "PE",
-    "name": "OECE contratos",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement_contracts",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "csv_xlsx",
-    "sourceUrl": "https://www.datosabiertos.gob.pe/node/20236/dataset",
-    "downloadUrl": "https://conosce.osce.gob.pe/buscador/assets/67ae6c4a/reportes/contratos/2025/CONOSCE_CONTRATOS2025_0.xlsx",
-    "updateFrequency": "monthly",
-    "keyFields": [
-      "codigoentidad",
-      "codigoconvocatoria",
-      "codigo_contrato",
-      "num_contrato",
-      "ruc_contratista",
-      "monto_contratado_item",
-      "fecha_suscripcion_contrato"
-    ],
-    "caveats": ["Contrato no confirma devengado ni pago; usar MEF para contexto presupuestario."]
-  },
-  {
-    "sourceId": "PE-OECE-CONTRATOS-HISTORICOS",
-    "countryCode": "PE",
-    "name": "OECE contratos historicos seleccionados",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement_contracts",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "derived_snapshot",
-    "format": "json",
-    "sourceUrl": "https://www.datosabiertos.gob.pe/dataset/contratos-de-las-entidades-organismo-supervisor-de-las-contrataciones-del-estado-osce",
-    "downloadUrl": null,
-    "updateFrequency": "manual_selection",
-    "keyFields": [
-      "codigoentidad",
-      "codigoconvocatoria",
-      "codigo_contrato",
-      "num_contrato",
-      "ruc_contratista",
-      "monto_contratado_item",
-      "fecha_suscripcion_contrato"
-    ],
-    "caveats": [
-      "Snapshot compacto seleccionado desde XLSX oficiales 2018-2024; no es catalogo completo.",
-      "Contrato no confirma devengado ni pago; usar MEF u otra fuente de ejecucion para contexto presupuestario."
-    ]
-  },
-  {
-    "sourceId": "PE-MEF-GASTO-DIARIO",
-    "countryCode": "PE",
-    "name": "MEF presupuesto y ejecucion de gasto diario",
-    "agency": "Ministerio de Economia y Finanzas",
-    "category": "budget_execution",
-    "priority": "later",
-    "official": true,
-    "accessMode": "direct_download",
-    "format": "csv",
-    "sourceUrl": "https://www.datosabiertos.gob.pe/dataset/presupuesto-y-ejecuci%C3%B3n-de-gasto",
-    "downloadUrl": "https://fs.datosabiertos.mef.gob.pe/datastorefiles/2026-Gasto-Diario.csv",
-    "updateFrequency": "daily",
-    "keyFields": ["ANO_EJE", "SEC_EJEC", "EJECUTORA", "PRODUCTO_PROYECTO", "MONTO_DEVENGADO", "DEPARTAMENTO_META"],
-    "caveats": ["Ejecucion presupuestaria no es prueba directa de pago por contrato especifico."]
-  },
-  {
-    "sourceId": "PE-UBIGEO-INEI",
-    "countryCode": "PE",
-    "name": "INEI UBIGEO",
-    "agency": "Instituto Nacional de Estadistica e Informatica",
-    "category": "geo_normalization",
-    "priority": "later",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "csv_xlsx",
-    "sourceUrl": "https://datosabiertos.gob.pe/dataset/ubigeos-c%C3%B3digos-de-ubicaci%C3%B3n-geogr%C3%A1fica-instituto-nacional-de-estad%C3%ADstica-e-inform%C3%A1tica-inei",
-    "downloadUrl": null,
-    "updateFrequency": "unknown",
-    "keyFields": ["ubigeo", "departamento", "provincia", "distrito"],
-    "caveats": ["Normaliza territorio; no prueba ubicacion exacta de una obra o proveedor."]
-  },
-  {
-    "sourceId": "PE-IDEP-LIMITE-DISTRITAL",
-    "countryCode": "PE",
-    "name": "IDEP limite distrital",
-    "agency": "Infraestructura de Datos Espaciales del Peru",
-    "category": "geo_boundaries",
-    "priority": "later",
-    "official": true,
-    "accessMode": "portal_api",
-    "format": "arcgis_json",
-    "sourceUrl": "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5",
-    "downloadUrl": "https://www.idep.gob.pe/geoportal/rest/services/DATOS_GEOESPACIALES/L%C3%8DMITES/MapServer/5/query?where=1%3D1&outFields=UBIGEO,NOMBDEP,NOMBPROV,NOMBDIST&returnGeometry=true&f=json",
-    "updateFrequency": "unknown",
-    "keyFields": ["UBIGEO", "NOMBDEP", "NOMBPROV", "NOMBDIST"],
-    "caveats": ["Permite centroides administrativos distritales; no representa sitio exacto de ejecucion."]
-  },
-  {
-    "sourceId": "PE-OECE-OCDS",
-    "countryCode": "PE",
-    "name": "Portal de contrataciones abiertas OCDS",
-    "agency": "Organismo Especializado para las Contrataciones Publicas Eficientes",
-    "category": "procurement_ocds",
-    "priority": "later",
-    "official": true,
-    "accessMode": "portal_api",
-    "format": "json_csv_xlsx",
-    "sourceUrl": "https://www.gob.pe/52005-acceder-al-portal-de-contrataciones-abiertas-de-la-compra-publica-ocds",
-    "downloadUrl": "https://contratacionesabiertas.osce.gob.pe/",
-    "updateFrequency": "unknown",
-    "keyFields": ["ocid", "buyer", "supplier", "awards", "contracts", "documents"],
-    "caveats": ["Requiere perfilar endpoints y estructura OCDS antes de integrarlo al MVP."]
-  },
-  {
-    "sourceId": "CL-CHILECOMPRA-DATOS-ABIERTOS",
-    "countryCode": "CL",
-    "name": "ChileCompra datos abiertos OCDS",
-    "agency": "Direccion ChileCompra",
-    "category": "procurement_ocds",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_download",
-    "format": "ocds",
-    "sourceUrl": "https://www.chilecompra.cl/datos-abiertos/",
-    "downloadUrl": null,
-    "updateFrequency": "unknown",
-    "keyFields": ["ocid", "tender/id", "buyer/id", "supplier/id", "value/amount", "date"],
-    "caveats": ["Perfil OCDS por release package antes de mapear a registros canonicos."]
-  },
-  {
-    "sourceId": "CL-CHILECOMPRA-OCDS-PROCESOS",
-    "countryCode": "CL",
-    "name": "ChileCompra descargas OCDS procesos",
-    "agency": "Direccion ChileCompra",
-    "category": "procurement_ocds",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "portal_api",
-    "format": "json_ocds",
-    "sourceUrl": "https://datos-abiertos.chilecompra.cl/descargas/procesos-ocds",
-    "downloadUrl": "https://api.mercadopublico.cl/APISOCDS/OCDS/listaOCDSAgnoMes",
-    "updateFrequency": "unknown",
-    "keyFields": ["ocid", "tender.id", "buyer.id", "parties.identifier", "awards.value"],
-    "caveats": ["Usar paginacion por mes y conservar release package original como receipt; la cobertura cargada es una muestra historica controlada por periodo."]
-  },
-  {
-    "sourceId": "CL-MERCADO-PUBLICO-API",
-    "countryCode": "CL",
-    "name": "API de Mercado Publico",
-    "agency": "Direccion ChileCompra",
-    "category": "procurement_api",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "api",
-    "format": "json",
-    "sourceUrl": "https://www.chilecompra.cl/api/",
-    "downloadUrl": null,
-    "updateFrequency": "daily",
-    "keyFields": ["codigo_licitacion", "codigo_orden_compra", "rut_proveedor", "codigo_organismo", "fecha", "monto"],
-    "caveats": ["Requiere ticket y respeto de limites diarios; usarlo para detalle incremental, no para scraping masivo."]
-  },
-  {
-    "sourceId": "CL-DIPRES-PAGOS",
-    "countryCode": "CL",
-    "name": "DIPRES presupuesto abierto pagos",
-    "agency": "Direccion de Presupuestos",
-    "category": "budget_payments",
-    "priority": "later",
-    "official": true,
-    "accessMode": "direct_download",
-    "format": "csv_gz",
-    "sourceUrl": "https://api.presupuestoabierto.gob.cl/about-data",
-    "downloadUrl": "https://api.presupuestoabierto.gob.cl/data/pagos-2026.gz",
-    "updateFrequency": "unknown",
-    "keyFields": ["ORDEN_DE_COMPRA", "RUT_BENEFICIARIO", "MONTO_DEVENGADO", "MONTO_PAGO", "FECHA_PAGO"],
-    "caveats": ["ORDEN_DE_COMPRA puede estar vacia; no todo pago cruza automaticamente con Mercado Publico."]
-  },
-  {
-    "sourceId": "CL-CHILECOMPRA-COMPRADORES-HISTORICOS",
-    "countryCode": "CL",
-    "name": "ChileCompra instituciones compradoras historicas",
-    "agency": "Direccion ChileCompra",
-    "category": "buyers",
-    "priority": "later",
-    "official": true,
-    "accessMode": "direct_download",
-    "format": "zip_csv",
-    "sourceUrl": "https://datos-abiertos.chilecompra.cl/",
-    "downloadUrl": "https://transparenciachc.blob.core.windows.net/oc-da/Instituciones_compradoras.zip",
-    "updateFrequency": "unknown",
-    "keyFields": ["codigo_organismo", "rut_unidad", "nombre_unidad", "region", "comuna"],
-    "caveats": ["Catalogo de compradores; usar como normalizador, no como prueba de compra."]
-  },
-  {
-    "sourceId": "CL-CIREN-LIMITE-COMUNAL",
-    "countryCode": "CL",
-    "name": "CIREN limite comunal Chile continental",
-    "agency": "Centro de Informacion de Recursos Naturales",
-    "category": "geo_boundaries",
-    "priority": "later",
-    "official": true,
-    "accessMode": "portal_api",
-    "format": "arcgis_json",
-    "sourceUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3",
-    "downloadUrl": "https://esri.ciren.cl/server/rest/services/LIMITES_ADMINISTRATIVOS/MapServer/3/query?where=1%3D1&outFields=codreg,codpro,codcom,nomreg,nompro,nomcom&returnGeometry=true&f=json",
-    "updateFrequency": "unknown",
-    "keyFields": ["codreg", "codpro", "codcom", "nomreg", "nompro", "nomcom"],
-    "caveats": ["Permite centroides comunales administrativos; no representa sitio exacto de ejecucion."]
   },
   {
     "sourceId": "AR-BCRA-COM-A3500",
@@ -497,39 +323,12 @@
     "sourceUrl": "https://datos.gob.ar/dataset/sspm-tipos-cambio-historicos",
     "downloadUrl": "https://infra.datos.gob.ar/catalog/sspm/dataset/175/distribution/175.1/download/tipos-de-cambio-historicos.csv",
     "updateFrequency": "daily",
-    "keyFields": ["indice_tiempo", "tipo_cambio_a_3500_mayorista_referencia_compra_pesos_por_dolar"],
-    "caveats": ["Sin cotizacion los fines de semana y feriados; Faro no interpola."]
-  },
-  {
-    "sourceId": "CL-BCCH-DOLAR-OBSERVADO",
-    "countryCode": "CL",
-    "name": "BCCh Dolar observado (via mindicador.cl)",
-    "agency": "Banco Central de Chile",
-    "category": "fx_reference_rate",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "api_aggregator",
-    "format": "csv",
-    "sourceUrl": "https://si3.bcentral.cl/Indicadoressiete/secure/Indicadoresdiarios.aspx",
-    "downloadUrl": "https://mindicador.cl/api/dolar/{year}",
-    "updateFrequency": "daily",
-    "keyFields": ["fecha", "dolar_observado"],
-    "caveats": ["mindicador.cl es agregador comunitario; el valor original proviene del BCCh."]
-  },
-  {
-    "sourceId": "PE-BCRP-SBS-VENTA",
-    "countryCode": "PE",
-    "name": "BCRP - Tipo de cambio Sistema bancario SBS Venta",
-    "agency": "Banco Central de Reserva del Peru",
-    "category": "fx_reference_rate",
-    "priority": "mvp",
-    "official": true,
-    "accessMode": "direct_download",
-    "format": "csv",
-    "sourceUrl": "https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD04640PD/html",
-    "downloadUrl": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04640PD/json/{from}/{to}",
-    "updateFrequency": "daily",
-    "keyFields": ["fecha", "tipo_cambio_sbs_venta"],
-    "caveats": ["Sin cotizacion los dias no habiles; Faro no interpola."]
+    "keyFields": [
+      "indice_tiempo",
+      "tipo_cambio_a_3500_mayorista_referencia_compra_pesos_por_dolar"
+    ],
+    "caveats": [
+      "Sin cotizacion los fines de semana y feriados; Faro no interpola."
+    ]
   }
 ]

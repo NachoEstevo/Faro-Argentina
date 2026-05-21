@@ -1,5 +1,5 @@
 import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
-import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "./argentinaContractCases.ts";
 
 export type CanonicalRecordType =
   | "public_work"
@@ -13,7 +13,7 @@ export type CanonicalRecordType =
 interface CanonicalRecordBase {
   canonicalId: string;
   type: CanonicalRecordType;
-  countryCode: "AR" | "PE" | "CL";
+  countryCode: "AR";
   receiptIds: string[];
   confidence: "official_dataset" | "official_record" | "cross_verified" | "reviewed_case";
   caveats: string[];
@@ -59,7 +59,7 @@ export interface ProcurementProcess extends CanonicalRecordBase {
   publicEntityId: string | null;
   supplierId: string | null;
   publicWorkId?: string | null;
-  amount: CrossCountryCaseFile["amount"];
+  amount: ArgentinaContractCaseFile["amount"];
 }
 
 export interface ProcurementContract extends CanonicalRecordBase {
@@ -72,7 +72,7 @@ export interface ProcurementContract extends CanonicalRecordBase {
   publicEntityId: string | null;
   supplierId: string | null;
   publicWorkId?: string | null;
-  amount: CrossCountryCaseFile["amount"];
+  amount: ArgentinaContractCaseFile["amount"];
 }
 
 export interface BudgetExecution extends CanonicalRecordBase {
@@ -82,7 +82,7 @@ export interface BudgetExecution extends CanonicalRecordBase {
     executionKey: string;
   };
   publicEntityId: string | null;
-  amount: CrossCountryCaseFile["amount"];
+  amount: ArgentinaContractCaseFile["amount"];
 }
 
 export interface Supplier extends CanonicalRecordBase {
@@ -165,8 +165,8 @@ export function buildCanonicalRecordsFromArgentinaWork(
   return records;
 }
 
-export function buildCanonicalRecordsFromCrossCountryCase(
-  caseFile: CrossCountryCaseFile,
+export function buildCanonicalRecordsFromArgentinaContractCase(
+  caseFile: ArgentinaContractCaseFile,
 ): CanonicalRecord[] {
   const records: CanonicalRecord[] = [];
   const receiptIds = [
@@ -252,59 +252,21 @@ export function buildCanonicalRecordsFromCrossCountryCase(
     });
   }
 
-  if (caseFile.caseType === "procurement_process") {
-    records.push({
-      canonicalId: `procurement_process:${caseFile.countryCode}:${caseFile.procedureNumber}`,
-      type: "procurement_process",
-      countryCode: caseFile.countryCode,
-      receiptIds,
-      confidence: "official_dataset",
-      caveats: caseFile.caveats,
-      title: caseFile.title,
-      officialIds: {
-        procedureNumber: caseFile.procedureNumber,
-      },
-      publicEntityId,
-      supplierId,
-      publicWorkId,
-      amount: caseFile.amount,
-    });
-    return records;
-  }
-
-  if (caseFile.caseType === "procurement_contract") {
-    records.push({
-      canonicalId: `procurement_contract:${caseFile.countryCode}:${caseFile.workNumber}`,
-      type: "procurement_contract",
-      countryCode: caseFile.countryCode,
-      receiptIds,
-      confidence: "official_dataset",
-      caveats: caseFile.caveats,
-      title: caseFile.title,
-      officialIds: {
-        contractNumber: caseFile.workNumber,
-        procedureNumber: caseFile.procedureNumber,
-      },
-      publicEntityId,
-      supplierId,
-      publicWorkId,
-      amount: caseFile.amount,
-    });
-    return records;
-  }
-
   records.push({
-    canonicalId: `budget_execution:${caseFile.countryCode}:${caseFile.workNumber}`,
-    type: "budget_execution",
+    canonicalId: `procurement_contract:${caseFile.countryCode}:${caseFile.workNumber}`,
+    type: "procurement_contract",
     countryCode: caseFile.countryCode,
     receiptIds,
     confidence: "official_dataset",
     caveats: caseFile.caveats,
     title: caseFile.title,
     officialIds: {
-      executionKey: caseFile.workNumber,
+      contractNumber: caseFile.workNumber,
+      procedureNumber: caseFile.procedureNumber,
     },
     publicEntityId,
+    supplierId,
+    publicWorkId,
     amount: caseFile.amount,
   });
   return records;

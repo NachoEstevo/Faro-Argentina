@@ -11,7 +11,7 @@ export default function TrustStrip({ totalCases, lastUpdated }: Props) {
     <div className={styles.trustStrip} aria-label="Resumen de la fuente">
       <span className={styles.trustItem}>
         <ShieldCheck size={13} aria-hidden className={styles.trustVerified} />
-        <strong>Fuentes oficiales · AR · CL · PE</strong>
+        <strong>Fuentes oficiales · Argentina</strong>
       </span>
       <span className={`${styles.trustDivider} ${styles.trustExtras}`} aria-hidden />
       <span className={`${styles.trustItem} ${styles.trustExtras}`}>

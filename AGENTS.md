@@ -35,13 +35,12 @@ wrongdoing score.
 - `README.md`
 - `docs/agent-onboarding.md`
 - `docs/product/faro-product-context.md`
-- `docs/handoffs/2026-05-16-data-quality-and-coverage-handoff.md`
-- `docs/handoffs/2026-05-16-ui-ux-expediente-faro-v1.md`
+- `docs/handoffs/2026-05-17-argentina-contract-expansion-handoff.md`
+- `docs/handoffs/2026-05-17-argentina-historical-judicial-cases-handoff.md`
+- `docs/handoffs/2026-05-17-data-integrity-and-quality-sprint-handoff.md`
 
 ## Known State
 
-`npm run typecheck`, `npm run build`, and focused coordinate-gate tests pass.
-
-`npm test` currently fails on `tests/dataSpineVerifier.test.ts` because raw
-snapshots and generated receipt hashes are out of sync. Treat that as the next
-data-trust blocker, not as a new failure from the coordinate gate work.
+Run `npm run data:build`, `npm run data:verify`, `npm run data:geo-report`,
+`npm run data:quality-report`, `npm test`, `npm run typecheck`, and
+`npm run build` before release work that changes code or data.

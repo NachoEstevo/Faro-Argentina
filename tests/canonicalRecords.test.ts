@@ -3,10 +3,9 @@ import assert from "node:assert/strict";
 
 import {
   buildCanonicalRecordsFromArgentinaWork,
-  buildCanonicalRecordsFromCrossCountryCase,
+  buildCanonicalRecordsFromArgentinaContractCase,
   type GeoPoint,
   type ProcurementContract,
-  type ProcurementProcess,
   type PublicWork,
   type Supplier,
 } from "../src/lib/data/canonicalRecords.ts";
@@ -45,85 +44,38 @@ test("buildCanonicalRecordsFromArgentinaWork emits work, entity and geopoint rec
   assert.equal(geo?.canonicalId, "geo_point:AR:81-0009-OBR18");
 });
 
-test("buildCanonicalRecordsFromCrossCountryCase emits buyer, supplier and procurement process", () => {
-  const records = buildCanonicalRecordsFromCrossCountryCase({
-    id: "CL-TENDER-1159-2-LP26",
-    countryCode: "CL",
-    caseType: "procurement_process",
-    workNumber: "1159-2-LP26",
-    year: 2026,
-    title: "Bolsas de carga pesada",
-    procedureNumber: "1159-2-LP26",
-    agencyName: "Servicio Agricola y Ganadero",
-    agencyCode: "1159",
-    contractingUnit: "Coquimbo",
-    executionTerm: null,
-    executionTermType: null,
-    coordinates: null,
-    evidenceLevel: "official_dataset",
-    amount: { value: 294, currency: "CLP", label: "monto_adjudicado", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
-    supplierName: "Sociedad de Gestion e Inversiones Julfior SPA",
-    supplierDocument: "78.047.617-6",
-    receipt: {
-      receiptId: "CL-MERCADO-PUBLICO-API-1159-2-LP26",
-      sourceId: "CL-MERCADO-PUBLICO-API",
-      sourceName: "API de Mercado Publico",
-      sourceUrl: "https://api.mercadopublico.cl/modules/api.aspx",
-      rawPath: "data/official/cl/sample.json",
-      snapshotHash: "sha256-snapshot",
-      fileHash: "sha256-snapshot",
-      rowHash: "sha256-row",
-      recordId: "1159-2-LP26",
-      locatorType: "official_detail",
-      extractedAt: "2026-05-16T00:00:00.000Z",
-      parserVersion: "cross-country@1",
-    },
-    caveats: ["La adjudicacion no prueba pago."],
-  });
-
-  const process = records.find(
-    (record): record is ProcurementProcess => record.type === "procurement_process",
-  );
-  const supplier = records.find((record): record is Supplier => record.type === "supplier");
-
-  assert.equal(process?.supplierId, "supplier:CL:78-047-617-6");
-  assert.equal(process?.publicEntityId, "public_entity:CL:1159");
-  assert.equal(supplier?.name, "Sociedad de Gestion e Inversiones Julfior SPA");
-  assert.equal(supplier?.officialIds.document, "78.047.617-6");
-});
-
-test("buildCanonicalRecordsFromCrossCountryCase emits contract records with supplier RUC", () => {
-  const records = buildCanonicalRecordsFromCrossCountryCase({
-    id: "PE-CONTRACT-2328678-1",
-    countryCode: "PE",
+test("buildCanonicalRecordsFromArgentinaContractCase emits buyer, supplier and contract records", () => {
+  const records = buildCanonicalRecordsFromArgentinaContractCase({
+    id: "AR-CONTRACT-14-1002-CON21",
+    countryCode: "AR",
     caseType: "procurement_contract",
-    workNumber: "2328678-1",
-    year: 2025,
-    title: "Contratacion de maquinaria pesada",
-    procedureNumber: "1122118",
-    agencyName: "Entidad OECE 010373",
-    agencyCode: "010373",
-    contractingUnit: "ORDEN DE SERVICIO N. 373",
+    workNumber: "14-1002-CON21",
+    year: 2026,
+    title: "Construccion cubierta",
+    procedureNumber: "14-0007-LPU20",
+    agencyName: "Comision Nacional de Energia Atomica",
+    agencyCode: "105",
+    contractingUnit: "Compras CNEA",
     executionTerm: null,
     executionTermType: null,
     coordinates: null,
     evidenceLevel: "official_dataset",
-    amount: { value: 113868.79, currency: "PEN", label: "monto_contratado", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
-    supplierName: null,
-    supplierDocument: "20487924050",
+    amount: { value: 8694426.61, currency: "ARS", label: "monto_contrato", usdEquivalent: null, usdConversionNote: "currency_not_supported" },
+    supplierName: "WARLET S.A.",
+    supplierDocument: "30-70043585-3",
     receipt: {
-      receiptId: "PE-OECE-CONTRATOS-2328678-1",
-      sourceId: "PE-OECE-CONTRATOS",
-      sourceName: "OECE contratos",
-      sourceUrl: "https://www.datosabiertos.gob.pe/node/20236/dataset",
-      rawPath: "data/official/pe/oece-contratos-2025.xlsx",
+      receiptId: "AR-CONTRATAR-CONTRATOS-14-1002-CON21",
+      sourceId: "AR-CONTRATAR-CONTRATOS",
+      sourceName: "CONTRAT.AR contratos",
+      sourceUrl: "https://datos.gob.ar",
+      rawPath: "data/official/ar/onc-contratar-contratos.csv",
       snapshotHash: "sha256-snapshot",
       fileHash: "sha256-snapshot",
       rowHash: "sha256-row",
-      recordId: "2328678-1",
+      recordId: "14-1002-CON21",
       locatorType: "official_dataset",
       extractedAt: "2026-05-16T00:00:00.000Z",
-      parserVersion: "cross-country@1",
+      parserVersion: "argentina-contracts@1",
     },
     caveats: ["Contrato no prueba pago."],
   });
@@ -132,14 +84,18 @@ test("buildCanonicalRecordsFromCrossCountryCase emits contract records with supp
     (record): record is ProcurementContract => record.type === "procurement_contract",
   );
   const supplier = records.find((record): record is Supplier => record.type === "supplier");
+  const entity = records.find((record) => record.type === "public_entity");
 
-  assert.equal(contract?.supplierId, "supplier:PE:20487924050");
-  assert.equal(contract?.officialIds.procedureNumber, "1122118");
-  assert.equal(supplier?.officialIds.document, "20487924050");
+  assert.equal(entity?.canonicalId, "public_entity:AR:105");
+  assert.equal(contract?.supplierId, "supplier:AR:30-70043585-3");
+  assert.equal(contract?.publicEntityId, "public_entity:AR:105");
+  assert.equal(contract?.officialIds.procedureNumber, "14-0007-LPU20");
+  assert.equal(supplier?.name, "WARLET S.A.");
+  assert.equal(supplier?.officialIds.document, "30-70043585-3");
 });
 
-test("buildCanonicalRecordsFromCrossCountryCase links Argentina contracts to official work geometry", () => {
-  const records = buildCanonicalRecordsFromCrossCountryCase({
+test("buildCanonicalRecordsFromArgentinaContractCase links Argentina contracts to official work geometry", () => {
+  const records = buildCanonicalRecordsFromArgentinaContractCase({
     id: "AR-CONTRACT-14-1002-CON21",
     countryCode: "AR",
     caseType: "procurement_contract",
@@ -174,7 +130,7 @@ test("buildCanonicalRecordsFromCrossCountryCase links Argentina contracts to off
       recordId: "14-1002-CON21",
       locatorType: "official_dataset",
       extractedAt: "2026-05-16T00:00:00.000Z",
-      parserVersion: "cross-country@1",
+      parserVersion: "argentina-contracts@1",
     },
     relatedReceipts: [
       {

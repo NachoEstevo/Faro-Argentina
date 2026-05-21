@@ -9,8 +9,8 @@ const rootDir = new URL("../", import.meta.url);
 
 const catalog = await readJson<SourceCatalogEntry[]>("data/sources/source-catalog.json");
 const argentinaDataset = await readJson<unknown>("src/data/argentinaWorkCases.json");
-const crossCountryDataset = await readJson<{ datasets: unknown[] }>(
-  "src/data/crossCountryCaseFiles.json",
+const argentinaContractDataset = await readJson<{ datasets: unknown[] }>(
+  "src/data/argentinaContractCases.json",
 );
 const historicalJudicialDataset = await readJson<{ datasets: unknown[] }>(
   "src/data/argentinaHistoricalJudicialCases.json",
@@ -21,7 +21,7 @@ const articleCitationDataset = await readJson<{ citations: ArticleCitation[] }>(
 
 const datasets = [
   argentinaDataset,
-  ...crossCountryDataset.datasets,
+  ...argentinaContractDataset.datasets,
   ...historicalJudicialDataset.datasets,
 ] as Parameters<typeof verifyDataSpine>[0]["datasets"];
 

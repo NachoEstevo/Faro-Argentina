@@ -32,18 +32,18 @@ test("profileCsvSnapshot computes hash, row count and schema profile", () => {
 
 test("profileJsonSnapshot computes hash, keys and nested record count", () => {
   const json = JSON.stringify({
-    sourceId: "CL-MERCADO-PUBLICO-API",
+    sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
     details: [{ id: "a" }, { id: "b" }],
   });
 
   const profile = profileJsonSnapshot({
-    sourceId: "CL-MERCADO-PUBLICO-API",
-    rawPath: "data/official/cl/sample.json",
+    sourceId: "AR-CONTRATAR-PROCEDIMIENTOS",
+    rawPath: "data/official/ar/onc-contratar-procedimientos.csv",
     text: json,
     recordPath: ["details"],
   });
 
-  assert.equal(profile.sourceId, "CL-MERCADO-PUBLICO-API");
+  assert.equal(profile.sourceId, "AR-CONTRATAR-PROCEDIMIENTOS");
   assert.match(profile.fileHash, /^sha256-/);
   assert.equal(profile.topLevelType, "object");
   assert.deepEqual(profile.keys, ["sourceId", "details"]);

@@ -14,13 +14,10 @@ Faro now includes a curated Argentina historical-judicial context dataset:
 
 The total checked-in corpus is now:
 
-- 633 cases.
 - 558 Argentina cases.
-- 50 Peru cases.
-- 25 Chile cases.
-- 8 datasets.
-- 2046 receipts.
-- 14 raw files.
+- 5 generated datasets.
+- 1946 receipts.
+- 8 raw snapshots in the manifest.
 
 ## Sources Added
 

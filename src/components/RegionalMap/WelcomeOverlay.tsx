@@ -13,7 +13,7 @@ export default function WelcomeOverlay({ dismissed, onCTA }: Props) {
   return (
     <div className={styles.welcomeOverlay} aria-hidden="false">
       <h1 className={styles.welcomeHeadline}>
-        Un observatorio de obras públicas en Argentina, Chile y Perú.
+        Un flujo de investigación de obras públicas en Argentina.
       </h1>
       <button type="button" className={styles.welcomeCTA} onClick={onCTA}>
         <span className={styles.welcomeCTASource} aria-hidden>

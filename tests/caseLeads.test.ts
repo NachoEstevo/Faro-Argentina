@@ -45,18 +45,18 @@ const highPriorityCase = {
 
 const lowerPriorityCase = {
   ...highPriorityCase,
-  id: "CL-TENDER-1002-53-LP26",
-  countryCode: "CL",
+  id: "AR-CONTRACT-14-1004-CON21",
+  countryCode: "AR",
   title: "Convenio mantenimiento",
   coordinates: null,
-  amount: { value: 1000, currency: "CLP", label: "monto_adjudicado_item_sum" },
+  amount: { value: 1000, currency: "ARS", label: "monto_contrato" },
   officialBudget: undefined,
   bidderCount: 13,
   claimCount: 12,
-  awardActUrl: "https://www.mercadopublico.cl/award-act",
+  awardActUrl: "https://comprar.gob.ar/acta-apertura",
   supplierName: "Proveedor adjudicado",
-  supplierDocument: "78.047.617-6",
-  caveats: ["Adjudicacion oficial; no prueba pago efectivo."],
+  supplierDocument: "30-70043585-3",
+  caveats: ["Contrato oficial; no prueba pago efectivo."],
 };
 
 test("buildCaseLeads returns one prioritized lead per case", () => {
@@ -78,13 +78,13 @@ test("buildCaseLeads returns one prioritized lead per case", () => {
 
 test("buildCaseLeads supports country and query filters", () => {
   const leads = buildCaseLeads([lowerPriorityCase, highPriorityCase], {
-    countryCode: "CL",
+    countryCode: "AR",
     query: "mantenimiento",
     limit: 10,
   });
 
   assert.equal(leads.length, 1);
-  assert.equal(leads[0]?.caseId, "CL-TENDER-1002-53-LP26");
+  assert.equal(leads[0]?.caseId, "AR-CONTRACT-14-1004-CON21");
 });
 
 test("buildCaseLeads supports signal phrases and aliases in query filters", () => {

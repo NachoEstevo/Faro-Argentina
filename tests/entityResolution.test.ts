@@ -34,60 +34,60 @@ test("resolveSupplierIdentity falls back to normalized name with lower confidenc
   assert.equal(identity?.aliasKey, "OBRAS DEL SUR");
 });
 
-test("resolveSupplierIdentity keeps countries separated", () => {
-  const ar = resolveSupplierIdentity({
+test("resolveSupplierIdentity keeps document and name keys separated", () => {
+  const documentIdentity = resolveSupplierIdentity({
     countryCode: "AR",
     supplierName: "Proveedor Regional SA",
     supplierDocument: "123",
   });
-  const cl = resolveSupplierIdentity({
-    countryCode: "CL",
+  const nameIdentity = resolveSupplierIdentity({
+    countryCode: "AR",
     supplierName: "Proveedor Regional SA",
-    supplierDocument: "123",
+    supplierDocument: null,
   });
 
-  assert.notEqual(ar?.key, cl?.key);
+  assert.notEqual(documentIdentity?.key, nameIdentity?.key);
 });
 
-test("resolveSupplierIdentity preserves Chilean RUT verifier digits", () => {
+test("resolveSupplierIdentity preserves alphanumeric verifier digits", () => {
   const identity = resolveSupplierIdentity({
-    countryCode: "CL",
-    supplierName: "Proveedor Rut K SpA",
+    countryCode: "AR",
+    supplierName: "Proveedor Documento K SA",
     supplierDocument: "12.975.530-k",
   });
 
-  assert.equal(identity?.key, "supplier:CL:doc:12975530K");
+  assert.equal(identity?.key, "supplier:AR:doc:12975530K");
   assert.equal(identity?.document, "12975530K");
   assert.equal(identity?.confidence, "high");
 });
 
 test("resolveSupplierIdentity preserves alphanumeric official documents", () => {
   const identity = resolveSupplierIdentity({
-    countryCode: "PE",
+    countryCode: "AR",
     supplierName: "Proveedor extranjero",
     supplierDocument: "L0606465503",
   });
 
-  assert.equal(identity?.key, "supplier:PE:doc:L0606465503");
+  assert.equal(identity?.key, "supplier:AR:doc:L0606465503");
   assert.equal(identity?.document, "L0606465503");
   assert.equal(identity?.confidence, "high");
 });
 
 test("resolveSupplierIdentity ignores document strings without digits", () => {
   const identity = resolveSupplierIdentity({
-    countryCode: "PE",
+    countryCode: "AR",
     supplierName: "Proveedor sin documento",
     supplierDocument: "N/A",
   });
 
-  assert.equal(identity?.key, "supplier:PE:name:PROVEEDOR SIN DOCUMENTO");
+  assert.equal(identity?.key, "supplier:AR:name:PROVEEDOR SIN DOCUMENTO");
   assert.equal(identity?.method, "normalized_name");
   assert.equal(identity?.confidence, "low");
 });
 
 test("resolveSupplierIdentity returns null when supplier data is missing", () => {
   assert.equal(resolveSupplierIdentity({
-    countryCode: "PE",
+    countryCode: "AR",
     supplierName: null,
     supplierDocument: null,
   }), null);

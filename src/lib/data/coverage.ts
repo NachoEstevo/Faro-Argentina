@@ -30,7 +30,7 @@ export interface CoverageReport {
   countries: Record<CountryCode, CountryCoverage>;
 }
 
-const countries: CountryCode[] = ["AR", "PE", "CL"];
+const countries: CountryCode[] = ["AR"];
 
 export function buildCoverageReport({
   sources,

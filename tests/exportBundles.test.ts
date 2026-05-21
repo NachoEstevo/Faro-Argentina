@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import {
   buildEvidencePack,
@@ -20,43 +20,38 @@ import {
 
 const cases = [
   ...argentinaDataset.cases,
-  ...crossCountryDataset.cases,
+  ...argentinaContractDataset.cases,
   ...historicalJudicialDataset.cases,
 ] as ExportableCaseFile[];
 
 test("filterCaseFiles filters by country, source and case type", () => {
-  const peContracts = filterCaseFiles(cases, {
-    countryCode: "PE",
-    sourceId: "PE-OECE-CONTRATOS",
+  const argentinaContracts = filterCaseFiles(cases, {
+    countryCode: "AR",
+    sourceId: "AR-CONTRATAR-CONTRATOS",
     caseType: "procurement_contract",
   });
 
-  assert.equal(peContracts.length, 500);
-  assert.equal(peContracts.every((caseFile) => caseFile.countryCode === "PE"), true);
+  assert.equal(argentinaContracts.length, 300);
+  assert.equal(argentinaContracts.every((caseFile) => caseFile.countryCode === "AR"), true);
   assert.equal(
-    peContracts.every((caseFile) => caseFile.receipt.sourceId === "PE-OECE-CONTRATOS"),
+    argentinaContracts.every((caseFile) => caseFile.receipt.sourceId === "AR-CONTRATAR-CONTRATOS"),
     true,
   );
 });
 
 test("buildCaseCollectionPack creates a country export with receipts and source summaries", () => {
-  const pack = buildCaseCollectionPack(cases, { countryCode: "PE" });
+  const pack = buildCaseCollectionPack(cases, { countryCode: "AR" });
 
   assert.equal(pack.packType, "faro_case_collection");
-  assert.equal(pack.filters.countryCode, "PE");
-  assert.equal(pack.stats.caseFiles, 609);
-  assert.equal(pack.stats.receipts, 1192);
-  assert.deepEqual(pack.sourceIds.sort(), [
-    "PE-MEF-GASTO-DIARIO",
-    "PE-OECE-CONTRATOS",
-    "PE-OECE-CONTRATOS-HISTORICOS",
-    "PE-OECE-OCDS",
-  ]);
-  assert.equal(pack.cases.every((caseFile) => caseFile.countryCode === "PE"), true);
-  assert.equal(pack.receipts[0]?.sourceId.startsWith("PE-"), true);
+  assert.equal(pack.filters.countryCode, "AR");
+  assert.equal(pack.stats.caseFiles, cases.length);
+  assert.equal(pack.stats.receipts > pack.stats.caseFiles, true);
+  assert.equal(pack.sourceIds.every((sourceId) => sourceId.startsWith("AR-")), true);
+  assert.equal(pack.cases.every((caseFile) => caseFile.countryCode === "AR"), true);
+  assert.equal(pack.receipts[0]?.sourceId.startsWith("AR-"), true);
   assert.equal(
     pack.cases.some((caseFile) =>
-      caseFile.relatedReceipts?.some((receipt) => receipt.sourceId === "PE-OECE-OCDS"),
+      caseFile.relatedReceipts?.some((receipt) => receipt.sourceId === "AR-CONTRATAR-OBRAS"),
     ),
     true,
   );
@@ -136,31 +131,6 @@ test("buildCaseCollectionPack keeps supplier context when query narrows the expo
   assert.equal(pack.cases[0]?.id, "AR-CONTRACT-40/31-1005-CON20");
   assert.equal(pack.cases[0]?.signals[0]?.code, "repeat_single_bid_winner");
   assert.equal(pack.signals[0]?.code, "repeat_single_bid_winner");
-});
-
-test("buildCaseCollectionPack exports Chile award evidence with official act context", () => {
-  const pack = buildCaseCollectionPack(cases, {
-    countryCode: "CL",
-    sourceId: "CL-MERCADO-PUBLICO-API",
-  });
-  const [caseFile] = pack.cases as Array<ExportableCaseFile & {
-    awardedAt?: string | null;
-    awardActUrl?: string | null;
-    bidderCount?: number | null;
-    signals?: Array<{ code: string }>;
-  }>;
-
-  assert.equal(pack.stats.caseFiles, 25);
-  assert.equal(pack.stats.signals > 0, true);
-  assert.equal(caseFile?.awardedAt, "2026-05-15");
-  assert.match(caseFile?.awardActUrl ?? "", /mercadopublico\.cl/);
-  assert.equal(caseFile?.bidderCount, 13);
-  assert.equal(Array.isArray(caseFile?.signals), true);
-  assert.equal(pack.signals.some((signal) => signal.code === "official_award_act"), true);
-  assert.equal(pack.signals.some((signal) => signal.code === "missing_official_geometry"), true);
-  assert.equal(pack.cases.every((caseFile) => Boolean(caseFile.supplierName)), true);
-  assert.match(caseFile?.receipt.sourceUrl ?? "", /mercadopublico\.cl/);
-  assert.doesNotMatch(caseFile?.receipt.sourceUrl ?? "", /modules\/api\.aspx/);
 });
 
 test("buildCaseCollectionPack exports Argentina judicial context with related receipts", () => {

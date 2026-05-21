@@ -43,8 +43,6 @@ interface Props {
 
 const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
   { code: "AR", short: "AR", label: "Argentina" },
-  { code: "CL", short: "CL", label: "Chile" },
-  { code: "PE", short: "PE", label: "Perú" },
 ];
 
 const GEOMETRY_OPTIONS: Array<{ id: InvestigatorGeometryFilter; label: string }> = [
@@ -716,40 +714,18 @@ function DetailRow({
 }
 
 function CountryFlag({ code }: { code: CountryCode }) {
-  const props = {
-    width: 22,
-    height: 14,
-    viewBox: "0 0 22 14",
-    role: "img",
-    "aria-label": code,
-    className: styles.countryFlag,
-  } as const;
-  if (code === "AR") {
-    return (
-      <svg {...props}>
-        <rect width="22" height="14" fill="#74acdf" />
-        <rect y="4.66" width="22" height="4.68" fill="#ffffff" />
-        <circle cx="11" cy="7" r="1.6" fill="#f6b40e" />
-      </svg>
-    );
-  }
-  if (code === "CL") {
-    return (
-      <svg {...props}>
-        <rect width="22" height="7" fill="#ffffff" />
-        <rect y="7" width="22" height="7" fill="#d52b1e" />
-        <rect width="9" height="7" fill="#0039a6" />
-        <polygon
-          points="4.5,2.3 5.05,3.9 6.7,3.9 5.35,4.85 5.85,6.45 4.5,5.5 3.15,6.45 3.65,4.85 2.3,3.9 3.95,3.9"
-          fill="#ffffff"
-        />
-      </svg>
-    );
-  }
   return (
-    <svg {...props}>
-      <rect width="22" height="14" fill="#d91023" />
-      <rect x="7.33" width="7.33" height="14" fill="#ffffff" />
+    <svg
+      width="22"
+      height="14"
+      viewBox="0 0 22 14"
+      role="img"
+      aria-label={code}
+      className={styles.countryFlag}
+    >
+      <rect width="22" height="14" fill="#74acdf" />
+      <rect y="4.66" width="22" height="4.68" fill="#ffffff" />
+      <circle cx="11" cy="7" r="1.6" fill="#f6b40e" />
     </svg>
   );
 }
@@ -1082,10 +1058,6 @@ function computeRowState(row: {
 const CASE_TYPE_LABELS: Record<string, string> = {
   argentina_contract: "Contrato AR",
   argentina_work: "Obra AR",
-  peru_contract: "Contrato PE",
-  peru_budget: "Presupuesto PE",
-  chile_award: "Adjudicación CL",
-  chile_tender: "Licitación CL",
   judicial_context: "Contexto judicial",
   historical_public_work: "Obra histórica",
   supplier_judicial_context: "Proveedor con causa judicial",

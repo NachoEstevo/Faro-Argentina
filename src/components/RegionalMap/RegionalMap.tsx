@@ -17,7 +17,7 @@ const CountryMap = dynamic(() => import("./CountryMap"), {
 });
 
 interface Props {
-  geojson: FeatureCollection<Geometry, { code: "AR" | "PE" | "CL"; name: string }>;
+  geojson: FeatureCollection<Geometry, { code: "AR"; name: string }>;
   totalCases: number;
   lastUpdated: string;
   syncLabel: string;

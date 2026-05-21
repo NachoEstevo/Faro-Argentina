@@ -4,7 +4,7 @@ import { getCasesByCountry } from "@/lib/caseRepository";
 import { paginateItems, parsePagination } from "@/lib/api/pagination";
 import type { CountryCode } from "@/lib/data/sourceCatalog";
 
-const countries: CountryCode[] = ["AR", "PE", "CL"];
+const countries: CountryCode[] = ["AR"];
 const defaultLimit = 100;
 const maxLimit = 200;
 

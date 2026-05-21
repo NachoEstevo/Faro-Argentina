@@ -202,8 +202,6 @@ function buildOfficialTrailDescription(sourceCount: number): string {
 
 function countryLabel(countryCode: string): string {
   if (countryCode === "AR") return "Argentina";
-  if (countryCode === "PE") return "Peru";
-  if (countryCode === "CL") return "Chile";
   return countryCode;
 }
 

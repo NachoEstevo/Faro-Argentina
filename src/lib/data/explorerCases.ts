@@ -1,34 +1,32 @@
 import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
 import type { ArgentinaHistoricalJudicialCase } from "./argentinaHistoricalJudicial.ts";
 import type { ArticleCitation } from "./articleCitations.ts";
-import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "./argentinaContractCases.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 import { shouldExposeCaseOnMap } from "./uiGates.ts";
 
 export type ExplorerCase =
-  (ArgentinaWorkCase | CrossCountryCaseFile | ArgentinaHistoricalJudicialCase) & {
+  (ArgentinaWorkCase | ArgentinaContractCaseFile | ArgentinaHistoricalJudicialCase) & {
     contextualCitations?: ArticleCitation[];
   };
 
 export function filterExplorerCases({
   countryCode,
   argentinaCases,
-  crossCountryCases,
+  argentinaContractCases,
   query,
   year,
 }: {
   countryCode: CountryCode;
   argentinaCases: ArgentinaWorkCase[];
-  crossCountryCases: CrossCountryCaseFile[];
+  argentinaContractCases: ArgentinaContractCaseFile[];
   query: string;
   year: number | null;
 }): ExplorerCase[] {
-  const pool = countryCode === "AR"
-    ? [
-        ...argentinaCases,
-        ...crossCountryCases.filter((caseFile) => caseFile.countryCode === "AR"),
-      ].filter(shouldExposeCaseOnMap)
-    : crossCountryCases.filter((caseFile) => caseFile.countryCode === countryCode);
+  const pool = [
+    ...argentinaCases,
+    ...argentinaContractCases.filter((caseFile) => caseFile.countryCode === countryCode),
+  ].filter(shouldExposeCaseOnMap);
 
   const normalizedQuery = query.trim().toLowerCase();
   return pool.filter((caseFile) => {

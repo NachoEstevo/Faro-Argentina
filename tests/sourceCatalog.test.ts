@@ -8,15 +8,13 @@ import {
   type SourceCatalogEntry,
 } from "../src/lib/data/sourceCatalog.ts";
 
-test("source catalog covers the first three Faro countries with official MVP sources", () => {
+test("source catalog covers Argentina with official MVP sources", () => {
   const report = validateSourceCatalog(catalog as SourceCatalogEntry[]);
 
   assert.deepEqual(report.errors, []);
   assert.equal(report.totalSources >= 6, true);
-  assert.deepEqual(Object.keys(report.sourcesByCountry).sort(), ["AR", "CL", "PE"]);
+  assert.deepEqual(Object.keys(report.sourcesByCountry).sort(), ["AR"]);
   assert.equal(getMvpSourcesByCountry(catalog as SourceCatalogEntry[], "AR").length >= 2, true);
-  assert.equal(getMvpSourcesByCountry(catalog as SourceCatalogEntry[], "PE").length >= 1, true);
-  assert.equal(getMvpSourcesByCountry(catalog as SourceCatalogEntry[], "CL").length >= 1, true);
 });
 
 test("source catalog validation rejects duplicate ids and non-official sources", () => {

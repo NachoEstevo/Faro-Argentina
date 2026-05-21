@@ -20,7 +20,7 @@ import {
 import styles from "./AportesView.module.css";
 
 interface Props {
-  selectedCountry: "AR" | "PE" | "CL";
+  selectedCountry: "AR";
   onSwitchToMap: () => void;
   onSwitchToExplorer: () => void;
   onSwitchToInvestigations: () => void;
@@ -185,11 +185,9 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 <select
                   className={styles.select}
                   value={jurisdiction}
-                  onChange={(event) => setJurisdiction(event.target.value as "AR" | "PE" | "CL")}
+                  onChange={(event) => setJurisdiction(event.target.value as "AR")}
                 >
                   <option value="AR">Argentina</option>
-                  <option value="PE">Peru</option>
-                  <option value="CL">Chile</option>
                 </select>
               </label>
               <label className={`${styles.field} ${styles.fieldWide}`}>

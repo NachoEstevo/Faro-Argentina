@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import catalog from "../data/sources/source-catalog.json" with { type: "json" };
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import { verifyDataSpine } from "../src/lib/data/dataSpineVerifier.ts";
 import type { SourceCatalogEntry } from "../src/lib/data/sourceCatalog.ts";
@@ -14,16 +14,16 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
     sources: catalog as SourceCatalogEntry[],
     datasets: [
       argentinaDataset,
-      ...crossCountryDataset.datasets,
+      ...argentinaContractDataset.datasets,
       ...historicalJudicialDataset.datasets,
     ],
   });
 
   assert.deepEqual(report.errors, []);
-  assert.equal(report.checkedDatasets, 17);
-  assert.equal(report.checkedCases, 1867);
-  assert.equal(report.checkedReceipts, 4510);
-  assert.equal(report.checkedRawFiles, 24);
+  assert.equal(report.checkedDatasets, 5);
+  assert.equal(report.checkedCases, 558);
+  assert.equal(report.checkedReceipts, 1946);
+  assert.equal(report.checkedRawFiles, 10);
 });
 
 test("verifyDataSpine reports a receipt hash mismatch", async () => {
@@ -40,7 +40,7 @@ test("verifyDataSpine reports a receipt hash mismatch", async () => {
 });
 
 test("verifyDataSpine validates related receipts against their raw source files", async () => {
-  const brokenDataset = structuredClone(crossCountryDataset.datasets[0]);
+  const brokenDataset = structuredClone(argentinaContractDataset.datasets[0]);
   const brokenCase = brokenDataset.cases[0] as typeof brokenDataset.cases[number] & {
     relatedReceipts: Array<typeof brokenDataset.cases[number]["receipt"]>;
   };

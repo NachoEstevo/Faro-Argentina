@@ -16,12 +16,12 @@ export const metadata = {
 };
 
 interface CountryProps {
-  code: "AR" | "PE" | "CL";
+  code: "AR";
   name: string;
 }
 
 export default async function Home() {
-  const geojsonPath = path.join(process.cwd(), "public", "geo", "latam-countries.json");
+  const geojsonPath = path.join(process.cwd(), "public", "geo", "argentina-country.json");
   const raw = await fs.readFile(geojsonPath, "utf8");
   const geojson = JSON.parse(raw) as FeatureCollection<Geometry, CountryProps>;
 

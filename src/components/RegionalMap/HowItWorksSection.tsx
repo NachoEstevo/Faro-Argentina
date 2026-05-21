@@ -3,8 +3,8 @@ import styles from "./RegionalMap.module.css";
 const STEPS = [
   {
     num: "01",
-    title: "Elegí un país",
-    desc: "Tocá Argentina, Chile o Perú para abrir el mapa de ese país.",
+    title: "Abrí Argentina",
+    desc: "Entrá al mapa o al Explorer para revisar expedientes argentinos.",
   },
   {
     num: "02",

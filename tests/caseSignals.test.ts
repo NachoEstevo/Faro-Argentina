@@ -58,23 +58,23 @@ test("buildCaseSignals explains why a low-competition contract is worth reviewin
 
 test("buildCaseSignals surfaces evidence gaps instead of inventing map context", () => {
   const signals = buildCaseSignals({
-    id: "PE-CONTRACT-2328678-1",
-    countryCode: "PE",
+    id: "AR-CONTRACT-14-1003-CON21",
+    countryCode: "AR",
     caseType: "procurement_contract",
-    title: "Contratacion de maquinaria pesada",
-    workNumber: "2328678-1",
-    year: 2025,
-    procedureNumber: "1122118",
-    agencyName: "Gobierno Regional de Amazonas",
-    agencyCode: "010373",
-    contractingUnit: "ORDEN DE SERVICIO N. 373",
+    title: "Contrato sin geometria oficial",
+    workNumber: "14-1003-CON21",
+    year: 2021,
+    procedureNumber: "14-0008-LPU20",
+    agencyName: "Comision Nacional de Energia Atomica",
+    agencyCode: "105",
+    contractingUnit: "Compras CNEA",
     executionTerm: "2025-06-03 - 2025-06-11",
     executionTermType: "vigencia_contractual",
     coordinates: null,
     evidenceLevel: "official_dataset",
-    amount: { value: 113868.79, currency: "PEN", label: "monto_contratado" },
+    amount: { value: 113868.79, currency: "ARS", label: "monto_contrato" },
     supplierName: null,
-    supplierDocument: "20487924050",
+    supplierDocument: "30-70043585-3",
     receipt,
     caveats: ["Contrato oficial; falta geometria oficial para mapa."],
   });
@@ -150,30 +150,30 @@ test("buildCaseSignals does not treat invalid coordinates as official geometry",
 
 test("buildCaseSignals labels administrative centroids without implying exact site geometry", () => {
   const signals = buildCaseSignals({
-    id: "PE-CONTRACT-2328678-1",
-    countryCode: "PE",
-    title: "Servicio en Bagua",
+    id: "AR-CONTRACT-14-1003-CON21",
+    countryCode: "AR",
+    title: "Servicio con referencia administrativa",
     caseType: "procurement_contract",
     year: 2025,
-    coordinates: { lat: -5.613, lon: -78.434 },
+    coordinates: { lat: -31.4201, lon: -64.1888 },
     geoEvidence: [
       {
         precision: "official_admin_centroid",
-        granularity: "district",
-        label: "LA PECA / BAGUA / AMAZONAS",
-        sourceId: "PE-IDEP-LIMITE-DISTRITAL",
+        granularity: "department",
+        label: "CORDOBA / CORDOBA",
+        sourceId: "AR-CONTRATAR-UBICACION",
         sourceField: "descripcion_proceso",
         method: "official_text_admin_catalog_match",
         confidence: "medium",
-        coordinates: { lat: -5.613, lon: -78.434 },
+        coordinates: { lat: -31.4201, lon: -64.1888 },
         exposeOnMap: true,
         satelliteEligible: false,
         caveat: "Centroide administrativo oficial; no es sitio exacto de ejecucion.",
       },
     ],
     receipt: {
-      sourceId: "PE-OECE-CONTRATOS",
-      sourceName: "OECE contratos",
+      sourceId: "AR-CONTRATAR-CONTRATOS",
+      sourceName: "CONTRAT.AR contratos",
       sourceUrl: "https://example.test",
     },
   });
@@ -218,26 +218,26 @@ test("buildCaseSignals keeps map and satellite capability out of lead selection"
 test("buildCaseSignalFeed ranks concrete review leads across cases", () => {
   const feed = buildCaseSignalFeed([
     {
-      id: "CL-TENDER-1002-53-LP26",
-      countryCode: "CL",
-      caseType: "procurement_process",
+      id: "AR-CONTRACT-14-1004-CON21",
+      countryCode: "AR",
+      caseType: "procurement_contract",
       title: "Convenio mantenimiento",
-      workNumber: "1002-53-LP26",
+      workNumber: "14-1004-CON21",
       year: 2026,
-      procedureNumber: "1002-53-LP26",
-      agencyName: "Ministerio de Obras Publicas",
-      agencyCode: "7248",
-      contractingUnit: "Direccion de Vialidad",
+      procedureNumber: "14-0010-LPU21",
+      agencyName: "Direccion Nacional de Vialidad",
+      agencyCode: "604",
+      contractingUnit: "DNV",
       executionTerm: null,
       executionTermType: null,
       coordinates: null,
       evidenceLevel: "official_dataset",
-      amount: { value: 1000, currency: "CLP", label: "monto_adjudicado_item_sum" },
+      amount: { value: 1000, currency: "ARS", label: "monto_contrato" },
       supplierName: "Proveedor adjudicado",
-      supplierDocument: "78.047.617-6",
+      supplierDocument: "30-70043585-3",
       bidderCount: 13,
       claimCount: 211,
-      awardActUrl: "https://www.mercadopublico.cl/award-act",
+      awardActUrl: "https://comprar.gob.ar/acta-apertura",
       receipt,
       caveats: ["Licitacion oficial; no prueba pago efectivo."],
     },
@@ -245,7 +245,7 @@ test("buildCaseSignalFeed ranks concrete review leads across cases", () => {
 
   assert.equal(feed.stats.cases, 1);
   assert.equal(feed.stats.signals > 0, true);
-  assert.equal(feed.signals[0]?.caseId, "CL-TENDER-1002-53-LP26");
+  assert.equal(feed.signals[0]?.caseId, "AR-CONTRACT-14-1004-CON21");
   assert.equal(feed.signals[0]?.code, "high_claim_volume");
   assert.equal(feed.signals.some((signal) => signal.code === "official_award_act"), true);
 });

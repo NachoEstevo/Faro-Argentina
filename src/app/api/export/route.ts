@@ -13,7 +13,7 @@ import {
 } from "@/lib/data/staticExportArtifacts";
 import type { CountryCode } from "@/lib/data/sourceCatalog";
 
-const countries: CountryCode[] = ["AR", "PE", "CL"];
+const countries: CountryCode[] = ["AR"];
 const functionPayloadGuardBytes = 4_000_000;
 const staticExportArtifacts = buildCoreStaticExportFilters(investigatorCaseFiles).map((filters) => ({
   filters,

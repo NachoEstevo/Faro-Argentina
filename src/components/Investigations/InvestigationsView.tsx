@@ -29,7 +29,7 @@ import styles from "./InvestigationsView.module.css";
 
 interface Props {
   cases: ExplorerCase[];
-  selectedCountry: "AR" | "PE" | "CL";
+  selectedCountry: "AR";
   onSwitchToMap: () => void;
   onSwitchToExplorer: () => void;
   onSwitchToAportes: () => void;

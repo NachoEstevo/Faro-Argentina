@@ -18,7 +18,7 @@ export interface FormattedAmount {
 /**
  * Like formatAmountWithUsd but with USD as the primary line and the local
  * currency as the secondary line. Used in compact summary surfaces (e.g.
- * the case panel facts grid) where USD reads as the cross-country anchor.
+ * the case panel facts grid) where USD reads as the argentina-contracts anchor.
  * Drops the FX source/date suffix to keep the secondary line short; that
  * provenance metadata still lives in the technical-details accordion.
  */
@@ -67,7 +67,5 @@ function formatIsoDate(iso: string): string {
 
 function shortSourceLabel(sourceId: string): string {
   if (sourceId.startsWith("AR-BCRA")) return "BCRA A 3500";
-  if (sourceId.startsWith("CL-BCCH")) return "BCCh observado";
-  if (sourceId.startsWith("PE-BCRP")) return "BCRP SBS";
   return sourceId;
 }

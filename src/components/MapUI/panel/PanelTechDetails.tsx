@@ -3,7 +3,7 @@
 import { ChevronRight, ExternalLink } from "lucide-react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
-import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { CaseSignalPanel } from "@/components/CaseSignals";
@@ -15,8 +15,8 @@ interface Props {
   signalContext?: CaseSignalContext;
 }
 
-function isCrossCountryCase(caseFile: ExplorerCase): caseFile is CrossCountryCaseFile {
-  return "caseType" in caseFile;
+function isArgentinaContractCase(caseFile: ExplorerCase): caseFile is ArgentinaContractCaseFile {
+  return "caseType" in caseFile && caseFile.caseType === "procurement_contract";
 }
 
 function shortSource(sourceId: string): string {
@@ -39,7 +39,7 @@ export default function PanelTechDetails({ caseFile, signalContext }: Props) {
     signalContext,
     contextualCitations,
   );
-  const relatedReceipts = isCrossCountryCase(caseFile) ? caseFile.relatedReceipts ?? [] : [];
+  const relatedReceipts = "relatedReceipts" in caseFile ? caseFile.relatedReceipts ?? [] : [];
   return (
     <details className={styles.accordion}>
       <summary className={styles.accordionSummary}>

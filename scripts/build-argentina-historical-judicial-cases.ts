@@ -11,7 +11,7 @@ import { profileJsonSnapshot } from "../src/lib/data/snapshots.ts";
 import { loadFxRegistryFromFiles } from "../src/lib/data/fxSeries.ts";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 
 interface HistoricalSourceConfig {
   sourceId: string;
@@ -133,7 +133,7 @@ await writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 function buildLocalReceiptLookup(): Map<string, EvidenceReceipt> {
   const cases = [
     ...argentinaDataset.cases,
-    ...crossCountryDataset.cases,
+    ...argentinaContractDataset.cases,
   ] as Array<{ id: string; receipt?: EvidenceReceipt }>;
   return new Map(
     cases

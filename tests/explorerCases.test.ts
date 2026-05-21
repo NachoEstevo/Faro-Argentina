@@ -2,19 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import { filterExplorerCases } from "../src/lib/data/explorerCases.ts";
 import type { ArgentinaWorkCase } from "../src/lib/data/argentinaWorks.ts";
-import type { CrossCountryCaseFile } from "../src/lib/data/crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "../src/lib/data/argentinaContractCases.ts";
 
 const argentinaCases = argentinaDataset.cases as ArgentinaWorkCase[];
-const crossCountryCases = crossCountryDataset.cases as CrossCountryCaseFile[];
+const argentinaContractCases = argentinaContractDataset.cases as ArgentinaContractCaseFile[];
 
 test("filterExplorerCases includes Argentina contracts only after official geo enrichment", () => {
   const cases = filterExplorerCases({
     countryCode: "AR",
     argentinaCases,
-    crossCountryCases,
+    argentinaContractCases,
     query: "",
     year: 2023,
   });
@@ -32,7 +32,7 @@ test("filterExplorerCases lets Argentina map search find suppliers", () => {
   const cases = filterExplorerCases({
     countryCode: "AR",
     argentinaCases,
-    crossCountryCases,
+    argentinaContractCases,
     query: "warlet",
     year: 2023,
   });

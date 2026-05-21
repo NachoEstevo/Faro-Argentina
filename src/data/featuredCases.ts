@@ -1,7 +1,7 @@
 export type FeaturedVariant = "geo" | "documentary";
 
 export interface FeaturedCase {
-  countryCode: "AR" | "PE" | "CL";
+  countryCode: "AR";
   caseId: string;
   variant: FeaturedVariant;
   marker: { lat: number; lon: number };
@@ -12,11 +12,8 @@ export interface FeaturedCase {
   tags: string[];
 }
 
-// Callout positions are spread across the landing-map perimeter so the 6
-// cards do not overlap. East-of-the-continent (Atlantic) hosts the AR
-// cards; the Pacific corridor and the Amazon basin host the PE/CL ones.
+// Callout positions stay near Argentina while leaving the case cards readable.
 export const FEATURED_CASES: FeaturedCase[] = [
-  // Argentina
   {
     countryCode: "AR",
     caseId: "AR-CONTRACT-46-1585-CON21",
@@ -25,7 +22,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -50.0, lon: -44.0 },
     kicker: "OBRA · PATAGONIA",
     title: "Vialidad — Ruta 3 Patagonia",
-    blurb: "Misma ruta y agencia que la causa que llegó a la Corte. ¿Qué pasa con la obra nueva?",
+    blurb: "Contrato y obra pública con geometría oficial para abrir fuente, receipt y caveats.",
     tags: ["DNV", "USD 67M", "RN 3"],
   },
   {
@@ -36,7 +33,7 @@ export const FEATURED_CASES: FeaturedCase[] = [
     callout: { lat: -27.0, lon: -47.0 },
     kicker: "CAUSA JUDICIAL",
     title: "Cuadernos / La Camarita",
-    blurb: "Las anotaciones que sacudieron la Argentina. Sentencia 2026 — leé el detalle.",
-    tags: ["Coimas", "Sentencia 2026", "TOF 7"],
+    blurb: "Contexto judicial oficial vinculado a proveedores; no reemplaza la lectura documental.",
+    tags: ["Contexto", "TOF 7", "MPF"],
   },
 ];

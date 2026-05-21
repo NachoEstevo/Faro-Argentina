@@ -17,17 +17,17 @@ test("buildCaseMarkerKey keeps repeated official work ids distinct on the map", 
 
 test("isMapMarkerEligible only accepts coordinates that pass country bounds", () => {
   assert.equal(isMapMarkerEligible({
-    countryCode: "PE",
-    coordinates: { lat: -5.613, lon: -78.434 },
+    countryCode: "AR",
+    coordinates: { lat: -34.609296, lon: -58.390555 },
   }), true);
 
   assert.equal(isMapMarkerEligible({
-    countryCode: "PE",
+    countryCode: "AR",
     coordinates: null,
   }), false);
 
   assert.equal(isMapMarkerEligible({
-    countryCode: "CL",
+    countryCode: "AR",
     coordinates: { lat: 38.8977, lon: -77.0365 },
   }), false);
 });

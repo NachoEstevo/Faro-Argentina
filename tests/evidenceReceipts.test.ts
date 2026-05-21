@@ -72,17 +72,17 @@ test("getPublicOfficialSourceHref maps dataset downloads to official catalog pag
 
 test("getPublicOfficialSourceHref preserves direct official record links", () => {
   const receipt = createEvidenceReceipt({
-    sourceId: "CL-MERCADO-PUBLICO-API",
-    sourceName: "API de Mercado Publico",
-    sourceUrl: "https://www.mercadopublico.cl/award-act",
-    rawPath: "data/official/cl/sample.json",
+    sourceId: "AR-CIJ-VIALIDAD-VEREDICTO",
+    sourceName: "CIJ Causa Vialidad",
+    sourceUrl: "https://www.cij.gov.ar/login/d/sentencia.pdf",
+    rawPath: "data/official/ar/cij-vialidad-context.json",
     snapshotHash: "sha256-snapshot",
-    recordId: "4052-3-LE26",
+    recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME",
     locatorType: "official_detail",
     extractedAt: "2026-05-16T00:00:00.000Z",
-    parserVersion: "chilecompra@1",
-    row: { CodigoExterno: "4052-3-LE26" },
+    parserVersion: "argentina-judicial-context@1",
+    row: { recordId: "VIALIDAD-CFP-5048-SENTENCIA-FIRME" },
   });
 
-  assert.equal(getPublicOfficialSourceHref(receipt), "https://www.mercadopublico.cl/award-act");
+  assert.equal(getPublicOfficialSourceHref(receipt), "https://www.cij.gov.ar/login/d/sentencia.pdf");
 });

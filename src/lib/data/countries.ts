@@ -23,26 +23,6 @@ const STATIC: Record<CountryCode, Omit<CountryConfig, "caseCount">> = {
       [-21.78, -53.64],
     ],
   },
-  PE: {
-    code: "PE",
-    name: "Perú",
-    sourceLabel: "Contratos OECE",
-    centroid: [-9.19, -75.02],
-    bounds: [
-      [-18.35, -81.33],
-      [-0.04, -68.65],
-    ],
-  },
-  CL: {
-    code: "CL",
-    name: "Chile",
-    sourceLabel: "Adjudicaciones",
-    centroid: [-35.68, -71.54],
-    bounds: [
-      [-55.98, -75.64],
-      [-17.5, -66.95],
-    ],
-  },
 };
 
 export const COUNTRIES: CountryConfig[] = (Object.keys(STATIC) as CountryCode[]).map(
@@ -61,5 +41,5 @@ export function totalCaseCount(): number {
 }
 
 export function isCountryCode(value: string): value is CountryCode {
-  return value === "AR" || value === "PE" || value === "CL";
+  return value === "AR";
 }

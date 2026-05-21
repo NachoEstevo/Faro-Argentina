@@ -1,10 +1,10 @@
-# Faro
+# Faro Argentina
 
 **El poder deja rastros. Faro los ordena.**
 
-Faro convierte datos oficiales de gasto publico en expedientes verificables para
-seguir obras, contratos, organismos, proveedores y fuentes sin saltar a
-conclusiones.
+Faro Argentina convierte datos oficiales de gasto publico en expedientes
+verificables para seguir obras, contratos, organismos, proveedores y fuentes sin
+saltar a conclusiones.
 
 Faro no acusa. Faro muestra donde mirar, por que mirar ahi, que fuente oficial
 lo sostiene y que falta verificar.
@@ -16,23 +16,36 @@ Explorer._
 
 ![Faro Explorer](docs/assets/faro-explorer.jpg)
 
-_Explorer investigador: busqueda por pais, pivots, receipts, fuentes oficiales y
+_Explorer investigador: busqueda, pivots, receipts, fuentes oficiales y
 expedientes exportables._
 
 ## Por Que Existe
 
 La informacion sobre gasto publico existe, pero esta dispersa en portales,
-CSVs, XLSX, APIs, PDFs y datasets con campos inconsistentes. Para verificar una
-pista hay que encontrar la fuente, entender el registro, cruzar identificadores,
-revisar montos, ubicar territorio, guardar hashes y explicar los caveats.
-
-Ese trabajo es lento para periodistas, auditores y equipos tecnicos. Para la
-mayoria de los ciudadanos es casi inaccesible.
+CSVs, APIs, PDFs y datasets con campos inconsistentes. Para verificar una pista
+hay que encontrar la fuente, entender el registro, cruzar identificadores,
+revisar montos, ubicar territorio, guardar hashes y explicar caveats.
 
 Faro reduce esa distancia:
 
 ```text
 datos oficiales -> pista -> expediente -> fuente oficial -> evidence pack
+```
+
+## Workflow
+
+El flujo principal esta enfocado en Argentina:
+
+1. Abrir el mapa o el Explorer.
+2. Encontrar una pista por territorio, organismo, proveedor, fuente o senal.
+3. Abrir el expediente.
+4. Revisar rastro oficial, receipts, hashes y caveats.
+5. Exportar informe imprimible o JSON tecnico para continuar la verificacion.
+
+El momento clave no es "mira un punto en el mapa". Es:
+
+```text
+esta pista -> esta fuente oficial -> este receipt -> este paquete verificable
 ```
 
 ## Que Hace
@@ -50,66 +63,44 @@ Tocas un punto del mapa o una fila del Explorer y Faro arma un expediente con:
 
 ## Lo Que Lo Hace Diferente
 
-Faro no es un mapa decorativo ni una tabla cruda. Su valor esta en la
-trazabilidad:
-
 - **Fuente oficial primero:** la UI abre paginas oficiales de catalogo o detalle;
   los links directos a datasets quedan para reproducibilidad tecnica.
 - **Receipts verificables:** cada caso conserva hashes, paths y version de parser.
-- **Explorer antes que sospecha:** se puede seguir el rastro por pais, fuente,
+- **Explorer antes que sospecha:** se puede seguir el rastro por fuente,
   organismo, proveedor, senal o identificador.
 - **Mapa con prudencia:** solo se dibuja geometria validada; lo debil queda como
   brecha de datos, no como punto inventado.
 - **Caveats visibles:** contratos y adjudicaciones no se presentan como pagos si
   no hay una fuente que lo pruebe.
 
-## Demo Para Hackathon
-
-El recorrido recomendado para mostrar Faro:
-
-1. Abrir la landing y explicar la regla: **Faro no acusa**.
-2. Entrar al Explorer y buscar por pais.
-3. Usar pivots por organismo, proveedor o senal.
-4. Abrir un expediente.
-5. Mostrar la fuente oficial publica.
-6. Mostrar receipt, hash y raw path.
-7. Abrir el informe imprimible o exportar JSON tecnico.
-
-El momento clave no es "mira un punto en el mapa". Es:
-
-```text
-esta pista -> esta fuente oficial -> este receipt -> este paquete verificable
-```
-
 ## Estado Actual
 
 Corpus versionado en el repo:
 
-- `17` datasets;
-- `1.867` expedientes;
-- `4.510` receipts;
-- `24` raw files verificados;
-- `0` errores en el data spine actual.
+- `5` datasets generados;
+- `558` expedientes de Argentina;
+- `1.946` receipts;
+- `8` snapshots oficiales en el manifest;
+- `411` expedientes elegibles para mapa despues del gate de geometria.
 
-Cobertura por pais:
+La cobertura se concentra en:
 
-| Pais | Expedientes | Map-ready | Nota |
-| --- | ---: | ---: | --- |
-| Argentina | 558 | 411 | Obras, contratos y contexto judicial verificable. |
-| Peru | 609 | 550 | Contratos OECE, historicos seleccionados y presupuesto MEF. |
-| Chile | 700 | 292 | Procesos ChileCompra/OCDS; mapa como referencia comunal caveateada. |
-
-Chile conserva evidencia administrativa para una parte de los registros y la
-dibuja como referencia comunal oficial del comprador. No es sitio exacto de
-ejecucion y no habilita comparacion satelital automatica.
+- CONTRAT.AR obras, contratos, procedimientos, ofertas, ubicacion geografica y
+  actas de apertura;
+- SIPRO proveedores;
+- BCRA Comunicacion A 3500 para conversiones historicas;
+- CIJ Causa Vialidad;
+- MPF Causa Vialidad;
+- MPF Cuadernos / La Camarita;
+- Contratar historico obras como fuente auxiliar.
 
 ## Superficies Del Producto
 
 ### Explorer
 
-El Explorer es el modo principal de investigacion. Permite buscar por pais,
-proveedor, organismo, fuente, receipt, senal o texto libre, y combinar pivots
-sin depender del mapa.
+El Explorer es el modo principal de investigacion. Permite buscar por proveedor,
+organismo, fuente, receipt, senal o texto libre, y combinar pivots sin depender
+del mapa.
 
 ### Mapa
 
@@ -127,31 +118,6 @@ lo sostiene, que caveats aplican y que deberia verificarse despues.
 
 El export tecnico conserva el rastro reproducible: caso, receipt, fuentes
 relacionadas, senales, caveats, hashes y pasos de verificacion.
-
-## Fuentes Iniciales
-
-Argentina:
-
-- CONTRAT.AR obras, contratos, procedimientos, ofertas, ubicacion geografica y
-  actas de apertura;
-- SIPRO proveedores;
-- CIJ Causa Vialidad;
-- MPF Causa Vialidad;
-- MPF Cuadernos / La Camarita;
-- Contratar historico obras como fuente auxiliar.
-
-Peru:
-
-- OECE contratos;
-- OECE contratos historicos seleccionados 2018-2024;
-- OECE OCDS;
-- MEF presupuesto y ejecucion de gasto diario.
-
-Chile:
-
-- Mercado Publico API;
-- ChileCompra / OCDS procesos, con muestra controlada 2019-2026;
-- DIPRES pagos como siguiente cruce previsto.
 
 ## Stack
 
@@ -173,7 +139,7 @@ scripts/                               # fetch/build/verify de datos oficiales
 data/official/                         # snapshots oficiales locales
 data/sources/source-catalog.json       # catalogo de fuentes oficiales
 src/data/                              # artefactos generados para la app
-docs/                                  # documentacion publica e interna
+docs/                                  # documentacion publica y handoffs vigentes
 ```
 
 ## Correr Localmente
@@ -204,8 +170,8 @@ npm run build
 
 `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts.
 `npm run data:geo-report` valida elegibilidad de mapa. `npm run
-data:quality-report` resume cobertura por pais, fuente, monto, proveedor,
-geometria, senales y blockers.
+data:quality-report` resume cobertura por fuente, monto, proveedor, geometria,
+senales y blockers.
 
 No usar fetch de datos como reparacion rutinaria:
 
@@ -218,18 +184,13 @@ evidencia.
 
 ## Documentacion
 
-Para jueces, colaboradores y futuras sesiones:
-
 - [Mapa de documentacion](docs/README.md)
 - [Contexto de producto](docs/product/faro-product-context.md)
 - [Onboarding tecnico](docs/agent-onboarding.md)
 - [Deployment](docs/deployment.md)
 
-Los handoffs siguen en `docs/handoffs/` y los planes largos viven en
-`docs/internal/`. La vitrina publica debe ser este README y `docs/README.md`.
-
 ## Descripcion Corta
 
-Faro convierte datos oficiales de gasto publico en expedientes verificables con
-Explorer, mapa prudente, fuentes oficiales, receipts, caveats e informes
-exportables.
+Faro Argentina convierte datos oficiales de gasto publico en expedientes
+verificables con Explorer, mapa prudente, fuentes oficiales, receipts, caveats e
+informes exportables.

@@ -22,7 +22,7 @@ import {
   FINDING_CODES,
   type FindingOption,
 } from "./RegionalMap/SidebarFilters";
-import type { CrossCountryCaseFile } from "@/lib/data/crossCountryCases";
+import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import {
   buildSearchSuggestions,
@@ -47,23 +47,21 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
 
 interface Props {
   dataset: CaseDataset<ArgentinaWorkCase>;
-  crossCountryCases: CrossCountryCaseFile[];
+  argentinaContractCases: ArgentinaContractCaseFile[];
   explorerCases?: ExplorerCase[];
-  initialCountry?: "AR" | "PE" | "CL";
+  initialCountry?: "AR";
   initialEntryOpen?: boolean;
   initialMode?: "map" | "explorer" | "aportes" | "investigations";
   initialCaseId?: string;
 }
 
-const COUNTRY_META: Record<"AR" | "PE" | "CL", { label: string; status: string }> = {
+const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
   AR: { label: "Argentina", status: "Obras CONTRAT.AR" },
-  PE: { label: "Perú", status: "Contratos OECE" },
-  CL: { label: "Chile", status: "Adjudicaciones" },
 };
 
 export default function FaroExperience({
   dataset,
-  crossCountryCases,
+  argentinaContractCases,
   explorerCases,
   initialCountry = "AR",
   initialEntryOpen = true,
@@ -72,15 +70,15 @@ export default function FaroExperience({
 }: Props) {
   const router = useRouter();
   const allCases = useMemo(
-    () => explorerCases ?? [...dataset.cases, ...crossCountryCases],
-    [crossCountryCases, dataset.cases, explorerCases],
+    () => explorerCases ?? [...dataset.cases, ...argentinaContractCases],
+    [argentinaContractCases, dataset.cases, explorerCases],
   );
   const explorerSignalContext = useMemo(
     () => buildCaseSignalContext(allCases as SignalCaseFile[]),
     [allCases],
   );
   const [entryOpen, setEntryOpen] = useState(initialEntryOpen);
-  const [selectedCountry, setSelectedCountry] = useState<"AR" | "PE" | "CL">(initialCountry);
+  const [selectedCountry, setSelectedCountry] = useState<"AR">(initialCountry);
   const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId ?? "");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -101,12 +99,12 @@ export default function FaroExperience({
     const pool = filterExplorerCases({
       countryCode: selectedCountry,
       argentinaCases: dataset.cases,
-      crossCountryCases,
+      argentinaContractCases,
       query: "",
       year: null,
     });
     return getYearBounds(pool);
-  }, [crossCountryCases, dataset.cases, selectedCountry]);
+  }, [argentinaContractCases, dataset.cases, selectedCountry]);
 
   // Clamp year range to current bounds whenever the country (and thus the
   // available year span) changes. Null means "match the bound" — clearing
@@ -600,7 +598,7 @@ function filterCountryReviewCases({
   year,
 }: {
   cases: ExplorerCase[];
-  countryCode: "AR" | "PE" | "CL";
+  countryCode: "AR";
   query: string;
   year: number | null;
 }): ExplorerCase[] {

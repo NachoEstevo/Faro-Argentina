@@ -1,4 +1,4 @@
-export type CountryCode = "AR" | "PE" | "CL";
+export type CountryCode = "AR";
 
 export type SourcePriority = "mvp" | "later";
 
@@ -31,14 +31,14 @@ export interface SourceCatalogValidationReport {
   errors: string[];
 }
 
-const countryCodes: CountryCode[] = ["AR", "PE", "CL"];
+const countryCodes: CountryCode[] = ["AR"];
 
 export function validateSourceCatalog(
   sources: SourceCatalogEntry[],
 ): SourceCatalogValidationReport {
   const errors: string[] = [];
   const seen = new Set<string>();
-  const sourcesByCountry = { AR: 0, PE: 0, CL: 0 };
+  const sourcesByCountry = { AR: 0 };
 
   sources.forEach((source, index) => {
     if (seen.has(source.sourceId)) {

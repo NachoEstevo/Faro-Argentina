@@ -8,8 +8,8 @@ export default function IntroSection() {
       </p>
       <h2 className={styles.introTitle}>Las obras públicas, a la vista.</h2>
       <p className={styles.introBody}>
-        Faro lee los datos oficiales de Argentina, Chile y Perú y marca las obras
-        que conviene revisar. No acusa: ilumina dónde mirar y entrega las pruebas.
+        Faro lee datos oficiales de Argentina y arma expedientes para seguir obras,
+        contratos, organismos, proveedores y fuentes. No acusa: ilumina dónde mirar.
       </p>
     </section>
   );

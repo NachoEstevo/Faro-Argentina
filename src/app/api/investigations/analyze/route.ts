@@ -82,7 +82,7 @@ interface AnalysisRequestBody {
   caseIds?: unknown;
   workspace?: Partial<{
     title: string;
-    countryCode: "AR" | "PE" | "CL";
+    countryCode: "AR";
     description: string;
     investigationQuestion: string | null;
     sourceLinks: InvestigationSourceLink[];

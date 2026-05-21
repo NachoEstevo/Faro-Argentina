@@ -1,6 +1,6 @@
 import { parseCsv } from "./argentinaWorks.ts";
 import { createEvidenceReceipt } from "./evidenceReceipts.ts";
-import type { CrossCountryCaseFile } from "./crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "./argentinaContractCases.ts";
 import { attachFx, yearAsAnchor } from "./fxAttach.ts";
 import {
   buildCaveats,
@@ -118,7 +118,7 @@ export function buildArgentinaContractCases(
   text: string,
   options: BuildOptions,
   limitOrContext: number | ArgentinaContractBuildContext = 50,
-): CrossCountryCaseFile[] {
+): ArgentinaContractCaseFile[] {
   const context = normalizeContext(limitOrContext);
   const worksByNumber = indexBy(context.works?.rows ?? [], (row) => clean(row.numero_obra));
   const suppliersByDocument = indexBy(
@@ -177,7 +177,7 @@ function buildCase({
   locationsByWork: Map<string, ArgentinaLocationRow[]>;
   openingActsByProcedure: Map<string, ArgentinaOpeningActRow[]>;
   offerStatsByProcedure: Map<string, OfferStats>;
-}): CrossCountryCaseFile {
+}): ArgentinaContractCaseFile {
   const contractNumber = clean(row.contrato_numero);
   const workNumber = clean(row.numero_obra);
   const procedureNumber = clean(row.procedimiento_numero);

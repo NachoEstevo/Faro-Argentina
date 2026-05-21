@@ -2,27 +2,26 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
-import crossCountryDataset from "../src/data/crossCountryCaseFiles.json" with { type: "json" };
+import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import {
   buildInvestigatorExplorer,
   type InvestigatorExplorerCase,
 } from "../src/lib/data/investigatorExplorer.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import type { ArgentinaWorkCase } from "../src/lib/data/argentinaWorks.ts";
-import type { CrossCountryCaseFile } from "../src/lib/data/crossCountryCases.ts";
+import type { ArgentinaContractCaseFile } from "../src/lib/data/argentinaContractCases.ts";
 
 const argentinaCases = argentinaDataset.cases as ArgentinaWorkCase[];
-const crossCountryCases = crossCountryDataset.cases as CrossCountryCaseFile[];
-const allCases = [...argentinaCases, ...crossCountryCases] as InvestigatorExplorerCase[];
+const argentinaContractCases = argentinaContractDataset.cases as ArgentinaContractCaseFile[];
+const allCases = [...argentinaCases, ...argentinaContractCases] as InvestigatorExplorerCase[];
 
-test("buildInvestigatorExplorer scans map and non-map cases across countries", () => {
+test("buildInvestigatorExplorer scans map and non-map Argentina cases", () => {
   const explorer = buildInvestigatorExplorer(allCases, { limit: 500 });
 
   assert.equal(explorer.viewType, "faro_investigator_explorer_v1");
   assert.equal(explorer.stats.totalCases, allCases.length);
   assert.equal(explorer.rows.some((row) => row.countryCode === "AR" && row.hasOfficialGeometry), true);
-  assert.equal(explorer.rows.some((row) => row.countryCode === "PE" && !row.hasOfficialGeometry), true);
-  assert.equal(explorer.rows.some((row) => row.countryCode === "CL" && !row.hasOfficialGeometry), true);
+  assert.equal(explorer.rows.some((row) => row.countryCode === "AR" && !row.hasOfficialGeometry), true);
   assert.equal(explorer.facets.some((facet) => facet.type === "source"), true);
 });
 
@@ -33,8 +32,8 @@ test("buildInvestigatorExplorer searches by supplier, source, record id, and sig
     true,
   );
 
-  const sourceSearch = buildInvestigatorExplorer(allCases, { query: "chilecompra", limit: 50 });
-  assert.equal(sourceSearch.rows.every((row) => row.sourceName.toLowerCase().includes("chile")), true);
+  const sourceSearch = buildInvestigatorExplorer(allCases, { query: "contrat.ar", limit: 50 });
+  assert.equal(sourceSearch.rows.every((row) => row.sourceName.toLowerCase().includes("contrat.ar")), true);
 
   const signalSearch = buildInvestigatorExplorer(allCases, { query: "competencia baja", limit: 50 });
   assert.equal(signalSearch.rows.some((row) => row.primarySignal?.code === "single_bidder"), true);
@@ -42,7 +41,7 @@ test("buildInvestigatorExplorer searches by supplier, source, record id, and sig
 
 test("buildInvestigatorExplorer applies geometry, country, signal, and pivot filters", () => {
   const noGeometry = buildInvestigatorExplorer(allCases, {
-    countries: ["PE", "CL"],
+    countries: ["AR"],
     geometry: "without",
     signalCode: "missing_official_geometry",
     limit: 80,
@@ -174,17 +173,23 @@ test("buildInvestigatorExplorer exposes collection-aware supplier signals as sea
   assert.equal(search.rows.some((row) => row.primarySignal?.code === "repeat_single_bid_winner"), true);
 });
 
-test("buildInvestigatorExplorer scopes supplier recurrence by filtered country", () => {
-  const mixedCountryCases = [
+test("buildInvestigatorExplorer scopes supplier recurrence to filtered Argentina rows", () => {
+  const scopedCases = [
     buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1),
     buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1),
-    buildExplorerFixture("PE-CONTRACT-381-1003-CON21", 1, { countryCode: "PE" }),
+    buildExplorerFixture("AR-CONTRACT-105-1003-CON21", 1, {
+      agencyName: "Comision Nacional de Energia Atomica",
+      supplierName: "OTRO PROVEEDOR SA",
+    }),
   ] as InvestigatorExplorerCase[];
 
-  const explorer = buildInvestigatorExplorer(mixedCountryCases, { countries: ["PE"], limit: 20 });
+  const explorer = buildInvestigatorExplorer(scopedCases, {
+    entities: [{ type: "agency", key: "comision nacional de energia atomica" }],
+    limit: 20,
+  });
 
   assert.equal(explorer.rows.length, 1);
-  assert.equal(explorer.rows[0]?.countryCode, "PE");
+  assert.equal(explorer.rows[0]?.countryCode, "AR");
   assert.equal(explorer.rows[0]?.signalCodes.includes("repeat_single_bid_winner"), false);
 });
 

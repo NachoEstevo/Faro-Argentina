@@ -15,10 +15,10 @@ type GeneratedDataset = DataQualityDataset & DataSpineDataset & {
 
 const catalog = await readJson<SourceCatalogEntry[]>("data/sources/source-catalog.json");
 const argentinaDataset = await readJson<GeneratedDataset>("src/data/argentinaWorkCases.json");
-const crossCountryDataset = await readJson<{
+const argentinaContractDataset = await readJson<{
   generatedAt: string;
   datasets: GeneratedDataset[];
-}>("src/data/crossCountryCaseFiles.json");
+}>("src/data/argentinaContractCases.json");
 const historicalJudicialDataset = await readJson<{
   generatedAt: string;
   datasets: GeneratedDataset[];
@@ -26,7 +26,7 @@ const historicalJudicialDataset = await readJson<{
 
 const datasets = [
   withCatalogCountry(argentinaDataset, catalog),
-  ...crossCountryDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
+  ...argentinaContractDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
   ...historicalJudicialDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
 ];
 
@@ -39,7 +39,7 @@ const verification = await verifyDataSpine({
 const report = buildDataQualityReport({
   generatedAt:
     historicalJudicialDataset.generatedAt ??
-    crossCountryDataset.generatedAt ??
+    argentinaContractDataset.generatedAt ??
     argentinaDataset.generatedAt ??
     new Date().toISOString(),
   verification,

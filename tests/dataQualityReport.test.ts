@@ -115,53 +115,53 @@ test("buildDataQualityReport aggregates repeated source ids across snapshot peri
     },
     datasets: [
       {
-        source: { sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS", countryCode: "CL" },
+        source: { sourceId: "AR-CONTRATAR-CONTRATOS", countryCode: "AR" },
         stats: { rawRows: 25, caseFiles: 25, mapReadyCases: 7 },
         cases: [{
-          id: "CL-OCDS-2019",
-          countryCode: "CL",
-          caseType: "procurement_process",
-          title: "Proceso ChileCompra 2019",
+          id: "AR-CONTRACT-14-1002-CON21",
+          countryCode: "AR",
+          caseType: "procurement_contract",
+          title: "Contrato 2019",
           year: 2019,
           workNumber: "2019",
           procedureNumber: "2019",
-          agencyName: "Municipalidad",
+          agencyName: "Comision Nacional de Energia Atomica",
           coordinates: null,
           amount: null,
           bidderCount: null,
           supplierName: null,
           supplierDocument: null,
-          receipt: { ...receipt, sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS" },
-          caveats: ["Release oficial; falta monto."],
+          receipt: { ...receipt, sourceId: "AR-CONTRATAR-CONTRATOS" },
+          caveats: ["Contrato oficial; falta monto."],
         }],
       },
       {
-        source: { sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS", countryCode: "CL" },
+        source: { sourceId: "AR-CONTRATAR-CONTRATOS", countryCode: "AR" },
         stats: { rawRows: 500, caseFiles: 500, mapReadyCases: 200 },
         cases: [{
-          id: "CL-OCDS-2026",
-          countryCode: "CL",
-          caseType: "procurement_process",
-          title: "Proceso ChileCompra 2026",
+          id: "AR-CONTRACT-14-1003-CON21",
+          countryCode: "AR",
+          caseType: "procurement_contract",
+          title: "Contrato 2026",
           year: 2026,
           workNumber: "2026",
           procedureNumber: "2026",
-          agencyName: "Municipalidad",
+          agencyName: "Comision Nacional de Energia Atomica",
           coordinates: null,
           amount: null,
           bidderCount: null,
           supplierName: null,
           supplierDocument: null,
-          receipt: { ...receipt, sourceId: "CL-CHILECOMPRA-OCDS-PROCESOS" },
-          caveats: ["Release oficial; falta monto."],
+          receipt: { ...receipt, sourceId: "AR-CONTRATAR-CONTRATOS" },
+          caveats: ["Contrato oficial; falta monto."],
         }],
       },
     ],
   });
 
-  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].rawRows, 525);
-  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].cases, 2);
-  assert.equal(report.bySource["CL-CHILECOMPRA-OCDS-PROCESOS"].mapReadyCases, 207);
+  assert.equal(report.bySource["AR-CONTRATAR-CONTRATOS"].rawRows, 525);
+  assert.equal(report.bySource["AR-CONTRATAR-CONTRATOS"].cases, 2);
+  assert.equal(report.bySource["AR-CONTRATAR-CONTRATOS"].mapReadyCases, 207);
 });
 
 test("buildDataQualityReport counts collection-aware supplier signals", () => {
