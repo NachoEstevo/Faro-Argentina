@@ -19,6 +19,7 @@ import {
   type InvestigationCaseRelationReason,
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
+import { cleanInvestigationAnalysisMarkdown } from "@/lib/data/investigationAnalysisText";
 import styles from "./InvestigationsView.module.css";
 
 interface SidebarProps {
@@ -65,6 +66,11 @@ interface SelectedCasesPanelProps {
   workspace: InvestigationWorkspace;
   onRemoveCase: (caseId: string) => void;
 }
+
+type AnalysisBlock =
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "list"; items: string[] };
 
 export function InvestigationsSidebar({
   onSwitchToMap,
@@ -170,9 +176,80 @@ export function InvestigationAnalysisPanel({
           <span>{aggregate.geometryGaps.count} brechas de geometría</span>
         </div>
       )}
-      {analysisMarkdown && <pre className={styles.analysis}>{analysisMarkdown}</pre>}
+      {analysisMarkdown && <AnalysisMarkdown markdown={analysisMarkdown} />}
     </section>
   );
+}
+
+function AnalysisMarkdown({ markdown }: { markdown: string }) {
+  const blocks = parseAnalysisBlocks(cleanInvestigationAnalysisMarkdown(markdown));
+  return (
+    <article className={styles.analysisReport} aria-label="Informe de análisis">
+      {blocks.map((block, index) => {
+        if (block.type === "heading") {
+          return <h4 key={`${block.type}-${index}`}>{block.text}</h4>;
+        }
+        if (block.type === "list") {
+          return (
+            <ul key={`${block.type}-${index}`}>
+              {block.items.map((item, itemIndex) => <li key={`${item}-${itemIndex}`}>{item}</li>)}
+            </ul>
+          );
+        }
+        return <p key={`${block.type}-${index}`}>{block.text}</p>;
+      })}
+    </article>
+  );
+}
+
+function parseAnalysisBlocks(markdown: string): AnalysisBlock[] {
+  const blocks: AnalysisBlock[] = [];
+  let paragraph: string[] = [];
+  let listItems: string[] = [];
+
+  function flushParagraph() {
+    if (paragraph.length === 0) return;
+    blocks.push({ type: "paragraph", text: paragraph.join(" ") });
+    paragraph = [];
+  }
+
+  function flushList() {
+    if (listItems.length === 0) return;
+    blocks.push({ type: "list", items: listItems });
+    listItems = [];
+  }
+
+  for (const rawLine of markdown.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+    const heading = line.match(/^#{1,6}\s+(.+)$/);
+    if (heading?.[1]) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "heading", text: stripMarkdownEmphasis(heading[1]) });
+      continue;
+    }
+    const listItem = line.match(/^[-*]\s+(.+)$/);
+    if (listItem?.[1]) {
+      flushParagraph();
+      listItems.push(stripMarkdownEmphasis(listItem[1]));
+      continue;
+    }
+    flushList();
+    paragraph.push(stripMarkdownEmphasis(line));
+  }
+
+  flushParagraph();
+  flushList();
+  return blocks;
+}
+
+function stripMarkdownEmphasis(value: string): string {
+  return value.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1");
 }
 
 export function WorkspaceHeader({ workspace, onExport }: WorkspaceHeaderProps) {

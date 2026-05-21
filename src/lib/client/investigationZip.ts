@@ -4,6 +4,7 @@ import {
   type InvestigationAggregate,
   type InvestigationWorkspace,
 } from "../data/investigationWorkspaces.ts";
+import { cleanInvestigationAnalysisMarkdown } from "../data/investigationAnalysisText.ts";
 
 export interface BuildInvestigationZipInput {
   workspace: InvestigationWorkspace;
@@ -36,9 +37,9 @@ export function buildInvestigationZip(input: BuildInvestigationZipInput): BuiltI
 }
 
 function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; content: string }> {
-  const analysis = input.analysisMarkdown ??
+  const analysis = cleanInvestigationAnalysisMarkdown(input.analysisMarkdown ??
     input.workspace.analyses[input.workspace.analyses.length - 1]?.markdown ??
-    "";
+    "");
   const aggregate = buildInvestigationAggregate(
     input.workspace,
     input.casePacks.map((pack) => pack.evidencePack),

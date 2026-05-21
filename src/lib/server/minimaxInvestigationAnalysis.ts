@@ -4,6 +4,10 @@ import type {
   InvestigationAnalysis,
   InvestigationWorkspace,
 } from "../data/investigationWorkspaces.ts";
+import {
+  cleanInvestigationAnalysisMarkdown,
+  summarizeInvestigationAnalysisMarkdown,
+} from "../data/investigationAnalysisText.ts";
 
 export interface MinimaxInvestigationAnalysisInput {
   workspace: InvestigationWorkspace;
@@ -42,6 +46,7 @@ export async function requestMinimaxInvestigationAnalysis(
             "No acuses, no inventes fuentes y no completes datos faltantes.",
             "Separá evidencia oficial, contexto periodístico, notas de usuario y brechas.",
             "Cada afirmación importante debe citar caseId, sourceId, receiptId o nota.",
+            "No incluyas razonamiento interno, etiquetas <think>, trazas de deliberación, explicación del proceso ni bloques de código.",
           ].join(" "),
         },
         {
@@ -58,7 +63,7 @@ export async function requestMinimaxInvestigationAnalysis(
   }
 
   const payload = await response.json() as MinimaxResponse;
-  const markdown = extractMiniMaxContent(payload);
+  const markdown = cleanInvestigationAnalysisMarkdown(extractMiniMaxContent(payload));
   if (!markdown) {
     throw new Error("MiniMax analysis returned an empty response.");
   }
@@ -67,7 +72,7 @@ export async function requestMinimaxInvestigationAnalysis(
   return {
     id: `ANALYSIS-${createdAt.replace(/[-:.TZ]/g, "").slice(0, 14)}`,
     createdAt,
-    summary: summarizeMarkdown(markdown),
+    summary: summarizeInvestigationAnalysisMarkdown(markdown),
     markdown,
   };
 }
@@ -78,6 +83,7 @@ export function buildInvestigationPrompt(input: MinimaxInvestigationAnalysisInpu
     "No inventes fuentes, hechos, montos, culpabilidad ni relaciones no incluidas.",
     "Usá lenguaje neutral: Faro muestra dónde mirar y qué falta verificar.",
     "Devolvé Markdown con estas secciones: Resumen, Evidencia oficial, Cruces, Brechas, Próximos pasos.",
+    "No muestres razonamiento interno, etiquetas <think> ni bloques de código; entregá solamente el informe final.",
     "",
     "Paquete estructurado:",
     JSON.stringify({
@@ -114,14 +120,6 @@ function extractMiniMaxContent(payload: MinimaxResponse): string {
     payload.reply,
     payload.content,
   ].find((value) => typeof value === "string" && value.trim().length > 0)?.trim() ?? "";
-}
-
-function summarizeMarkdown(markdown: string): string {
-  const firstContentLine = markdown
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .find((line) => line && !line.startsWith("#"));
-  return firstContentLine ?? markdown.slice(0, 180);
 }
 
 function toCompactCasePack(pack: InvestigationCasePack) {

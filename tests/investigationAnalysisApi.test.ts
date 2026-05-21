@@ -76,8 +76,11 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
         {
           message: {
             content: [
+              "<think>Voy a analizar el paquete estructurado antes de responder.</think>",
+              "```markdown",
               "# Análisis de trabajo",
               "La carpeta contiene evidencia oficial y huecos de verificacion.",
+              "```",
             ].join("\n\n"),
           },
         },
@@ -113,6 +116,9 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
     assert.equal(payload.aggregate.caseCount, 1);
     assert.match(payload.analysis.markdown, /Análisis de trabajo/);
     assert.match(payload.analysis.summary, /evidencia oficial/);
+    assert.doesNotMatch(payload.analysis.markdown, /<think>|<\/think>|Voy a analizar/);
+    assert.doesNotMatch(payload.analysis.markdown, /```/);
+    assert.doesNotMatch(payload.analysis.summary, /<think>|<\/think>|Voy a analizar/);
     assert.equal(calls.length, 1);
     assert.equal(calls[0]?.url, "https://api.minimax.io/v1/chat/completions");
     assert.equal(calls[0]?.authorization, "Bearer minimax-test-key");
