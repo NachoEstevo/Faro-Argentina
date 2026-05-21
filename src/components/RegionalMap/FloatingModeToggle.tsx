@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileSearch, Map as MapIcon } from "lucide-react";
+import { FileSearch, FolderOpen, Map as MapIcon } from "lucide-react";
 import styles from "./RegionalMap.module.css";
 
 export default function FloatingModeToggle() {
@@ -20,6 +20,14 @@ export default function FloatingModeToggle() {
       >
         <FileSearch size={13} aria-hidden />
         Explorer
+      </Link>
+      <Link
+        href="/pais/AR?mode=investigations"
+        className={styles.floatingToggleButton}
+        aria-label="Abrir carpetas de investigación"
+      >
+        <FolderOpen size={13} aria-hidden />
+        Carpetas
       </Link>
     </div>
   );

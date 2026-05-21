@@ -30,14 +30,15 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupción|Score de corrupcion|Publicar caso/);
 });
 
-test("FaroExperience keeps Investigaciones routeable but hides the public Investigaciones tab", async () => {
+test("FaroExperience exposes Carpetas from the main mode toggle", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
 
   assert.match(source, /InvestigationsView/);
   assert.match(source, /"map" \| "explorer" \| "aportes" \| "investigations"/);
   assert.match(source, /viewMode === "investigations"/);
-  assert.doesNotMatch(source, /FolderOpen/);
-  assert.doesNotMatch(source, /aria-pressed=\{false\}[\s\S]*?Investigaciones[\s\S]*?<\/button>/);
+  assert.match(source, /FolderOpen/);
+  assert.match(source, /setViewMode\("investigations"\)/);
+  assert.match(source, /Carpetas/);
 });
 
 test("FaroExperience keeps private modes isolated from the map sidebar", async () => {
@@ -56,13 +57,13 @@ test("country route can open investigations mode directly", async () => {
   assert.match(source, /"investigations"/);
 });
 
-test("regional landing hides Investigaciones while aportes mode can still link to it", async () => {
+test("regional landing exposes Carpetas while aportes mode can still link to it", async () => {
   const floatingSource = await readFile(floatingToggleUrl, "utf8");
   const aportesSource = await readFile(aportesViewUrl, "utf8");
 
-  assert.doesNotMatch(floatingSource, /mode=investigations/);
-  assert.doesNotMatch(floatingSource, /Investigaciones/);
-  assert.doesNotMatch(floatingSource, /FolderOpen/);
+  assert.match(floatingSource, /mode=investigations/);
+  assert.match(floatingSource, /Carpetas/);
+  assert.match(floatingSource, /FolderOpen/);
   assert.match(aportesSource, /onSwitchToInvestigations/);
   assert.match(aportesSource, /Investigaciones/);
 });
