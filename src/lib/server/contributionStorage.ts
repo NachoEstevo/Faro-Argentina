@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
@@ -9,6 +9,7 @@ import {
   type UserContribution,
   type UserContributionDraft,
 } from "../data/userContributions.ts";
+import { getR2Config, putR2Object, type R2Config } from "./r2ObjectStorage.ts";
 
 export interface ContributionFileUpload {
   filename: string;
@@ -29,13 +30,6 @@ export interface StoreContributionResult {
   contribution: UserContribution;
   storageMode: "local" | "r2";
   manifestKey: string;
-}
-
-interface R2Config {
-  endpoint: string;
-  accessKeyId: string;
-  secretAccessKey: string;
-  bucket: string;
 }
 
 export async function storeContribution(input: StoreContributionInput): Promise<StoreContributionResult> {
@@ -79,8 +73,7 @@ async function storeLocally({
   files: ContributionFileUpload[];
   attachmentKeys: string[];
 }) {
-  const root = process.env.FARO_CONTRIBUTIONS_STORAGE_DIR ??
-    join(/*turbopackIgnore: true*/ process.cwd(), ".faro-contributions");
+  const root = getContributionStorageRoot();
   await Promise.all(
     files.map(async (file, index) => {
       const target = localPath(root, attachmentKeys[index]);
@@ -122,116 +115,16 @@ async function storeInR2({
   });
 }
 
-async function putR2Object({
-  config,
-  key,
-  body,
-  contentType,
-}: {
-  config: R2Config;
-  key: string;
-  body: Uint8Array;
-  contentType: string;
-}) {
-  const endpoint = config.endpoint.replace(/\/+$/, "");
-  const pathname = `/${config.bucket}/${encodeKeyPath(key)}`;
-  const url = new URL(pathname, endpoint);
-  const amzDate = toAmzDate(new Date());
-  const dateStamp = amzDate.slice(0, 8);
-  const payloadHash = sha256Hex(body);
-  const headers = {
-    "content-type": contentType,
-    host: url.host,
-    "x-amz-content-sha256": payloadHash,
-    "x-amz-date": amzDate,
-  };
-  const signedHeaders = Object.keys(headers).sort().join(";");
-  const canonicalHeaders = Object.keys(headers)
-    .sort()
-    .map((name) => `${name}:${headers[name as keyof typeof headers]}\n`)
-    .join("");
-  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
-  const canonicalRequest = [
-    "PUT",
-    url.pathname,
-    "",
-    canonicalHeaders,
-    signedHeaders,
-    payloadHash,
-  ].join("\n");
-  const stringToSign = [
-    "AWS4-HMAC-SHA256",
-    amzDate,
-    credentialScope,
-    sha256Hex(canonicalRequest),
-  ].join("\n");
-  const signingKey = getSignatureKey(config.secretAccessKey, dateStamp, "auto", "s3");
-  const signature = hmacHex(signingKey, stringToSign);
-  const authorization = `AWS4-HMAC-SHA256 Credential=${config.accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
-
-  const response = await fetch(url, {
-    method: "PUT",
-    headers: {
-      ...headers,
-      Authorization: authorization,
-    },
-    body: Buffer.from(body),
-  });
-
-  if (!response.ok) {
-    throw new Error(`R2 upload failed for ${key}: ${response.status} ${await response.text()}`);
-  }
-}
-
-function getR2Config(): R2Config | null {
-  const endpoint = optionalEnv("STORAGE_ENDPOINT") ??
-    (optionalEnv("R2_ACCOUNT_ID")
-      ? `https://${optionalEnv("R2_ACCOUNT_ID")}.r2.cloudflarestorage.com`
-      : null);
-  const accessKeyId = optionalEnv("STORAGE_ACCESS_KEY") ?? optionalEnv("R2_ACCESS_KEY_ID");
-  const secretAccessKey = optionalEnv("STORAGE_SECRET_KEY") ?? optionalEnv("R2_SECRET_ACCESS_KEY");
-  const bucket = optionalEnv("STORAGE_BUCKET") ?? optionalEnv("R2_BUCKET") ?? "faro";
-  if (!endpoint || !accessKeyId || !secretAccessKey) return null;
-  return { endpoint, accessKeyId, secretAccessKey, bucket };
-}
-
-function optionalEnv(key: string): string | null {
-  const value = process.env[key]?.trim();
-  return value ? value : null;
-}
-
 function createContributionId(createdAt: string): string {
   const date = createdAt.slice(0, 10).replace(/-/g, "");
   return `APORTE-${date}-${randomUUID().slice(0, 8).toUpperCase()}`;
 }
 
+export function getContributionStorageRoot(): string {
+  return process.env.FARO_CONTRIBUTIONS_STORAGE_DIR ??
+    join(/*turbopackIgnore: true*/ process.cwd(), ".faro-contributions");
+}
+
 function localPath(root: string, ...segments: string[]): string {
   return join(/*turbopackIgnore: true*/ root, ...segments);
-}
-
-function encodeKeyPath(key: string): string {
-  return key.split("/").map(encodeURIComponent).join("/");
-}
-
-function sha256Hex(value: Uint8Array | string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
-
-function hmac(key: Buffer | string, value: string): Buffer {
-  return createHmac("sha256", key).update(value).digest();
-}
-
-function hmacHex(key: Buffer, value: string): string {
-  return createHmac("sha256", key).update(value).digest("hex");
-}
-
-function getSignatureKey(secret: string, dateStamp: string, region: string, service: string): Buffer {
-  const dateKey = hmac(`AWS4${secret}`, dateStamp);
-  const regionKey = hmac(dateKey, region);
-  const serviceKey = hmac(regionKey, service);
-  return hmac(serviceKey, "aws4_request");
-}
-
-function toAmzDate(date: Date): string {
-  return date.toISOString().replace(/[:-]|\.\d{3}/g, "");
 }
