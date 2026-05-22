@@ -95,6 +95,100 @@
   border-top: 1px solid var(--cf-border);
 }
 
+.workspaceSwitcher {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.switcherHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.switcherHeader span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.switcherHeader button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.workspaceList {
+  display: grid;
+  gap: 7px;
+  max-height: 220px;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.workspaceOption {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(21, 28, 35, 0.54);
+  color: var(--cf-text-secondary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.workspaceOption strong,
+.workspaceOption small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspaceOption strong {
+  color: var(--cf-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.workspaceOption small,
+.switcherEmpty {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.workspaceOptionActive {
+  border-color: var(--cf-border-strong);
+  background: rgba(91, 180, 246, 0.16);
+}
+
+.switcherEmpty {
+  margin: 0;
+}
+
 .content {
   min-height: 0;
   overflow-y: auto;

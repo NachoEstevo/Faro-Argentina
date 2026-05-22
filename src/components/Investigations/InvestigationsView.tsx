@@ -22,7 +22,9 @@ import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
 import {
   INVESTIGATION_WORKSPACE_UPDATED_EVENT,
+  readStoredInvestigationWorkspaceCollection,
   readStoredInvestigationWorkspace,
+  writeStoredInvestigationWorkspaceCollection,
   writeStoredInvestigationWorkspace,
   type StoredInvestigationWorkspaceCaseResult,
 } from "@/lib/client/investigationWorkspaceStorage";
@@ -57,7 +59,9 @@ export default function InvestigationsView({
   onSwitchToExplorer,
   onSwitchToAportes,
 }: Props) {
-  const [workspace, setWorkspace] = useState<InvestigationWorkspace | null>(null);
+  const [workspaces, setWorkspaces] = useState<InvestigationWorkspace[]>([]);
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
+  const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
   const [query, setQuery] = useState("");
   const [relationReason, setRelationReason] = useState<InvestigationCaseRelationReason>("same_judicial_context");
   const [relationNote, setRelationNote] = useState("");
@@ -70,21 +74,45 @@ export default function InvestigationsView({
   const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("resumen");
   const [statusText, setStatusText] = useState("");
+  const workspace = useMemo(
+    () => workspaces.find((item) => item.id === activeWorkspaceId) ?? workspaces[0] ?? null,
+    [activeWorkspaceId, workspaces],
+  );
 
   useEffect(() => {
-    setWorkspace(readStoredInvestigationWorkspace());
+    const collection = readStoredInvestigationWorkspaceCollection();
+    const legacyWorkspace = readStoredInvestigationWorkspace();
+    const initialWorkspaces = collection.workspaces.length > 0
+      ? collection.workspaces
+      : legacyWorkspace
+      ? [legacyWorkspace]
+      : [];
+    setWorkspaces(initialWorkspaces);
+    setActiveWorkspaceId(collection.activeWorkspaceId ?? legacyWorkspace?.id ?? initialWorkspaces[0]?.id ?? null);
+    setIsCreatingWorkspace(initialWorkspaces.length === 0);
     const handleWorkspaceUpdate = (event: Event) => {
       const detail = (event as CustomEvent<StoredInvestigationWorkspaceCaseResult>).detail;
-      if (detail?.workspace) setWorkspace(detail.workspace);
+      if (detail?.collection) {
+        setWorkspaces(detail.collection.workspaces);
+        setActiveWorkspaceId(detail.collection.activeWorkspaceId);
+      } else if (detail?.workspace) {
+        setWorkspaces((current) => upsertWorkspaceList(current, detail.workspace));
+        setActiveWorkspaceId(detail.workspace.id);
+      }
+      setIsCreatingWorkspace(false);
     };
     window.addEventListener(INVESTIGATION_WORKSPACE_UPDATED_EVENT, handleWorkspaceUpdate);
     return () => window.removeEventListener(INVESTIGATION_WORKSPACE_UPDATED_EVENT, handleWorkspaceUpdate);
   }, []);
 
   useEffect(() => {
-    if (!workspace) return;
-    writeStoredInvestigationWorkspace(workspace);
-  }, [workspace]);
+    if (workspaces.length === 0) return;
+    writeStoredInvestigationWorkspaceCollection({
+      version: "faro_investigation_workspace_collection_v1",
+      activeWorkspaceId,
+      workspaces,
+    });
+  }, [activeWorkspaceId, workspaces]);
 
   useEffect(() => {
     if (!workspace || workspace.caseIds.length === 0) {
@@ -132,34 +160,63 @@ export default function InvestigationsView({
       .slice(0, 8);
   }, [cases, query, selectedCountry, workspace?.countryCode]);
   const latestAnalysis = workspace?.analyses[workspace.analyses.length - 1] ?? null;
+  const showCreateForm = isCreatingWorkspace || !workspace;
+
+  function persistActiveWorkspace(nextWorkspace: InvestigationWorkspace) {
+    const nextWorkspaces = upsertWorkspaceList(workspaces, nextWorkspace);
+    setWorkspaces(nextWorkspaces);
+    setActiveWorkspaceId(nextWorkspace.id);
+    setIsCreatingWorkspace(false);
+    writeStoredInvestigationWorkspace(nextWorkspace);
+  }
+
+  function handleSelectWorkspace(workspaceId: string) {
+    if (!workspaces.some((item) => item.id === workspaceId)) return;
+    setActiveWorkspaceId(workspaceId);
+    setIsCreatingWorkspace(false);
+    setAggregate(null);
+    writeStoredInvestigationWorkspaceCollection({
+      version: "faro_investigation_workspace_collection_v1",
+      activeWorkspaceId: workspaceId,
+      workspaces,
+    });
+  }
+
+  function handleCreateNewWorkspace() {
+    setIsCreatingWorkspace(true);
+    setActiveTab("resumen");
+  }
 
   function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    setWorkspace(createInvestigationWorkspace({
+    persistActiveWorkspace(createInvestigationWorkspace({
       title: String(form.get("title") ?? ""),
       countryCode: selectedCountry,
       description: String(form.get("description") ?? ""),
       investigationQuestion: String(form.get("question") ?? ""),
       tags: String(form.get("tags") ?? "").split(","),
     }));
+    setAggregate(null);
   }
 
   function handleAddCase(caseId: string, reason: InvestigationCaseRelationReason, note: string) {
     if (!workspace) return;
-    setWorkspace(addCaseToWorkspace(workspace, caseId, { reason, note }));
+    persistActiveWorkspace(addCaseToWorkspace(workspace, caseId, { reason, note }));
     setQuery("");
     setRelationNote("");
+    setAggregate(null);
   }
 
   function handleRemoveCase(caseId: string) {
     if (!workspace) return;
-    setWorkspace(removeCaseFromWorkspace(workspace, caseId));
+    persistActiveWorkspace(removeCaseFromWorkspace(workspace, caseId));
+    setAggregate(null);
   }
 
   function handleAddNote() {
     if (!workspace || !noteText.trim()) return;
-    setWorkspace({
+    persistActiveWorkspace({
       ...workspace,
       notes: [...workspace.notes, { id: `NOTE-${workspace.notes.length + 1}`, body: noteText.trim(), createdAt: new Date().toISOString() }],
       updatedAt: new Date().toISOString(),
@@ -175,7 +232,7 @@ export default function InvestigationsView({
       label: sourceUrl.trim(),
       note: "",
     };
-    setWorkspace({ ...workspace, sourceLinks: [...workspace.sourceLinks, source], updatedAt: new Date().toISOString() });
+    persistActiveWorkspace({ ...workspace, sourceLinks: [...workspace.sourceLinks, source], updatedAt: new Date().toISOString() });
     setSourceUrl("");
   }
 
@@ -187,7 +244,7 @@ export default function InvestigationsView({
       kind: "other",
       note: "",
     };
-    setWorkspace({ ...workspace, entities: [...workspace.entities, entity], updatedAt: new Date().toISOString() });
+    persistActiveWorkspace({ ...workspace, entities: [...workspace.entities, entity], updatedAt: new Date().toISOString() });
     setEntityLabel("");
   }
 
@@ -210,7 +267,7 @@ export default function InvestigationsView({
       if (!response.ok || !payload.analysis) {
         throw new Error(payload.message ?? labelAnalysisError(payload.error));
       }
-      setWorkspace({ ...workspace, analyses: [...workspace.analyses, payload.analysis], updatedAt: payload.analysis.createdAt });
+      persistActiveWorkspace({ ...workspace, analyses: [...workspace.analyses, payload.analysis], updatedAt: payload.analysis.createdAt });
       setAggregate(payload.aggregate ?? null);
       setAnalysisState("success");
       setStatusText("Análisis recibido. Revisalo antes de citarlo.");
@@ -241,12 +298,16 @@ export default function InvestigationsView({
         onSwitchToMap={onSwitchToMap}
         onSwitchToExplorer={onSwitchToExplorer}
         onSwitchToAportes={onSwitchToAportes}
+        workspaces={workspaces}
+        activeWorkspaceId={activeWorkspaceId}
+        onSelectWorkspace={handleSelectWorkspace}
+        onCreateWorkspace={handleCreateNewWorkspace}
       />
 
       <div className={styles.content}>
-        {!workspace ? (
+        {showCreateForm ? (
           <CreateWorkspaceForm onSubmit={handleCreate} />
-        ) : (
+        ) : workspace ? (
           <div className={styles.workspace}>
             <WorkspaceHeader workspace={workspace} />
             <WorkspaceTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -314,10 +375,20 @@ export default function InvestigationsView({
               <WorkspaceExportPanel workspace={workspace} aggregate={visibleAggregate} onExport={handleExport} />
             )}
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );
+}
+
+function upsertWorkspaceList(
+  current: InvestigationWorkspace[],
+  workspace: InvestigationWorkspace,
+): InvestigationWorkspace[] {
+  return [
+    workspace,
+    ...current.filter((item) => item.id !== workspace.id),
+  ];
 }
 
 function WorkspaceOverviewPanel({

@@ -21,6 +21,8 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /\/api\/investigations\/analyze/);
   assert.match(source, /readStoredInvestigationWorkspace/);
   assert.match(source, /writeStoredInvestigationWorkspace/);
+  assert.match(source, /readStoredInvestigationWorkspaceCollection/);
+  assert.match(source, /writeStoredInvestigationWorkspaceCollection/);
   assert.match(source, /buildInvestigationZip/);
   assert.match(source, /Exportar carpeta ZIP/);
   assert.match(source, /Generar análisis de trabajo/);
@@ -39,6 +41,10 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /AnalysisMarkdown/);
   assert.match(source, /parseInvestigationAnalysisBlocks/);
   assert.match(source, /analysisTable/);
+  assert.match(source, /WorkspaceSwitcher/);
+  assert.match(source, /Carpetas guardadas/);
+  assert.match(source, /Seleccionar carpeta/);
+  assert.match(source, /Nueva carpeta/);
   assert.doesNotMatch(source, /<pre className=\{styles\.analysis\}/);
   assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupción|Score de corrupcion|Publicar caso/);
 });

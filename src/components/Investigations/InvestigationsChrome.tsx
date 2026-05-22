@@ -26,6 +26,10 @@ interface SidebarProps {
   onSwitchToMap: () => void;
   onSwitchToExplorer: () => void;
   onSwitchToAportes: () => void;
+  workspaces: InvestigationWorkspace[];
+  activeWorkspaceId: string | null;
+  onSelectWorkspace: (workspaceId: string) => void;
+  onCreateWorkspace: () => void;
 }
 
 interface CreateFormProps {
@@ -80,6 +84,10 @@ export function InvestigationsSidebar({
   onSwitchToMap,
   onSwitchToExplorer,
   onSwitchToAportes,
+  workspaces,
+  activeWorkspaceId,
+  onSelectWorkspace,
+  onCreateWorkspace,
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
@@ -110,7 +118,55 @@ export function InvestigationsSidebar({
         <span>El trabajo se guarda en este navegador.</span>
         <span>Minimax solo ordena el paquete que vos armaste.</span>
       </div>
+      <WorkspaceSwitcher
+        workspaces={workspaces}
+        activeWorkspaceId={activeWorkspaceId}
+        onSelectWorkspace={onSelectWorkspace}
+        onCreateWorkspace={onCreateWorkspace}
+      />
     </aside>
+  );
+}
+
+export function WorkspaceSwitcher({
+  workspaces,
+  activeWorkspaceId,
+  onSelectWorkspace,
+  onCreateWorkspace,
+}: {
+  workspaces: InvestigationWorkspace[];
+  activeWorkspaceId: string | null;
+  onSelectWorkspace: (workspaceId: string) => void;
+  onCreateWorkspace: () => void;
+}) {
+  return (
+    <div className={styles.workspaceSwitcher}>
+      <div className={styles.switcherHeader}>
+        <span>Carpetas guardadas</span>
+        <button type="button" onClick={onCreateWorkspace}>
+          <Plus size={13} aria-hidden />
+          Nueva carpeta
+        </button>
+      </div>
+      {workspaces.length === 0 ? (
+        <p className={styles.switcherEmpty}>Creá una carpeta para empezar a reunir expedientes.</p>
+      ) : (
+        <div className={styles.workspaceList} aria-label="Carpetas guardadas">
+          {workspaces.map((workspace) => (
+            <button
+              key={workspace.id}
+              type="button"
+              className={`${styles.workspaceOption} ${workspace.id === activeWorkspaceId ? styles.workspaceOptionActive : ""}`}
+              onClick={() => onSelectWorkspace(workspace.id)}
+              aria-label={`Seleccionar carpeta ${workspace.title}`}
+            >
+              <strong>{workspace.title}</strong>
+              <small>{workspace.caseIds.length} expedientes · {workspace.notes.length} notas</small>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
