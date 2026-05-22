@@ -33,7 +33,10 @@ import {
   InvestigationSummaryPanel,
   InvestigationsSidebar,
   SelectedCasesPanel,
+  WorkspaceExportPanel,
   WorkspaceHeader,
+  WorkspaceTabs,
+  type WorkspaceTab,
 } from "./InvestigationsChrome";
 import styles from "./InvestigationsView.module.css";
 
@@ -65,6 +68,7 @@ export default function InvestigationsView({
   const [casePacks, setCasePacks] = useState<Record<string, InvestigationCasePack>>({});
   const [aggregate, setAggregate] = useState<InvestigationAggregate | null>(null);
   const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("resumen");
   const [statusText, setStatusText] = useState("");
 
   useEffect(() => {
@@ -244,54 +248,102 @@ export default function InvestigationsView({
           <CreateWorkspaceForm onSubmit={handleCreate} />
         ) : (
           <div className={styles.workspace}>
-            <WorkspaceHeader workspace={workspace} onExport={handleExport} />
-            <CaseSearchPanel
-              query={query}
-              relationReason={relationReason}
-              relationNote={relationNote}
-              results={results}
-              relationReasonOptions={INVESTIGATION_RELATION_REASON_OPTIONS}
-              onQueryChange={setQuery}
-              onRelationReasonChange={setRelationReason}
-              onRelationNoteChange={setRelationNote}
-              onAddCase={handleAddCase}
-            />
-            <SelectedCasesPanel
-              selectedCases={selectedCases}
-              workspace={workspace}
-              onRemoveCase={handleRemoveCase}
-            />
-            <InvestigationSummaryPanel aggregate={visibleAggregate} />
+            <WorkspaceHeader workspace={workspace} />
+            <WorkspaceTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-            <section className={styles.grid}>
-              <div className={styles.panel}>
-                <h3>Notas</h3>
-                <textarea className={styles.textarea} value={noteText} onChange={(event) => setNoteText(event.target.value)} />
-                <button className={styles.secondary} type="button" onClick={handleAddNote}>Agregar nota</button>
-              </div>
-              <div className={styles.panel}>
-                <h3>Fuentes y entidades</h3>
-                <input className={styles.input} value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} placeholder="Link público u oficial" />
-                <button className={styles.secondary} type="button" onClick={handleAddSource}><LinkIcon size={14} aria-hidden />Agregar fuente</button>
-                <input className={styles.input} value={entityLabel} onChange={(event) => setEntityLabel(event.target.value)} placeholder="Proveedor, organismo, persona o expediente" />
-                <button className={styles.secondary} type="button" onClick={handleAddEntity}>Agregar entidad</button>
-              </div>
-            </section>
+            {activeTab === "resumen" && (
+              <>
+                <WorkspaceOverviewPanel workspace={workspace} aggregate={visibleAggregate} />
+                <InvestigationSummaryPanel aggregate={visibleAggregate} />
+              </>
+            )}
 
-            <InvestigationAnalysisPanel
-              accessCode={accessCode}
-              onAccessCodeChange={setAccessCode}
-              onAnalyze={handleAnalyze}
-              analysisLoading={analysisState === "loading"}
-              caseCount={workspace.caseIds.length}
-              statusText={statusText}
-              isError={analysisState === "error"}
-              aggregate={visibleAggregate}
-              analysisMarkdown={latestAnalysis?.markdown}
-            />
+            {activeTab === "expedientes" && (
+              <>
+                <CaseSearchPanel
+                  query={query}
+                  relationReason={relationReason}
+                  relationNote={relationNote}
+                  results={results}
+                  relationReasonOptions={INVESTIGATION_RELATION_REASON_OPTIONS}
+                  onQueryChange={setQuery}
+                  onRelationReasonChange={setRelationReason}
+                  onRelationNoteChange={setRelationNote}
+                  onAddCase={handleAddCase}
+                />
+                <SelectedCasesPanel
+                  selectedCases={selectedCases}
+                  workspace={workspace}
+                  onRemoveCase={handleRemoveCase}
+                />
+              </>
+            )}
+
+            {activeTab === "notas" && (
+              <section className={styles.grid}>
+                <div className={styles.panel}>
+                  <h3>Notas</h3>
+                  <textarea className={styles.textarea} value={noteText} onChange={(event) => setNoteText(event.target.value)} />
+                  <button className={styles.secondary} type="button" onClick={handleAddNote}>Agregar nota</button>
+                </div>
+                <div className={styles.panel}>
+                  <h3>Fuentes y entidades</h3>
+                  <input className={styles.input} value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} placeholder="Link público u oficial" />
+                  <button className={styles.secondary} type="button" onClick={handleAddSource}><LinkIcon size={14} aria-hidden />Agregar fuente</button>
+                  <input className={styles.input} value={entityLabel} onChange={(event) => setEntityLabel(event.target.value)} placeholder="Proveedor, organismo, persona o expediente" />
+                  <button className={styles.secondary} type="button" onClick={handleAddEntity}>Agregar entidad</button>
+                </div>
+              </section>
+            )}
+
+            {activeTab === "analisis" && (
+              <InvestigationAnalysisPanel
+                accessCode={accessCode}
+                onAccessCodeChange={setAccessCode}
+                onAnalyze={handleAnalyze}
+                analysisLoading={analysisState === "loading"}
+                caseCount={workspace.caseIds.length}
+                statusText={statusText}
+                isError={analysisState === "error"}
+                aggregate={visibleAggregate}
+                analysisMarkdown={latestAnalysis?.markdown}
+              />
+            )}
+
+            {activeTab === "exportar" && (
+              <WorkspaceExportPanel workspace={workspace} aggregate={visibleAggregate} onExport={handleExport} />
+            )}
           </div>
         )}
       </div>
+    </section>
+  );
+}
+
+function WorkspaceOverviewPanel({
+  workspace,
+  aggregate,
+}: {
+  workspace: InvestigationWorkspace;
+  aggregate: InvestigationAggregate | null;
+}) {
+  return (
+    <section className={styles.panel}>
+      <h3>Resumen de trabajo</h3>
+      <div className={styles.metrics}>
+        <span>{workspace.caseIds.length} expedientes</span>
+        <span>{workspace.notes.length} notas</span>
+        <span>{workspace.sourceLinks.length} fuentes manuales</span>
+        <span>{workspace.entities.length} entidades</span>
+      </div>
+      <p className={styles.empty}>
+        Usá Expedientes para reunir material, Notas para ordenar hipótesis de trabajo y Análisis para pedir una lectura asistida del paquete.
+      </p>
+      {aggregate?.geometryGaps.count ? (
+        <p className={styles.status}>
+          {aggregate.geometryGaps.count} expediente{aggregate.geometryGaps.count === 1 ? "" : "s"} sin geometría oficial para revisar fuera del mapa.
+        </p>
+      ) : null}
     </section>
   );
 }

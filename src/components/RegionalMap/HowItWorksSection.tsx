@@ -4,7 +4,7 @@ const STEPS = [
   {
     num: "01",
     title: "Abrí Argentina",
-    desc: "Entrá al mapa o al Explorer para revisar expedientes argentinos.",
+    desc: "Entrá al mapa o a Explorar para revisar expedientes argentinos.",
   },
   {
     num: "02",

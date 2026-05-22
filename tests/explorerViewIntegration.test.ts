@@ -103,7 +103,10 @@ test("ExplorerView lets investigators save expedientes into local case folders",
 
   assert.match(source, /addCaseToStoredInvestigationWorkspace/);
   assert.match(source, /onSwitchToInvestigations/);
-  assert.match(source, /Mis carpetas/);
+  assert.match(source, /onSwitchToAportes/);
+  assert.match(source, /Carpetas/);
+  assert.match(source, /Aportar/);
+  assert.doesNotMatch(source, /Mis carpetas/);
   assert.match(source, /Guardar en carpeta/);
   assert.match(source, /FolderPlus/);
   assert.match(source, /event\.stopPropagation\(\)/);

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -488,9 +488,18 @@ export default function FaroExperience({
               aria-pressed={false}
             >
               <FolderOpen size={13} aria-hidden />
-              Mis carpetas
+              Carpetas
             </button>
           </div>
+          <button
+            type="button"
+            className={styles.floatingActionButton}
+            onClick={() => setViewMode("aportes")}
+            aria-label="Enviar aporte a revisión"
+          >
+            <MessageSquarePlus size={13} aria-hidden />
+            Aportar
+          </button>
           {viewMode === "map" && !selectedCase && (
             <MapLegend
               highCount={severityCounts.high}
@@ -514,6 +523,7 @@ export default function FaroExperience({
           onClearSelection={() => setSelectedCaseId("")}
           onSwitchToMap={() => setViewMode("map")}
           onSwitchToInvestigations={() => setViewMode("investigations")}
+          onSwitchToAportes={() => setViewMode("aportes")}
         />
       )}
 

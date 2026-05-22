@@ -956,6 +956,34 @@
   border: 1px solid var(--cf-border-strong);
 }
 
+.floatingActionButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--cf-border);
+  border-radius: 999px;
+  background: rgba(13, 15, 19, 0.82);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--cf-shadow-soft);
+}
+
+.floatingActionButton:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+}
+
 .welcomeOverlay {
   position: absolute;
   top: 50%;
@@ -1311,6 +1339,13 @@
     top: 64px;
   }
 
+  .floatingActionButton {
+    top: 106px;
+    right: 16px;
+    min-height: 32px;
+    padding: 0 12px;
+  }
+
   .welcomeHeadline {
     font-size: clamp(20px, 6vw, 26px);
     letter-spacing: -0.4px;
@@ -1385,6 +1420,13 @@
     top: 56px;
     padding: 2px;
   }
+  .floatingActionButton {
+    top: 94px;
+    right: 14px;
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
   .floatingToggleButton {
     padding: 6px 12px;
     font-size: 12px;
@@ -1455,6 +1497,11 @@
   .floatingToggleButton {
     padding: 10px 22px;
     font-size: 15px;
+  }
+  .floatingActionButton {
+    min-height: 42px;
+    padding: 0 20px;
+    font-size: 14px;
   }
   .welcomeHeadline {
     font-size: clamp(38px, 3vw, 56px);

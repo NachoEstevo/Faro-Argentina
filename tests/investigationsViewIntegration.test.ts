@@ -29,6 +29,13 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Nota de relación/);
   assert.match(source, /Resumen de carpeta/);
   assert.match(source, /Motivos declarados/);
+  assert.match(source, /WorkspaceTabs/);
+  assert.match(source, /"resumen" \| "expedientes" \| "notas" \| "analisis" \| "exportar"/);
+  assert.match(source, /Resumen/);
+  assert.match(source, /Expedientes/);
+  assert.match(source, /Notas/);
+  assert.match(source, /Análisis/);
+  assert.match(source, /Exportar/);
   assert.match(source, /AnalysisMarkdown/);
   assert.match(source, /parseInvestigationAnalysisBlocks/);
   assert.match(source, /analysisTable/);
@@ -44,7 +51,8 @@ test("FaroExperience exposes Carpetas from the main mode toggle", async () => {
   assert.match(source, /viewMode === "investigations"/);
   assert.match(source, /FolderOpen/);
   assert.match(source, /setViewMode\("investigations"\)/);
-  assert.match(source, /Mis carpetas/);
+  assert.match(source, /Carpetas/);
+  assert.doesNotMatch(source, /Mis carpetas/);
 });
 
 test("FaroExperience keeps private modes isolated from the map sidebar", async () => {
@@ -69,10 +77,11 @@ test("regional landing exposes Carpetas while aportes mode can still link to it"
   const aportesSource = await readFile(aportesViewUrl, "utf8");
 
   assert.match(floatingSource, /mode=investigations/);
-  assert.match(floatingSource, /Mis carpetas/);
+  assert.match(floatingSource, /Carpetas/);
+  assert.doesNotMatch(floatingSource, /Mis carpetas/);
   assert.match(floatingSource, /Explorar/);
   assert.match(stylesSource, /text-decoration: none/);
   assert.match(floatingSource, /FolderOpen/);
   assert.match(aportesSource, /onSwitchToInvestigations/);
-  assert.match(aportesSource, /Investigaciones/);
+  assert.match(aportesSource, /Carpetas/);
 });

@@ -46,7 +46,6 @@ interface AnalysisPanelProps {
 
 interface WorkspaceHeaderProps {
   workspace: InvestigationWorkspace;
-  onExport: () => void;
 }
 
 interface CaseSearchPanelProps {
@@ -67,6 +66,16 @@ interface SelectedCasesPanelProps {
   onRemoveCase: (caseId: string) => void;
 }
 
+export type WorkspaceTab = "resumen" | "expedientes" | "notas" | "analisis" | "exportar";
+
+const WORKSPACE_TABS: Array<{ id: WorkspaceTab; label: string }> = [
+  { id: "resumen", label: "Resumen" },
+  { id: "expedientes", label: "Expedientes" },
+  { id: "notas", label: "Notas" },
+  { id: "analisis", label: "Análisis" },
+  { id: "exportar", label: "Exportar" },
+];
+
 export function InvestigationsSidebar({
   onSwitchToMap,
   onSwitchToExplorer,
@@ -81,15 +90,15 @@ export function InvestigationsSidebar({
         </button>
         <button type="button" className={styles.modeButton} onClick={onSwitchToExplorer}>
           <FileSearch size={13} aria-hidden />
-          Explorer
+          Explorar
         </button>
         <button type="button" className={styles.modeButton} onClick={onSwitchToAportes}>
           <MessageSquarePlus size={13} aria-hidden />
-          Aportes
+          Aportar
         </button>
         <button type="button" className={`${styles.modeButton} ${styles.activeMode}`} aria-pressed="true">
           <FolderOpen size={13} aria-hidden />
-          Investigaciones
+          Carpetas
         </button>
       </div>
       <p className={styles.eyebrow}>Carpeta privada</p>
@@ -221,19 +230,69 @@ function AnalysisMarkdown({ markdown }: { markdown: string }) {
   );
 }
 
-export function WorkspaceHeader({ workspace, onExport }: WorkspaceHeaderProps) {
+export function WorkspaceHeader({ workspace }: WorkspaceHeaderProps) {
   return (
     <header className={styles.header}>
       <div>
-        <p className={styles.eyebrow}>Investigaciones</p>
+        <p className={styles.eyebrow}>Carpetas</p>
         <h2>{workspace.title}</h2>
         <p>{workspace.description || "Carpeta local de trabajo."}</p>
+      </div>
+    </header>
+  );
+}
+
+export function WorkspaceTabs({
+  activeTab,
+  onTabChange,
+}: {
+  activeTab: WorkspaceTab;
+  onTabChange: (tab: WorkspaceTab) => void;
+}) {
+  return (
+    <div className={styles.tabs} role="tablist" aria-label="Secciones de carpeta">
+      {WORKSPACE_TABS.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          className={`${styles.tabButton} ${activeTab === tab.id ? styles.tabButtonActive : ""}`}
+          onClick={() => onTabChange(tab.id)}
+          role="tab"
+          aria-selected={activeTab === tab.id}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function WorkspaceExportPanel({
+  workspace,
+  aggregate,
+  onExport,
+}: {
+  workspace: InvestigationWorkspace;
+  aggregate: InvestigationAggregate | null;
+  onExport: () => void;
+}) {
+  return (
+    <section className={styles.panel}>
+      <h3>Exportar carpeta</h3>
+      <p className={styles.empty}>
+        Descargá un ZIP con la carpeta local, expedientes, fuentes, notas y el último análisis disponible.
+      </p>
+      <div className={styles.metrics}>
+        <span>{workspace.caseIds.length} expedientes</span>
+        <span>{workspace.notes.length} notas</span>
+        <span>{workspace.sourceLinks.length} fuentes manuales</span>
+        {aggregate && <span>{aggregate.sourceIds.length} fuentes en expedientes</span>}
       </div>
       <button className={styles.primary} type="button" onClick={onExport}>
         <Download size={15} aria-hidden />
         Exportar carpeta ZIP
       </button>
-    </header>
+    </section>
   );
 }
 

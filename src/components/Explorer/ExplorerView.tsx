@@ -10,6 +10,7 @@ import {
   FolderOpen,
   FolderPlus,
   Map as MapIcon,
+  MessageSquarePlus,
   PanelLeftClose,
   Search,
 } from "lucide-react";
@@ -48,6 +49,7 @@ interface Props {
   onClearSelection: () => void;
   onSwitchToMap: () => void;
   onSwitchToInvestigations: () => void;
+  onSwitchToAportes: () => void;
 }
 
 const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
@@ -78,6 +80,7 @@ export default function ExplorerView({
   onClearSelection,
   onSwitchToMap,
   onSwitchToInvestigations,
+  onSwitchToAportes,
 }: Props) {
   const [countryScope, setCountryScope] = useState<CountryCode>(selectedCountry);
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
@@ -198,7 +201,7 @@ export default function ExplorerView({
   };
 
   return (
-    <section className={styles.shell} aria-label="Explorer">
+    <section className={styles.shell} aria-label="Explorar">
       <aside className={styles.sidebar} aria-label="Filtros y guardados">
         <header className={styles.sidebarBrand}>
           <FaroMark compact />
@@ -332,28 +335,34 @@ export default function ExplorerView({
         ) : (
         <>
         <header className={styles.mainHeader}>
-          <h1 className={styles.mainTitle}>Explorer</h1>
-          <div className={styles.modeToggle} role="group" aria-label="Modo de exploración">
-            <button type="button" className={styles.modeToggleButton} onClick={onSwitchToMap}>
-              <MapIcon size={13} aria-hidden />
-              Mapa
-            </button>
-            <button
-              type="button"
-              className={`${styles.modeToggleButton} ${styles.modeToggleActive}`}
-              aria-pressed
-            >
-              <FileSearch size={13} aria-hidden />
-              Explorer
-            </button>
-            <button
-              type="button"
-              className={styles.modeToggleButton}
-              onClick={onSwitchToInvestigations}
-              aria-pressed={false}
-            >
-              <FolderOpen size={13} aria-hidden />
-              Mis carpetas
+          <h1 className={styles.mainTitle}>Explorar</h1>
+          <div className={styles.headerActions}>
+            <div className={styles.modeToggle} role="group" aria-label="Modo de exploración">
+              <button type="button" className={styles.modeToggleButton} onClick={onSwitchToMap}>
+                <MapIcon size={13} aria-hidden />
+                Mapa
+              </button>
+              <button
+                type="button"
+                className={`${styles.modeToggleButton} ${styles.modeToggleActive}`}
+                aria-pressed
+              >
+                <FileSearch size={13} aria-hidden />
+                Explorar
+              </button>
+              <button
+                type="button"
+                className={styles.modeToggleButton}
+                onClick={onSwitchToInvestigations}
+                aria-pressed={false}
+              >
+                <FolderOpen size={13} aria-hidden />
+                Carpetas
+              </button>
+            </div>
+            <button type="button" className={styles.contributeButton} onClick={onSwitchToAportes}>
+              <MessageSquarePlus size={13} aria-hidden />
+              Aportar
             </button>
           </div>
           <div className={styles.countrySelector} role="group" aria-label="País">

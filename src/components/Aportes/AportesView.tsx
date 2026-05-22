@@ -61,6 +61,12 @@ const contributionTypes = [
   },
 ] as const;
 
+const aporteSteps = [
+  { eyebrow: "Paso 1", title: "Tipo de aporte", detail: "Elegí la categoría más cercana." },
+  { eyebrow: "Paso 2", title: "Datos y archivos", detail: "Agregá el contexto mínimo para revisar." },
+  { eyebrow: "Paso 3", title: "Revisión", detail: "Confirmá permisos y contacto opcional." },
+] as const;
+
 export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchToExplorer, onSwitchToInvestigations }: Props) {
   const [type, setType] = useState<(typeof contributionTypes)[number]["id"]>("add_photo");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
@@ -119,15 +125,15 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           </button>
           <button type="button" className={styles.modeButton} onClick={onSwitchToExplorer}>
             <FileSearch size={13} aria-hidden />
-            Explorer
+            Explorar
           </button>
           <button type="button" className={`${styles.modeButton} ${styles.activeMode}`} aria-pressed="true">
             <MessageSquarePlus size={13} aria-hidden />
-            Aportes
+            Aportar
           </button>
           <button type="button" className={styles.modeButton} onClick={onSwitchToInvestigations}>
             <FolderOpen size={13} aria-hidden />
-            Investigaciones
+            Carpetas
           </button>
         </div>
         <p className={styles.eyebrow}>Revisión privada</p>
@@ -143,15 +149,25 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           </div>
           <div className={styles.rule}>
             <Flag size={18} aria-hidden />
-            <span>No se publica automáticamente en mapa, Explorer, informes o exports.</span>
+            <span>No se publica automáticamente en mapa, Explorar, informes o exports.</span>
           </div>
         </div>
       </aside>
       <div className={styles.content}>
         <form className={styles.form} onSubmit={handleSubmit}>
+          <ol className={styles.stepper} aria-label="Pasos del aporte">
+            {aporteSteps.map((step) => (
+              <li key={step.eyebrow} className={styles.step}>
+                <span className={styles.stepEyebrow}>{step.eyebrow}</span>
+                <strong>{step.title}</strong>
+                <span>{step.detail}</span>
+              </li>
+            ))}
+          </ol>
+
           <section className={styles.section} aria-labelledby="aporte-tipo">
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} id="aporte-tipo">Tipo de aporte</h2>
+              <h2 className={styles.sectionTitle} id="aporte-tipo">Paso 1 · Tipo de aporte</h2>
               <p className={styles.sectionHint}>Elegí el camino más cercano. Todo entra a la misma revisión.</p>
             </div>
             <div className={styles.typeGrid}>
@@ -174,7 +190,10 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
             </div>
           </section>
           <section className={styles.section} aria-labelledby="aporte-datos">
-            <h2 className={styles.sectionTitle} id="aporte-datos">Datos para revisar</h2>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle} id="aporte-datos">Paso 2 · Datos y archivos</h2>
+              <p className={styles.sectionHint}>El aporte es más útil cuando tiene una fuente, un caso o una ubicación para revisar.</p>
+            </div>
             <div className={styles.grid}>
               <label className={styles.field}>
                 <span className={styles.label}>Título neutral</span>
@@ -211,9 +230,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 <input className={styles.input} name="capturedAt" type="date" />
               </label>
             </div>
-          </section>
-          <section className={styles.section} aria-labelledby="aporte-fotos">
-            <h2 className={styles.sectionTitle} id="aporte-fotos">Fotos privadas</h2>
+            <h3 className={styles.subsectionTitle}>Fotos privadas</h3>
             <div className={styles.dropzone}>
               <label className={styles.field}>
                 <span className={styles.label}>JPG, PNG o WebP. Hasta 5 archivos, 10 MB cada uno.</span>
@@ -239,7 +256,10 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
             </div>
           </section>
           <section className={styles.section} aria-labelledby="aporte-contacto">
-            <h2 className={styles.sectionTitle} id="aporte-contacto">Contacto y confirmacion</h2>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle} id="aporte-contacto">Paso 3 · Revisión y contacto</h2>
+              <p className={styles.sectionHint}>Faro guarda esto como material privado hasta que el equipo lo valide.</p>
+            </div>
             <div className={styles.grid}>
               <label className={styles.field}>
                 <span className={styles.label}>Nombre</span>
