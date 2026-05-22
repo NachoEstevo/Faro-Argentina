@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
+import argentinaInvestmentMapDataset from "../src/data/argentinaInvestmentMapCases.json" with { type: "json" };
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import {
   buildEvidencePack,
@@ -21,6 +22,7 @@ import {
 const cases = [
   ...argentinaDataset.cases,
   ...argentinaContractDataset.cases,
+  ...argentinaInvestmentMapDataset.cases,
   ...historicalJudicialDataset.cases,
 ] as ExportableCaseFile[];
 
@@ -95,6 +97,19 @@ test("buildCaseCollectionPack exports Argentina contract cases by source and typ
     pack.receipts.some((receipt) => receipt.sourceId === "AR-CONTRATAR-OFERTAS"),
     true,
   );
+});
+
+test("buildCaseCollectionPack exports Mapa de Inversiones progress cases without map geometry", () => {
+  const pack = buildCaseCollectionPack(cases, {
+    countryCode: "AR",
+    sourceId: "AR-MAPA-INVERSIONES-OBRAS",
+    caseType: "public_works_progress",
+  });
+
+  assert.equal(pack.stats.caseFiles, 7285);
+  assert.deepEqual(pack.sourceIds, ["AR-MAPA-INVERSIONES-OBRAS"]);
+  assert.equal(pack.cases.every((caseFile) => caseFile.receipt.locatorType === "official_detail"), true);
+  assert.equal(pack.cases.every((caseFile) => "coordinates" in caseFile && caseFile.coordinates === null), true);
 });
 
 test("buildCaseCollectionPack includes collection-aware supplier review signals", () => {

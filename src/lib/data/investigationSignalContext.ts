@@ -56,6 +56,7 @@ export function buildCaseSignalContext(cases: SignalCaseFile[]): CaseSignalConte
   const aliasGroups = new Map<string, MutableSupplierAliasGroup>();
 
   for (const caseFile of cases) {
+    if (!shouldUseCaseForSupplierAggregation(caseFile)) continue;
     const supplierIdentity = resolveSupplierIdentity(caseFile);
     if (!supplierIdentity) continue;
 
@@ -205,6 +206,10 @@ function buildCaseMetrics(
     });
   }
   return metrics;
+}
+
+function shouldUseCaseForSupplierAggregation(caseFile: SignalCaseFile): boolean {
+  return caseFile.caseType !== "public_works_progress";
 }
 
 function normalizeKey(value: string | null | undefined): string {

@@ -6,6 +6,7 @@ import {
   addCaseToWorkspace,
   buildInvestigationAggregate,
   createInvestigationWorkspace,
+  ensureInvestigationWorkspaceWithCase,
   removeCaseFromWorkspace,
 } from "../src/lib/data/investigationWorkspaces.ts";
 
@@ -83,6 +84,74 @@ test("addCaseToWorkspace stores why a case belongs in the folder", () => {
     addedAt: "2026-05-17T12:10:00.000Z",
   }]);
   assert.deepEqual(removed.caseRelations, []);
+});
+
+test("ensureInvestigationWorkspaceWithCase creates a local folder from Explorer", () => {
+  const result = ensureInvestigationWorkspaceWithCase({
+    workspace: null,
+    caseId: "AR-CASE-1",
+    countryCode: "AR",
+    reason: "same_supplier",
+    note: "Proveedor repetido en la hipótesis.",
+    now: new Date("2026-05-17T12:05:00.000Z"),
+  });
+
+  assert.equal(result.status, "created");
+  assert.equal(result.workspace.title, "Carpeta de investigación");
+  assert.equal(result.workspace.countryCode, "AR");
+  assert.equal(result.workspace.description, "Selección privada de expedientes para verificar.");
+  assert.deepEqual(result.workspace.caseIds, ["AR-CASE-1"]);
+  assert.deepEqual(result.workspace.caseRelations, [{
+    caseId: "AR-CASE-1",
+    reason: "same_supplier",
+    note: "Proveedor repetido en la hipótesis.",
+    addedAt: "2026-05-17T12:05:00.000Z",
+  }]);
+});
+
+test("ensureInvestigationWorkspaceWithCase does not overwrite existing relation notes on quick save", () => {
+  const workspace = addCaseToWorkspace(
+    createInvestigationWorkspace(
+      { title: "Carpeta", countryCode: "AR" },
+      new Date("2026-05-17T12:00:00.000Z"),
+    ),
+    "AR-CASE-1",
+    {
+      reason: "same_agency",
+      note: "Nota cargada por el usuario.",
+      now: new Date("2026-05-17T12:01:00.000Z"),
+    },
+  );
+
+  const quickSave = ensureInvestigationWorkspaceWithCase({
+    workspace,
+    caseId: "AR-CASE-1",
+    countryCode: "AR",
+    now: new Date("2026-05-17T12:10:00.000Z"),
+  });
+  const explicitUpdate = ensureInvestigationWorkspaceWithCase({
+    workspace: quickSave.workspace,
+    caseId: "AR-CASE-1",
+    countryCode: "AR",
+    reason: "same_source",
+    note: "Actualizado desde el detalle.",
+    now: new Date("2026-05-17T12:15:00.000Z"),
+  });
+
+  assert.equal(quickSave.status, "already_present");
+  assert.deepEqual(quickSave.workspace.caseRelations, [{
+    caseId: "AR-CASE-1",
+    reason: "same_agency",
+    note: "Nota cargada por el usuario.",
+    addedAt: "2026-05-17T12:01:00.000Z",
+  }]);
+  assert.equal(explicitUpdate.status, "updated");
+  assert.deepEqual(explicitUpdate.workspace.caseRelations, [{
+    caseId: "AR-CASE-1",
+    reason: "same_source",
+    note: "Actualizado desde el detalle.",
+    addedAt: "2026-05-17T12:15:00.000Z",
+  }]);
 });
 
 test("buildInvestigationAggregate summarizes repeated entities, amounts, signals and gaps", () => {

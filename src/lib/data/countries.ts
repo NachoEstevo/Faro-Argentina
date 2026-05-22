@@ -16,7 +16,7 @@ const STATIC: Record<CountryCode, Omit<CountryConfig, "caseCount">> = {
   AR: {
     code: "AR",
     name: "Argentina",
-    sourceLabel: "Obras CONTRAT.AR",
+    sourceLabel: "CONTRAT.AR + Mapa de Inversiones",
     centroid: [-38.4, -63.6],
     bounds: [
       [-55.06, -73.56],

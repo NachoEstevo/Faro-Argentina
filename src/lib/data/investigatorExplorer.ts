@@ -85,6 +85,8 @@ export interface InvestigatorExplorerView {
   stats: {
     totalCases: number;
     filteredCases: number;
+    filteredCasesWithPrimarySignal: number;
+    filteredCasesWithoutMapGeometry: number;
     shownRows: number;
     facets: number;
   };
@@ -115,6 +117,7 @@ export function buildInvestigatorExplorer(
   const filteredRows = allRows
     .filter((row) => matchesFilters(row, filters))
     .sort(compareRows);
+  const filteredSummary = summarizeRows(filteredRows);
   const facets = buildFacets(facetRows);
   const rows = filteredRows.slice(0, clampLimit(filters.limit));
   const activeEntities = findActiveEntities(
@@ -128,6 +131,8 @@ export function buildInvestigatorExplorer(
     stats: {
       totalCases: cases.length,
       filteredCases: filteredRows.length,
+      filteredCasesWithPrimarySignal: filteredSummary.withPrimarySignal,
+      filteredCasesWithoutMapGeometry: filteredSummary.withoutMapGeometry,
       shownRows: rows.length,
       facets: facets.length,
     },
@@ -136,6 +141,19 @@ export function buildInvestigatorExplorer(
     activeEntities,
     activeEntity: activeEntities[0] ?? null,
   };
+}
+
+function summarizeRows(rows: InvestigatorCaseRow[]): {
+  withPrimarySignal: number;
+  withoutMapGeometry: number;
+} {
+  let withPrimarySignal = 0;
+  let withoutMapGeometry = 0;
+  for (const row of rows) {
+    if (row.primarySignal) withPrimarySignal += 1;
+    if (!row.hasOfficialGeometry) withoutMapGeometry += 1;
+  }
+  return { withPrimarySignal, withoutMapGeometry };
 }
 
 function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: CaseSignalContext): InvestigatorCaseRow {

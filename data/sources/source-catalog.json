@@ -167,7 +167,7 @@
     "name": "Mapa de Inversiones Argentina obras",
     "agency": "Ministerio de Obras Publicas",
     "category": "public_works_progress",
-    "priority": "later",
+    "priority": "mvp",
     "official": true,
     "accessMode": "direct_download",
     "format": "csv",
@@ -175,17 +175,18 @@
     "downloadUrl": "https://mapainversiones.obraspublicas.gob.ar/opendata/dataset_mop.csv",
     "updateFrequency": "monthly_claimed",
     "keyFields": [
-      "id",
-      "nombre",
-      "contratista",
-      "provincia",
-      "latitud",
-      "longitud",
-      "avance_fisico",
-      "avance_financiero"
+      "idproyecto",
+      "numeroobra",
+      "nombreobra",
+      "montototal",
+      "avancefisico",
+      "avancefinanciero",
+      "nombreprovincia",
+      "url_perfil_obra"
     ],
     "caveats": [
-      "Usar con health-check y snapshot cache; si el endpoint falla, mostrarlo como brecha de cobertura."
+      "Usar con health-check y snapshot cache; si el endpoint falla, mostrarlo como brecha de cobertura.",
+      "El CSV actual no incluye latitud/longitud; no mapear casos desde esta fuente sin geometria oficial adicional."
     ]
   },
   {

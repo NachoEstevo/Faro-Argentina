@@ -91,6 +91,18 @@ test("assessCoordinateQuality blocks coordinates outside expected country bounds
   assert.equal(quality.exposeOnMap, false);
 });
 
+test("assessCoordinateQuality blocks southern Atlantic coordinates inside the broad Argentina bounds", () => {
+  const quality = assessCoordinateQuality({
+    caseId: "AR-CONTRACT-OCEAN-DUPLICATE",
+    countryCode: "AR",
+    coordinates: { lat: -54.31232, lon: -54.642749 },
+  });
+
+  assert.equal(quality.status, "known_bad_geometry");
+  assert.equal(quality.exposeOnMap, false);
+  assert.match(quality.summary, /control de calidad/i);
+});
+
 test("assessCoordinateQuality reports unsupported countries distinctly", () => {
   const quality = assessCoordinateQuality({
     caseId: "UY-TENDER-VALID-LOOKING",

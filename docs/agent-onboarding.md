@@ -126,8 +126,11 @@ sign, classify it as `sign_suspect` and leave it out of the map.
 
 Current expected shape:
 
-- `647` total expedientes;
-- `435` map eligible after the gate;
+- `7.932` total expedientes;
+- `431` map eligible after the gate;
+- `7.285` Mapa de Inversiones projects are searchable/exportable as progress
+  coverage, but stay off-map because the current CSV snapshot has no
+  latitud/longitud columns;
 - invalid and known-bad Argentina coordinates remain available as data gaps in
   Explorer/export, but must not be drawn on the map.
 

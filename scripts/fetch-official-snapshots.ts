@@ -47,6 +47,12 @@ const argentinaSources = [
     outputPath: new URL("../data/official/ar/sipro-proveedores.csv", import.meta.url),
     url: "https://infra.datos.gob.ar/catalog/modernizacion/dataset/2/distribution/2.11/download/proveedores.csv",
   },
+  {
+    sourceId: "AR-MAPA-INVERSIONES-OBRAS",
+    rawPath: "data/official/ar/mapa-inversiones-obras.csv",
+    outputPath: new URL("../data/official/ar/mapa-inversiones-obras.csv", import.meta.url),
+    url: "https://mapainversiones.obraspublicas.gob.ar/opendata/dataset_mop.csv",
+  },
 ];
 
 await mkdir(arOutputDir, { recursive: true });

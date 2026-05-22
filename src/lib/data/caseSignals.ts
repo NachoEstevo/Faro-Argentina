@@ -80,6 +80,10 @@ export interface SignalCaseFile {
   awardActUrl?: string | null;
   supplierName?: string | null;
   supplierDocument?: string | null;
+  projectStage?: string | null;
+  sectorName?: string | null;
+  physicalProgress?: number | null;
+  financialProgress?: number | null;
   judicialStatus?: string;
   contextSummary?: string;
   localMatchStatus?: string;
@@ -101,6 +105,7 @@ export function buildCaseSignals(caseFile: SignalCaseFile, context?: CaseSignalC
   addAmountGapSignals(signals, caseFile);
   addClaimSignals(signals, caseFile);
   addTraceabilitySignals(signals, caseFile);
+  addPublicWorksProgressSignals(signals, caseFile);
   addJudicialContextSignals(signals, caseFile);
   addAggregateSupplierSignals(signals, caseFile, context);
   addGeoSignals(signals, caseFile);
@@ -369,6 +374,34 @@ function addTraceabilitySignals(signals: CaseSignal[], caseFile: SignalCaseFile)
       action: "Buscar recurrencia del proveedor por organismo, rubro y territorio.",
     });
   }
+}
+
+function addPublicWorksProgressSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
+  if (caseFile.caseType !== "public_works_progress") return;
+  const physical = numberOrNull(caseFile.physicalProgress);
+  const financial = numberOrNull(caseFile.financialProgress);
+  const stage = clean(caseFile.projectStage);
+  if (physical === null && financial === null && !stage) return;
+
+  const progressEvidence = [
+    physical !== null ? `avance fisico ${Math.round(physical)}%` : "",
+    financial !== null ? `avance financiero ${Math.round(financial)}%` : "",
+    stage ? `etapa ${stage}` : "",
+  ].filter(Boolean).join("; ");
+
+  signals.push({
+    code: "official_progress_declared",
+    kind: "context",
+    family: "traceability",
+    severity: "low",
+    confidence: "high",
+    priority: 46,
+    label: "Avance declarado",
+    summary: "La fuente oficial informa avance o etapa del proyecto para priorizar revision documental.",
+    evidence: progressEvidence,
+    caveat: "El avance declarado no equivale a verificacion independiente ni confirma pagos.",
+    action: "Abrir el perfil oficial y cruzar con certificados, pagos y geometria oficial antes de publicar.",
+  });
 }
 
 function addAggregateSupplierSignals(

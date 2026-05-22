@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type FormEvent, type MouseEvent, useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   Download,
   FileText,
   FileSearch,
+  FolderOpen,
+  FolderPlus,
   Map as MapIcon,
   PanelLeftClose,
   Search,
 } from "lucide-react";
 
+import { addCaseToStoredInvestigationWorkspace } from "@/lib/client/investigationWorkspaceStorage";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
 import {
@@ -20,10 +23,15 @@ import {
 } from "@/lib/data/caseSignals";
 import {
   buildInvestigatorExplorer,
+  type InvestigatorCaseRow,
   type InvestigatorEntityFilter,
   type InvestigatorFacet,
   type InvestigatorGeometryFilter,
 } from "@/lib/data/investigatorExplorer";
+import {
+  INVESTIGATION_RELATION_REASON_OPTIONS,
+  type InvestigationCaseRelationReason,
+} from "@/lib/data/investigationWorkspaces";
 import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
@@ -39,6 +47,7 @@ interface Props {
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onClearSelection: () => void;
   onSwitchToMap: () => void;
+  onSwitchToInvestigations: () => void;
 }
 
 const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
@@ -68,12 +77,14 @@ export default function ExplorerView({
   onSelectCase,
   onClearSelection,
   onSwitchToMap,
+  onSwitchToInvestigations,
 }: Props) {
   const [countryScope, setCountryScope] = useState<CountryCode>(selectedCountry);
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
   const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
+  const [folderStatus, setFolderStatus] = useState<{ caseId: string; message: string } | null>(null);
 
   const countries = useMemo(() => [countryScope], [countryScope]);
 
@@ -155,16 +166,6 @@ export default function ExplorerView({
     [explorer.rows, page],
   );
 
-  const rowStats = useMemo(() => {
-    let signaledRows = 0;
-    let withoutMapGeometry = 0;
-    for (const row of explorer.rows) {
-      if (row.primarySignal) signaledRows += 1;
-      if (!row.hasOfficialGeometry) withoutMapGeometry += 1;
-    }
-    return { signaledRows, withoutMapGeometry };
-  }, [explorer.rows]);
-
   const resetFilters = () => {
     setActiveFacets([]);
     setGeometryFilter("any");
@@ -185,6 +186,15 @@ export default function ExplorerView({
       if (exists) return prev.filter((active) => !isSameFacet(active, facet));
       return [...prev, facet];
     });
+  };
+
+  const saveRowToFolder = (event: MouseEvent<HTMLButtonElement>, row: InvestigatorCaseRow) => {
+    event.stopPropagation();
+    const result = addCaseToStoredInvestigationWorkspace({
+      caseId: row.caseId,
+      countryCode: "AR",
+    });
+    setFolderStatus({ caseId: row.caseId, message: labelFolderSaveStatus(result.status) });
   };
 
   return (
@@ -317,6 +327,7 @@ export default function ExplorerView({
             pool={countryAll}
             onBack={onClearSelection}
             onSelectCase={onSelectCase}
+            onSwitchToInvestigations={onSwitchToInvestigations}
           />
         ) : (
         <>
@@ -334,6 +345,15 @@ export default function ExplorerView({
             >
               <FileSearch size={13} aria-hidden />
               Explorer
+            </button>
+            <button
+              type="button"
+              className={styles.modeToggleButton}
+              onClick={onSwitchToInvestigations}
+              aria-pressed={false}
+            >
+              <FolderOpen size={13} aria-hidden />
+              Mis carpetas
             </button>
           </div>
           <div className={styles.countrySelector} role="group" aria-label="País">
@@ -368,8 +388,8 @@ export default function ExplorerView({
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
           <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
-          <StatCard label="Con señal" value={rowStats.signaledRows.toLocaleString("es-AR")} />
-          <StatCard label="Sin geometría de mapa" value={rowStats.withoutMapGeometry.toLocaleString("es-AR")} />
+          <StatCard label="Con señal prioritaria" value={explorer.stats.filteredCasesWithPrimarySignal.toLocaleString("es-AR")} />
+          <StatCard label="Sin geometría de mapa" value={explorer.stats.filteredCasesWithoutMapGeometry.toLocaleString("es-AR")} />
           <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
         </div>
         <div className={styles.tableWrap}>
@@ -431,12 +451,13 @@ export default function ExplorerView({
                 <th className={styles.tableNumeric}>Monto</th>
                 <th>Fuente</th>
                 <th>Señal</th>
+                <th>Carpeta</th>
               </tr>
             </thead>
             <tbody>
               {pagedRows.length === 0 && (
                 <tr className={styles.tableEmptyRow}>
-                  <td colSpan={7} className={styles.tableEmpty}>
+                  <td colSpan={8} className={styles.tableEmpty}>
                     No hay expedientes que coincidan con los filtros actuales.
                   </td>
                 </tr>
@@ -471,6 +492,19 @@ export default function ExplorerView({
                         {state.label}
                       </span>
                     </td>
+                    <td className={styles.tableActionCell}>
+                      <button
+                        type="button"
+                        className={`${styles.saveCaseButton} ${
+                          folderStatus?.caseId === caseFile.caseId ? styles.saveCaseButtonSaved : ""
+                        }`}
+                        onClick={(event) => saveRowToFolder(event, caseFile)}
+                        aria-label={`Guardar ${caseFile.caseId} en carpeta`}
+                      >
+                        <FolderPlus size={13} aria-hidden />
+                        <span>{folderStatus?.caseId === caseFile.caseId ? "Guardado" : "Guardar"}</span>
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -489,11 +523,13 @@ function ExplorerDetail({
   pool,
   onBack,
   onSelectCase,
+  onSwitchToInvestigations,
 }: {
   caseFile: ExplorerCase;
   pool: ExplorerCase[];
   onBack: () => void;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+  onSwitchToInvestigations: () => void;
 }) {
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
   const relatedContract =
@@ -558,6 +594,7 @@ function ExplorerDetail({
           </a>
         </div>
       </div>
+      <AddToInvestigationForm caseFile={caseFile} onSwitchToInvestigations={onSwitchToInvestigations} />
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
       </p>
@@ -684,6 +721,68 @@ function ExplorerDetail({
   );
 }
 
+function AddToInvestigationForm({
+  caseFile,
+  onSwitchToInvestigations,
+}: {
+  caseFile: ExplorerCase;
+  onSwitchToInvestigations: () => void;
+}) {
+  const [reason, setReason] = useState<InvestigationCaseRelationReason>("manual_hypothesis");
+  const [note, setNote] = useState("");
+  const [statusText, setStatusText] = useState("");
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const result = addCaseToStoredInvestigationWorkspace({
+      caseId: caseFile.id,
+      countryCode: "AR",
+      reason,
+      note,
+    });
+    setStatusText(labelFolderSaveStatus(result.status));
+    if (result.status === "created" || result.status === "added" || result.status === "updated") {
+      setNote("");
+    }
+  }
+
+  return (
+    <form className={styles.detailFolderForm} onSubmit={handleSubmit}>
+      <div className={styles.detailFolderFields}>
+        <label className={styles.detailFolderField}>
+          <span>Motivo</span>
+          <select
+            value={reason}
+            onChange={(event) => setReason(event.target.value as InvestigationCaseRelationReason)}
+          >
+            {INVESTIGATION_RELATION_REASON_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className={styles.detailFolderField}>
+          <span>Nota de relación</span>
+          <input
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="Por qué entra en esta carpeta"
+          />
+        </label>
+      </div>
+      <button className={styles.detailFolderSubmit} type="submit">
+        <FolderPlus size={13} aria-hidden />
+        Guardar en carpeta
+      </button>
+      {statusText && (
+        <p className={styles.detailFolderStatus}>
+          <span>{statusText}</span>
+          <button type="button" onClick={onSwitchToInvestigations}>Ver carpeta</button>
+        </p>
+      )}
+    </form>
+  );
+}
+
 function DetailRow({
   label,
   value,
@@ -755,6 +854,13 @@ function formatFacetLabel(facet: Pick<InvestigatorFacet, "type" | "label">): str
 
 function shouldShowFacetCount(type: InvestigatorFacet["type"]): boolean {
   return type !== "agency" && type !== "supplier";
+}
+
+function labelFolderSaveStatus(status: "created" | "added" | "updated" | "already_present"): string {
+  if (status === "created") return "Carpeta creada y expediente guardado.";
+  if (status === "added") return "Expediente guardado en tu carpeta.";
+  if (status === "updated") return "Motivo y nota actualizados.";
+  return "Este expediente ya estaba en tu carpeta.";
 }
 
 function isSameFacet(
@@ -992,14 +1098,24 @@ function ProcedimientoCard({ caseFile }: { caseFile: ExplorerCase }) {
 function EjecucionCard({ caseFile }: { caseFile: ExplorerCase }) {
   const term = getField<string>(caseFile, "executionTerm");
   const termType = getField<string>(caseFile, "executionTermType");
-  if (!term && !termType) return null;
+  const stage = getField<string>(caseFile, "projectStage");
+  const physical = getField<number>(caseFile, "physicalProgress");
+  const financial = getField<number>(caseFile, "financialProgress");
+  if (!term && !termType && !stage && physical === null && financial === null) return null;
   return (
     <div className={styles.detailCard}>
       <p className={styles.detailCardHead}>Ejecución</p>
+      {stage && <DetailRow label="Etapa" value={stage} />}
+      {physical !== null && <DetailRow label="Avance físico" value={formatPercent(physical)} />}
+      {financial !== null && <DetailRow label="Avance financiero" value={formatPercent(financial)} />}
       {term && <DetailRow label="Plazo declarado" value={term} />}
       {termType && <DetailRow label="Unidad de plazo" value={termType} />}
     </div>
   );
+}
+
+function formatPercent(value: number): string {
+  return `${Math.round(value)}%`;
 }
 
 function OrganismoCard({ caseFile }: { caseFile: ExplorerCase }) {
@@ -1009,7 +1125,7 @@ function OrganismoCard({ caseFile }: { caseFile: ExplorerCase }) {
   if (!agency && !code && !unit) return null;
   return (
     <div className={styles.detailCard}>
-      <p className={styles.detailCardHead}>Organismo contratante</p>
+      <p className={styles.detailCardHead}>Organismo</p>
       {agency && <DetailRow label="Nombre" value={agency} />}
       {code && <DetailRow label="Código SAF" value={code} />}
       {unit && <DetailRow label="Unidad operativa" value={unit} />}
@@ -1058,6 +1174,10 @@ function computeRowState(row: {
 const CASE_TYPE_LABELS: Record<string, string> = {
   argentina_contract: "Contrato AR",
   argentina_work: "Obra AR",
+  procurement_contract: "Contrato",
+  procurement_process: "Compra o adjudicacion",
+  public_work: "Obra publica",
+  public_works_progress: "Obra con avance",
   judicial_context: "Contexto judicial",
   historical_public_work: "Obra histórica",
   supplier_judicial_context: "Proveedor con causa judicial",

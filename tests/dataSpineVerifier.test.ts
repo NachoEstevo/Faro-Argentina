@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import catalog from "../data/sources/source-catalog.json" with { type: "json" };
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
+import argentinaInvestmentMapDataset from "../src/data/argentinaInvestmentMapCases.json" with { type: "json" };
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import { verifyDataSpine } from "../src/lib/data/dataSpineVerifier.ts";
 import type { SourceCatalogEntry } from "../src/lib/data/sourceCatalog.ts";
@@ -15,15 +16,16 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
     datasets: [
       argentinaDataset,
       ...argentinaContractDataset.datasets,
+      argentinaInvestmentMapDataset,
       ...historicalJudicialDataset.datasets,
     ],
   });
 
   assert.deepEqual(report.errors, []);
-  assert.equal(report.checkedDatasets, 5);
-  assert.equal(report.checkedCases, 647);
-  assert.equal(report.checkedReceipts, 2332);
-  assert.equal(report.checkedRawFiles, 10);
+  assert.equal(report.checkedDatasets, 6);
+  assert.equal(report.checkedCases, 7932);
+  assert.equal(report.checkedReceipts, 9617);
+  assert.equal(report.checkedRawFiles, 11);
 });
 
 test("verifyDataSpine reports a receipt hash mismatch", async () => {

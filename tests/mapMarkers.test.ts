@@ -43,7 +43,13 @@ test("isMapMarkerEligible blocks known official coordinates that land in the sea
     countryCode: "AR",
     coordinates: { lat: -54.31232, lon: -54.642749 },
   };
+  const condoritoContractDuplicate = {
+    id: "AR-CONTRACT-74-1345-CON21",
+    countryCode: "AR",
+    coordinates: { lat: -54.31232, lon: -54.642749 },
+  };
 
   assert.equal(isMapMarkerEligible(ciervosPantanosIntendencia), false);
   assert.equal(isMapMarkerEligible(condoritoVisitorCenter), false);
+  assert.equal(isMapMarkerEligible(condoritoContractDuplicate), false);
 });

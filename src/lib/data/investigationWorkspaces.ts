@@ -119,6 +119,27 @@ export interface AddCaseToWorkspaceOptions {
   now?: Date;
 }
 
+export type EnsureInvestigationWorkspaceStatus =
+  | "created"
+  | "added"
+  | "updated"
+  | "already_present";
+
+export interface EnsureInvestigationWorkspaceWithCaseInput {
+  workspace: InvestigationWorkspace | null;
+  caseId: string;
+  countryCode: InvestigationCountryCode;
+  reason?: InvestigationCaseRelationReason;
+  note?: string;
+  title?: string;
+  now?: Date;
+}
+
+export interface EnsureInvestigationWorkspaceWithCaseResult {
+  workspace: InvestigationWorkspace;
+  status: EnsureInvestigationWorkspaceStatus;
+}
+
 export const INVESTIGATION_RELATION_REASON_OPTIONS: Array<{
   value: InvestigationCaseRelationReason;
   label: string;
@@ -193,6 +214,38 @@ export function removeCaseFromWorkspace(
     caseRelations: (workspace.caseRelations ?? []).filter((relation) => relation.caseId !== caseId),
     updatedAt: now.toISOString(),
   };
+}
+
+export function ensureInvestigationWorkspaceWithCase(
+  input: EnsureInvestigationWorkspaceWithCaseInput,
+): EnsureInvestigationWorkspaceWithCaseResult {
+  const now = input.now ?? new Date();
+  const normalizedCaseId = normalizeInvestigationText(input.caseId);
+  const workspace = input.workspace ?? createInvestigationWorkspace(
+    {
+      title: input.title ?? "Carpeta de investigación",
+      countryCode: input.countryCode,
+      description: "Selección privada de expedientes para verificar.",
+    },
+    now,
+  );
+  const alreadyPresent = normalizedCaseId ? workspace.caseIds.includes(normalizedCaseId) : false;
+  const explicitRelationUpdate =
+    input.reason !== undefined || normalizeInvestigationText(input.note).length > 0;
+
+  if (alreadyPresent && !explicitRelationUpdate) {
+    return { workspace, status: "already_present" };
+  }
+
+  const updated = addCaseToWorkspace(workspace, normalizedCaseId, {
+    reason: input.reason,
+    note: input.note,
+    now,
+  });
+
+  if (!input.workspace) return { workspace: updated, status: "created" };
+  if (alreadyPresent) return { workspace: updated, status: "updated" };
+  return { workspace: updated, status: "added" };
 }
 
 export function buildInvestigationAggregate(

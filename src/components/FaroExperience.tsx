@@ -56,7 +56,7 @@ interface Props {
 }
 
 const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
-  AR: { label: "Argentina", status: "Obras CONTRAT.AR" },
+  AR: { label: "Argentina", status: "CONTRAT.AR + Mapa de Inversiones" },
 };
 
 export default function FaroExperience({
@@ -513,6 +513,7 @@ export default function FaroExperience({
           }}
           onClearSelection={() => setSelectedCaseId("")}
           onSwitchToMap={() => setViewMode("map")}
+          onSwitchToInvestigations={() => setViewMode("investigations")}
         />
       )}
 

@@ -2,11 +2,17 @@ import type { ArgentinaWorkCase } from "./argentinaWorks.ts";
 import type { ArgentinaHistoricalJudicialCase } from "./argentinaHistoricalJudicial.ts";
 import type { ArticleCitation } from "./articleCitations.ts";
 import type { ArgentinaContractCaseFile } from "./argentinaContractCases.ts";
+import type { ArgentinaInvestmentMapCaseFile } from "./argentinaInvestmentMap.ts";
 import type { CountryCode } from "./sourceCatalog.ts";
 import { shouldExposeCaseOnMap } from "./uiGates.ts";
 
 export type ExplorerCase =
-  (ArgentinaWorkCase | ArgentinaContractCaseFile | ArgentinaHistoricalJudicialCase) & {
+  (
+    ArgentinaWorkCase |
+    ArgentinaContractCaseFile |
+    ArgentinaInvestmentMapCaseFile |
+    ArgentinaHistoricalJudicialCase
+  ) & {
     contextualCitations?: ArticleCitation[];
   };
 

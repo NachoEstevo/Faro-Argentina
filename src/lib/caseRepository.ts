@@ -1,8 +1,10 @@
 import payload from "../data/argentinaWorkCases.json" with { type: "json" };
 import historicalJudicialPayload from "../data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import argentinaContractPayload from "../data/argentinaContractCases.json" with { type: "json" };
+import argentinaInvestmentMapPayload from "../data/argentinaInvestmentMapCases.json" with { type: "json" };
 import articleCitationPayload from "../data/articleCitations.json" with { type: "json" };
 import type { ArgentinaHistoricalJudicialCase } from "./data/argentinaHistoricalJudicial.ts";
+import type { ArgentinaInvestmentMapCaseFile } from "./data/argentinaInvestmentMap.ts";
 import type { ArgentinaWorkCase } from "./data/argentinaWorks.ts";
 import {
   getArticleCitationsForCase,
@@ -51,6 +53,7 @@ import sourceCatalogPayload from "../../data/sources/source-catalog.json" with {
 export type FaroCaseFile =
   | ArgentinaWorkCase
   | ArgentinaContractCaseFile
+  | ArgentinaInvestmentMapCaseFile
   | ArgentinaHistoricalJudicialCase;
 
 export interface CaseDataset<TCase extends FaroCaseFile = FaroCaseFile> {
@@ -114,6 +117,7 @@ interface ArgentinaHistoricalJudicialPayload {
 
 const rawArgentinaWorkDataset = payload as CaseDataset<ArgentinaWorkCase>;
 const argentinaContractCasePayload = argentinaContractPayload as ArgentinaContractPayload;
+const rawArgentinaInvestmentMapDataset = argentinaInvestmentMapPayload as CaseDataset<ArgentinaInvestmentMapCaseFile>;
 const argentinaHistoricalJudicialPayload = historicalJudicialPayload as ArgentinaHistoricalJudicialPayload;
 const articleCitations = articleCitationPayload.citations as ArticleCitation[];
 const argentinaWorkCaseFiles = withStableDuplicateCaseIds(rawArgentinaWorkDataset.cases);
@@ -127,11 +131,14 @@ export const sourceCatalogEntries = sourceCatalogPayload as SourceCatalogEntry[]
 export const argentinaWorkDataset = buildExplorerDataset(normalizedArgentinaWorkDataset);
 export const argentinaContractDatasets = argentinaContractCasePayload.datasets;
 export const argentinaContractCaseFiles = argentinaContractCasePayload.cases;
+export const argentinaInvestmentMapDataset = rawArgentinaInvestmentMapDataset;
+export const argentinaInvestmentMapCaseFiles = rawArgentinaInvestmentMapDataset.cases;
 export const argentinaHistoricalJudicialDatasets = argentinaHistoricalJudicialPayload.datasets;
 export const argentinaHistoricalJudicialCaseFiles = argentinaHistoricalJudicialPayload.cases;
 export const investigatorCaseFiles: FaroCaseFile[] = withContextualCitations([
   ...argentinaWorkCaseFiles,
   ...argentinaContractCaseFiles,
+  ...argentinaInvestmentMapCaseFiles,
   ...argentinaHistoricalJudicialCaseFiles,
 ]);
 const investigatorSignalContext: CaseSignalContext = buildCaseSignalContext(
@@ -146,6 +153,7 @@ export const dataSpineCoverage: CoverageReport = buildCoverageReport({
   caseDatasets: [
     rawArgentinaWorkDataset,
     ...argentinaContractDatasets,
+    rawArgentinaInvestmentMapDataset,
     ...argentinaHistoricalJudicialDatasets,
   ],
 });

@@ -25,6 +25,20 @@ test("buildInvestigatorExplorer scans map and non-map Argentina cases", () => {
   assert.equal(explorer.facets.some((facet) => facet.type === "source"), true);
 });
 
+test("buildInvestigatorExplorer summary stats count the filtered set, not only shown rows", () => {
+  const cases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 2, { coordinates: null }),
+    buildExplorerFixture("AR-CONTRACT-381-1003-CON21", 3, { coordinates: null }),
+  ] as InvestigatorExplorerCase[];
+  const explorer = buildInvestigatorExplorer(cases, { limit: 1 });
+
+  assert.equal(explorer.rows.length, 1);
+  assert.equal(explorer.stats.filteredCases, 3);
+  assert.equal(explorer.stats.filteredCasesWithoutMapGeometry, 2);
+  assert.equal(explorer.stats.filteredCasesWithPrimarySignal, 3);
+});
+
 test("buildInvestigatorExplorer searches by supplier, source, record id, and signal", () => {
   const supplierSearch = buildInvestigatorExplorer(allCases, { query: "warlet", limit: 50 });
   assert.equal(
@@ -216,7 +230,9 @@ function buildExplorerFixture(
     contractingUnit: "Compras",
     executionTerm: null,
     executionTermType: null,
-    coordinates: overrides.coordinates ?? { lat: -31.4201, lon: -64.1888 },
+    coordinates: Object.hasOwn(overrides, "coordinates")
+      ? overrides.coordinates ?? null
+      : { lat: -31.4201, lon: -64.1888 },
     evidenceLevel: "official_dataset",
     amount: { value: 1_000_000, currency: "ARS", label: "monto_contrato" },
     bidderCount,

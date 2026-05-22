@@ -87,6 +87,14 @@ export function assessCoordinateQuality(
     );
   }
 
+  if (candidate.countryCode === "AR" && isSouthernAtlanticCoordinate(coordinates)) {
+    return buildQuality(
+      candidate,
+      "known_bad_geometry",
+      "Coordenadas oficiales bloqueadas por control de calidad geografica.",
+    );
+  }
+
   const bounds = getCountryBounds(candidate.countryCode);
   if (!bounds) {
     return buildQuality(
@@ -183,6 +191,10 @@ function isInsideBounds(coordinates: GeoPoint, bounds: Bounds): boolean {
     coordinates.lon >= bounds.minLon &&
     coordinates.lon <= bounds.maxLon
   );
+}
+
+function isSouthernAtlanticCoordinate(coordinates: GeoPoint): boolean {
+  return coordinates.lat <= -53 && coordinates.lon >= -60;
 }
 
 function looksLikeMissingSign(coordinates: GeoPoint, bounds: Bounds): boolean {

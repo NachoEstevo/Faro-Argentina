@@ -88,6 +88,17 @@
       "partial": false,
       "fileHash": "sha256-9188493b73e0356f75da2253abc972c44a053145f86213d1d26efd84f46104ef",
       "byteSize": 646309
+    },
+    {
+      "sourceId": "AR-MAPA-INVERSIONES-OBRAS",
+      "rawPath": "data/official/ar/mapa-inversiones-obras.csv",
+      "fetchUrl": "https://mapainversiones.obraspublicas.gob.ar/opendata/dataset_mop.csv",
+      "fetchedAt": "2026-05-21T23:31:18.990Z",
+      "contentType": "text/csv",
+      "contentLength": "8255683",
+      "partial": false,
+      "fileHash": "sha256-0463e423d6fd8f05c1eae127cd09df42b6ef47dc8dbe57a3036fe94bb9280fef",
+      "byteSize": 8255683
     }
   ]
 }

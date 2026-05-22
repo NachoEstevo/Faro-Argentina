@@ -12,6 +12,9 @@ const argentinaDataset = await readJson<unknown>("src/data/argentinaWorkCases.js
 const argentinaContractDataset = await readJson<{ datasets: unknown[] }>(
   "src/data/argentinaContractCases.json",
 );
+const argentinaInvestmentMapDataset = await readJson<unknown>(
+  "src/data/argentinaInvestmentMapCases.json",
+);
 const historicalJudicialDataset = await readJson<{ datasets: unknown[] }>(
   "src/data/argentinaHistoricalJudicialCases.json",
 );
@@ -22,6 +25,7 @@ const articleCitationDataset = await readJson<{ citations: ArticleCitation[] }>(
 const datasets = [
   argentinaDataset,
   ...argentinaContractDataset.datasets,
+  argentinaInvestmentMapDataset,
   ...historicalJudicialDataset.datasets,
 ] as Parameters<typeof verifyDataSpine>[0]["datasets"];
 

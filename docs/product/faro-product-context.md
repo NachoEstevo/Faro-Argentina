@@ -181,18 +181,23 @@ Implementado:
 
 Datos actuales:
 
-- `647` expedientes de Argentina;
+- `7.932` expedientes de Argentina;
 - `389` contratos CONTRAT.AR canonicos;
-- `250` obras publicas CONTRAT.AR;
+- `246` obras publicas CONTRAT.AR;
+- `7.285` proyectos de Mapa de Inversiones cargados como cobertura de avance,
+  sin mapa porque el CSV actual no trae latitud/longitud;
 - `12` expedientes historico-judiciales;
-- `435` expedientes elegibles para mapa despues del gate;
-- `2.332` receipts.
+- `431` expedientes elegibles para mapa despues del gate;
+- `9.617` receipts.
 
 Bloqueos antes de llamarlo producto terminado:
 
 - Algunas coordenadas de Argentina son invalidas, duplicadas, placeholders o
   parecen tener signos negativos faltantes; esos casos deben seguir como brechas
   de datos, no como puntos corregidos manualmente.
+- Mapa de Inversiones suma volumen y avance declarado, pero no debe alimentar
+  el mapa ni senales fuertes de proveedor hasta cruzarse con geometria o
+  contratacion oficial mas especifica.
 - Las obras publicas de Argentina conservan filas oficiales duplicadas con ids
   estables tipo `--row-2`; el `numero_obra` oficial sigue en el receipt.
 - Los expedientes historico-judiciales cargados para Argentina son contexto

@@ -209,6 +209,7 @@ function caseTypeLabel(caseType: string | null): string {
   if (caseType === "procurement_contract") return "Contrato";
   if (caseType === "procurement_process") return "Compra o adjudicacion";
   if (caseType === "budget_execution") return "Ejecucion presupuestaria";
+  if (caseType === "public_works_progress") return "Obra con avance declarado";
   if (caseType === "public_work") return "Obra publica";
   if (caseType === "judicial_context") return "Contexto judicial";
   if (caseType === "historical_public_work") return "Obra historica";

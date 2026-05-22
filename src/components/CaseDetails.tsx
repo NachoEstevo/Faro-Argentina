@@ -5,6 +5,7 @@ import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
+import type { ArgentinaInvestmentMapCaseFile } from "@/lib/data/argentinaInvestmentMap";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
@@ -26,6 +27,7 @@ export function CaseDetails({
   onTraceModeChange: (next: boolean) => void;
 }) {
   const isContract = isArgentinaContractCase(caseFile) && caseFile.caseType === "procurement_contract";
+  const isInvestmentMap = isArgentinaInvestmentMapCase(caseFile);
   const relatedReceipts = "relatedReceipts" in caseFile ? caseFile.relatedReceipts ?? [] : [];
   const contextualCitations = caseFile.contextualCitations ?? [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext, contextualCitations);
@@ -40,12 +42,12 @@ export function CaseDetails({
       <h1>{caseFile.title}</h1>
       <CaseSignalChips caseFile={caseFile} limit={4} signalContext={signalContext} />
       <div className="caseMetaGrid">
-        <Metric label={isContract ? "Contrato" : "Obra"} value={caseFile.workNumber} />
-        <Metric label="Procedimiento" value={caseFile.procedureNumber || "Sin dato"} />
+        <Metric label={caseNumberLabel({ isContract, isInvestmentMap })} value={caseFile.workNumber} />
+        <Metric label={isInvestmentMap ? "BAPIN" : "Procedimiento"} value={caseFile.procedureNumber || "Sin dato"} />
         <Metric label="Organismo" value={caseFile.agencyName || "Sin dato"} />
         <Metric
-          label={isContract ? "Proveedor" : "Plazo"}
-          value={isContract ? formatSupplier(caseFile) : formatExecutionTerm(caseFile)}
+          label={isContract ? "Proveedor" : isInvestmentMap ? "Etapa" : "Plazo"}
+          value={isContract ? formatSupplier(caseFile) : isInvestmentMap ? caseFile.projectStage ?? "Sin dato" : formatExecutionTerm(caseFile)}
         />
         {isContract && (
           <>
@@ -53,6 +55,14 @@ export function CaseDetails({
             <Metric label="Oferentes" value={formatBidderCount(caseFile)} />
             <Metric label="Estado" value={caseFile.procedureState ?? "Sin dato"} />
             <Metric label="Ubicacion" value={formatWorkLocation(caseFile)} />
+          </>
+        )}
+        {isInvestmentMap && (
+          <>
+            <Metric label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
+            <Metric label="Avance fisico" value={formatProgress(caseFile.physicalProgress)} />
+            <Metric label="Avance financiero" value={formatProgress(caseFile.financialProgress)} />
+            <Metric label="Ubicacion" value={formatInvestmentLocation(caseFile)} />
           </>
         )}
       </div>
@@ -179,6 +189,35 @@ function formatSupplier(caseFile: ArgentinaContractCaseFile): string {
 
 function isArgentinaContractCase(caseFile: ExplorerCase): caseFile is ArgentinaContractCaseFile {
   return "caseType" in caseFile && caseFile.caseType === "procurement_contract";
+}
+
+function isArgentinaInvestmentMapCase(caseFile: ExplorerCase): caseFile is ArgentinaInvestmentMapCaseFile {
+  return "caseType" in caseFile && caseFile.caseType === "public_works_progress";
+}
+
+function caseNumberLabel({
+  isContract,
+  isInvestmentMap,
+}: {
+  isContract: boolean;
+  isInvestmentMap: boolean;
+}): string {
+  if (isContract) return "Contrato";
+  if (isInvestmentMap) return "Proyecto";
+  return "Obra";
+}
+
+function formatProgress(value: number | null): string {
+  if (value === null) return "Sin dato";
+  return `${Math.round(value)}%`;
+}
+
+function formatInvestmentLocation(
+  caseFile: Pick<ArgentinaInvestmentMapCaseFile, "workDepartment" | "workProvince" | "locationName">,
+): string {
+  const parts = [caseFile.workDepartment, caseFile.workProvince]
+    .filter((value): value is string => Boolean(value));
+  return parts.length > 0 ? parts.join(", ") : caseFile.locationName ?? "Sin dato";
 }
 
 function describeTraceContext({

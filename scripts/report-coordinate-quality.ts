@@ -1,5 +1,6 @@
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
+import argentinaInvestmentMapDataset from "../src/data/argentinaInvestmentMapCases.json" with { type: "json" };
 import historicalJudicialDataset from "../src/data/argentinaHistoricalJudicialCases.json" with { type: "json" };
 import { buildCoordinateQualityReport } from "../src/lib/data/coordinateQualityReport.ts";
 import type { CoordinateQualityReportCase } from "../src/lib/data/coordinateQualityReport.ts";
@@ -15,6 +16,7 @@ const historicalJudicialCases = historicalJudicialDataset.datasets.flatMap((data
 const report = buildCoordinateQualityReport([
   ...argentinaCases,
   ...argentinaContractCases,
+  ...argentinaInvestmentMapDataset.cases.map(toReportCase),
   ...historicalJudicialCases,
 ]);
 

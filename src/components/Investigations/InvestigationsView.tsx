@@ -21,6 +21,12 @@ import { caseMatchesSearch } from "@/lib/data/searchSuggestions";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
 import {
+  INVESTIGATION_WORKSPACE_UPDATED_EVENT,
+  readStoredInvestigationWorkspace,
+  writeStoredInvestigationWorkspace,
+  type StoredInvestigationWorkspaceCaseResult,
+} from "@/lib/client/investigationWorkspaceStorage";
+import {
   CaseSearchPanel,
   CreateWorkspaceForm,
   InvestigationAnalysisPanel,
@@ -40,8 +46,6 @@ interface Props {
 }
 
 type AnalysisState = "idle" | "loading" | "success" | "error";
-
-const storageKey = "faro-investigation-workspace-v1";
 
 export default function InvestigationsView({
   cases,
@@ -64,18 +68,18 @@ export default function InvestigationsView({
   const [statusText, setStatusText] = useState("");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(storageKey);
-    if (!stored) return;
-    try {
-      setWorkspace(JSON.parse(stored) as InvestigationWorkspace);
-    } catch {
-      window.localStorage.removeItem(storageKey);
-    }
+    setWorkspace(readStoredInvestigationWorkspace());
+    const handleWorkspaceUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<StoredInvestigationWorkspaceCaseResult>).detail;
+      if (detail?.workspace) setWorkspace(detail.workspace);
+    };
+    window.addEventListener(INVESTIGATION_WORKSPACE_UPDATED_EVENT, handleWorkspaceUpdate);
+    return () => window.removeEventListener(INVESTIGATION_WORKSPACE_UPDATED_EVENT, handleWorkspaceUpdate);
   }, []);
 
   useEffect(() => {
     if (!workspace) return;
-    window.localStorage.setItem(storageKey, JSON.stringify(workspace));
+    writeStoredInvestigationWorkspace(workspace);
   }, [workspace]);
 
   useEffect(() => {

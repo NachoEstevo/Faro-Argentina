@@ -152,6 +152,7 @@ function buildPlainSummary(caseFile: ExpedienteCaseFile): string {
 function describeCaseType(caseType: string | undefined): string {
   if (caseType === "procurement_contract") return "Contrato";
   if (caseType === "procurement_process") return "Proceso de compra";
+  if (caseType === "public_works_progress") return "Obra con avance declarado";
   if (caseType === "public_work") return "Obra publica";
   if (caseType === "judicial_context") return "Contexto judicial";
   if (caseType === "historical_public_work") return "Obra historica";

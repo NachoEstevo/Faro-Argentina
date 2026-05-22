@@ -19,6 +19,9 @@ const argentinaContractDataset = await readJson<{
   generatedAt: string;
   datasets: GeneratedDataset[];
 }>("src/data/argentinaContractCases.json");
+const argentinaInvestmentMapDataset = await readJson<GeneratedDataset>(
+  "src/data/argentinaInvestmentMapCases.json",
+);
 const historicalJudicialDataset = await readJson<{
   generatedAt: string;
   datasets: GeneratedDataset[];
@@ -27,6 +30,7 @@ const historicalJudicialDataset = await readJson<{
 const datasets = [
   withCatalogCountry(argentinaDataset, catalog),
   ...argentinaContractDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
+  withCatalogCountry(argentinaInvestmentMapDataset, catalog),
   ...historicalJudicialDataset.datasets.map((dataset) => withCatalogCountry(dataset, catalog)),
 ];
 
@@ -37,11 +41,12 @@ const verification = await verifyDataSpine({
 });
 
 const report = buildDataQualityReport({
-  generatedAt:
-    historicalJudicialDataset.generatedAt ??
-    argentinaContractDataset.generatedAt ??
-    argentinaDataset.generatedAt ??
-    new Date().toISOString(),
+  generatedAt: latestIso([
+    argentinaDataset.generatedAt,
+    argentinaContractDataset.generatedAt,
+    argentinaInvestmentMapDataset.generatedAt,
+    historicalJudicialDataset.generatedAt,
+  ]),
   verification,
   datasets,
 });
@@ -68,4 +73,12 @@ function withCatalogCountry(
       countryCode: source?.countryCode ?? dataset.source.countryCode,
     },
   };
+}
+
+function latestIso(values: Array<string | undefined>): string {
+  const sorted = values
+    .filter((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value)))
+    .map((value) => new Date(value).toISOString())
+    .sort();
+  return sorted.at(-1) ?? new Date().toISOString();
 }
