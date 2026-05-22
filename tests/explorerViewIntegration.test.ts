@@ -117,6 +117,26 @@ test("ExplorerView lets investigators save expedientes into local case folders",
   assert.match(css, /\.detailFolderForm/);
 });
 
+test("ExplorerView renders the approved tabbed case detail structure", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /type ExplorerDetailTab = "resumen" \| "dinero" \| "actores" \| "evidencia" \| "mapa" \| "relacionados"/);
+  assert.match(source, /CaseDetailSummary/);
+  assert.match(source, /MoneyTrailStrip/);
+  assert.match(source, /CaseDetailTabs/);
+  assert.match(source, /Por qué mirar este expediente/);
+  assert.match(source, /Próximo paso/);
+  assert.match(source, /Dinero/);
+  assert.match(source, /Actores/);
+  assert.match(source, /Evidencia/);
+  assert.match(source, /Mapa/);
+  assert.match(source, /Relacionados/);
+  assert.match(css, /\.moneyTrailStrip/);
+  assert.match(css, /\.detailTabs/);
+  assert.match(css, /\.detailTabPanel/);
+});
+
 test("ExplorerView only offers country-specific search scopes", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 

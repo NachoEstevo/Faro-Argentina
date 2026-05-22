@@ -20,6 +20,7 @@ import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
 import {
   buildCaseSignals,
+  type CaseSignal,
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 import {
@@ -67,6 +68,17 @@ const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string
   { type: "agency", label: "Organismo", limit: 4 },
   { type: "supplier", label: "Proveedor", limit: 4 },
   { type: "signal", label: "Señal", limit: 5 },
+];
+
+type ExplorerDetailTab = "resumen" | "dinero" | "actores" | "evidencia" | "mapa" | "relacionados";
+
+const DETAIL_TABS: Array<{ id: ExplorerDetailTab; label: string }> = [
+  { id: "resumen", label: "Resumen" },
+  { id: "dinero", label: "Dinero" },
+  { id: "actores", label: "Actores" },
+  { id: "evidencia", label: "Evidencia" },
+  { id: "mapa", label: "Mapa" },
+  { id: "relacionados", label: "Relacionados" },
 ];
 
 const LEADING_AGENCY_CODE_PATTERN = /^\d+\s*-?\s*/;
@@ -540,7 +552,10 @@ function ExplorerDetail({
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onSwitchToInvestigations: () => void;
 }) {
+  const [activeDetailTab, setActiveDetailTab] = useState<ExplorerDetailTab>("resumen");
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
+  const primarySignal = selectPrimaryDetailSignal(signals);
+  const nextAction = getDetailNextAction(primarySignal);
   const relatedContract =
     pool.find(
       (entry) =>
@@ -568,6 +583,10 @@ function ExplorerDetail({
   const receiptLocator = caseFile.receipt
     ? describeReceiptLocator(caseFile.receipt.locatorType)
     : null;
+  useEffect(() => {
+    setActiveDetailTab("resumen");
+  }, [caseFile.id]);
+
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
       <div className={styles.detailTopBar}>
@@ -601,9 +620,16 @@ function ExplorerDetail({
             <Download size={13} aria-hidden />
             JSON técnico
           </a>
+          <button
+            type="button"
+            className={styles.detailSecondaryAction}
+            onClick={() => setActiveDetailTab("actores")}
+          >
+            <FolderPlus size={13} aria-hidden />
+            Guardar en carpeta
+          </button>
         </div>
       </div>
-      <AddToInvestigationForm caseFile={caseFile} onSwitchToInvestigations={onSwitchToInvestigations} />
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
       </p>
@@ -627,19 +653,8 @@ function ExplorerDetail({
           })}
         </div>
       )}
-      {(() => {
-        const primary = signals.find((signal) => signal.kind === "watch");
-        if (!primary) return null;
-        return (
-          <article className={styles.detailReason}>
-            <p className={styles.detailReasonEyebrow}>Por qué esta señal</p>
-            <p className={styles.detailReasonBody}>{primary.summary}</p>
-            {primary.caveat && (
-              <p className={styles.detailReasonCaveat}>{primary.caveat}</p>
-            )}
-          </article>
-        );
-      })()}
+      <CaseDetailSummary primarySignal={primarySignal} nextAction={nextAction} />
+      <MoneyTrailStrip caseFile={caseFile} fallback={relatedContract} />
       {caseFile.workNumber.includes("OBR") &&
         !relatedContract &&
         !("amount" in caseFile && (caseFile as AnyCase).amount) && (
@@ -649,83 +664,293 @@ function ExplorerDetail({
             eso no se ven proveedor ni monto.
           </p>
         )}
-      <div className={styles.detailGrid}>
-        <MontoCard caseFile={caseFile} fallback={relatedContract} />
-        <CronologiaCard caseFile={caseFile} />
-        <CompetenciaCard caseFile={caseFile} />
-        <UbicacionObraCard caseFile={caseFile} />
-        <ProveedorCard caseFile={caseFile} fallback={relatedContract} />
-        <ProcedimientoCard caseFile={caseFile} />
-        <EjecucionCard caseFile={caseFile} />
-        <OrganismoCard caseFile={caseFile} />
-        <PuntoGeoCard caseFile={caseFile} />
+      <CaseDetailTabs activeTab={activeDetailTab} onTabChange={setActiveDetailTab} />
+      <DetailTabPanel
+        activeTab={activeDetailTab}
+        caseFile={caseFile}
+        fallback={relatedContract}
+        receiptLocator={receiptLocator}
+        similar={similar}
+        onSelectCase={onSelectCase}
+        onSwitchToInvestigations={onSwitchToInvestigations}
+      />
+    </section>
+  );
+}
+
+function CaseDetailSummary({
+  primarySignal,
+  nextAction,
+}: {
+  primarySignal: CaseSignal | null;
+  nextAction: string;
+}) {
+  return (
+    <div className={styles.detailSummaryGrid}>
+      <article className={styles.detailReason}>
+        <p className={styles.detailReasonEyebrow}>Por qué mirar este expediente</p>
+        <p className={styles.detailReasonBody}>
+          {primarySignal?.summary ?? "Este expediente tiene fuente oficial disponible para revisar datos, caveats y próximos pasos."}
+        </p>
+        {primarySignal?.caveat && (
+          <p className={styles.detailReasonCaveat}>{primarySignal.caveat}</p>
+        )}
+      </article>
+      <article className={styles.detailNextStep}>
+        <p className={styles.detailReasonEyebrow}>Próximo paso</p>
+        <p className={styles.detailReasonBody}>{nextAction}</p>
+      </article>
+    </div>
+  );
+}
+
+function MoneyTrailStrip({
+  caseFile,
+  fallback,
+}: {
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+}) {
+  const amount = getField<Amount>(caseFile, "amount") ?? (fallback ? getField<Amount>(fallback, "amount") : null);
+  const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
+  if (!amount && !budget) return null;
+  const variation = formatMoneyVariation(amount, budget);
+  return (
+    <section className={styles.moneyTrailStrip} aria-label="Rastro económico">
+      <MoneyTrailCell label="Presupuesto oficial" amount={budget} emptyText="Sin presupuesto oficial" />
+      <MoneyTrailCell label={amount ? amountDetailLabel(amount) : "Adjudicado"} amount={amount} emptyText="Monto no informado" />
+      <div className={`${styles.moneyTrailCell} ${variation ? styles.moneyTrailReview : ""}`}>
+        <span className={styles.moneyTrailLabel}>Variación</span>
+        <strong className={styles.moneyTrailValue}>{variation ?? moneyVariationFallback(amount, budget)}</strong>
+        <small className={styles.moneyTrailMeta}>
+          {variation ? "Revisar alcance y fuente" : moneyVariationMeta(amount, budget)}
+        </small>
       </div>
-      {caseFile.caveats && caseFile.caveats.length > 0 && (
-        <article className={styles.caveatCard}>
-          <p className={styles.detailCardHead}>Aclaraciones de la fuente</p>
-          <ul className={styles.caveatList}>
-            {caseFile.caveats.map((caveat, idx) => (
-              <li key={idx}>{caveat}</li>
-            ))}
-          </ul>
-        </article>
+    </section>
+  );
+}
+
+function MoneyTrailCell({
+  label,
+  amount,
+  emptyText,
+}: {
+  label: string;
+  amount: Amount;
+  emptyText: string;
+}) {
+  const formatted = amount ? formatRowAmount(amount) : null;
+  return (
+    <div className={`${styles.moneyTrailCell} ${amount ? styles.moneyTrailAvailable : ""}`}>
+      <span className={styles.moneyTrailLabel}>{label}</span>
+      <strong className={styles.moneyTrailValue}>{formatted?.primary ?? emptyText}</strong>
+      <small className={styles.moneyTrailMeta}>{formatted?.usd ? `≈ ${formatted.usd}` : "Dato a verificar en fuente"}</small>
+    </div>
+  );
+}
+
+function CaseDetailTabs({
+  activeTab,
+  onTabChange,
+}: {
+  activeTab: ExplorerDetailTab;
+  onTabChange: (tab: ExplorerDetailTab) => void;
+}) {
+  return (
+    <div className={styles.detailTabs} role="tablist" aria-label="Categorías del expediente">
+      {DETAIL_TABS.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          className={`${styles.detailTabButton} ${activeTab === tab.id ? styles.detailTabButtonActive : ""}`}
+          onClick={() => onTabChange(tab.id)}
+          role="tab"
+          aria-selected={activeTab === tab.id}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function DetailTabPanel({
+  activeTab,
+  caseFile,
+  fallback,
+  receiptLocator,
+  similar,
+  onSelectCase,
+  onSwitchToInvestigations,
+}: {
+  activeTab: ExplorerDetailTab;
+  caseFile: ExplorerCase;
+  fallback?: ExplorerCase | null;
+  receiptLocator: ReturnType<typeof describeReceiptLocator> | null;
+  similar: ExplorerCase[];
+  onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+  onSwitchToInvestigations: () => void;
+}) {
+  return (
+    <div className={styles.detailTabPanel}>
+      {activeTab === "resumen" && (
+        <div className={styles.detailTabGrid}>
+          <CompetenciaCard caseFile={caseFile} />
+          <CronologiaCard caseFile={caseFile} />
+          <UbicacionObraCard caseFile={caseFile} />
+          <TopCaveatCard caseFile={caseFile} />
+        </div>
       )}
-      {caseFile.receipt && (
-        <article className={styles.receiptCard}>
-          <p className={styles.detailCardHead}>Recibo</p>
-          <DetailRow
-            label="Fuente"
-            value={caseFile.receipt.sourceName || caseFile.receipt.sourceId}
-          />
-          {receiptLocator && (
-            <>
-              <DetailRow label="Tipo de locator" value={receiptLocator.label} />
-              <DetailRow label="Nota" value={receiptLocator.note} />
-            </>
-          )}
-          <DetailRow label="Record ID" value={caseFile.receipt.recordId} />
-          <DetailRow label="Raw path" value={caseFile.receipt.rawPath} />
-          {caseFile.receipt.sourceUrl && (
-            <DetailRow
-              label="Página oficial"
-              value={`${receiptLocator?.actionLabel ?? "Abrir fuente"} ↗`}
-              href={getPublicOfficialSourceHref(caseFile.receipt)}
-            />
-          )}
-          <DetailRow
-            label="Snapshot"
-            value={caseFile.receipt.snapshotHash?.slice(0, 16) ?? "—"}
-          />
-          <DetailRow
-            label="Row hash"
-            value={caseFile.receipt.rowHash?.slice(0, 16) ?? "—"}
-          />
-          <DetailRow
-            label="Extraído"
-            value={caseFile.receipt.extractedAt?.slice(0, 10) ?? "—"}
-          />
-        </article>
+      {activeTab === "dinero" && (
+        <div className={styles.detailTabGrid}>
+          <MontoCard caseFile={caseFile} fallback={fallback} />
+          <EjecucionCard caseFile={caseFile} />
+        </div>
       )}
-      <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
-      {similar.length > 0 && (
-        <section className={styles.similarSection} aria-label="Casos similares">
-          <p className={styles.similarHead}>Casos similares</p>
-          <div className={styles.similarGrid}>
-            {similar.map((entry) => (
-              <button
-                key={entry.id}
-                type="button"
-                className={styles.similarCard}
-                onClick={() => onSelectCase(entry.id, entry.countryCode)}
-              >
-                <span className={styles.similarCardId}>#{entry.workNumber}</span>
-                <strong className={styles.similarCardTitle}>{entry.title}</strong>
-                <span className={styles.similarCardMeta}>{entry.agencyName}</span>
-              </button>
-            ))}
+      {activeTab === "actores" && (
+        <>
+          <AddToInvestigationForm caseFile={caseFile} onSwitchToInvestigations={onSwitchToInvestigations} />
+          <div className={styles.detailTabGrid}>
+            <ProveedorCard caseFile={caseFile} fallback={fallback} />
+            <ProcedimientoCard caseFile={caseFile} />
+            <OrganismoCard caseFile={caseFile} />
           </div>
-        </section>
+        </>
       )}
+      {activeTab === "evidencia" && (
+        <>
+          <CaveatsCard caseFile={caseFile} />
+          <ReceiptCard caseFile={caseFile} receiptLocator={receiptLocator} />
+          <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
+        </>
+      )}
+      {activeTab === "mapa" && (
+        <div className={styles.detailTabGrid}>
+          {caseFile.coordinates && shouldExposeCaseOnMap(caseFile)
+            ? <PuntoGeoCard caseFile={caseFile} />
+            : <MapGapCard />}
+        </div>
+      )}
+      {activeTab === "relacionados" && (
+        <SimilarCasesPanel similar={similar} onSelectCase={onSelectCase} />
+      )}
+    </div>
+  );
+}
+
+function TopCaveatCard({ caseFile }: { caseFile: ExplorerCase }) {
+  const caveat = caseFile.caveats?.[0];
+  if (!caveat) return null;
+  return (
+    <article className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Aclaración principal</p>
+      <p className={styles.detailInlineText}>{caveat}</p>
+    </article>
+  );
+}
+
+function CaveatsCard({ caseFile }: { caseFile: ExplorerCase }) {
+  if (!caseFile.caveats || caseFile.caveats.length === 0) return null;
+  return (
+    <article className={styles.caveatCard}>
+      <p className={styles.detailCardHead}>Aclaraciones de la fuente</p>
+      <ul className={styles.caveatList}>
+        {caseFile.caveats.map((caveat, idx) => (
+          <li key={idx}>{caveat}</li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+function ReceiptCard({
+  caseFile,
+  receiptLocator,
+}: {
+  caseFile: ExplorerCase;
+  receiptLocator: ReturnType<typeof describeReceiptLocator> | null;
+}) {
+  if (!caseFile.receipt) return null;
+  return (
+    <article className={styles.receiptCard}>
+      <p className={styles.detailCardHead}>Recibo</p>
+      <DetailRow
+        label="Fuente"
+        value={caseFile.receipt.sourceName || caseFile.receipt.sourceId}
+      />
+      {receiptLocator && (
+        <>
+          <DetailRow label="Tipo de locator" value={receiptLocator.label} />
+          <DetailRow label="Nota" value={receiptLocator.note} />
+        </>
+      )}
+      <DetailRow label="Record ID" value={caseFile.receipt.recordId} />
+      <DetailRow label="Raw path" value={caseFile.receipt.rawPath} />
+      {caseFile.receipt.sourceUrl && (
+        <DetailRow
+          label="Página oficial"
+          value={`${receiptLocator?.actionLabel ?? "Abrir fuente"} ↗`}
+          href={getPublicOfficialSourceHref(caseFile.receipt)}
+        />
+      )}
+      <DetailRow
+        label="Snapshot"
+        value={caseFile.receipt.snapshotHash?.slice(0, 16) ?? "—"}
+      />
+      <DetailRow
+        label="Row hash"
+        value={caseFile.receipt.rowHash?.slice(0, 16) ?? "—"}
+      />
+      <DetailRow
+        label="Extraído"
+        value={caseFile.receipt.extractedAt?.slice(0, 10) ?? "—"}
+      />
+    </article>
+  );
+}
+
+function MapGapCard() {
+  return (
+    <article className={styles.detailCard}>
+      <p className={styles.detailCardHead}>Mapa</p>
+      <p className={styles.detailInlineText}>
+        Este expediente queda disponible para Explorer y exportación, pero no se dibuja en el mapa porque falta geometría oficial validada.
+      </p>
+    </article>
+  );
+}
+
+function SimilarCasesPanel({
+  similar,
+  onSelectCase,
+}: {
+  similar: ExplorerCase[];
+  onSelectCase: (caseId: string, countryCode: CountryCode) => void;
+}) {
+  if (similar.length === 0) {
+    return (
+      <article className={styles.detailEmpty}>
+        No hay casos relacionados suficientes con el filtro actual.
+      </article>
+    );
+  }
+  return (
+    <section className={styles.similarSection} aria-label="Casos similares">
+      <p className={styles.similarHead}>Casos similares</p>
+      <div className={styles.similarGrid}>
+        {similar.map((entry) => (
+          <button
+            key={entry.id}
+            type="button"
+            className={styles.similarCard}
+            onClick={() => onSelectCase(entry.id, entry.countryCode)}
+          >
+            <span className={styles.similarCardId}>#{entry.workNumber}</span>
+            <strong className={styles.similarCardTitle}>{entry.title}</strong>
+            <span className={styles.similarCardMeta}>{entry.agencyName}</span>
+          </button>
+        ))}
+      </div>
     </section>
   );
 }
@@ -966,6 +1191,34 @@ function formatAmountInline(amount: Amount): string {
   return formatted.usd ? `${formatted.primary} · ≈ ${formatted.usd}` : formatted.primary;
 }
 
+function formatMoneyVariation(amount: Amount, budget: Amount): string | null {
+  if (!amount || !budget || budget.value <= 0 || amount.currency !== budget.currency) return null;
+  const delta = ((amount.value - budget.value) / budget.value) * 100;
+  if (Math.abs(delta) < 0.5) return "0,0 %";
+  return `${delta > 0 ? "+" : ""}${delta.toFixed(1).replace(".", ",")} %`;
+}
+
+function moneyVariationFallback(amount: Amount, budget: Amount): string {
+  if (amount && budget && amount.currency !== budget.currency) return "Monedas distintas";
+  return "Requiere dos montos";
+}
+
+function moneyVariationMeta(amount: Amount, budget: Amount): string {
+  if (amount && budget && amount.currency !== budget.currency) return "No se compara sin misma moneda";
+  return "No se estima sin presupuesto y adjudicación";
+}
+
+function selectPrimaryDetailSignal(signals: CaseSignal[]): CaseSignal | null {
+  return signals.find((signal) => signal.kind === "watch" && signal.leadEligible !== false) ??
+    signals.find((signal) => signal.leadEligible) ??
+    signals[0] ??
+    null;
+}
+
+function getDetailNextAction(signal: CaseSignal | null): string {
+  return signal?.action ?? "Abrir la fuente oficial, revisar receipts y registrar brechas antes de citar una conclusión.";
+}
+
 function MontoCard({
   caseFile,
   fallback,
@@ -977,7 +1230,7 @@ function MontoCard({
   const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
   if (!amount && !budget) return null;
   let overrun: string | null = null;
-  if (amount && budget && budget.value > 0) {
+  if (amount && budget && budget.value > 0 && amount.currency === budget.currency) {
     const delta = ((amount.value - budget.value) / budget.value) * 100;
     if (Math.abs(delta) >= 0.5) {
       overrun = `${delta > 0 ? "+" : ""}${delta.toFixed(1).replace(".", ",")} %`;
