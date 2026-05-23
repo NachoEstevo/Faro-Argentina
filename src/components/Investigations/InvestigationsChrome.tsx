@@ -1,15 +1,20 @@
 "use client";
 
 import type { FormEvent } from "react";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import {
+  CloudDownload,
+  CloudUpload,
   Download,
   FileSearch,
   FolderOpen,
+  LogIn,
   Map as MapIcon,
   MessageSquarePlus,
   Plus,
   Send,
   Trash2,
+  UserRound,
 } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
@@ -30,6 +35,12 @@ interface SidebarProps {
   activeWorkspaceId: string | null;
   onSelectWorkspace: (workspaceId: string) => void;
   onCreateWorkspace: () => void;
+  onLoadServerWorkspaces: () => void;
+  onSaveServerWorkspaces: () => void;
+  syncLoading: boolean;
+  syncSaving: boolean;
+  syncStatusText: string;
+  syncIsError: boolean;
 }
 
 interface CreateFormProps {
@@ -88,6 +99,12 @@ export function InvestigationsSidebar({
   activeWorkspaceId,
   onSelectWorkspace,
   onCreateWorkspace,
+  onLoadServerWorkspaces,
+  onSaveServerWorkspaces,
+  syncLoading,
+  syncSaving,
+  syncStatusText,
+  syncIsError,
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
@@ -123,6 +140,15 @@ export function InvestigationsSidebar({
         activeWorkspaceId={activeWorkspaceId}
         onSelectWorkspace={onSelectWorkspace}
         onCreateWorkspace={onCreateWorkspace}
+      />
+      <WorkspaceSyncPanel
+        onLoad={onLoadServerWorkspaces}
+        onSave={onSaveServerWorkspaces}
+        loading={syncLoading}
+        saving={syncSaving}
+        statusText={syncStatusText}
+        isError={syncIsError}
+        workspaceCount={workspaces.length}
       />
     </aside>
   );
@@ -167,6 +193,76 @@ export function WorkspaceSwitcher({
         </div>
       )}
     </div>
+  );
+}
+
+export function WorkspaceSyncPanel({
+  onLoad,
+  onSave,
+  loading,
+  saving,
+  statusText,
+  isError,
+  workspaceCount,
+}: {
+  onLoad: () => void;
+  onSave: () => void;
+  loading: boolean;
+  saving: boolean;
+  statusText: string;
+  isError: boolean;
+  workspaceCount: number;
+}) {
+  const { isLoaded, user } = useUser();
+  const isBusy = loading || saving || !isLoaded;
+  const accountLabel = user?.primaryEmailAddress?.emailAddress ?? user?.fullName ?? "Cuenta activa";
+  return (
+    <section className={styles.syncPanel} aria-label="Cuenta privada">
+      <div className={styles.syncHeader}>
+        <span>
+          <UserRound size={13} aria-hidden />
+          Cuenta privada
+        </span>
+        <small>{workspaceCount} carpeta{workspaceCount === 1 ? "" : "s"}</small>
+      </div>
+      {!user && (
+        <p className={styles.syncCopy}>
+          Podés trabajar localmente. Iniciá sesión para guardar y recuperar carpetas entre dispositivos.
+        </p>
+      )}
+      {!user && (
+        <SignInButton mode="modal">
+          <button className={styles.primary} type="button">
+            <LogIn size={14} aria-hidden />
+            Iniciar sesión
+          </button>
+        </SignInButton>
+      )}
+      {user && (
+        <div className={styles.accountRow}>
+          <UserButton />
+          <span>{accountLabel}</span>
+        </div>
+      )}
+      {user && (
+        <p className={styles.syncCopy}>
+          Guardá esta selección en tu cuenta o cargá la última versión sincronizada.
+        </p>
+      )}
+      {user && (
+        <div className={styles.syncActions}>
+          <button className={styles.secondary} type="button" onClick={onLoad} disabled={isBusy}>
+            <CloudDownload size={14} aria-hidden />
+            Cargar cuenta
+          </button>
+          <button className={styles.secondary} type="button" onClick={onSave} disabled={isBusy}>
+            <CloudUpload size={14} aria-hidden />
+            Guardar cuenta
+          </button>
+        </div>
+      )}
+      {statusText && <p className={isError ? styles.error : styles.status}>{statusText}</p>}
+    </section>
   );
 }
 

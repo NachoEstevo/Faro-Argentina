@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: 18px;
   min-width: 0;
-  overflow: hidden;
+  overflow-y: auto;
   padding: 22px;
   border-right: 1px solid var(--cf-border);
   background: var(--cf-workspace-sidebar-bg, rgba(13, 15, 19, 0.64));
@@ -90,7 +90,6 @@
 .rules {
   display: grid;
   gap: 8px;
-  margin-top: auto;
   padding-top: 18px;
   border-top: 1px solid var(--cf-border);
 }
@@ -187,6 +186,81 @@
 
 .switcherEmpty {
   margin: 0;
+}
+
+.syncPanel {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg, rgba(21, 28, 35, 0.54));
+}
+
+.syncHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.syncHeader span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.syncHeader small,
+.syncCopy {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.syncCopy {
+  margin: 0;
+}
+
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+}
+
+.accountRow span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.syncActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.syncActions .secondary {
+  width: 100%;
+  min-height: 34px;
+  padding: 0 9px;
+  font-size: 11px;
 }
 
 .content {
@@ -341,7 +415,8 @@
   color: var(--cf-text);
 }
 
-.primary:disabled {
+.primary:disabled,
+.secondary:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }

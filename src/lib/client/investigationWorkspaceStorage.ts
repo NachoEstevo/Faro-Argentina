@@ -5,16 +5,18 @@ import {
   type InvestigationCountryCode,
   type InvestigationWorkspace,
 } from "../data/investigationWorkspaces.ts";
+import {
+  emptyInvestigationWorkspaceCollection,
+  normalizeInvestigationWorkspaceCollection,
+  upsertInvestigationWorkspaceCollection,
+  type InvestigationWorkspaceCollection,
+} from "../data/investigationWorkspaceCollections.ts";
 
 export const INVESTIGATION_WORKSPACE_STORAGE_KEY = "faro-investigation-workspace-v1";
 export const INVESTIGATION_WORKSPACE_COLLECTION_STORAGE_KEY = "faro-investigation-workspaces-v2";
 export const INVESTIGATION_WORKSPACE_UPDATED_EVENT = "faro:investigation-workspace-updated";
 
-export interface StoredInvestigationWorkspaceCollection {
-  version: "faro_investigation_workspace_collection_v1";
-  activeWorkspaceId: string | null;
-  workspaces: InvestigationWorkspace[];
-}
+export type StoredInvestigationWorkspaceCollection = InvestigationWorkspaceCollection;
 
 export interface StoredInvestigationWorkspaceCaseInput {
   storage?: Storage;
@@ -41,12 +43,12 @@ export function readStoredInvestigationWorkspace(storage = resolveStorage()): In
 export function readStoredInvestigationWorkspaceCollection(
   storage = resolveStorage(),
 ): StoredInvestigationWorkspaceCollection {
-  const empty = emptyWorkspaceCollection();
+  const empty = emptyInvestigationWorkspaceCollection();
   if (!storage) return empty;
   const storedCollection = storage.getItem(INVESTIGATION_WORKSPACE_COLLECTION_STORAGE_KEY);
   if (storedCollection) {
     try {
-      return normalizeWorkspaceCollection(JSON.parse(storedCollection));
+      return normalizeInvestigationWorkspaceCollection(JSON.parse(storedCollection));
     } catch {
       storage.removeItem(INVESTIGATION_WORKSPACE_COLLECTION_STORAGE_KEY);
       return empty;
@@ -67,7 +69,7 @@ export function writeStoredInvestigationWorkspaceCollection(
   storage = resolveStorage(),
 ): void {
   if (!storage) return;
-  const normalized = normalizeWorkspaceCollection(collection);
+  const normalized = normalizeInvestigationWorkspaceCollection(collection);
   storage.setItem(INVESTIGATION_WORKSPACE_COLLECTION_STORAGE_KEY, JSON.stringify(normalized));
   const activeWorkspace = normalized.workspaces.find((workspace) => workspace.id === normalized.activeWorkspaceId) ??
     normalized.workspaces[0] ??
@@ -106,7 +108,7 @@ export function writeStoredInvestigationWorkspace(
 ): void {
   if (!storage) return;
   const collection = readStoredInvestigationWorkspaceCollection(storage);
-  writeStoredInvestigationWorkspaceCollection(upsertWorkspace(collection, workspace), storage);
+  writeStoredInvestigationWorkspaceCollection(upsertInvestigationWorkspaceCollection(collection, workspace), storage);
 }
 
 export function addCaseToStoredInvestigationWorkspace(
@@ -125,7 +127,7 @@ export function addCaseToStoredInvestigationWorkspace(
     note: input.note,
     now: input.now,
   });
-  const nextCollection = upsertWorkspace(collection, result.workspace);
+  const nextCollection = upsertInvestigationWorkspaceCollection(collection, result.workspace);
 
   writeStoredInvestigationWorkspaceCollection(nextCollection, storage);
   const storedResult = { ...result, collection: nextCollection };
@@ -141,52 +143,4 @@ function resolveStorage(): Storage | undefined {
 function notifyWorkspaceUpdated(result: StoredInvestigationWorkspaceCaseResult): void {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(INVESTIGATION_WORKSPACE_UPDATED_EVENT, { detail: result }));
-}
-
-function emptyWorkspaceCollection(): StoredInvestigationWorkspaceCollection {
-  return {
-    version: "faro_investigation_workspace_collection_v1",
-    activeWorkspaceId: null,
-    workspaces: [],
-  };
-}
-
-function normalizeWorkspaceCollection(value: unknown): StoredInvestigationWorkspaceCollection {
-  const input = value as Partial<StoredInvestigationWorkspaceCollection>;
-  const workspaces = Array.isArray(input.workspaces) ? uniqueWorkspaces(input.workspaces) : [];
-  const activeWorkspaceId = typeof input.activeWorkspaceId === "string" &&
-      workspaces.some((workspace) => workspace.id === input.activeWorkspaceId)
-    ? input.activeWorkspaceId
-    : workspaces[0]?.id ?? null;
-  return {
-    version: "faro_investigation_workspace_collection_v1",
-    activeWorkspaceId,
-    workspaces,
-  };
-}
-
-function upsertWorkspace(
-  collection: StoredInvestigationWorkspaceCollection,
-  workspace: InvestigationWorkspace,
-): StoredInvestigationWorkspaceCollection {
-  const workspaces = uniqueWorkspaces([
-    workspace,
-    ...collection.workspaces.filter((item) => item.id !== workspace.id),
-  ]);
-  return {
-    version: "faro_investigation_workspace_collection_v1",
-    activeWorkspaceId: workspace.id,
-    workspaces,
-  };
-}
-
-function uniqueWorkspaces(workspaces: InvestigationWorkspace[]): InvestigationWorkspace[] {
-  const seen = new Set<string>();
-  const unique: InvestigationWorkspace[] = [];
-  for (const workspace of workspaces) {
-    if (!workspace?.id || seen.has(workspace.id)) continue;
-    seen.add(workspace.id);
-    unique.push(workspace);
-  }
-  return unique;
 }

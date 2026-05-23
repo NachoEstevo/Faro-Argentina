@@ -17,6 +17,10 @@ import {
   type InvestigationSourceLink,
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
+import {
+  normalizeInvestigationWorkspaceCollection,
+  type InvestigationWorkspaceCollection,
+} from "@/lib/data/investigationWorkspaceCollections";
 import { caseMatchesSearch } from "@/lib/data/searchSuggestions";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
@@ -51,6 +55,7 @@ interface Props {
 }
 
 type AnalysisState = "idle" | "loading" | "success" | "error";
+type WorkspaceSyncState = "idle" | "loading" | "saving" | "success" | "error";
 
 export default function InvestigationsView({
   cases,
@@ -69,6 +74,8 @@ export default function InvestigationsView({
   const [sourceUrl, setSourceUrl] = useState("");
   const [entityLabel, setEntityLabel] = useState("");
   const [accessCode, setAccessCode] = useState("");
+  const [syncState, setSyncState] = useState<WorkspaceSyncState>("idle");
+  const [syncStatusText, setSyncStatusText] = useState("Podés trabajar localmente o sincronizar con tu cuenta.");
   const [casePacks, setCasePacks] = useState<Record<string, InvestigationCasePack>>({});
   const [aggregate, setAggregate] = useState<InvestigationAggregate | null>(null);
   const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
@@ -168,6 +175,22 @@ export default function InvestigationsView({
     setActiveWorkspaceId(nextWorkspace.id);
     setIsCreatingWorkspace(false);
     writeStoredInvestigationWorkspace(nextWorkspace);
+  }
+
+  function persistWorkspaceCollection(collection: InvestigationWorkspaceCollection) {
+    const normalized = normalizeInvestigationWorkspaceCollection(collection);
+    setWorkspaces(normalized.workspaces);
+    setActiveWorkspaceId(normalized.activeWorkspaceId);
+    setIsCreatingWorkspace(normalized.workspaces.length === 0);
+    writeStoredInvestigationWorkspaceCollection(normalized);
+  }
+
+  function buildCurrentWorkspaceCollection(): InvestigationWorkspaceCollection {
+    return normalizeInvestigationWorkspaceCollection({
+      version: "faro_investigation_workspace_collection_v1",
+      activeWorkspaceId,
+      workspaces,
+    });
   }
 
   function handleSelectWorkspace(workspaceId: string) {
@@ -277,6 +300,53 @@ export default function InvestigationsView({
     }
   }
 
+  async function handleLoadServerWorkspaces() {
+    setSyncState("loading");
+    setSyncStatusText("Cargando carpetas de tu cuenta...");
+    try {
+      const response = await fetch("/api/investigations/workspaces");
+      const payload = await response.json() as WorkspaceSyncResponse;
+      if (!response.ok || !payload.collection) {
+        throw new Error(payload.message ?? labelWorkspaceSyncError(payload.error));
+      }
+      persistWorkspaceCollection(payload.collection);
+      setAggregate(null);
+      setSyncState("success");
+      setSyncStatusText(
+        payload.collection.workspaces.length === 0
+          ? "Todavía no hay carpetas guardadas en tu cuenta."
+          : "Carpetas cargadas en este navegador.",
+      );
+    } catch (error) {
+      setSyncState("error");
+      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron cargar tus carpetas.");
+    }
+  }
+
+  async function handleSaveServerWorkspaces() {
+    setSyncState("saving");
+    setSyncStatusText("Guardando carpetas en tu cuenta...");
+    try {
+      const response = await fetch("/api/investigations/workspaces", {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(buildCurrentWorkspaceCollection()),
+      });
+      const payload = await response.json() as WorkspaceSyncResponse;
+      if (!response.ok || !payload.collection) {
+        throw new Error(payload.message ?? labelWorkspaceSyncError(payload.error));
+      }
+      persistWorkspaceCollection(payload.collection);
+      setSyncState("success");
+      setSyncStatusText("Carpetas guardadas en tu cuenta.");
+    } catch (error) {
+      setSyncState("error");
+      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron guardar tus carpetas.");
+    }
+  }
+
   function handleExport() {
     if (!workspace) return;
     const zip = buildInvestigationZip({
@@ -302,6 +372,12 @@ export default function InvestigationsView({
         activeWorkspaceId={activeWorkspaceId}
         onSelectWorkspace={handleSelectWorkspace}
         onCreateWorkspace={handleCreateNewWorkspace}
+        onLoadServerWorkspaces={handleLoadServerWorkspaces}
+        onSaveServerWorkspaces={handleSaveServerWorkspaces}
+        syncLoading={syncState === "loading"}
+        syncSaving={syncState === "saving"}
+        syncStatusText={syncStatusText}
+        syncIsError={syncState === "error"}
       />
 
       <div className={styles.content}>
@@ -424,6 +500,19 @@ function labelAnalysisError(error?: string): string {
   if (error === "analysis_unavailable") return "Análisis no disponible en este entorno.";
   if (error === "too_many_case_ids") return "La carpeta tiene demasiados expedientes para este corte.";
   return "No se pudo generar el análisis.";
+}
+
+interface WorkspaceSyncResponse {
+  collection?: InvestigationWorkspaceCollection;
+  error?: string;
+  message?: string;
+}
+
+function labelWorkspaceSyncError(error?: string): string {
+  if (error === "login_required") return "Iniciá sesión para sincronizar tus carpetas.";
+  if (error === "auth_not_configured") return "La autenticación privada todavía no está configurada.";
+  if (error === "workspace_sync_unavailable") return "La sincronización privada no está disponible en este momento.";
+  return "No se pudo sincronizar tu cuenta.";
 }
 
 function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {

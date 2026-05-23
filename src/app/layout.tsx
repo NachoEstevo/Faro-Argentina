@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Funnel_Sans, Geist, Geist_Mono } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -116,11 +117,13 @@ function getMetadataBase(): URL {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="es"
-      className={`${funnelSans.variable} ${geist.variable} ${geistMono.variable}`}
-    >
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="es"
+        className={`${funnelSans.variable} ${geist.variable} ${geistMono.variable}`}
+      >
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -43,6 +43,17 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /parseInvestigationAnalysisBlocks/);
   assert.match(source, /analysisTable/);
   assert.match(source, /WorkspaceSwitcher/);
+  assert.match(source, /WorkspaceSyncPanel/);
+  assert.match(source, /\/api\/investigations\/workspaces/);
+  assert.match(source, /SignInButton/);
+  assert.match(source, /UserButton/);
+  assert.match(source, /Cuenta privada/);
+  assert.match(source, /Cargar cuenta/);
+  assert.match(source, /Guardar cuenta/);
+  assert.match(source, /Iniciar sesión/);
+  assert.match(source, /sincronizar con tu cuenta/i);
+  assert.doesNotMatch(source, /x-faro-workspace-code/);
+  assert.doesNotMatch(source, /Código privado/);
   assert.match(source, /Carpetas guardadas/);
   assert.match(source, /Seleccionar carpeta/);
   assert.match(source, /Nueva carpeta/);

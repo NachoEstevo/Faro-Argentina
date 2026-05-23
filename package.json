@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev -H 127.0.0.1 -p 3002",
+    "dev": "next dev -H localhost -p 3002",
     "build": "npm run exports:build && next build",
-    "start": "next start -H 127.0.0.1 -p 3002",
+    "start": "next start -H localhost -p 3002",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "data:fetch": "node --experimental-strip-types scripts/fetch-official-snapshots.ts && node --experimental-strip-types scripts/fetch-fx-snapshots.ts",
@@ -15,10 +15,13 @@
     "data:geo-report": "node --experimental-strip-types scripts/report-coordinate-quality.ts",
     "data:quality-report": "node --experimental-strip-types scripts/report-data-quality.ts",
     "data:verify": "node --experimental-strip-types scripts/verify-data-spine.ts",
+    "db:migrate": "node --experimental-strip-types scripts/migrate-product-db.ts",
     "verify:aportes-storage": "node --experimental-strip-types scripts/verify-aportes-storage.ts",
     "exports:build": "node --experimental-strip-types scripts/build-static-exports.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.4.1",
+    "@neondatabase/serverless": "^1.1.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.16.0",
     "next": "^16.2.6",

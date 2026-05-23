@@ -32,16 +32,18 @@ Razon:
 
 ### 2. Documentos
 
-Expedientes, informes, receipts y revision documental deben tener toggle
-`Claro` / `Oscuro`.
+Informes descargables y documentos para imprimir deben ser light-only:
+fondo blanco, texto oscuro y sin toggle de tema. El objetivo es lectura,
+archivo y PDF.
 
 Regla:
 
-- explorar: oscuro por defecto;
-- leer/citar/imprimir: claro disponible;
-- preferencia persistente localmente cuando se implemente.
+- mapa/home: oscuro cartografico fijo;
+- Explorer, Carpetas y Aportes: tema de plataforma claro/oscuro;
+- informe descargable: claro fijo para leer, citar, imprimir y exportar.
 
-El modo claro es una capa de lectura. No reemplaza el sistema base.
+El modo claro de plataforma no reemplaza el informe imprimible: el informe
+siempre conserva hoja blanca.
 
 ### 3. Home
 
@@ -190,8 +192,10 @@ tecnica.
 
 ### Expediente / Informe
 
-Debe tener toggle `Claro` / `Oscuro`, receipt oficial visible, caveats antes de
-detalles tecnicos, tablas para analisis y acciones de export/fuente visibles.
+El expediente dentro de Explorer puede seguir el tema de la plataforma.
+El informe descargable debe ser siempre claro, imprimible y sin toggle.
+Debe mantener receipt oficial visible, caveats antes de detalles tecnicos,
+tablas para analisis y acciones de export/fuente visibles.
 
 Nunca mostrar a usuarios comunes raw HTML, markdown crudo, code fences,
 `<think>` o razonamiento interno del modelo.
@@ -265,9 +269,9 @@ overflow horizontal mobile e icon-only controls con label accesible.
    Agregar preset cerrado `Expedientes seleccionados`, banner y salida a todos
    los expedientes. Preservar puntos operativos.
 
-4. **Document Mode**
-   Agregar toggle Claro/Oscuro en expediente/informe/documentos y persistir
-   preferencia local.
+4. **Platform Theme Scope**
+   Mantener el informe descargable light-only y aplicar Claro/Oscuro solo a
+   Explorer, Carpetas y Aportes. El mapa sigue oscuro.
 
 5. **Workflow Polish**
    Carpetas con tabs, Aportes como stepper y admin review con estados/acciones.
@@ -278,7 +282,8 @@ overflow horizontal mobile e icon-only controls con label accesible.
 - Mapa actual central y usable.
 - `/pais/AR` mantiene puntos con geometria oficial.
 - Preset seleccionado entendible y reversible.
-- Documentos alternan claro/oscuro.
+- Explorer, Carpetas y Aportes alternan claro/oscuro.
+- Informes descargables son light-only e imprimibles.
 - No copy implica culpa, corrupcion, fraude o prueba.
 - Caveats visibles.
 - Data gaps son informacion de primera clase.

@@ -1,0 +1,67 @@
+.authShell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 480px);
+  background: #f5f3ef;
+  color: #161614;
+}
+
+.authContext {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(28px, 7vw, 96px);
+}
+
+.authContext p,
+.authContext li {
+  color: #5f5b52;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.authContext h1 {
+  margin: 0;
+  max-width: 660px;
+  font-family: var(--cf-font-heading);
+  font-size: clamp(36px, 7vw, 76px);
+  font-weight: 500;
+  line-height: 0.98;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #0d6c9f;
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.bullets {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+.authPanel {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 28px;
+  border-left: 1px solid rgba(22, 22, 20, 0.12);
+  background: #ffffff;
+}
+
+@media (max-width: 860px) {
+  .authShell {
+    grid-template-columns: 1fr;
+  }
+
+  .authPanel {
+    border-left: 0;
+    border-top: 1px solid rgba(22, 22, 20, 0.12);
+  }
+}
