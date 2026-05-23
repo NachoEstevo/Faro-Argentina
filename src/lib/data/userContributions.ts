@@ -141,7 +141,7 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
   if (!hasReviewAnchor({ publicSourceUrl, relatedCase, approximateLocation, attachments })) {
     errors.push({
       field: "reviewAnchor",
-      message: "Necesitamos un link publico, un caso relacionado o una foto con contexto para poder revisar.",
+      message: "Necesitamos un link publico, un caso relacionado, una ubicacion o un archivo con contexto para poder revisar.",
     });
   }
   if (!draft.sourcePermissionConfirmed) {

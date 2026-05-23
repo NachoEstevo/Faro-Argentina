@@ -28,6 +28,18 @@ test("validateContributionDraft accepts a neutral photo aporte with private atta
   assert.equal(result.valid, true);
 });
 
+test("validateContributionDraft accepts a neutral PDF aporte with private attachment metadata", () => {
+  const result = validateContributionDraft({
+    ...baseDraft,
+    attachments: [
+      { filename: "informe.pdf", mimeType: "application/pdf", sizeBytes: 240_000 },
+    ],
+  });
+
+  assert.equal(result.valid, true);
+  assert.deepEqual(result.errors, []);
+});
+
 test("validateContributionDraft requires a review anchor", () => {
   const result = validateContributionDraft({
     ...baseDraft,
@@ -39,6 +51,8 @@ test("validateContributionDraft requires a review anchor", () => {
 
   assert.equal(result.valid, false);
   assert.deepEqual(result.errors.map((error) => error.field), ["reviewAnchor"]);
+  assert.match(result.errors[0].message, /archivo/i);
+  assert.doesNotMatch(result.errors[0].message, /foto/i);
 });
 
 test("validateContributionDraft rejects unsupported or oversized attachments", () => {

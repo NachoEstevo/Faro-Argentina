@@ -8,7 +8,7 @@ const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 
-test("AportesView submits private contributions with photo attachments", async () => {
+test("AportesView submits private contributions with file attachments", async () => {
   const source = await readFile(aportesViewUrl, "utf8");
 
   assert.match(source, /Ayudanos a mejorar Faro/);
@@ -19,7 +19,10 @@ test("AportesView submits private contributions with photo attachments", async (
   assert.match(source, /Paso 3/);
   assert.match(source, /Datos y archivos/);
   assert.match(source, /Revisión/);
-  assert.match(source, /accept="image\/jpeg,image\/png,image\/webp"/);
+  assert.match(source, /accept="image\/jpeg,image\/png,image\/webp,application\/pdf"/);
+  assert.match(source, /Archivos privados/);
+  assert.doesNotMatch(source, /Fotos privadas/);
+  assert.match(source, /material enviado/i);
   assert.match(source, /Material aportado por usuario/);
   assert.doesNotMatch(source, /Publicar caso|Comunidad|Denuncia/);
 });
@@ -46,6 +49,15 @@ test("Aportes sidebar mode switch stays inside the sidebar", async () => {
   assert.match(styles, /\.modeSwitch\s*\{[\s\S]*display: grid;[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);[\s\S]*width: 100%;[\s\S]*max-width: 100%;/);
   assert.match(styles, /\.modeButton\s*\{[\s\S]*justify-content: center;[\s\S]*min-width: 0;/);
   assert.doesNotMatch(styles, /\.modeSwitch\s*\{[\s\S]*width: fit-content;/);
+});
+
+test("AportesView inherits platform work-view theme surfaces", async () => {
+  const styles = await readFile(aportesStylesUrl, "utf8");
+
+  assert.match(styles, /background:\s*var\(--cf-workspace-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-sidebar-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
 });
 
 test("FaroExperience exposes Aportes as a secondary action, not a primary mode tab", async () => {

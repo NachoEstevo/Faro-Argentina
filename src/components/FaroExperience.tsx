@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus } from "lucide-react";
+import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -53,7 +53,12 @@ interface Props {
   initialEntryOpen?: boolean;
   initialMode?: "map" | "explorer" | "aportes" | "investigations";
   initialCaseId?: string;
+  initialExplorerPreset?: "selected" | null;
 }
+
+type InterfaceTheme = "dark" | "light";
+
+const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
 
 const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
   AR: { label: "Argentina", status: "CONTRAT.AR + Mapa de Inversiones" },
@@ -67,6 +72,7 @@ export default function FaroExperience({
   initialEntryOpen = true,
   initialMode = "map",
   initialCaseId,
+  initialExplorerPreset = null,
 }: Props) {
   const router = useRouter();
   const allCases = useMemo(
@@ -88,12 +94,33 @@ export default function FaroExperience({
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes" | "investigations">(initialMode);
+  const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(INTERFACE_THEME_STORAGE_KEY);
+      if (stored === "dark" || stored === "light") {
+        setInterfaceThemeState(stored);
+      }
+    } catch {
+      // Theme persistence is a convenience; platform views still render.
+    }
+  }, []);
+
+  const setInterfaceTheme = useCallback((theme: InterfaceTheme) => {
+    setInterfaceThemeState(theme);
+    try {
+      window.localStorage.setItem(INTERFACE_THEME_STORAGE_KEY, theme);
+    } catch {
+      // Ignore private-mode storage failures.
+    }
+  }, []);
 
   const yearBounds = useMemo(() => {
     const pool = filterExplorerCases({
@@ -361,6 +388,8 @@ export default function FaroExperience({
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
   const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
+  const isInvestigationsMode = viewMode === "investigations";
+  const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
 
   const shellClasses = [
     styles.shell,
@@ -375,7 +404,7 @@ export default function FaroExperience({
   }, [showMapChrome]);
 
   return (
-    <main className={shellClasses}>
+    <main className={shellClasses} data-platform-theme={activePlatformTheme}>
       <div className={styles.mapArea}>
         <div className={styles.leafletHost}>
           {viewMode === "map" ? (
@@ -483,9 +512,9 @@ export default function FaroExperience({
             </button>
             <button
               type="button"
-              className={styles.floatingToggleButton}
+              className={`${styles.floatingToggleButton} ${isInvestigationsMode ? styles.active : ""}`}
               onClick={() => setViewMode("investigations")}
-              aria-pressed={false}
+              aria-pressed={isInvestigationsMode}
             >
               <FolderOpen size={13} aria-hidden />
               Carpetas
@@ -510,6 +539,13 @@ export default function FaroExperience({
         </div>
       )}
 
+      {viewMode !== "map" && (
+        <InterfaceThemeToggle
+          theme={interfaceTheme}
+          onThemeChange={setInterfaceTheme}
+        />
+      )}
+
       {viewMode === "explorer" && (
         <ExplorerView
           cases={allCases}
@@ -524,6 +560,7 @@ export default function FaroExperience({
           onSwitchToMap={() => setViewMode("map")}
           onSwitchToInvestigations={() => setViewMode("investigations")}
           onSwitchToAportes={() => setViewMode("aportes")}
+          initialPreset={initialExplorerPreset}
         />
       )}
 
@@ -582,6 +619,37 @@ export default function FaroExperience({
         />
       )}
     </main>
+  );
+}
+
+function InterfaceThemeToggle({
+  theme,
+  onThemeChange,
+}: {
+  theme: InterfaceTheme;
+  onThemeChange: (theme: InterfaceTheme) => void;
+}) {
+  return (
+    <div className={styles.interfaceThemeDock} role="group" aria-label="Tema de interfaz">
+      <button
+        type="button"
+        className={`${styles.interfaceThemeButton} ${theme === "light" ? styles.interfaceThemeButtonActive : ""}`}
+        onClick={() => onThemeChange("light")}
+        aria-pressed={theme === "light"}
+      >
+        <Sun size={13} aria-hidden />
+        <span>Claro</span>
+      </button>
+      <button
+        type="button"
+        className={`${styles.interfaceThemeButton} ${theme === "dark" ? styles.interfaceThemeButtonActive : ""}`}
+        onClick={() => onThemeChange("dark")}
+        aria-pressed={theme === "dark"}
+      >
+        <Moon size={13} aria-hidden />
+        <span>Oscuro</span>
+      </button>
+    </div>
   );
 }
 

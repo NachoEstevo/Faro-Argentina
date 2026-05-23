@@ -1,4 +1,7 @@
-import { Database, History, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { Database, FileSearch, History, ShieldCheck } from "lucide-react";
+
+import { CURATED_CASES } from "@/data/curatedCases";
 import styles from "./RegionalMap.module.css";
 
 interface Props {
@@ -23,6 +26,16 @@ export default function TrustStrip({ totalCases, lastUpdated }: Props) {
         <History size={12} aria-hidden className={styles.trustMuted} />
         Última actualización: {lastUpdated}
       </span>
+      <span className={styles.trustDivider} aria-hidden />
+      <Link
+        href="/pais/AR?mode=explorer&preset=selected"
+        className={styles.trustSelectedLink}
+        aria-label={`Abrir ${CURATED_CASES.length.toLocaleString("es-AR")} expedientes seleccionados`}
+      >
+        <FileSearch size={12} aria-hidden />
+        <span className={styles.trustSelectedFull}>Expedientes seleccionados</span>
+        <span className={styles.trustSelectedShort}>Seleccionados</span>
+      </Link>
     </div>
   );
 }

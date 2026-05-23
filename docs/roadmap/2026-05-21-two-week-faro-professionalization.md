@@ -156,6 +156,27 @@ Acceptance:
 - all claims are grounded in official sources or clearly labeled as product plans;
 - presenter can explain receipts and caveats without technical deep dive.
 
+### 8. Casos Curados Institucionales
+
+Goal: offer a small set of strong entry points without turning the product into
+a forced demo.
+
+Deliverables:
+
+- curated case metadata tied to real Faro case ids;
+- map callouts only for cases with validated official geometry;
+- documentary/data-gap cases in a separate editorial panel;
+- visible source and limit text on every curated card;
+- no required minimum count beyond the cases that are defensible.
+
+Acceptance:
+
+- every curated case has receipt and caveat;
+- non-map cases are not drawn on the map;
+- judicial context is labeled as context, not a conclusion;
+- release review checks government-endorsement risk, accusation drift and
+  judicial-overclaiming before publish.
+
 ## Do Not Do During These Two Weeks
 
 - Do not add public accusations, rankings of guilt, fraud scores or corruption

@@ -5,6 +5,8 @@ node_modules/
 *.log
 *-preview.png
 public/exports/
+.playwright-cli/
+.superpowers/
 .faro-contributions/
 .env
 .env.*

@@ -9,7 +9,6 @@ import L from "leaflet";
 
 import type { CountryCode } from "@/lib/data/countries";
 import { COUNTRIES, isCountryCode } from "@/lib/data/countries";
-import FeaturedCasesOverlay from "./FeaturedCasesOverlay";
 
 const ESRI_IMAGERY_URL =
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
@@ -167,9 +166,7 @@ export default function CountryMap({ geojson }: Props) {
         noWrap
       />
       <GeoJSON data={geojson} onEachFeature={onEachFeature} />
-      <FeaturedCasesOverlay />
       <SyncView center={[-32, -75]} zoom={4} />
     </MapContainer>
   );
 }
-

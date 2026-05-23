@@ -49,7 +49,7 @@ const contributionTypes = [
   },
   {
     id: "add_photo",
-    label: "Subir foto",
+    label: "Subir archivo/foto",
     description: "Material propio para revisión privada.",
     icon: Camera,
   },
@@ -139,8 +139,8 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
         <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>
-          Aportá una fuente, subí una foto, corregí un dato o sugerí una pista verificable.
-          Todo lo enviado pasa por revisión antes de usarse en Faro.
+          Aportá una fuente, subí un archivo o foto, corregí un dato o sugerí una pista verificable.
+          Todo material enviado pasa por revisión antes de usarse en Faro.
         </p>
         <div className={styles.rules} aria-label="Reglas de revisión">
           <div className={styles.rule}>
@@ -230,15 +230,15 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 <input className={styles.input} name="capturedAt" type="date" />
               </label>
             </div>
-            <h3 className={styles.subsectionTitle}>Fotos privadas</h3>
+            <h3 className={styles.subsectionTitle}>Archivos privados</h3>
             <div className={styles.dropzone}>
               <label className={styles.field}>
-                <span className={styles.label}>JPG, PNG o WebP. Hasta 5 archivos, 10 MB cada uno.</span>
+                <span className={styles.label}>JPG, PNG, WebP o PDF. Hasta 5 archivos, 10 MB cada uno.</span>
                 <input
                   className={styles.fileInput}
                   name="attachmentsInput"
                   type="file"
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/jpeg,image/png,image/webp,application/pdf"
                   multiple
                   onChange={handleFiles}
                 />

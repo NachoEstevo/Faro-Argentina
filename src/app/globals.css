@@ -25,7 +25,6 @@
   --cf-font-heading: var(--cf-font-heading-src), "Funnel Sans", system-ui, sans-serif;
   --cf-font-body: var(--cf-font-body-src), "Geist", system-ui, sans-serif;
   --cf-font-data: var(--cf-font-data-src), "Geist Mono", ui-monospace, monospace;
-
   /* Legacy Faro Amber aliases — used by FaroExperience and CaseDetails. */
   --faro-bg: var(--cf-bg);
   --faro-panel: rgba(22, 26, 34, 0.9);
@@ -69,7 +68,7 @@ a {
 
 .faroShell {
   position: relative;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
   background: #111;
@@ -152,6 +151,13 @@ a {
     linear-gradient(120deg, rgba(22, 20, 16, 0.92), rgba(8, 7, 5, 0.96)),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 42px),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 42px);
+}
+
+[data-platform-theme="light"] .explorerBackdrop {
+  background:
+    linear-gradient(120deg, rgba(247, 249, 252, 0.96), rgba(238, 243, 248, 0.96)),
+    repeating-linear-gradient(0deg, rgba(24, 32, 43, 0.035) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(24, 32, 43, 0.035) 0 1px, transparent 1px 42px);
 }
 
 .leaflet-control-zoom a {

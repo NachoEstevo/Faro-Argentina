@@ -145,3 +145,23 @@ test("ExplorerView only offers country-specific search scopes", async () => {
   assert.doesNotMatch(source, /Todos/);
   assert.doesNotMatch(source, /countryScope === "ALL"/);
 });
+
+test("ExplorerView supports a closed selected-expedientes preset", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /initialPreset/);
+  assert.match(source, /CURATED_CASES/);
+  assert.match(source, /selectedCaseIds/);
+  assert.match(source, /Expedientes seleccionados/);
+  assert.match(source, /Ver todos los expedientes|Limpiar filtro/);
+  assert.match(source, /preset === "selected"/);
+  assert.match(source, /selectedDetailCase/);
+  assert.match(source, /selectedCaseIds\.has\(selectedCase\.id\)/);
+  assert.match(source, /clearPreset/);
+  assert.match(source, /useSearchParams/);
+  assert.match(source, /\.delete\("preset"\)/);
+  assert.match(source, /router\.replace/);
+  assert.match(source, /presetScopedCases/);
+  assert.match(css, /\.presetBanner/);
+});

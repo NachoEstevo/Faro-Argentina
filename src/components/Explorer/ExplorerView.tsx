@@ -14,8 +14,10 @@ import {
   PanelLeftClose,
   Search,
 } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { addCaseToStoredInvestigationWorkspace } from "@/lib/client/investigationWorkspaceStorage";
+import { CURATED_CASES } from "@/data/curatedCases";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
 import {
@@ -51,6 +53,7 @@ interface Props {
   onSwitchToMap: () => void;
   onSwitchToInvestigations: () => void;
   onSwitchToAportes: () => void;
+  initialPreset?: ExplorerPreset;
 }
 
 const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
@@ -71,6 +74,7 @@ const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string
 ];
 
 type ExplorerDetailTab = "resumen" | "dinero" | "actores" | "evidencia" | "mapa" | "relacionados";
+type ExplorerPreset = "selected" | null;
 
 const DETAIL_TABS: Array<{ id: ExplorerDetailTab; label: string }> = [
   { id: "resumen", label: "Resumen" },
@@ -93,19 +97,35 @@ export default function ExplorerView({
   onSwitchToMap,
   onSwitchToInvestigations,
   onSwitchToAportes,
+  initialPreset = null,
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [countryScope, setCountryScope] = useState<CountryCode>(selectedCountry);
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
   const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   const [folderStatus, setFolderStatus] = useState<{ caseId: string; message: string } | null>(null);
+  const [preset, setPreset] = useState<ExplorerPreset>(initialPreset);
 
   const countries = useMemo(() => [countryScope], [countryScope]);
+  const selectedCaseIds = useMemo(
+    () => new Set(CURATED_CASES.map((caseFile) => caseFile.caseId)),
+    [],
+  );
+  const presetScopedCases = useMemo(
+    () =>
+      preset === "selected"
+        ? cases.filter((caseFile) => selectedCaseIds.has(caseFile.id))
+        : cases,
+    [cases, preset, selectedCaseIds],
+  );
 
   const countryAll = useMemo(
-    () => cases.filter((caseFile) => caseFile.countryCode === countryScope),
-    [cases, countryScope],
+    () => presetScopedCases.filter((caseFile) => caseFile.countryCode === countryScope),
+    [countryScope, presetScopedCases],
   );
 
   const yearBounds = useMemo(() => {
@@ -145,11 +165,16 @@ export default function ExplorerView({
     return () => window.removeEventListener("keydown", handler);
   }, [selectedCase, onClearSelection]);
 
+  const selectedDetailCase =
+    selectedCase && (preset !== "selected" || selectedCaseIds.has(selectedCase.id))
+      ? selectedCase
+      : null;
+
   const yearScopedCases = useMemo(
-    () => cases.filter((caseFile) =>
+    () => presetScopedCases.filter((caseFile) =>
       caseFile.year === null || (caseFile.year >= yearFrom && caseFile.year <= yearTo),
     ),
-    [cases, yearFrom, yearTo],
+    [presetScopedCases, yearFrom, yearTo],
   );
 
   const explorer = useMemo(
@@ -181,7 +206,17 @@ export default function ExplorerView({
     [explorer.rows, page],
   );
 
+  const clearPreset = () => {
+    if (preset !== "selected") return;
+    setPreset(null);
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.delete("preset");
+    const nextQuery = nextSearchParams.toString();
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+  };
+
   const resetFilters = () => {
+    clearPreset();
     setActiveFacets([]);
     setGeometryFilter("any");
     setQuery("");
@@ -190,17 +225,44 @@ export default function ExplorerView({
   };
 
   const selectCountryScope = (code: CountryCode) => {
+    clearPreset();
     setCountryScope(code);
     setActiveFacets([]);
     onSelectCountry(code);
   };
 
   const toggleFacet = (facet: InvestigatorFacet) => {
+    clearPreset();
     setActiveFacets((prev) => {
       const exists = prev.some((active) => isSameFacet(active, facet));
       if (exists) return prev.filter((active) => !isSameFacet(active, facet));
       return [...prev, facet];
     });
+  };
+
+  const clearActiveFacets = () => {
+    clearPreset();
+    setActiveFacets([]);
+  };
+
+  const handleGeometryFilterChange = (value: InvestigatorGeometryFilter) => {
+    clearPreset();
+    setGeometryFilter(value);
+  };
+
+  const handleYearFromChange = (value: number) => {
+    clearPreset();
+    setYearFrom(value);
+  };
+
+  const handleYearToChange = (value: number) => {
+    clearPreset();
+    setYearTo(value);
+  };
+
+  const handleQueryChange = (value: string) => {
+    clearPreset();
+    setQuery(value);
   };
 
   const saveRowToFolder = (event: MouseEvent<HTMLButtonElement>, row: InvestigatorCaseRow) => {
@@ -245,7 +307,7 @@ export default function ExplorerView({
                       type="radio"
                       name="explorer-geometry"
                       checked={isChecked}
-                      onChange={() => setGeometryFilter(option.id)}
+                      onChange={() => handleGeometryFilterChange(option.id)}
                     />
                     <span className={`${styles.checkDot} ${geometryDotClass(option.id, styles)}`} aria-hidden />
                     <span className={styles.checkLabel}>{option.label}</span>
@@ -265,8 +327,8 @@ export default function ExplorerView({
                 max={yearBounds.max}
                 from={yearFrom}
                 to={yearTo}
-                onFromChange={setYearFrom}
-                onToChange={setYearTo}
+                onFromChange={handleYearFromChange}
+                onToChange={handleYearToChange}
               />
             </div>
           </section>
@@ -279,7 +341,7 @@ export default function ExplorerView({
                 Pivots
               </p>
               {activeFacets.length > 0 && (
-                <button type="button" className={styles.sectionLink} onClick={() => setActiveFacets([])}>
+                <button type="button" className={styles.sectionLink} onClick={clearActiveFacets}>
                   Quitar todo
                 </button>
               )}
@@ -336,9 +398,9 @@ export default function ExplorerView({
         </div>
       </aside>
       <main className={styles.main}>
-        {selectedCase ? (
+        {selectedDetailCase ? (
           <ExplorerDetail
-            caseFile={selectedCase}
+            caseFile={selectedDetailCase}
             pool={countryAll}
             onBack={onClearSelection}
             onSelectCase={onSelectCase}
@@ -396,12 +458,27 @@ export default function ExplorerView({
           </div>
         </header>
         <div className={styles.searchWrap}>
+          {preset === "selected" && (
+            <section className={styles.presetBanner} aria-label="Expedientes seleccionados">
+              <div>
+                <p className={styles.presetEyebrow}>Selección curada</p>
+                <h2>Expedientes seleccionados</h2>
+                <p>
+                  Lista breve de casos con recibos, caveats y próximos pasos claros.
+                  No reemplaza una búsqueda completa.
+                </p>
+              </div>
+              <button type="button" className={styles.presetClearButton} onClick={clearPreset}>
+                Ver todos los expedientes
+              </button>
+            </section>
+          )}
           <label className={styles.searchBox}>
             <Search size={15} aria-hidden />
             <input
               type="text"
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => handleQueryChange(event.target.value)}
               placeholder="Buscar proveedor, organismo, fuente, receipt, señal o expediente…"
               aria-label="Buscar"
             />

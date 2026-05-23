@@ -9,6 +9,7 @@ const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.ur
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", import.meta.url);
+const investigationsStylesUrl = new URL("../src/components/Investigations/InvestigationsView.module.css", import.meta.url);
 
 test("InvestigationsView manages local workspaces, analysis and ZIP export", async () => {
   const source = [
@@ -68,6 +69,16 @@ test("FaroExperience keeps private modes isolated from the map sidebar", async (
   assert.match(source, /{showMapChrome && <MobileHeader/);
   assert.match(source, /{showMapChrome && \(\s*<CountrySidebar/s);
   assert.match(source, /const showOverlayChrome = viewMode === "map" \|\| viewMode === "explorer";/);
+});
+
+test("InvestigationsView inherits platform work-view theme surfaces", async () => {
+  const styles = await readFile(investigationsStylesUrl, "utf8");
+
+  assert.match(styles, /background:\s*var\(--cf-workspace-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-sidebar-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
+  assert.match(styles, /background:\s*var\(--cf-workspace-analysis-bg/);
 });
 
 test("country route can open investigations mode directly", async () => {

@@ -1,11 +1,51 @@
 .shell {
   position: relative;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
   background: var(--cf-bg);
   color: var(--cf-text);
   --sidebar-width: 360px;
+  --cf-workspace-bg:
+    linear-gradient(135deg, rgba(13, 15, 19, 0.98), rgba(18, 26, 34, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 42px);
+  --cf-workspace-sidebar-bg: rgba(13, 15, 19, 0.64);
+  --cf-workspace-panel-bg: rgba(21, 28, 35, 0.58);
+  --cf-workspace-card-bg: rgba(21, 28, 35, 0.54);
+  --cf-workspace-card-bg-muted: rgba(13, 15, 19, 0.42);
+  --cf-workspace-input-bg: rgba(13, 15, 19, 0.78);
+  --cf-workspace-analysis-bg: rgba(21, 28, 35, 0.58);
+}
+
+.shell[data-platform-theme="light"] {
+  --cf-bg: #f5f7fa;
+  --cf-bg-elev: #ffffff;
+  --cf-bg-overlay: #eef3f7;
+  --cf-bg-surface: #f8fafc;
+  --cf-border: #d8e0ea;
+  --cf-border-strong: #acbac9;
+  --cf-text: #17202b;
+  --cf-text-secondary: #485465;
+  --cf-text-muted: #748092;
+  --cf-accent: #2e7db3;
+  --cf-accent-hi: #145b86;
+  --cf-accent-dim: #6ba7cd;
+  --cf-accent-faint: #e3f1fa;
+  --cf-on-accent: #ffffff;
+  --cf-state-verified: #2f855a;
+  --cf-state-caution: #986f13;
+  --cf-state-flag: #b65b3b;
+  --cf-shadow-pop: 0 20px 40px rgba(20, 32, 44, 0.16);
+  --cf-shadow-soft: 0 12px 32px rgba(20, 32, 44, 0.12);
+  --cf-workspace-bg:
+    linear-gradient(135deg, rgba(247, 249, 252, 0.98), rgba(238, 243, 248, 0.96)),
+    repeating-linear-gradient(90deg, rgba(24, 32, 43, 0.035) 0 1px, transparent 1px 42px);
+  --cf-workspace-sidebar-bg: rgba(255, 255, 255, 0.86);
+  --cf-workspace-panel-bg: #ffffff;
+  --cf-workspace-card-bg: #ffffff;
+  --cf-workspace-card-bg-muted: #eef3f7;
+  --cf-workspace-input-bg: #ffffff;
+  --cf-workspace-analysis-bg: #ffffff;
 }
 
 .shellCollapsed {
@@ -746,6 +786,49 @@
   box-shadow: 0 0 0 3px rgba(90, 169, 229, 0.18);
 }
 
+/* --- Work-view theme control --------------------------------------- */
+
+.interfaceThemeDock {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 65;
+  display: inline-flex;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-bg-elev);
+  box-shadow: var(--cf-shadow-soft);
+}
+
+.interfaceThemeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 32px;
+  min-width: 78px;
+  border: 0;
+  border-radius: var(--cf-radius-sm);
+  background: transparent;
+  color: var(--cf-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.interfaceThemeButton:hover {
+  background: var(--cf-bg-surface);
+  color: var(--cf-text);
+}
+
+.interfaceThemeButtonActive,
+.interfaceThemeButtonActive:hover {
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
+}
+
 @media (max-width: 600px) {
   .mapLegend {
     right: 12px;
@@ -757,6 +840,20 @@
   }
   .mapLegendList em {
     font-size: 10px;
+  }
+
+  .interfaceThemeDock {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .interfaceThemeButton {
+    min-width: 42px;
+    padding: 0 10px;
+  }
+
+  .interfaceThemeButton span {
+    display: none;
   }
 }
 
@@ -833,20 +930,6 @@
   pointer-events: none;
   position: absolute;
   inset: 0;
-}
-
-.featuredHost {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 12;
-  opacity: 1;
-  transition: opacity 360ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.featuredHostMuted {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .welcomeLayer {
@@ -1206,6 +1289,27 @@
   flex-shrink: 0;
 }
 
+.trustSelectedLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--cf-accent-hi);
+  font-family: var(--cf-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.trustSelectedLink:hover {
+  color: var(--cf-text);
+  transform: translateY(-1px);
+}
+
+.trustSelectedShort {
+  display: none;
+}
+
 /* --- MOBILE HEADER + DRAWER ----------------------------------------- */
 
 .mobileHeader {
@@ -1396,6 +1500,28 @@
 
   .trustItem strong {
     font-size: 11px;
+  }
+
+  .trustSelectedLink {
+    font-size: 11px;
+  }
+
+  .trustSelectedFull {
+    display: none;
+  }
+
+  .trustSelectedShort {
+    display: inline;
+  }
+}
+
+@media (max-width: 1280px) {
+  .trustSelectedFull {
+    display: none;
+  }
+
+  .trustSelectedShort {
+    display: inline;
   }
 }
 

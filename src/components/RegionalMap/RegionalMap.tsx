@@ -109,18 +109,6 @@ export default function RegionalMap({ geojson, totalCases, lastUpdated, syncLabe
         <FloatingModeToggle />
         <TrustStrip totalCases={totalCases} lastUpdated={lastUpdated} />
       </div>
-      {/* Featured-cases overlay portals into here so its dots and cards
-          sit above the vignette layer instead of being dimmed by it.
-          While the welcome overlay is visible the host fades out so it
-          doesn't compete with the headline + CTA. */}
-      <div
-        id="faro-featured-host"
-        className={`${styles.featuredHost} ${overlayDismissed ? "" : styles.featuredHostMuted}`}
-        aria-hidden
-      />
-      {/* Welcome lives on its own stacking level above the featured
-          callouts so the headline and CTA are always the top of the
-          visual hierarchy on first load. */}
       <div className={styles.welcomeLayer}>
         <WelcomeOverlay dismissed={overlayDismissed} onCTA={handleCTA} />
       </div>
