@@ -17,3 +17,4 @@ public/exports/
 
 # Local MCP server config (per-developer paths)
 .mcp.json
+.vercel
