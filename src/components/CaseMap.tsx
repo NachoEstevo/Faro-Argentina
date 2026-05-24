@@ -21,8 +21,9 @@ interface Props {
   waybackState: WaybackState;
 }
 
-const CARTODB_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-const CARTODB_ATTRIBUTION = "&copy; OpenStreetMap contributors &copy; CARTO";
+const ARGENMAP_DARK_URL =
+  "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/argenmap_oscuro@EPSG%3A3857@png/{z}/{x}/{-y}.png";
+const ARGENMAP_ATTRIBUTION = "Mapa base: Instituto Geográfico Nacional - Argenmap";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 
 export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase, waybackState }: Props) {
@@ -67,7 +68,7 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
             maxNativeZoom={17}
           />
         ) : (
-          <TileLayer attribution={CARTODB_ATTRIBUTION} url={CARTODB_URL} />
+          <TileLayer attribution={ARGENMAP_ATTRIBUTION} url={ARGENMAP_DARK_URL} />
         )}
         <ZoomControl position="bottomright" />
         <MapFocus

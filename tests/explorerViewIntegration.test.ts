@@ -138,6 +138,7 @@ test("ExplorerView renders the approved tabbed case detail structure", async () 
   assert.match(source, /Relacionados/);
   assert.match(css, /\.moneyTrailStrip/);
   assert.match(css, /\.detailTabs/);
+  assert.match(css, /\.detailTabButtonActive:hover\s*\{[\s\S]*color: var\(--cf-on-accent\);[\s\S]*\}/);
   assert.match(css, /\.detailTabPanel/);
 });
 

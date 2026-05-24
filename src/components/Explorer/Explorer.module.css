@@ -1276,6 +1276,10 @@
   color: var(--cf-on-accent);
 }
 
+.detailTabButtonActive:hover {
+  color: var(--cf-on-accent);
+}
+
 .detailTabPanel {
   display: grid;
   gap: 14px;
