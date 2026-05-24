@@ -6,11 +6,7 @@ import {
   CloudDownload,
   CloudUpload,
   Download,
-  FileSearch,
-  FolderOpen,
   LogIn,
-  Map as MapIcon,
-  MessageSquarePlus,
   Plus,
   Send,
   Trash2,
@@ -25,6 +21,7 @@ import {
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
 import { parseInvestigationAnalysisBlocks } from "@/lib/data/investigationAnalysisText";
+import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./InvestigationsView.module.css";
 
 interface SidebarProps {
@@ -106,26 +103,19 @@ export function InvestigationsSidebar({
   syncStatusText,
   syncIsError,
 }: SidebarProps) {
+  function switchPlatformMode(mode: PlatformMode) {
+    if (mode === "map") onSwitchToMap();
+    else if (mode === "explorer") onSwitchToExplorer();
+    else if (mode === "aportes") onSwitchToAportes();
+  }
+
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.modeSwitch} role="group" aria-label="Modo de exploración">
-        <button type="button" className={styles.modeButton} onClick={onSwitchToMap}>
-          <MapIcon size={13} aria-hidden />
-          Mapa
-        </button>
-        <button type="button" className={styles.modeButton} onClick={onSwitchToExplorer}>
-          <FileSearch size={13} aria-hidden />
-          Explorar
-        </button>
-        <button type="button" className={styles.modeButton} onClick={onSwitchToAportes}>
-          <MessageSquarePlus size={13} aria-hidden />
-          Aportar
-        </button>
-        <button type="button" className={`${styles.modeButton} ${styles.activeMode}`} aria-pressed="true">
-          <FolderOpen size={13} aria-hidden />
-          Carpetas
-        </button>
-      </div>
+      <PlatformModeNav
+        activeMode="investigations"
+        onModeChange={switchPlatformMode}
+        variant="sidebar"
+      />
       <p className={styles.eyebrow}>Carpeta privada</p>
       <h1 className={styles.title}>Carpeta de investigación</h1>
       <p className={styles.intro}>

@@ -6,11 +6,7 @@ import {
   ChevronRight,
   Download,
   FileText,
-  FileSearch,
-  FolderOpen,
   FolderPlus,
-  Map as MapIcon,
-  MessageSquarePlus,
   PanelLeftClose,
   Search,
 } from "lucide-react";
@@ -41,6 +37,7 @@ import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 import { ContextualCitationsPanel } from "../ContextualCitations";
 import FaroMark from "../FaroMark";
+import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./Explorer.module.css";
 
 interface Props {
@@ -115,6 +112,13 @@ export default function ExplorerView({
     () => new Set(CURATED_CASES.map((caseFile) => caseFile.caseId)),
     [],
   );
+
+  function switchPlatformMode(mode: PlatformMode) {
+    if (mode === "map") onSwitchToMap();
+    else if (mode === "investigations") onSwitchToInvestigations();
+    else if (mode === "aportes") onSwitchToAportes();
+  }
+
   const presetScopedCases = useMemo(
     () =>
       preset === "selected"
@@ -411,33 +415,11 @@ export default function ExplorerView({
         <header className={styles.mainHeader}>
           <h1 className={styles.mainTitle}>Explorar</h1>
           <div className={styles.headerActions}>
-            <div className={styles.modeToggle} role="group" aria-label="Modo de exploración">
-              <button type="button" className={styles.modeToggleButton} onClick={onSwitchToMap}>
-                <MapIcon size={13} aria-hidden />
-                Mapa
-              </button>
-              <button
-                type="button"
-                className={`${styles.modeToggleButton} ${styles.modeToggleActive}`}
-                aria-pressed
-              >
-                <FileSearch size={13} aria-hidden />
-                Explorar
-              </button>
-              <button
-                type="button"
-                className={styles.modeToggleButton}
-                onClick={onSwitchToInvestigations}
-                aria-pressed={false}
-              >
-                <FolderOpen size={13} aria-hidden />
-                Carpetas
-              </button>
-            </div>
-            <button type="button" className={styles.contributeButton} onClick={onSwitchToAportes}>
-              <MessageSquarePlus size={13} aria-hidden />
-              Aportar
-            </button>
+            <PlatformModeNav
+              activeMode="explorer"
+              onModeChange={switchPlatformMode}
+              variant="header"
+            />
           </div>
           <div className={styles.countrySelector} role="group" aria-label="País">
             {COUNTRY_OPTIONS.map((country) => {

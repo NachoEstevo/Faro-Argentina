@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const explorerViewUrl = new URL("../src/components/Explorer/ExplorerView.tsx", import.meta.url);
 const explorerStylesUrl = new URL("../src/components/Explorer/Explorer.module.css", import.meta.url);
+const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 
 test("ExplorerView consumes the tested investigator explorer view model", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
@@ -98,7 +99,10 @@ test("ExplorerView promotes a readable report before technical JSON export", asy
 });
 
 test("ExplorerView lets investigators save expedientes into local case folders", async () => {
-  const source = await readFile(explorerViewUrl, "utf8");
+  const source = [
+    await readFile(explorerViewUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
   const css = await readFile(explorerStylesUrl, "utf8");
 
   assert.match(source, /addCaseToStoredInvestigationWorkspace/);

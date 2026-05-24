@@ -162,7 +162,7 @@ export default function CountrySidebar({
 
           <section className={styles.section} aria-labelledby="leads-button-heading">
             <p className={styles.eyebrow} id="leads-button-heading">
-              Alertas
+              Revisión
             </p>
             <button
               type="button"
@@ -175,7 +175,7 @@ export default function CountrySidebar({
               <AlertTriangle size={18} aria-hidden className={styles.cpLeadsButtonIcon} />
               <span className={styles.cpLeadsButtonLabel}>
                 <span className={styles.cpLeadsButtonTitle}>
-                  {leadsCount === 0 ? "Sin alertas para estos filtros" : "Casos a revisar"}
+                  {leadsCount === 0 ? "Sin prioridades para estos filtros" : "Prioridad de revisión"}
                 </span>
                 {leadsCount > 0 && (
                   <span className={styles.cpLeadsButtonCount}>

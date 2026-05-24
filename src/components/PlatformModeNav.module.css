@@ -1,0 +1,159 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+  pointer-events: auto;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: stretch;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-bg-overlay);
+}
+
+.item,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.item:not(:last-child) {
+  border-right: 1px solid var(--cf-border);
+}
+
+.item:hover,
+.secondary:hover {
+  color: var(--cf-text);
+  background: var(--cf-bg-surface);
+}
+
+.active,
+.active:hover,
+.secondaryActive,
+.secondaryActive:hover {
+  color: var(--cf-on-accent);
+  background: var(--cf-accent);
+}
+
+.secondary {
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text);
+}
+
+.secondary:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+}
+
+.secondaryActive:hover {
+  color: var(--cf-on-accent);
+}
+
+.floating {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header {
+  justify-content: flex-end;
+}
+
+.sidebar {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.sidebar .primary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+}
+
+.sidebar .item {
+  padding: 0 9px;
+}
+
+.sidebar .secondary {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .header {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .header .primary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    flex: 1 1 auto;
+  }
+
+  .header .secondary {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .floating {
+    top: 68px;
+    width: calc(100% - 24px);
+    justify-content: center;
+  }
+
+  .floating .primary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    flex: 1 1 auto;
+  }
+
+  .floating .secondary {
+    flex: 0 0 auto;
+  }
+
+  .item,
+  .secondary {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 430px) {
+  .root {
+    gap: 6px;
+  }
+
+  .item,
+  .secondary {
+    gap: 5px;
+    padding: 0 8px;
+  }
+}

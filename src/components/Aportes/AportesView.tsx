@@ -6,18 +6,15 @@ import {
   Camera,
   CheckCircle2,
   FilePlus2,
-  FileSearch,
   Flag,
-  FolderOpen,
   Link as LinkIcon,
-  Map as MapIcon,
-  MessageSquarePlus,
   Send,
   ShieldCheck,
   UserRoundX,
   UploadCloud,
 } from "lucide-react";
 
+import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./AportesView.module.css";
 
 interface Props {
@@ -156,27 +153,20 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
     setFiles(selected);
   }
 
+  function switchPlatformMode(mode: PlatformMode) {
+    if (mode === "map") onSwitchToMap();
+    else if (mode === "explorer") onSwitchToExplorer();
+    else if (mode === "investigations") onSwitchToInvestigations();
+  }
+
   return (
     <section className={styles.shell} aria-label="Aportes">
       <aside className={styles.sidebar}>
-        <div className={styles.modeSwitch} role="group" aria-label="Modo de exploracion">
-          <button type="button" className={styles.modeButton} onClick={onSwitchToMap}>
-            <MapIcon size={13} aria-hidden />
-            Mapa
-          </button>
-          <button type="button" className={styles.modeButton} onClick={onSwitchToExplorer}>
-            <FileSearch size={13} aria-hidden />
-            Explorar
-          </button>
-          <button type="button" className={`${styles.modeButton} ${styles.activeMode}`} aria-pressed="true">
-            <MessageSquarePlus size={13} aria-hidden />
-            Aportar
-          </button>
-          <button type="button" className={styles.modeButton} onClick={onSwitchToInvestigations}>
-            <FolderOpen size={13} aria-hidden />
-            Carpetas
-          </button>
-        </div>
+        <PlatformModeNav
+          activeMode="aportes"
+          onModeChange={switchPlatformMode}
+          variant="sidebar"
+        />
         <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>

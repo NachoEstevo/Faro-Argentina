@@ -20,42 +20,6 @@
   background: var(--cf-workspace-sidebar-bg, rgba(13, 15, 19, 0.64));
 }
 
-.modeSwitch {
-  display: inline-flex;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  border: 1px solid var(--cf-border);
-  border-radius: var(--cf-radius-md);
-  background: var(--cf-bg);
-}
-
-.modeButton {
-  display: inline-flex;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 7px;
-  min-height: 34px;
-  padding: 0 11px;
-  border: 0;
-  border-right: 1px solid var(--cf-border);
-  background: transparent;
-  color: var(--cf-text-muted);
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.modeButton:last-child {
-  border-right: 0;
-}
-
-.activeMode,
-.modeButton:hover {
-  color: var(--cf-on-accent);
-  background: var(--cf-accent);
-}
-
 .eyebrow {
   margin: 0;
   font-family: var(--cf-font-data);

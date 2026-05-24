@@ -7,6 +7,8 @@ const aportesStylesUrl = new URL("../src/components/Aportes/AportesView.module.c
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
+const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
+const platformModeNavStylesUrl = new URL("../src/components/PlatformModeNav.module.css", import.meta.url);
 const resourcesSectionUrl = new URL("../src/components/RegionalMap/ResourcesSection.tsx", import.meta.url);
 
 test("AportesView submits private contributions with file attachments", async () => {
@@ -67,12 +69,14 @@ test("AportesView does not surface raw JavaScript errors to users", async () => 
 });
 
 test("Aportes sidebar mode switch stays inside the sidebar", async () => {
-  const styles = await readFile(aportesStylesUrl, "utf8");
+  const source = await readFile(aportesViewUrl, "utf8");
+  const styles = await readFile(platformModeNavStylesUrl, "utf8");
 
-  assert.match(styles, /\.sidebar\s*\{[\s\S]*min-width: 0;[\s\S]*overflow: hidden;/);
-  assert.match(styles, /\.modeSwitch\s*\{[\s\S]*display: grid;[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);[\s\S]*width: 100%;[\s\S]*max-width: 100%;/);
-  assert.match(styles, /\.modeButton\s*\{[\s\S]*justify-content: center;[\s\S]*min-width: 0;/);
-  assert.doesNotMatch(styles, /\.modeSwitch\s*\{[\s\S]*width: fit-content;/);
+  assert.match(source, /<PlatformModeNav[\s\S]*activeMode="aportes"[\s\S]*variant="sidebar"/);
+  assert.match(styles, /\.sidebar \.primary\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);[\s\S]*width: 100%;/);
+  assert.match(styles, /\.sidebar \.item\s*\{[\s\S]*padding: 0 9px;/);
+  assert.match(styles, /\.sidebar \.secondary\s*\{[\s\S]*width: 100%;/);
+  assert.doesNotMatch(styles, /width: fit-content/);
 });
 
 test("AportesView inherits platform work-view theme surfaces", async () => {
@@ -88,15 +92,19 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
 });
 
 test("FaroExperience exposes Aportes as a secondary action, not a primary mode tab", async () => {
-  const source = await readFile(faroExperienceUrl, "utf8");
+  const source = [
+    await readFile(faroExperienceUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
 
   assert.match(source, /AportesView/);
-  assert.match(source, /"map" \| "explorer" \| "aportes"/);
+  assert.match(source, /type PlatformMode = "map" \| "explorer" \| "investigations" \| "aportes"/);
   assert.match(source, /viewMode === "aportes"/);
   assert.match(source, /MessageSquarePlus/);
   assert.match(source, /Aportar/);
-  assert.match(source, /styles\.floatingActionButton/);
-  assert.doesNotMatch(source, /aria-pressed=\{false\}[\s\S]*?Aportes[\s\S]*?<\/button>/);
+  assert.match(source, /mode="aportes"/);
+  assert.match(source, /styles\.secondary/);
+  assert.doesNotMatch(source, /Aportes[\s\S]*?aria-pressed=\{false\}/);
 });
 
 test("FaroExperience only enables Wayback for satellite-eligible map evidence", async () => {
@@ -115,10 +123,14 @@ test("country route can open the aportes mode directly", async () => {
 });
 
 test("regional landing exposes Aportes as a secondary action", async () => {
-  const source = await readFile(floatingToggleUrl, "utf8");
+  const source = [
+    await readFile(floatingToggleUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
   const resourcesSource = await readFile(resourcesSectionUrl, "utf8");
 
-  assert.match(source, /mode=aportes/);
+  assert.match(source, /buildPlatformModeHref/);
+  assert.match(source, /mode="aportes"/);
   assert.match(source, /Aportar/);
   assert.match(source, /MessageSquarePlus/);
   assert.match(resourcesSource, /Privacidad y seguridad/);

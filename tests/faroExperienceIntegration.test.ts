@@ -33,11 +33,12 @@ test("FaroExperience scopes light and dark themes to work views only", async () 
   assert.match(source, /const activePlatformTheme = viewMode === "map" \? "dark" : interfaceTheme;/);
   assert.match(source, /data-platform-theme=\{activePlatformTheme\}/);
   assert.match(source, /viewMode !== "map" && \(\s*<InterfaceThemeToggle/);
-  assert.match(source, /aria-label="Tema de interfaz"/);
-  assert.match(source, /Claro/);
-  assert.match(source, /Oscuro/);
+  assert.match(source, /const nextTheme: InterfaceTheme = theme === "dark" \? "light" : "dark";/);
+  assert.match(source, /aria-label=\{nextLabel\}/);
+  assert.match(source, /<ThemeIcon size=\{15\} aria-hidden \/>/);
+  assert.doesNotMatch(source, /<span>Claro<\/span>|<span>Oscuro<\/span>|role="group" aria-label="Tema de interfaz"/);
 
   assert.match(styles, /\.shell\[data-platform-theme="light"\]/);
-  assert.match(styles, /\.interfaceThemeDock/);
-  assert.match(styles, /\.interfaceThemeButtonActive/);
+  assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*width: 38px;[\s\S]*height: 38px;/);
+  assert.doesNotMatch(styles, /\.interfaceThemeButton|\.interfaceThemeButtonActive/);
 });

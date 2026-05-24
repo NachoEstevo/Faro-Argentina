@@ -7,6 +7,7 @@ const investigationsChromeUrl = new URL("../src/components/Investigations/Invest
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
+const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", import.meta.url);
 const investigationsStylesUrl = new URL("../src/components/Investigations/InvestigationsView.module.css", import.meta.url);
@@ -62,13 +63,16 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
 });
 
 test("FaroExperience exposes Carpetas from the main mode toggle", async () => {
-  const source = await readFile(faroExperienceUrl, "utf8");
+  const source = [
+    await readFile(faroExperienceUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
 
   assert.match(source, /InvestigationsView/);
-  assert.match(source, /"map" \| "explorer" \| "aportes" \| "investigations"/);
+  assert.match(source, /"map" \| "explorer" \| "investigations" \| "aportes"/);
   assert.match(source, /viewMode === "investigations"/);
   assert.match(source, /FolderOpen/);
-  assert.match(source, /setViewMode\("investigations"\)/);
+  assert.match(source, /switchViewMode\("investigations"\)/);
   assert.match(source, /Carpetas/);
   assert.doesNotMatch(source, /Mis carpetas/);
 });
@@ -100,11 +104,18 @@ test("country route can open investigations mode directly", async () => {
 });
 
 test("regional landing exposes Carpetas while aportes mode can still link to it", async () => {
-  const floatingSource = await readFile(floatingToggleUrl, "utf8");
+  const floatingSource = [
+    await readFile(floatingToggleUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
   const stylesSource = await readFile(regionalMapStylesUrl, "utf8");
-  const aportesSource = await readFile(aportesViewUrl, "utf8");
+  const aportesSource = [
+    await readFile(aportesViewUrl, "utf8"),
+    await readFile(platformModeNavUrl, "utf8"),
+  ].join("\n");
 
-  assert.match(floatingSource, /mode=investigations/);
+  assert.match(floatingSource, /buildPlatformModeHref/);
+  assert.match(floatingSource, /mode: "investigations"/);
   assert.match(floatingSource, /Carpetas/);
   assert.doesNotMatch(floatingSource, /Mis carpetas/);
   assert.match(floatingSource, /Explorar/);

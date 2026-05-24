@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, FileSearch, FolderOpen, Map as MapIcon, MessageSquarePlus, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { CaseDataset } from "@/lib/caseRepository";
@@ -34,6 +34,7 @@ import AportesView from "./Aportes/AportesView";
 import EntryGate from "./EntryGate";
 import ExplorerView from "./Explorer/ExplorerView";
 import InvestigationsView from "./Investigations/InvestigationsView";
+import PlatformModeNav, { buildPlatformModeHref, type PlatformMode } from "./PlatformModeNav";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
 import LeadsPanel from "./RegionalMap/LeadsPanel";
 import MapLegend from "./RegionalMap/MapLegend";
@@ -51,7 +52,7 @@ interface Props {
   explorerCases?: ExplorerCase[];
   initialCountry?: "AR";
   initialEntryOpen?: boolean;
-  initialMode?: "map" | "explorer" | "aportes" | "investigations";
+  initialMode?: PlatformMode;
   initialCaseId?: string;
   initialExplorerPreset?: "selected" | null;
 }
@@ -93,7 +94,7 @@ export default function FaroExperience({
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [traceMode, setTraceMode] = useState(false);
-  const [viewMode, setViewMode] = useState<"map" | "explorer" | "aportes" | "investigations">(initialMode);
+  const [viewMode, setViewMode] = useState<PlatformMode>(initialMode);
   const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -121,6 +122,14 @@ export default function FaroExperience({
       // Ignore private-mode storage failures.
     }
   }, []);
+
+  const switchViewMode = useCallback(
+    (mode: PlatformMode) => {
+      setViewMode(mode);
+      router.replace(buildPlatformModeHref(mode, selectedCountry), { scroll: false });
+    },
+    [router, selectedCountry],
+  );
 
   const yearBounds = useMemo(() => {
     const pool = filterExplorerCases({
@@ -199,7 +208,7 @@ export default function FaroExperience({
     }
 
     // Pre-compute the union of signal codes a case needs to expose to match
-    // the active "Hallazgo" chips. A case matches if it carries ANY of those
+    // the active signal chips. A case matches if it carries ANY of those
     // codes (OR within findings, AND across other filter groups).
     const findingCodes = new Set<string>();
     for (const finding of selectedFindings) {
@@ -388,7 +397,6 @@ export default function FaroExperience({
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
   const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
-  const isInvestigationsMode = viewMode === "investigations";
   const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
 
   const shellClasses = [
@@ -491,44 +499,11 @@ export default function FaroExperience({
             <ArrowLeft size={14} aria-hidden />
             <span>{selectedCaseId ? country.label : "Mapa general"}</span>
           </button>
-          <div className={styles.floatingToggle} role="group" aria-label="Modo de exploración">
-            <button
-              type="button"
-              className={`${styles.floatingToggleButton} ${viewMode === "map" ? styles.active : ""}`}
-              onClick={() => setViewMode("map")}
-              aria-pressed={viewMode === "map"}
-            >
-              <MapIcon size={13} aria-hidden />
-              Mapa
-            </button>
-            <button
-              type="button"
-              className={`${styles.floatingToggleButton} ${viewMode === "explorer" ? styles.active : ""}`}
-              onClick={() => setViewMode("explorer")}
-              aria-pressed={viewMode === "explorer"}
-            >
-              <FileSearch size={13} aria-hidden />
-              Explorar
-            </button>
-            <button
-              type="button"
-              className={`${styles.floatingToggleButton} ${isInvestigationsMode ? styles.active : ""}`}
-              onClick={() => setViewMode("investigations")}
-              aria-pressed={isInvestigationsMode}
-            >
-              <FolderOpen size={13} aria-hidden />
-              Carpetas
-            </button>
-          </div>
-          <button
-            type="button"
-            className={styles.floatingActionButton}
-            onClick={() => setViewMode("aportes")}
-            aria-label="Enviar aporte a revisión"
-          >
-            <MessageSquarePlus size={13} aria-hidden />
-            Aportar
-          </button>
+          <PlatformModeNav
+            activeMode={viewMode}
+            onModeChange={switchViewMode}
+            variant="floating"
+          />
           {viewMode === "map" && !selectedCase && (
             <MapLegend
               highCount={severityCounts.high}
@@ -557,9 +532,9 @@ export default function FaroExperience({
             setSelectedCaseId(caseId);
           }}
           onClearSelection={() => setSelectedCaseId("")}
-          onSwitchToMap={() => setViewMode("map")}
-          onSwitchToInvestigations={() => setViewMode("investigations")}
-          onSwitchToAportes={() => setViewMode("aportes")}
+          onSwitchToMap={() => switchViewMode("map")}
+          onSwitchToInvestigations={() => switchViewMode("investigations")}
+          onSwitchToAportes={() => switchViewMode("aportes")}
           initialPreset={initialExplorerPreset}
         />
       )}
@@ -567,9 +542,9 @@ export default function FaroExperience({
       {viewMode === "aportes" && (
         <AportesView
           selectedCountry={selectedCountry}
-          onSwitchToMap={() => setViewMode("map")}
-          onSwitchToExplorer={() => setViewMode("explorer")}
-          onSwitchToInvestigations={() => setViewMode("investigations")}
+          onSwitchToMap={() => switchViewMode("map")}
+          onSwitchToExplorer={() => switchViewMode("explorer")}
+          onSwitchToInvestigations={() => switchViewMode("investigations")}
         />
       )}
 
@@ -577,9 +552,9 @@ export default function FaroExperience({
         <InvestigationsView
           cases={allCases}
           selectedCountry={selectedCountry}
-          onSwitchToMap={() => setViewMode("map")}
-          onSwitchToExplorer={() => setViewMode("explorer")}
-          onSwitchToAportes={() => setViewMode("aportes")}
+          onSwitchToMap={() => switchViewMode("map")}
+          onSwitchToExplorer={() => switchViewMode("explorer")}
+          onSwitchToAportes={() => switchViewMode("aportes")}
         />
       )}
 
@@ -605,15 +580,15 @@ export default function FaroExperience({
       {entryOpen && (
         <EntryGate
           onStartGuide={() => {
-            setViewMode("map");
+            switchViewMode("map");
             setEntryOpen(false);
           }}
           onEnterMap={() => {
-            setViewMode("map");
+            switchViewMode("map");
             setEntryOpen(false);
           }}
           onEnterExplorer={() => {
-            setViewMode("explorer");
+            switchViewMode("explorer");
             setEntryOpen(false);
           }}
         />
@@ -629,27 +604,20 @@ function InterfaceThemeToggle({
   theme: InterfaceTheme;
   onThemeChange: (theme: InterfaceTheme) => void;
 }) {
+  const nextTheme: InterfaceTheme = theme === "dark" ? "light" : "dark";
+  const nextLabel = nextTheme === "dark" ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
+  const ThemeIcon = theme === "dark" ? Sun : Moon;
+
   return (
-    <div className={styles.interfaceThemeDock} role="group" aria-label="Tema de interfaz">
-      <button
-        type="button"
-        className={`${styles.interfaceThemeButton} ${theme === "light" ? styles.interfaceThemeButtonActive : ""}`}
-        onClick={() => onThemeChange("light")}
-        aria-pressed={theme === "light"}
-      >
-        <Sun size={13} aria-hidden />
-        <span>Claro</span>
-      </button>
-      <button
-        type="button"
-        className={`${styles.interfaceThemeButton} ${theme === "dark" ? styles.interfaceThemeButtonActive : ""}`}
-        onClick={() => onThemeChange("dark")}
-        aria-pressed={theme === "dark"}
-      >
-        <Moon size={13} aria-hidden />
-        <span>Oscuro</span>
-      </button>
-    </div>
+    <button
+      type="button"
+      className={styles.interfaceThemeDock}
+      onClick={() => onThemeChange(nextTheme)}
+      aria-label={nextLabel}
+      title={nextLabel}
+    >
+      <ThemeIcon size={15} aria-hidden />
+    </button>
   );
 }
 

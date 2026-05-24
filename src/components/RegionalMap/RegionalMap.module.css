@@ -793,40 +793,24 @@
   right: 18px;
   bottom: 18px;
   z-index: 65;
-  display: inline-flex;
-  gap: 3px;
-  padding: 4px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-md);
   background: var(--cf-bg-elev);
+  color: var(--cf-text-secondary);
   box-shadow: var(--cf-shadow-soft);
-}
-
-.interfaceThemeButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 32px;
-  min-width: 78px;
-  border: 0;
-  border-radius: var(--cf-radius-sm);
-  background: transparent;
-  color: var(--cf-text-muted);
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
-.interfaceThemeButton:hover {
+.interfaceThemeDock:hover {
+  border-color: var(--cf-accent);
   background: var(--cf-bg-surface);
-  color: var(--cf-text);
-}
-
-.interfaceThemeButtonActive,
-.interfaceThemeButtonActive:hover {
-  background: var(--cf-accent);
-  color: var(--cf-on-accent);
+  color: var(--cf-accent);
 }
 
 @media (max-width: 600px) {
@@ -845,15 +829,8 @@
   .interfaceThemeDock {
     right: 12px;
     bottom: 12px;
-  }
-
-  .interfaceThemeButton {
-    min-width: 42px;
-    padding: 0 10px;
-  }
-
-  .interfaceThemeButton span {
-    display: none;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -963,20 +940,6 @@
   );
 }
 
-.floatingToggle {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  background: var(--cf-bg-overlay);
-  border: 1px solid var(--cf-border);
-}
-
 .backToGlobal {
   position: absolute;
   top: 20px;
@@ -1010,61 +973,6 @@
   .backToGlobal {
     padding: 8px 10px;
   }
-}
-
-.floatingToggleButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: none;
-  background: transparent;
-  color: var(--cf-text-muted);
-  font-family: var(--cf-font-body);
-  font-size: 12px;
-  border-radius: 999px;
-  cursor: pointer;
-  text-decoration: none;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.floatingToggleButton:hover {
-  color: var(--cf-text);
-}
-
-.floatingToggleButton.active {
-  background: var(--cf-bg);
-  color: var(--cf-text);
-  border: 1px solid var(--cf-border-strong);
-}
-
-.floatingActionButton {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 34px;
-  padding: 0 14px;
-  border: 1px solid var(--cf-border);
-  border-radius: 999px;
-  background: rgba(13, 15, 19, 0.82);
-  color: var(--cf-text);
-  font-family: var(--cf-font-body);
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: var(--cf-shadow-soft);
-}
-
-.floatingActionButton:hover {
-  border-color: var(--cf-accent);
-  color: var(--cf-accent);
 }
 
 .welcomeOverlay {
@@ -1439,17 +1347,6 @@
     display: none;
   }
 
-  .floatingToggle {
-    top: 64px;
-  }
-
-  .floatingActionButton {
-    top: 106px;
-    right: 16px;
-    min-height: 32px;
-    padding: 0 12px;
-  }
-
   .welcomeHeadline {
     font-size: clamp(20px, 6vw, 26px);
     letter-spacing: -0.4px;
@@ -1542,24 +1439,6 @@
   .sidebar .section {
     flex-shrink: 0;
   }
-  .floatingToggle {
-    top: 56px;
-    padding: 2px;
-  }
-  .floatingActionButton {
-    top: 94px;
-    right: 14px;
-    min-height: 30px;
-    padding: 0 10px;
-    font-size: 12px;
-  }
-  .floatingToggleButton {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  .floatingToggleButton.active {
-    padding: 5px 11px;
-  }
   .welcomeOverlay {
     gap: 12px;
   }
@@ -1615,20 +1494,8 @@
   }
 }
 
-/* Ultra-wide: trust strip un poco más ancho, mode toggle más grande */
+/* Ultra-wide: trust strip un poco más ancho. */
 @media (min-width: 2400px) {
-  .floatingToggle {
-    padding: 6px;
-  }
-  .floatingToggleButton {
-    padding: 10px 22px;
-    font-size: 15px;
-  }
-  .floatingActionButton {
-    min-height: 42px;
-    padding: 0 20px;
-    font-size: 14px;
-  }
   .welcomeHeadline {
     font-size: clamp(38px, 3vw, 56px);
   }

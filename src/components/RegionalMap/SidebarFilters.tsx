@@ -148,7 +148,7 @@ export default function SidebarFilters({
       </div>
 
       <div className={styles.group}>
-        <span className={styles.groupLabel}>Hallazgo</span>
+        <span className={styles.groupLabel}>Señal</span>
         <div className={styles.chipColumn}>
           {FINDING_ORDER.map((finding) => {
             const active = value.findings.has(finding);

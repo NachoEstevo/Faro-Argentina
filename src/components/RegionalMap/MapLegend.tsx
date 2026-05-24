@@ -18,7 +18,7 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Revisar con prioridad</strong>
+            <strong>Prioridad de revisión</strong>
             <em>{highCount}</em>
           </span>
         </li>
@@ -28,7 +28,7 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Posibles señales</strong>
+            <strong>Con señal</strong>
             <em>{mediumCount}</em>
           </span>
         </li>
@@ -38,7 +38,7 @@ export default function MapLegend({ highCount, mediumCount, totalCount }: Props)
             aria-hidden
           />
           <span>
-            <strong>Sin alertas</strong>
+            <strong>Sin señal</strong>
             <em>{normalCount}</em>
           </span>
         </li>
