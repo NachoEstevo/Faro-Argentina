@@ -53,6 +53,29 @@ test("buildInvestigatorExplorer searches by supplier, source, record id, and sig
   assert.equal(signalSearch.rows.some((row) => row.primarySignal?.code === "single_bidder"), true);
 });
 
+test("buildInvestigatorExplorer searches by official location fields used by suggestions", () => {
+  const cases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1, {
+      workProvince: "CATAMARCA",
+      workDepartment: "BELÉN",
+      workLocality: "LONDRES",
+    }),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1, {
+      workProvince: "BUENOS AIRES",
+      workDepartment: "MERCEDES",
+      workLocality: "MERCEDES",
+    }),
+  ] as InvestigatorExplorerCase[];
+
+  const byProvince = buildInvestigatorExplorer(cases, { query: "CATAMARCA", limit: 20 });
+  const byDepartment = buildInvestigatorExplorer(cases, { query: "BELEN", limit: 20 });
+  const byLocality = buildInvestigatorExplorer(cases, { query: "LONDRES", limit: 20 });
+
+  assert.deepEqual(byProvince.rows.map((row) => row.caseId), ["AR-CONTRACT-381-1001-CON21"]);
+  assert.deepEqual(byDepartment.rows.map((row) => row.caseId), ["AR-CONTRACT-381-1001-CON21"]);
+  assert.deepEqual(byLocality.rows.map((row) => row.caseId), ["AR-CONTRACT-381-1001-CON21"]);
+});
+
 test("buildInvestigatorExplorer applies geometry, country, signal, and pivot filters", () => {
   const noGeometry = buildInvestigatorExplorer(allCases, {
     countries: ["AR"],
@@ -215,6 +238,9 @@ function buildExplorerFixture(
     agencyName?: string;
     coordinates?: { lat: number; lon: number } | null;
     supplierName?: string;
+    workProvince?: string;
+    workDepartment?: string;
+    workLocality?: string;
   } = {},
 ) {
   return {
@@ -239,6 +265,9 @@ function buildExplorerFixture(
     offerCount: bidderCount,
     supplierName: overrides.supplierName ?? "ANSAL CONSTRUCCIONES SRL",
     supplierDocument: "30-64071769-2",
+    workProvince: overrides.workProvince ?? null,
+    workDepartment: overrides.workDepartment ?? null,
+    workLocality: overrides.workLocality ?? null,
     receipt: createEvidenceReceipt({
       sourceId: "AR-CONTRATAR-CONTRATOS",
       sourceName: "CONTRAT.AR contratos",

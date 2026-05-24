@@ -4,7 +4,7 @@ import {
   formatBytes,
   formatDate,
   statusLabel,
-  statusOptions,
+  statusWorkflow,
   type Attachment,
   type Contribution,
   type ReviewLinkTarget,
@@ -51,6 +51,7 @@ export default function AdminAportesDetail({
     return <article className={styles.detail}><p className={styles.empty}>Seleccioná un aporte.</p></article>;
   }
   const lastReview = contribution.reviewTrail?.at(-1) ?? null;
+  const trail = contribution.reviewTrail ?? [];
   const links = contribution.reviewLinks ?? [];
   return (
     <article className={styles.detail}>
@@ -88,14 +89,30 @@ export default function AdminAportesDetail({
           <textarea value={note} onChange={(event) => onNoteChange(event.target.value)} />
         </label>
         <div className={styles.actionGrid}>
-          {statusOptions.filter((option) => option.value !== "submitted").map((option) => (
+          {statusWorkflow.filter((option) => option.value !== "submitted").map((option) => (
             <button key={option.value} type="button" onClick={() => onUpdateStatus(option.value)} disabled={loading}>
               {option.value === "approved" && <CheckCircle2 size={14} aria-hidden />}
-              {option.label}
+              {option.actionLabel}
             </button>
           ))}
         </div>
         {lastReview && <p className={styles.lastReview}>Última nota: {lastReview.note || "sin nota"} · {lastReview.reviewerName}</p>}
+      </section>
+      <section className={styles.timeline} aria-label="Trazabilidad interna">
+        <h4>Trazabilidad interna</h4>
+        {trail.length === 0 ? (
+          <p className={styles.empty}>Todavía no hay eventos internos. El aporte figura como {statusLabel(contribution.status)}.</p>
+        ) : (
+          <ol>
+            {trail.map((entry) => (
+              <li key={entry.id}>
+                <span>{formatDate(entry.createdAt)} · {entry.reviewerName}</span>
+                <strong>{statusLabel(entry.status)}</strong>
+                <p>{entry.note || "Sin nota interna."}</p>
+              </li>
+            ))}
+          </ol>
+        )}
       </section>
       <section className={styles.linkBox}>
         <div className={styles.linkIntro}>

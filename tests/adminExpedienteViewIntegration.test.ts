@@ -13,10 +13,12 @@ test("/admin/expediente/[id] renders a private associated-material view", async 
 
   assert.match(source, /AdminExpedienteReviewView/);
   assert.match(source, /\/api\/admin\/aportes\/linked/);
-  assert.match(source, /Código privado/);
+  assert.match(source, /Cuenta reviewer/);
   assert.match(source, /Material asociado/);
   assert.match(source, /Aportes vinculados/);
   assert.match(source, /No modifica el expediente público/);
   assert.match(source, /Abrir archivo privado/);
+  assert.doesNotMatch(source, /Código privado/);
+  assert.doesNotMatch(source, /x-faro-admin-code/);
   assert.doesNotMatch(source, /Publicar ahora|Publicar aporte|Caso probado|Fraude|Corrupción/);
 });

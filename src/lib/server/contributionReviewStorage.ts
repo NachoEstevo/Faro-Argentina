@@ -7,7 +7,14 @@ import {
   type UserContribution,
 } from "../data/userContributions.ts";
 import { getCaseById } from "../caseRepository.ts";
+import type { FaroAuthenticatedUser } from "./faroAuth.ts";
+import {
+  appendContributionReviewEvent,
+  appendContributionReviewLink,
+  hydrateContributionsWithReviewState,
+} from "./contributionReviewDb.ts";
 import { getContributionStorageRoot } from "./contributionStorage.ts";
+import { isProductDatabaseConfigured } from "./productDb.ts";
 import {
   getR2Config,
   getR2Object,
@@ -16,7 +23,7 @@ import {
   type R2Config,
 } from "./r2ObjectStorage.ts";
 
-export type ContributionReviewStorageMode = "local" | "r2";
+export type ContributionReviewStorageMode = "local" | "r2" | "neon";
 export const CONTRIBUTION_REVIEW_LINK_TARGETS = ["case", "workspace"] as const;
 export type ContributionReviewLinkTarget = (typeof CONTRIBUTION_REVIEW_LINK_TARGETS)[number];
 
@@ -54,6 +61,7 @@ export interface UpdateContributionReviewInput {
   status: ContributionReviewStatus;
   note?: string;
   reviewerName?: string;
+  reviewer?: FaroAuthenticatedUser;
   now?: Date;
 }
 
@@ -64,6 +72,7 @@ export interface LinkContributionReviewInput {
   targetLabel?: string;
   note?: string;
   reviewerName?: string;
+  reviewer?: FaroAuthenticatedUser;
   now?: Date;
 }
 
@@ -108,9 +117,12 @@ export async function listContributionReviews(): Promise<ContributionReviewInbox
   const submissions = r2Config
     ? await listR2Contributions(r2Config)
     : await listLocalContributions();
-  const sorted = submissions.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const hydrated = isProductDatabaseConfigured()
+    ? await hydrateContributionsWithReviewState(submissions)
+    : submissions;
+  const sorted = hydrated.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return {
-    storageMode: r2Config ? "r2" : "local",
+    storageMode: isProductDatabaseConfigured() ? "neon" : r2Config ? "r2" : "local",
     submissions: sorted,
     stats: buildStats(sorted),
   };
@@ -169,6 +181,28 @@ export async function linkContributionToReviewTarget(
     ? await readR2ContributionForUpdate(r2Config, input.submissionId)
     : null;
   const contribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
+  if (isProductDatabaseConfigured()) {
+    const [hydrated] = await hydrateContributionsWithReviewState([contribution]);
+    if (hydrated.status !== "approved") {
+      throw new ContributionReviewOperationError(
+        409,
+        "contribution_not_approved",
+        "Aprobá el aporte antes de vincularlo a un expediente o carpeta.",
+      );
+    }
+    const link = await appendContributionReviewLink({
+      submissionId: input.submissionId,
+      targetType,
+      targetId,
+      targetLabel,
+      note: input.note,
+      reviewerName: input.reviewerName,
+      reviewer: input.reviewer,
+      now: input.now,
+    });
+    const [updated] = await hydrateContributionsWithReviewState([contribution]);
+    return { storageMode: "neon", contribution: updated, link };
+  }
 
   if (contribution.status !== "approved") {
     throw new ContributionReviewOperationError(
@@ -185,7 +219,7 @@ export async function linkContributionToReviewTarget(
     targetId,
     targetLabel,
     note: normalizeText(input.note),
-    linkedBy: normalizeText(input.reviewerName) || "Equipo Faro",
+    linkedBy: reviewerDisplayName(input.reviewer, input.reviewerName),
     createdAt: (input.now ?? new Date()).toISOString(),
   };
   const updated: ReviewedUserContribution = {
@@ -216,6 +250,18 @@ export async function updateContributionReview(
     ? await readR2ContributionForUpdate(r2Config, input.submissionId)
     : null;
   const contribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
+  if (isProductDatabaseConfigured()) {
+    await appendContributionReviewEvent({
+      submissionId: input.submissionId,
+      status,
+      note: input.note,
+      reviewerName: input.reviewerName,
+      reviewer: input.reviewer,
+      now: input.now,
+    });
+    const [updated] = await hydrateContributionsWithReviewState([contribution]);
+    return { storageMode: "neon", contribution: updated };
+  }
   const reviewTrail = contribution.reviewTrail ?? [];
   const updated: ReviewedUserContribution = {
     ...contribution,
@@ -226,7 +272,7 @@ export async function updateContributionReview(
         id: `REV-${String(reviewTrail.length + 1).padStart(3, "0")}`,
         status,
         note: normalizeText(input.note),
-        reviewerName: normalizeText(input.reviewerName) || "Equipo Faro",
+        reviewerName: reviewerDisplayName(input.reviewer, input.reviewerName),
         createdAt: (input.now ?? new Date()).toISOString(),
       },
     ],
@@ -406,4 +452,8 @@ function inferContentType(objectKey: string): string {
 
 function normalizeText(value: unknown): string {
   return typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
+}
+
+function reviewerDisplayName(user: FaroAuthenticatedUser | undefined, override: unknown): string {
+  return normalizeText(user?.displayName) || normalizeText(user?.email) || normalizeText(override) || "Equipo Faro";
 }

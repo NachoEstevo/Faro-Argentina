@@ -21,6 +21,7 @@
 .toolbar h2,
 .detail h3,
 .files h4,
+.timeline h4,
 .linkIntro h4 {
   margin: 0;
   font-family: var(--cf-font-heading);
@@ -76,6 +77,29 @@
   margin-top: 8px;
 }
 
+.accountNotice {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 13px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.accountNotice span {
+  color: var(--cf-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.accountNotice p {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .accessForm span,
 .reviewBox span,
 .linkGrid span {
@@ -124,6 +148,7 @@
 }
 
 .accessForm button,
+.accountNotice button,
 .secondaryButton,
 .filterRow button,
 .actionGrid button,
@@ -149,7 +174,16 @@
   color: var(--cf-on-accent);
 }
 
+.accountNotice button {
+  width: fit-content;
+  padding: 0 13px;
+  border-color: transparent;
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
+}
+
 .accessForm button:hover,
+.accountNotice button:hover,
 .actionGrid button:hover,
 .linkButton:hover {
   background: var(--cf-accent-hi);
@@ -168,6 +202,7 @@
 }
 
 .accessForm button:disabled,
+.accountNotice button:disabled,
 .secondaryButton:disabled,
 .actionGrid button:disabled,
 .linkButton:disabled {
@@ -246,6 +281,79 @@
   font-family: var(--cf-font-data);
   font-size: 22px;
   font-weight: 700;
+}
+
+.workflowPanel {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.workflowPanel h3,
+.workflowPanel p {
+  margin: 0;
+}
+
+.workflowPanel h3 {
+  margin-top: 5px;
+  font-family: var(--cf-font-heading);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.workflowPanel p {
+  margin-top: 6px;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.workflowSteps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.workflowStep {
+  display: grid;
+  gap: 5px;
+  min-height: 112px;
+  padding: 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(13, 15, 19, 0.44);
+  color: var(--cf-text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.workflowStep:hover,
+.workflowStepActive {
+  border-color: var(--cf-accent-dim);
+  background: var(--cf-accent-faint);
+  color: var(--cf-text);
+}
+
+.workflowStep span {
+  color: var(--cf-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.workflowStep strong {
+  font-family: var(--cf-font-data);
+  font-size: 24px;
+  color: var(--cf-text);
+}
+
+.workflowStep small {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  line-height: 1.35;
 }
 
 .filterRow {
@@ -390,6 +498,7 @@
 
 .files,
 .reviewBox,
+.timeline,
 .linkBox {
   display: grid;
   gap: 10px;
@@ -399,6 +508,44 @@
 
 .files h4 {
   font-size: 15px;
+}
+
+.timeline h4 {
+  font-size: 15px;
+}
+
+.timeline ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.timeline li span {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+}
+
+.timeline li strong {
+  color: var(--cf-accent);
+  font-size: 12px;
+}
+
+.timeline li p {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .files button {
@@ -575,6 +722,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .workflowSteps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .list {
     max-height: none;
   }
@@ -588,6 +739,7 @@
 
   .facts,
   .stats,
+  .workflowSteps,
   .linkGrid {
     grid-template-columns: 1fr;
   }

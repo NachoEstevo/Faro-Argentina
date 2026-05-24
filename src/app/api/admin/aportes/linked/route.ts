@@ -1,4 +1,4 @@
-import { verifyAdminAccess } from "../../../../../lib/server/adminAccess.ts";
+import { requireFaroReviewer } from "../../../../../lib/server/faroAuth.ts";
 import {
   ContributionReviewOperationError,
   isContributionReviewLinkTarget,
@@ -6,9 +6,12 @@ import {
 } from "../../../../../lib/server/contributionReviewStorage.ts";
 
 export async function GET(request: Request) {
-  const accessFailure = verifyAdminAccess(request);
-  if (accessFailure) {
-    return Response.json(accessFailure, { status: accessFailure.status });
+  const auth = await requireFaroReviewer();
+  if (!auth.ok) {
+    return Response.json(
+      { error: auth.error, message: auth.message },
+      { status: auth.status },
+    );
   }
 
   const url = new URL(request.url);

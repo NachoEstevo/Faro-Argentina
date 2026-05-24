@@ -1,10 +1,22 @@
 import type { SignalCaseFile } from "./caseSignals.ts";
 
-export type SearchSuggestionKind = "case" | "supplier" | "agency" | "signal" | "identifier" | "source";
+export type SearchSuggestionKind =
+  | "case"
+  | "supplier"
+  | "agency"
+  | "signal"
+  | "identifier"
+  | "source"
+  | "document"
+  | "alias"
+  | "location";
 
 export type SearchSuggestionCase = SignalCaseFile & {
   year?: number | null;
   agencyCode?: string;
+  workProvince?: string | null;
+  workDepartment?: string | null;
+  workLocality?: string | null;
 };
 
 export interface SearchSuggestion {
@@ -21,7 +33,7 @@ export interface SearchSuggestionOptions {
 }
 
 interface StaticSuggestion {
-  kind: "signal";
+  kind: "signal" | "alias";
   label: string;
   detail: string;
   query: string;
@@ -29,6 +41,20 @@ interface StaticSuggestion {
 }
 
 const staticSuggestions: StaticSuggestion[] = [
+  {
+    kind: "alias",
+    label: "DNV",
+    detail: "Alias de organismo",
+    query: "Dirección Nacional de Vialidad",
+    keywords: ["dnv", "vialidad", "direccion nacional vialidad"],
+  },
+  {
+    kind: "alias",
+    label: "Lázaro Báez",
+    detail: "Alias de persona/proveedor",
+    query: "Grupo Baez",
+    keywords: ["lazaro", "baez", "grupo baez", "austral construcciones"],
+  },
   {
     kind: "signal",
     label: "1 oferente",
@@ -135,8 +161,8 @@ export function buildSearchSuggestions(
       continue;
     }
     addSuggestion(suggestions, seen, {
-      id: `signal:${normalizeSearchText(suggestion.query)}`,
-      kind: "signal",
+      id: `${suggestion.kind}:${normalizeSearchText(suggestion.query)}`,
+      kind: suggestion.kind,
       label: suggestion.label,
       detail: suggestion.detail,
       query: suggestion.query,
@@ -197,6 +223,15 @@ function addEntitySuggestions(
   addFieldSuggestion({
     suggestions,
     seen,
+    kind: "document",
+    label: caseFile.supplierDocument,
+    detail: "CUIT / documento de proveedor",
+    query,
+    candidateText: [caseFile.supplierDocument, compactIdentifier(caseFile.supplierDocument)].join(" "),
+  });
+  addFieldSuggestion({
+    suggestions,
+    seen,
     kind: "agency",
     label: caseFile.agencyName,
     detail: "Organismo",
@@ -223,6 +258,33 @@ function addEntitySuggestions(
       candidateText: identifier,
     });
   });
+  addFieldSuggestion({
+    suggestions,
+    seen,
+    kind: "location",
+    label: caseFile.workProvince,
+    detail: "Provincia",
+    query,
+    candidateText: caseFile.workProvince,
+  });
+  addFieldSuggestion({
+    suggestions,
+    seen,
+    kind: "location",
+    label: caseFile.workDepartment,
+    detail: "Departamento",
+    query,
+    candidateText: caseFile.workDepartment,
+  });
+  addFieldSuggestion({
+    suggestions,
+    seen,
+    kind: "location",
+    label: caseFile.workLocality,
+    detail: "Localidad",
+    query,
+    candidateText: caseFile.workLocality,
+  });
 }
 
 function addFieldSuggestion({
@@ -236,7 +298,7 @@ function addFieldSuggestion({
 }: {
   suggestions: SearchSuggestion[];
   seen: Set<string>;
-  kind: Exclude<SearchSuggestionKind, "case" | "signal">;
+  kind: Exclude<SearchSuggestionKind, "case" | "signal" | "alias">;
   label: string | null | undefined;
   detail: string;
   query: string;
@@ -285,12 +347,19 @@ function buildCaseSearchText(caseFile: SearchSuggestionCase): string {
     caseFile.judicialStatus,
     caseFile.contextSummary,
     caseFile.localMatchStatus,
+    caseFile.workProvince,
+    caseFile.workDepartment,
+    caseFile.workLocality,
     caseFile.receipt.sourceId,
     caseFile.receipt.sourceName,
     buildDerivedSearchHints(caseFile),
   ];
 
   return parts.filter((value): value is string => value !== null && value !== undefined).join(" ");
+}
+
+function compactIdentifier(value: string | null | undefined): string {
+  return String(value ?? "").replace(/[^a-zA-Z0-9]/g, "");
 }
 
 function buildDerivedSearchHints(caseFile: SearchSuggestionCase): string {

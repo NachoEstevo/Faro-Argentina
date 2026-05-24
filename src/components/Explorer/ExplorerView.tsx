@@ -32,6 +32,11 @@ import {
   INVESTIGATION_RELATION_REASON_OPTIONS,
   type InvestigationCaseRelationReason,
 } from "@/lib/data/investigationWorkspaces";
+import {
+  buildSearchSuggestions,
+  type SearchSuggestion,
+  type SearchSuggestionCase,
+} from "@/lib/data/searchSuggestions";
 import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
@@ -192,6 +197,11 @@ export default function ExplorerView({
     [activeEntities, countries, geometryFilter, query, yearScopedCases],
   );
 
+  const searchSuggestions = useMemo(
+    () => buildSearchSuggestions(yearScopedCases as SearchSuggestionCase[], query, { limit: 8 }),
+    [query, yearScopedCases],
+  );
+
   const facetGroups = useMemo(
     () => FACET_TYPE_OPTIONS
       .map((group) => ({
@@ -267,6 +277,12 @@ export default function ExplorerView({
   const handleQueryChange = (value: string) => {
     clearPreset();
     setQuery(value);
+  };
+
+  const handleSuggestionSelect = (suggestion: SearchSuggestion) => {
+    clearPreset();
+    setQuery(suggestion.query);
+    if (suggestion.caseId) onSelectCase(suggestion.caseId, countryScope);
   };
 
   const saveRowToFolder = (event: MouseEvent<HTMLButtonElement>, row: InvestigatorCaseRow) => {
@@ -465,6 +481,10 @@ export default function ExplorerView({
               aria-label="Buscar"
             />
           </label>
+          <SearchSuggestionsList
+            suggestions={searchSuggestions}
+            onSelectSuggestion={handleSuggestionSelect}
+          />
         </div>
         <div className={styles.statsGrid} aria-label="Resumen">
           <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
@@ -596,6 +616,50 @@ export default function ExplorerView({
       </main>
     </section>
   );
+}
+
+function SearchSuggestionsList({
+  suggestions,
+  onSelectSuggestion,
+}: {
+  suggestions: SearchSuggestion[];
+  onSelectSuggestion: (suggestion: SearchSuggestion) => void;
+}) {
+  if (suggestions.length === 0) return null;
+  return (
+    <section className={styles.searchSuggestions} aria-label="Sugerencias de búsqueda">
+      <div className={styles.suggestionHeader}>
+        <span>Sugerencias de búsqueda</span>
+        <small>Proveedor · CUIT · Organismo · Expediente · Señal · Alias · Fuente · Provincia</small>
+      </div>
+      <div className={styles.suggestionGrid}>
+        {suggestions.map((suggestion) => (
+          <button
+            key={suggestion.id}
+            type="button"
+            className={styles.suggestionButton}
+            onClick={() => onSelectSuggestion(suggestion)}
+          >
+            <span>{suggestionKindLabel(suggestion)}</span>
+            <strong>{suggestion.label}</strong>
+            <small>{suggestion.detail}</small>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function suggestionKindLabel(suggestion: SearchSuggestion): string {
+  if (suggestion.kind === "supplier") return "Proveedor";
+  if (suggestion.kind === "document") return "CUIT";
+  if (suggestion.kind === "agency") return "Organismo";
+  if (suggestion.kind === "case" || suggestion.kind === "identifier") return "Expediente";
+  if (suggestion.kind === "signal") return "Señal";
+  if (suggestion.kind === "alias") return "Alias";
+  if (suggestion.kind === "source") return "Fuente";
+  if (suggestion.kind === "location") return suggestion.detail || "Ubicación";
+  return "Búsqueda";
 }
 
 function ExplorerDetail({

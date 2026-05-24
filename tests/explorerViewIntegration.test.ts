@@ -151,6 +151,25 @@ test("ExplorerView only offers country-specific search scopes", async () => {
   assert.doesNotMatch(source, /countryScope === "ALL"/);
 });
 
+test("ExplorerView renders concrete investigative search suggestions", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const styles = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /buildSearchSuggestions/);
+  assert.match(source, /Sugerencias de búsqueda/);
+  assert.match(source, /suggestionKindLabel/);
+  assert.match(source, /Proveedor/);
+  assert.match(source, /CUIT/);
+  assert.match(source, /Organismo/);
+  assert.match(source, /Expediente/);
+  assert.match(source, /Señal/);
+  assert.match(source, /Alias/);
+  assert.match(source, /Fuente/);
+  assert.match(source, /Provincia/);
+  assert.match(styles, /\.suggestionGrid/);
+  assert.match(styles, /\.suggestionButton/);
+});
+
 test("ExplorerView supports a closed selected-expedientes preset", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
   const css = await readFile(explorerStylesUrl, "utf8");

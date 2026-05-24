@@ -9,6 +9,7 @@ import type {
 } from "../data/investigationWorkspaces.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
 import { getProductSql, type ProductSql } from "./productDb.ts";
+import { upsertFaroUser } from "./faroUserDb.ts";
 
 interface WorkspaceRow {
   id: string;
@@ -79,24 +80,6 @@ export async function replaceUserInvestigationWorkspaceCollection(
     await upsertWorkspace(user.clerkUserId, workspace, sql);
   }
   return readUserInvestigationWorkspaceCollection(user, sql);
-}
-
-async function upsertFaroUser(
-  user: FaroAuthenticatedUser,
-  activeWorkspaceId: string | null | undefined,
-  sql: ProductSql,
-): Promise<void> {
-  await sql.query(
-    `insert into faro_users (clerk_user_id, email, role, display_name, active_workspace_id, updated_at)
-     values ($1, $2, $3, $4, $5, now())
-     on conflict (clerk_user_id) do update set
-       email = excluded.email,
-       role = excluded.role,
-       display_name = excluded.display_name,
-       active_workspace_id = coalesce(excluded.active_workspace_id, faro_users.active_workspace_id),
-       updated_at = now()`,
-    [user.clerkUserId, user.email, user.role, user.displayName, activeWorkspaceId ?? null],
-  );
 }
 
 async function upsertWorkspace(ownerClerkUserId: string, workspace: InvestigationWorkspace, sql: ProductSql): Promise<void> {

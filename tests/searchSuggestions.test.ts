@@ -50,6 +50,9 @@ const contractCase: SearchSuggestionCase = {
   offerCount: 1,
   supplierName: "TRANSREDES SA",
   supplierDocument: "30-71079146-1",
+  workProvince: "CATAMARCA",
+  workDepartment: "BELÉN",
+  workLocality: "LONDRES",
   receipt: {
     sourceId: "AR-CONTRATAR-CONTRATOS",
     sourceName: "CONTRAT.AR contratos",
@@ -84,6 +87,41 @@ test("buildSearchSuggestions returns categorized suggestions from matched cases"
     suggestions.some((suggestion) =>
       suggestion.kind === "supplier" &&
       suggestion.label === "Grupo Baez"
+    ),
+    true,
+  );
+});
+
+test("buildSearchSuggestions includes CUIT, alias and location suggestions", () => {
+  const cuitSuggestions = buildSearchSuggestions([contractCase], "30-71079146-1", { limit: 8 });
+  const aliasSuggestions = buildSearchSuggestions([contractCase], "dnv", { limit: 8 });
+  const locationSuggestions = buildSearchSuggestions([contractCase], "catamarca", { limit: 8 });
+
+  assert.equal(
+    cuitSuggestions.some((suggestion) =>
+      suggestion.kind === "document" &&
+      suggestion.label === "30-71079146-1" &&
+      suggestion.detail === "CUIT / documento de proveedor"
+    ),
+    true,
+  );
+  assert.equal(
+    aliasSuggestions.some((suggestion) =>
+      suggestion.kind === "alias" &&
+      suggestion.label === "DNV" &&
+      suggestion.query === "Dirección Nacional de Vialidad"
+    ),
+    true,
+  );
+  assert.equal(
+    aliasSuggestions.some((suggestion) => suggestion.kind === "alias" && suggestion.label === "Lázaro Báez"),
+    false,
+  );
+  assert.equal(
+    locationSuggestions.some((suggestion) =>
+      suggestion.kind === "location" &&
+      suggestion.label === "CATAMARCA" &&
+      suggestion.detail === "Provincia"
     ),
     true,
   );

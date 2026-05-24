@@ -18,32 +18,42 @@ const r2EnvKeys = [
   "R2_BUCKET",
 ];
 
-test("GET /api/admin/aportes requires the private admin access code", async () => {
-  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE"]);
-  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+const authEnvKeys = [
+  "FARO_ENABLE_TEST_AUTH",
+  "FARO_TEST_CLERK_USER_ID",
+  "FARO_TEST_CLERK_USER_ROLE",
+  "FARO_TEST_CLERK_USER_EMAIL",
+  "FARO_TEST_CLERK_USER_NAME",
+];
+const productDbEnvKeys = ["DATABASE_URL"];
+
+test("GET /api/admin/aportes requires a Clerk reviewer or admin role", async () => {
+  const env = preserveEnv(authEnvKeys);
+  enableInvestigatorAuth();
 
   try {
     const response = await GET(new Request("http://localhost/api/admin/aportes"));
     const payload = await response.json() as { error: string; message: string };
 
-    assert.equal(response.status, 401);
-    assert.equal(payload.error, "admin_access_required");
-    assert.doesNotMatch(payload.message, /review-code|env|secret/i);
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "reviewer_access_required");
+    assert.doesNotMatch(payload.message, /secret|env|FARO/i);
   } finally {
     restoreEnv(env);
   }
 });
 
 test("GET /api/admin/aportes does not accept admin codes in query strings", async () => {
-  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE"]);
+  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE", ...authEnvKeys]);
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  enableInvestigatorAuth();
 
   try {
     const response = await GET(new Request("http://localhost/api/admin/aportes?accessCode=review-code"));
     const payload = await response.json() as { error: string };
 
-    assert.equal(response.status, 401);
-    assert.equal(payload.error, "admin_access_required");
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "reviewer_access_required");
   } finally {
     restoreEnv(env);
   }
@@ -51,16 +61,16 @@ test("GET /api/admin/aportes does not accept admin codes in query strings", asyn
 
 test("GET /api/admin/aportes lists private submissions for review", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
-    const response = await GET(new Request("http://localhost/api/admin/aportes", {
-      headers: { "x-faro-admin-code": "review-code" },
-    }));
+    const response = await GET(new Request("http://localhost/api/admin/aportes"));
     const payload = await response.json() as {
       inboxType: string;
       storageMode: string;
@@ -91,10 +101,12 @@ test("GET /api/admin/aportes lists private submissions for review", async () => 
 
 test("PATCH /api/admin/aportes updates review status and internal note", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
@@ -102,13 +114,12 @@ test("PATCH /api/admin/aportes updates review status and internal note", async (
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({
         submissionId: stored.contribution.id,
         status: "needs_more_info",
         note: "Pedir fecha exacta y fuente oficial complementaria.",
-        reviewerName: "Equipo Faro",
+        reviewerName: "Nombre enviado por cliente",
       }),
     }));
     const payload = await response.json() as {
@@ -126,7 +137,7 @@ test("PATCH /api/admin/aportes updates review status and internal note", async (
       id: "REV-001",
       status: "needs_more_info",
       note: "Pedir fecha exacta y fuente oficial complementaria.",
-      reviewerName: "Equipo Faro",
+      reviewerName: "Reviewer Faro",
       createdAt: payload.contribution.reviewTrail.at(-1)?.createdAt,
     });
 
@@ -141,15 +152,15 @@ test("PATCH /api/admin/aportes updates review status and internal note", async (
 });
 
 test("PATCH /api/admin/aportes rejects unknown review states", async () => {
-  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE"]);
+  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE", ...authEnvKeys]);
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  enableReviewerAuth();
 
   try {
     const response = await PATCH(new Request("http://localhost/api/admin/aportes", {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({ submissionId: "APORTE-1", status: "published" }),
     }));
@@ -164,10 +175,12 @@ test("PATCH /api/admin/aportes rejects unknown review states", async () => {
 
 test("POST /api/admin/aportes links an approved contribution to an existing expediente", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
@@ -177,14 +190,13 @@ test("POST /api/admin/aportes links an approved contribution to an existing expe
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({
         submissionId: stored.contribution.id,
         targetType: "case",
         targetId: "AR-CONTRACT-46-0453-CON22",
         note: "Usar como material privado para revisar avance visible.",
-        reviewerName: "Equipo Faro",
+        reviewerName: "Nombre enviado por cliente",
       }),
     }));
     const payload = await response.json() as {
@@ -210,7 +222,7 @@ test("POST /api/admin/aportes links an approved contribution to an existing expe
       targetId: "AR-CONTRACT-46-0453-CON22",
       targetLabel: payload.contribution.reviewLinks.at(-1)?.targetLabel,
       note: "Usar como material privado para revisar avance visible.",
-      linkedBy: "Equipo Faro",
+      linkedBy: "Reviewer Faro",
       createdAt: payload.contribution.reviewLinks.at(-1)?.createdAt,
     });
     assert.ok(payload.contribution.reviewLinks[0]?.targetLabel.length > 0);
@@ -228,10 +240,12 @@ test("POST /api/admin/aportes links an approved contribution to an existing expe
 
 test("POST /api/admin/aportes links an approved contribution to an internal folder", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
@@ -241,7 +255,6 @@ test("POST /api/admin/aportes links an approved contribution to an internal fold
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({
         submissionId: stored.contribution.id,
@@ -266,10 +279,12 @@ test("POST /api/admin/aportes links an approved contribution to an internal fold
 
 test("POST /api/admin/aportes only links approved private contributions", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
@@ -277,7 +292,6 @@ test("POST /api/admin/aportes only links approved private contributions", async 
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({
         submissionId: stored.contribution.id,
@@ -296,10 +310,12 @@ test("POST /api/admin/aportes only links approved private contributions", async 
 
 test("POST /api/admin/aportes rejects unknown expediente targets", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
-  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...r2EnvKeys]);
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
   clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
 
   try {
     const stored = await seedContribution();
@@ -308,7 +324,6 @@ test("POST /api/admin/aportes rejects unknown expediente targets", async () => {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-faro-admin-code": "review-code",
       },
       body: JSON.stringify({
         submissionId: stored.contribution.id,
@@ -355,7 +370,6 @@ async function approveContribution(submissionId: string): Promise<void> {
     method: "PATCH",
     headers: {
       "content-type": "application/json",
-      "x-faro-admin-code": "review-code",
     },
     body: JSON.stringify({
       submissionId,
@@ -372,6 +386,26 @@ function preserveEnv(keys: string[]): Map<string, string | undefined> {
 
 function clearR2Env(): void {
   for (const key of r2EnvKeys) delete process.env[key];
+}
+
+function clearProductDbEnv(): void {
+  for (const key of productDbEnvKeys) delete process.env[key];
+}
+
+function enableReviewerAuth(): void {
+  process.env.FARO_ENABLE_TEST_AUTH = "1";
+  process.env.FARO_TEST_CLERK_USER_ID = "user_reviewer";
+  process.env.FARO_TEST_CLERK_USER_ROLE = "reviewer";
+  process.env.FARO_TEST_CLERK_USER_EMAIL = "reviewer@example.com";
+  process.env.FARO_TEST_CLERK_USER_NAME = "Reviewer Faro";
+}
+
+function enableInvestigatorAuth(): void {
+  process.env.FARO_ENABLE_TEST_AUTH = "1";
+  process.env.FARO_TEST_CLERK_USER_ID = "user_investigator";
+  process.env.FARO_TEST_CLERK_USER_ROLE = "investigator";
+  process.env.FARO_TEST_CLERK_USER_EMAIL = "investigator@example.com";
+  process.env.FARO_TEST_CLERK_USER_NAME = "Investigadora Faro";
 }
 
 function restoreEnv(env: Map<string, string | undefined>): void {

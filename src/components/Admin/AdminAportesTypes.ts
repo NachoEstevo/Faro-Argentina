@@ -46,21 +46,61 @@ export interface Contribution {
 }
 
 export interface InboxPayload {
-  storageMode: "local" | "r2";
+  storageMode: "local" | "r2" | "neon";
   stats: Record<ReviewStatus | "total", number>;
   submissions: Contribution[];
 }
 
-export const statusOptions: Array<{ value: ReviewStatus; label: string }> = [
-  { value: "submitted", label: "Revisar" },
-  { value: "needs_more_info", label: "Necesita más info" },
-  { value: "accepted_for_review", label: "En revisión" },
-  { value: "approved", label: "Aprobado para cargar" },
-  { value: "rejected", label: "Descartado" },
+export const statusWorkflow: Array<{
+  value: ReviewStatus;
+  label: string;
+  actionLabel: string;
+  description: string;
+}> = [
+  {
+    value: "submitted",
+    label: "Recibido",
+    actionLabel: "Marcar recibido",
+    description: "Entrada nueva, todavía sin decisión interna.",
+  },
+  {
+    value: "accepted_for_review",
+    label: "En revisión",
+    actionLabel: "Tomar en revisión",
+    description: "El equipo está verificando fuente, contexto y uso posible.",
+  },
+  {
+    value: "needs_more_info",
+    label: "Necesita más info",
+    actionLabel: "Pedir más info",
+    description: "Falta contexto, fuente o precisión antes de avanzar.",
+  },
+  {
+    value: "approved",
+    label: "Aprobado para cargar",
+    actionLabel: "Aprobar para cargar",
+    description: "Listo para vincular o cargar manualmente, sin publicación automática.",
+  },
+  {
+    value: "rejected",
+    label: "Descartado",
+    actionLabel: "Descartar aporte",
+    description: "No se usará en Faro con la información disponible.",
+  },
 ];
 
+export const statusOptions = statusWorkflow.map(({ value, label }) => ({ value, label }));
+
 export function statusLabel(status: ReviewStatus): string {
-  return statusOptions.find((option) => option.value === status)?.label ?? "Revisar";
+  return statusWorkflow.find((option) => option.value === status)?.label ?? "Recibido";
+}
+
+export function sortContributionsForReview(submissions: Contribution[]): Contribution[] {
+  return [...submissions].sort((left, right) => {
+    const statusDelta = statusPriority(left.status) - statusPriority(right.status);
+    if (statusDelta !== 0) return statusDelta;
+    return right.createdAt.localeCompare(left.createdAt);
+  });
 }
 
 export function buildClientStats(submissions: Contribution[]): Record<ReviewStatus | "total", number> {
@@ -72,6 +112,11 @@ export function buildClientStats(submissions: Contribution[]): Record<ReviewStat
     approved: submissions.filter((item) => item.status === "approved").length,
     rejected: submissions.filter((item) => item.status === "rejected").length,
   };
+}
+
+function statusPriority(status: ReviewStatus): number {
+  const index = statusWorkflow.findIndex((option) => option.value === status);
+  return index === -1 ? statusWorkflow.length : index;
 }
 
 export function formatDate(value: string): string {

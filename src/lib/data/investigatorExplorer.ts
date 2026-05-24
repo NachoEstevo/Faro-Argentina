@@ -204,7 +204,7 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
 
   return {
     ...row,
-    searchText: buildSearchText(row, signals),
+    searchText: buildSearchText(row, signals, caseFile),
   };
 }
 
@@ -355,7 +355,11 @@ function findActiveEntities(
     .filter((facet): facet is InvestigatorFacet => facet !== null);
 }
 
-function buildSearchText(row: Omit<InvestigatorCaseRow, "searchText">, signals: CaseSignal[]): string {
+function buildSearchText(
+  row: Omit<InvestigatorCaseRow, "searchText">,
+  signals: CaseSignal[],
+  caseFile: InvestigatorExplorerCase,
+): string {
   return normalize([
     row.caseId,
     row.countryCode,
@@ -364,7 +368,13 @@ function buildSearchText(row: Omit<InvestigatorCaseRow, "searchText">, signals: 
     row.workNumber,
     row.procedureNumber,
     row.agencyName,
+    "agencyCode" in caseFile ? caseFile.agencyCode : null,
+    "contractingUnit" in caseFile ? caseFile.contractingUnit : null,
     row.supplierLabel,
+    "supplierDocument" in caseFile ? caseFile.supplierDocument : null,
+    "workProvince" in caseFile ? caseFile.workProvince : null,
+    "workDepartment" in caseFile ? caseFile.workDepartment : null,
+    "workLocality" in caseFile ? caseFile.workLocality : null,
     row.amountLabel,
     row.sourceId,
     row.sourceName,

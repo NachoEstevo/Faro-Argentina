@@ -1,5 +1,5 @@
 import { CONTRIBUTION_REVIEW_STATUSES, type ContributionReviewStatus } from "../../../../lib/data/userContributions.ts";
-import { verifyAdminAccess } from "../../../../lib/server/adminAccess.ts";
+import { requireFaroReviewer } from "../../../../lib/server/faroAuth.ts";
 import {
   ContributionReviewOperationError,
   isContributionReviewStatus,
@@ -10,9 +10,13 @@ import {
 } from "../../../../lib/server/contributionReviewStorage.ts";
 
 export async function GET(request: Request) {
-  const accessFailure = verifyAdminAccess(request);
-  if (accessFailure) {
-    return Response.json(accessFailure, { status: accessFailure.status });
+  void request;
+  const auth = await requireFaroReviewer();
+  if (!auth.ok) {
+    return Response.json(
+      { error: auth.error, message: auth.message },
+      { status: auth.status },
+    );
   }
 
   const inbox = await listContributionReviews();
@@ -27,16 +31,18 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const accessFailure = verifyAdminAccess(request);
-  if (accessFailure) {
-    return Response.json(accessFailure, { status: accessFailure.status });
+  const auth = await requireFaroReviewer();
+  if (!auth.ok) {
+    return Response.json(
+      { error: auth.error, message: auth.message },
+      { status: auth.status },
+    );
   }
 
   const payload = await request.json().catch(() => null) as {
     submissionId?: string;
     status?: string;
     note?: string;
-    reviewerName?: string;
   } | null;
   const status = payload?.status ?? "";
   if (!isContributionReviewStatus(status)) {
@@ -63,7 +69,7 @@ export async function PATCH(request: Request) {
       submissionId: payload.submissionId,
       status: status as ContributionReviewStatus,
       note: payload.note,
-      reviewerName: payload.reviewerName,
+      reviewer: auth.user,
     });
     return Response.json({
       ok: true,
@@ -82,9 +88,12 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const accessFailure = verifyAdminAccess(request);
-  if (accessFailure) {
-    return Response.json(accessFailure, { status: accessFailure.status });
+  const auth = await requireFaroReviewer();
+  if (!auth.ok) {
+    return Response.json(
+      { error: auth.error, message: auth.message },
+      { status: auth.status },
+    );
   }
 
   const payload = await request.json().catch(() => null) as {
@@ -93,7 +102,6 @@ export async function POST(request: Request) {
     targetId?: string;
     targetLabel?: string;
     note?: string;
-    reviewerName?: string;
   } | null;
 
   if (!payload?.submissionId) {
@@ -123,7 +131,7 @@ export async function POST(request: Request) {
       targetId: payload.targetId ?? "",
       targetLabel: payload.targetLabel,
       note: payload.note,
-      reviewerName: payload.reviewerName,
+      reviewer: auth.user,
     });
     return Response.json({
       ok: true,

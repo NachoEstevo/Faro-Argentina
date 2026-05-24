@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Inbox,
   LockKeyhole,
@@ -12,8 +12,10 @@ import AdminAportesDetail from "./AdminAportesDetail";
 import {
   buildClientStats,
   formatDate,
+  sortContributionsForReview,
   statusLabel,
   statusOptions,
+  statusWorkflow,
   type Attachment,
   type Contribution,
   type InboxPayload,
@@ -23,7 +25,6 @@ import {
 import styles from "./AdminAportesView.module.css";
 
 export default function AdminAportesView() {
-  const [accessCode, setAccessCode] = useState("");
   const [inbox, setInbox] = useState<InboxPayload | null>(null);
   const [selectedId, setSelectedId] = useState("");
   const [filter, setFilter] = useState<ReviewStatus | "all">("all");
@@ -36,25 +37,24 @@ export default function AdminAportesView() {
   const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => {
-    const submissions = inbox?.submissions ?? [];
+    const submissions = sortContributionsForReview(inbox?.submissions ?? []);
     return filter === "all" ? submissions : submissions.filter((item) => item.status === filter);
   }, [filter, inbox?.submissions]);
   const selected = filtered.find((submission) => submission.id === selectedId) ??
     filtered[0] ??
     null;
 
-  async function loadInbox(event?: FormEvent) {
-    event?.preventDefault();
+  async function loadInbox() {
     setLoading(true);
     setStatusText("Cargando bandeja privada...");
     try {
-      const response = await fetch("/api/admin/aportes", {
-        headers: { "x-faro-admin-code": accessCode },
-      });
+      const response = await fetch("/api/admin/aportes");
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.message ?? "No se pudo abrir la bandeja.");
-      setInbox(payload as InboxPayload);
-      setSelectedId((payload as InboxPayload).submissions[0]?.id ?? "");
+      const normalizedPayload = payload as InboxPayload;
+      const submissions = sortContributionsForReview(normalizedPayload.submissions);
+      setInbox({ ...normalizedPayload, submissions, stats: buildClientStats(submissions) });
+      setSelectedId(submissions[0]?.id ?? "");
       setStatusText("Bandeja actualizada.");
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : "No se pudo abrir la bandeja.");
@@ -72,13 +72,11 @@ export default function AdminAportesView() {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          "x-faro-admin-code": accessCode,
         },
         body: JSON.stringify({
           submissionId: selected.id,
           status,
           note,
-          reviewerName: "Equipo Faro",
         }),
       });
       const payload = await response.json();
@@ -89,7 +87,8 @@ export default function AdminAportesView() {
         const submissions = current.submissions.map((item) =>
           item.id === selected.id ? updatedContribution : item
         );
-        return { ...current, submissions, stats: buildClientStats(submissions) };
+        const sorted = sortContributionsForReview(submissions);
+        return { ...current, submissions: sorted, stats: buildClientStats(sorted) };
       });
       setSelectedId(updatedContribution.id);
       setNote("");
@@ -104,9 +103,7 @@ export default function AdminAportesView() {
   async function openAttachment(attachment: Attachment) {
     setStatusText("Abriendo archivo privado...");
     try {
-      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`, {
-        headers: { "x-faro-admin-code": accessCode },
-      });
+      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`);
       if (!response.ok) {
         const payload = await response.json().catch(() => null) as { message?: string } | null;
         throw new Error(payload?.message ?? "No se pudo abrir el archivo.");
@@ -130,7 +127,6 @@ export default function AdminAportesView() {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-faro-admin-code": accessCode,
         },
         body: JSON.stringify({
           submissionId: selected.id,
@@ -138,7 +134,6 @@ export default function AdminAportesView() {
           targetId: linkTargetId,
           targetLabel: linkTargetLabel,
           note: linkNote,
-          reviewerName: "Equipo Faro",
         }),
       });
       const payload = await response.json();
@@ -149,7 +144,8 @@ export default function AdminAportesView() {
         const submissions = current.submissions.map((item) =>
           item.id === selected.id ? updatedContribution : item
         );
-        return { ...current, submissions, stats: buildClientStats(submissions) };
+        const sorted = sortContributionsForReview(submissions);
+        return { ...current, submissions: sorted, stats: buildClientStats(sorted) };
       });
       setSelectedId(updatedContribution.id);
       setLinkTargetId("");
@@ -172,26 +168,14 @@ export default function AdminAportesView() {
           Material no verificado enviado por usuarios. No se publica automáticamente en mapa,
           Explorer, informes o exports.
         </p>
-        <form className={styles.accessForm} onSubmit={loadInbox}>
-          <label className={styles.srOnly}>
-            <span>Cuenta admin</span>
-            <input name="username" autoComplete="username" defaultValue="faro-admin" readOnly tabIndex={-1} />
-          </label>
-          <label>
-            <span>Código privado</span>
-            <input
-              name="password"
-              value={accessCode}
-              onChange={(event) => setAccessCode(event.target.value)}
-              type="password"
-              autoComplete="current-password"
-            />
-          </label>
-          <button type="submit" disabled={loading}>
+        <div className={styles.accountNotice}>
+          <span>Cuenta reviewer</span>
+          <p>Acceso por invitación con Clerk. Tu rol se valida antes de leer o modificar aportes.</p>
+          <button type="button" onClick={() => loadInbox()} disabled={loading}>
             <LockKeyhole size={15} aria-hidden />
             Abrir bandeja
           </button>
-        </form>
+        </div>
         <div className={styles.ruleBox}>
           <ShieldAlert size={17} aria-hidden />
           <span>Un aporte aprobado queda listo para cargar o vincular, no se convierte solo en expediente.</span>
@@ -204,7 +188,7 @@ export default function AdminAportesView() {
             <p className={styles.eyebrow}>Revisión interna</p>
             <h2>Aportes recibidos</h2>
           </div>
-          <button type="button" className={styles.secondaryButton} onClick={() => loadInbox()} disabled={loading || !accessCode}>
+          <button type="button" className={styles.secondaryButton} onClick={() => loadInbox()} disabled={loading}>
             <RefreshCw size={14} aria-hidden />
             Actualizar
           </button>
@@ -216,10 +200,32 @@ export default function AdminAportesView() {
           <>
             <div className={styles.stats}>
               <Metric label="Total" value={inbox.stats.total} />
-              <Metric label="Revisar" value={inbox.stats.submitted} />
+              <Metric label="Recibidos" value={inbox.stats.submitted} />
+              <Metric label="En revisión" value={inbox.stats.accepted_for_review} />
               <Metric label="Necesita más info" value={inbox.stats.needs_more_info} />
-              <Metric label="Aprobado para cargar" value={inbox.stats.approved} />
             </div>
+            <section className={styles.workflowPanel} aria-label="Flujo operativo">
+              <div>
+                <p className={styles.eyebrow}>Flujo operativo</p>
+                <h3>recibido → en revisión → necesita más info → aprobado para cargar → descartado</h3>
+                <p>Los aportes siguen siendo privados hasta que el equipo los cargue manualmente.</p>
+              </div>
+              <div className={styles.workflowSteps}>
+                {statusWorkflow.map((step) => (
+                  <button
+                    key={step.value}
+                    type="button"
+                    className={`${styles.workflowStep} ${filter === step.value ? styles.workflowStepActive : ""}`}
+                    onClick={() => setFilter(step.value)}
+                    aria-pressed={filter === step.value}
+                  >
+                    <span>{step.label}</span>
+                    <strong>{inbox.stats[step.value]}</strong>
+                    <small>{step.description}</small>
+                  </button>
+                ))}
+              </div>
+            </section>
             <div className={styles.filterRow}>
               <button className={filter === "all" ? styles.activeFilter : ""} type="button" onClick={() => setFilter("all")}>Todos</button>
               {statusOptions.map((option) => (
@@ -272,7 +278,7 @@ export default function AdminAportesView() {
         ) : (
           <div className={styles.emptyState}>
             <Inbox size={22} aria-hidden />
-            <p>Ingresá el código privado para cargar la bandeja de revisión.</p>
+            <p>Usá una cuenta Faro reviewer o admin para cargar la bandeja de revisión.</p>
           </div>
         )}
       </section>

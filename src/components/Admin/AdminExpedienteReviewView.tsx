@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { FileText, LockKeyhole, RefreshCw, ShieldAlert } from "lucide-react";
 
 import { formatBytes, formatDate, type Attachment } from "./AdminAportesTypes";
@@ -36,19 +36,16 @@ interface LinkedPayload {
 }
 
 export default function AdminExpedienteReviewView({ caseId }: { caseId: string }) {
-  const [accessCode, setAccessCode] = useState("");
   const [payload, setPayload] = useState<LinkedPayload | null>(null);
   const [statusText, setStatusText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function loadLinkedMaterial(event?: FormEvent) {
-    event?.preventDefault();
+  async function loadLinkedMaterial() {
     setLoading(true);
     setStatusText("Cargando material asociado...");
     try {
       const response = await fetch(
         `/api/admin/aportes/linked?targetType=case&targetId=${encodeURIComponent(caseId)}`,
-        { headers: { "x-faro-admin-code": accessCode } },
       );
       const data = await response.json();
       if (!response.ok) throw new Error(data.message ?? "No se pudo cargar el material asociado.");
@@ -64,9 +61,7 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
   async function openAttachment(attachment: Attachment) {
     setStatusText("Abriendo archivo privado...");
     try {
-      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`, {
-        headers: { "x-faro-admin-code": accessCode },
-      });
+      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`);
       if (!response.ok) {
         const data = await response.json().catch(() => null) as { message?: string } | null;
         throw new Error(data?.message ?? "No se pudo abrir el archivo privado.");
@@ -87,26 +82,14 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
         <p className={styles.eyebrow}>Admin privado</p>
         <h1>Material asociado</h1>
         <p>No modifica el expediente público. Esta vista sólo reúne aportes privados ya vinculados por el equipo.</p>
-        <form className={styles.accessForm} onSubmit={loadLinkedMaterial}>
-          <label className={styles.srOnly}>
-            <span>Cuenta admin</span>
-            <input name="username" autoComplete="username" defaultValue="faro-admin" readOnly tabIndex={-1} />
-          </label>
-          <label>
-            <span>Código privado</span>
-            <input
-              name="password"
-              value={accessCode}
-              onChange={(event) => setAccessCode(event.target.value)}
-              type="password"
-              autoComplete="current-password"
-            />
-          </label>
-          <button type="submit" disabled={loading}>
+        <div className={styles.accountNotice}>
+          <span>Cuenta reviewer</span>
+          <p>Acceso por invitación con Clerk. Sólo roles reviewer o admin pueden ver material asociado.</p>
+          <button type="button" onClick={() => loadLinkedMaterial()} disabled={loading}>
             <LockKeyhole size={15} aria-hidden />
             Abrir material
           </button>
-        </form>
+        </div>
         <div className={styles.ruleBox}>
           <ShieldAlert size={17} aria-hidden />
           <span>Los aportes vinculados siguen siendo material de revisión privada.</span>
@@ -119,7 +102,7 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
             <p className={styles.eyebrow}>Expediente</p>
             <h2>{payload?.target.label ?? caseId}</h2>
           </div>
-          <button type="button" className={styles.secondaryButton} onClick={() => loadLinkedMaterial()} disabled={loading || !accessCode}>
+          <button type="button" className={styles.secondaryButton} onClick={() => loadLinkedMaterial()} disabled={loading}>
             <RefreshCw size={14} aria-hidden />
             Actualizar
           </button>
@@ -167,7 +150,7 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
         ) : (
           <div className={styles.emptyState}>
             <ShieldAlert size={22} aria-hidden />
-            <p>Ingresá el código privado para ver aportes vinculados a este expediente.</p>
+            <p>Usá una cuenta Faro reviewer o admin para ver aportes vinculados a este expediente.</p>
           </div>
         )}
       </section>

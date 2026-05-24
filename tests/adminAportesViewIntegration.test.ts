@@ -17,11 +17,21 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
 
   assert.match(source, /AdminAportesView/);
   assert.match(source, /\/api\/admin\/aportes/);
-  assert.match(source, /Código privado/);
+  assert.match(source, /Cuenta reviewer/);
+  assert.match(source, /Abrir bandeja/);
   assert.match(source, /Bandeja de aportes/);
+  assert.match(source, /Flujo operativo/);
+  assert.match(source, /Recibido/);
+  assert.match(source, /En revisión/);
   assert.match(source, /Necesita más info/);
   assert.match(source, /Aprobado para cargar/);
   assert.match(source, /Descartado/);
+  assert.match(source, /Tomar en revisión/);
+  assert.match(source, /Pedir más info/);
+  assert.match(source, /Aprobar para cargar/);
+  assert.match(source, /Descartar aporte/);
+  assert.match(source, /Trazabilidad interna/);
+  assert.match(source, /timeline/);
   assert.match(source, /Nota interna/);
   assert.match(source, /Modo de contacto/);
   assert.match(source, /Sin contacto/);
@@ -33,6 +43,8 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /ID de expediente o carpeta/);
   assert.match(source, /Sólo material aprobado/);
   assert.match(source, /Guardar vínculo/);
+  assert.doesNotMatch(source, /Código privado/);
+  assert.doesNotMatch(source, /x-faro-admin-code/);
   assert.doesNotMatch(source, /accessCode=/);
   assert.doesNotMatch(source, /Publicar ahora|Publicar caso|Caso probado|Fraude|Corrupción/);
 });
