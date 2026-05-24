@@ -210,7 +210,7 @@ export default function AdminAportesView() {
           </button>
         </header>
 
-        {statusText && <p className={styles.statusText}>{statusText}</p>}
+        {statusText && <p className={styles.statusText} aria-live="polite">{statusText}</p>}
 
         {inbox ? (
           <>

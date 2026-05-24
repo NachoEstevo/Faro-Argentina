@@ -19,13 +19,12 @@ const CountryMap = dynamic(() => import("./CountryMap"), {
 interface Props {
   geojson: FeatureCollection<Geometry, { code: "AR"; name: string }>;
   totalCases: number;
-  lastUpdated: string;
   syncLabel: string;
 }
 
 const WELCOME_STORAGE_KEY = "faro-welcome-dismissed";
 
-export default function RegionalMap({ geojson, totalCases, lastUpdated, syncLabel }: Props) {
+export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
   const [overlayDismissed, setOverlayDismissed] = useState(true);
 
   useEffect(() => {
@@ -107,7 +106,7 @@ export default function RegionalMap({ geojson, totalCases, lastUpdated, syncLabe
         <div className={styles.vignetteTop} aria-hidden />
         <div className={styles.vignetteSides} aria-hidden />
         <FloatingModeToggle />
-        <TrustStrip totalCases={totalCases} lastUpdated={lastUpdated} />
+        <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>
         <WelcomeOverlay dismissed={overlayDismissed} onCTA={handleCTA} />

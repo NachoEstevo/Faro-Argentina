@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     approximateLocation: formString(form, "approximateLocation"),
     capturedAt: formString(form, "capturedAt"),
     missingVerification: formString(form, "missingVerification"),
+    privacyMode: formString(form, "privacyMode"),
     contactName: formString(form, "contactName"),
     contactEmail: formString(form, "contactEmail"),
     sourcePermissionConfirmed: formBoolean(form, "sourcePermissionConfirmed"),

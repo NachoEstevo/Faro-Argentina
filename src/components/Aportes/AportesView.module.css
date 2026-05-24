@@ -215,7 +215,7 @@
 
 .typeGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -306,6 +306,102 @@
   border-color: var(--cf-accent-dim);
 }
 
+.input:disabled {
+  opacity: 0.66;
+  cursor: not-allowed;
+}
+
+.privacyModes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.privacyMode {
+  display: grid;
+  grid-template-columns: 18px 22px 1fr;
+  gap: 5px 10px;
+  align-items: start;
+  min-height: 88px;
+  padding: 14px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg, rgba(21, 28, 35, 0.52));
+  color: var(--cf-text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.privacyMode input {
+  margin: 2px 0 0;
+}
+
+.privacyMode svg {
+  grid-row: span 2;
+  grid-column: 2;
+  color: var(--cf-accent);
+}
+
+.privacyMode:hover,
+.privacyModeActive {
+  border-color: var(--cf-accent-dim);
+  background: var(--cf-accent-faint);
+  color: var(--cf-text);
+}
+
+.privacyModeTitle {
+  grid-column: 3;
+  color: var(--cf-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.privacyModeText {
+  grid-column: 3;
+  color: var(--cf-text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.securityNote {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-left: 3px solid var(--cf-state-caution);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+  color: var(--cf-text-secondary);
+}
+
+.securityNote svg {
+  color: var(--cf-state-caution);
+}
+
+.securityNote p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.securityNote a,
+.policyLinks a {
+  color: var(--cf-accent-hi);
+  font-weight: 700;
+}
+
+.policyLinks {
+  margin: -2px 0 0;
+  color: var(--cf-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .dropzone {
   display: grid;
   gap: 10px;
@@ -361,6 +457,18 @@
 
 .checkRow input {
   margin-top: 2px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .actions {
@@ -423,7 +531,8 @@
 
   .stepper,
   .typeGrid,
-  .grid {
+  .grid,
+  .privacyModes {
     grid-template-columns: 1fr;
   }
 }

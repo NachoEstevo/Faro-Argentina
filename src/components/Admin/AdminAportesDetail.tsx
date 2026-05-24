@@ -61,6 +61,7 @@ export default function AdminAportesDetail({
       </div>
       <dl className={styles.facts}>
         <Fact label="Jurisdicción" value={contribution.jurisdiction} />
+        <Fact label="Modo de contacto" value={privacyModeLabel(contribution)} />
         <Fact label="Contacto" value={[contribution.contactName, contribution.contactEmail].filter(Boolean).join(" · ")} />
         <Fact label="Caso relacionado" value={contribution.relatedCase} />
         <Fact label="Organismo" value={contribution.organization} />
@@ -160,4 +161,10 @@ export default function AdminAportesDetail({
 function Fact({ label, value, href }: { label: string; value?: string | null; href?: string | null }) {
   if (!value) return null;
   return <div><dt>{label}</dt><dd>{href ? <a href={href} target="_blank" rel="noreferrer">{value}</a> : value}</dd></div>;
+}
+
+function privacyModeLabel(contribution: Contribution): string {
+  if (contribution.privacyMode === "contact") return "Permite contacto";
+  if (contribution.privacyMode === "anonymous") return "Sin contacto";
+  return contribution.contactEmail ? "Permite contacto" : "Sin contacto";
 }

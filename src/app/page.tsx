@@ -26,14 +26,12 @@ export default async function Home() {
   const geojson = JSON.parse(raw) as FeatureCollection<Geometry, CountryProps>;
 
   const totalCases = totalCaseCount();
-  const lastUpdated = formatGeneratedAt((snapshotManifest as { generatedAt?: string }).generatedAt);
   const syncLabel = `Datos hasta ${monthLabel((snapshotManifest as { generatedAt?: string }).generatedAt)}`;
 
   return (
     <RegionalMap
       geojson={geojson}
       totalCases={totalCases}
-      lastUpdated={lastUpdated}
       syncLabel={syncLabel}
     />
   );
@@ -53,16 +51,6 @@ const MONTHS_ES = [
   "noviembre",
   "diciembre",
 ];
-
-function formatGeneratedAt(isoDate?: string): string {
-  if (!isoDate) return "—";
-  const date = new Date(isoDate);
-  if (Number.isNaN(date.getTime())) return "—";
-  const day = date.getUTCDate();
-  const month = MONTHS_ES[date.getUTCMonth()];
-  const year = date.getUTCFullYear();
-  return `${day} ${month} ${year}`;
-}
 
 function monthLabel(isoDate?: string): string {
   if (!isoDate) return "diciembre 2025";

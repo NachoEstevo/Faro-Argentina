@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { Database, FileSearch, History, ShieldCheck } from "lucide-react";
+import { Database, FileSearch, ShieldCheck } from "lucide-react";
 
 import { CURATED_CASES } from "@/data/curatedCases";
 import styles from "./RegionalMap.module.css";
 
 interface Props {
   totalCases: number;
-  lastUpdated: string;
 }
 
-export default function TrustStrip({ totalCases, lastUpdated }: Props) {
+export default function TrustStrip({ totalCases }: Props) {
   return (
     <div className={styles.trustStrip} aria-label="Resumen de la fuente">
       <span className={styles.trustItem}>
@@ -20,11 +19,6 @@ export default function TrustStrip({ totalCases, lastUpdated }: Props) {
       <span className={`${styles.trustItem} ${styles.trustExtras}`}>
         <Database size={12} aria-hidden className={styles.trustMuted} />
         {totalCases.toLocaleString("es-AR")} expedientes
-      </span>
-      <span className={`${styles.trustDivider} ${styles.trustExtras}`} aria-hidden />
-      <span className={`${styles.trustItem} ${styles.trustExtras}`}>
-        <History size={12} aria-hidden className={styles.trustMuted} />
-        Última actualización: {lastUpdated}
       </span>
       <span className={styles.trustDivider} aria-hidden />
       <Link

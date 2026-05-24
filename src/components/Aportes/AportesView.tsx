@@ -1,8 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
 import {
-  AlertTriangle,
   Camera,
   CheckCircle2,
   FilePlus2,
@@ -14,6 +14,7 @@ import {
   MessageSquarePlus,
   Send,
   ShieldCheck,
+  UserRoundX,
   UploadCloud,
 } from "lucide-react";
 
@@ -27,18 +28,13 @@ interface Props {
 }
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
+type PrivacyMode = "anonymous" | "contact";
 
 const contributionTypes = [
   {
-    id: "suggest_lead",
-    label: "Sugerir pista",
-    description: "Un registro público que deberíamos revisar.",
-    icon: FileSearch,
-  },
-  {
     id: "add_source",
     label: "Agregar fuente",
-    description: "Un link oficial o documento público faltante.",
+    description: "Un link oficial o público que falta revisar.",
     icon: LinkIcon,
   },
   {
@@ -49,30 +45,70 @@ const contributionTypes = [
   },
   {
     id: "add_photo",
-    label: "Subir archivo/foto",
+    label: "Subir archivo o foto",
     description: "Material propio para revisión privada.",
     icon: Camera,
   },
-  {
-    id: "report_issue",
-    label: "Reportar problema",
-    description: "Algo roto, confuso o imposible de verificar.",
-    icon: AlertTriangle,
-  },
 ] as const;
+
+type ContributionTypeId = (typeof contributionTypes)[number]["id"];
+
+const formCopy: Record<ContributionTypeId, {
+  heading: string;
+  hint: string;
+  titleLabel: string;
+  titlePlaceholder: string;
+  explanationLabel: string;
+  explanationPlaceholder: string;
+  fileTitle: string;
+  fileHint: string;
+}> = {
+  add_source: {
+    heading: "Paso 2 · Fuente para revisar",
+    hint: "La fuente es el centro de este aporte. Preferimos links oficiales, documentos públicos o páginas verificables.",
+    titleLabel: "Nombre neutral de la fuente",
+    titlePlaceholder: "Ej. Acta de adjudicación publicada",
+    explanationLabel: "Qué dato aporta esta fuente",
+    explanationPlaceholder: "Explicá qué debería revisar Faro y cómo se relaciona con un expediente o tema.",
+    fileTitle: "Archivo de respaldo opcional",
+    fileHint: "Si además tenés PDF o captura propia, podés adjuntarla para revisión privada.",
+  },
+  correct_data: {
+    heading: "Paso 2 · Corrección de dato",
+    hint: "Marcá el expediente, el campo que parece incorrecto y la fuente que respalda la corrección.",
+    titleLabel: "Resumen de la corrección",
+    titlePlaceholder: "Ej. Monto oficial incompleto en expediente",
+    explanationLabel: "Por qué habría que corregirlo",
+    explanationPlaceholder: "Describí el dato visible, el problema y la fuente que permite verificarlo.",
+    fileTitle: "Respaldo privado opcional",
+    fileHint: "Podés adjuntar captura o documento de respaldo si ayuda a revisar la corrección.",
+  },
+  add_photo: {
+    heading: "Paso 2 · Archivo o foto",
+    hint: "El archivo necesita contexto mínimo: ubicación, fecha si la tenés y por qué ayuda a revisar.",
+    titleLabel: "Título neutral del material",
+    titlePlaceholder: "Ej. Cartel de obra visible en ruta",
+    explanationLabel: "Qué muestra el archivo",
+    explanationPlaceholder: "Describí qué se ve, desde dónde se tomó y qué expediente o dato podría ayudar a revisar.",
+    fileTitle: "Archivo o foto del aporte",
+    fileHint: "JPG, PNG, WebP o PDF. Hasta 5 archivos, 10 MB cada uno.",
+  },
+};
 
 const aporteSteps = [
   { eyebrow: "Paso 1", title: "Tipo de aporte", detail: "Elegí la categoría más cercana." },
-  { eyebrow: "Paso 2", title: "Datos y archivos", detail: "Agregá el contexto mínimo para revisar." },
+  { eyebrow: "Paso 2", title: "Datos necesarios", detail: "Completá lo que pide ese tipo de aporte." },
   { eyebrow: "Paso 3", title: "Revisión", detail: "Confirmá permisos y contacto opcional." },
 ] as const;
 
 export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchToExplorer, onSwitchToInvestigations }: Props) {
-  const [type, setType] = useState<(typeof contributionTypes)[number]["id"]>("add_photo");
+  const [type, setType] = useState<ContributionTypeId>("add_source");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
+  const [privacyMode, setPrivacyMode] = useState<PrivacyMode>("anonymous");
   const [files, setFiles] = useState<File[]>([]);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [statusText, setStatusText] = useState("");
+  const selectedCopy = formCopy[type];
 
   const fileSummary = useMemo(
     () => files.map((file) => `${file.name} · ${formatBytes(file.size)}`),
@@ -85,6 +121,11 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
     const form = new FormData(formElement);
     form.set("type", type);
     form.set("jurisdiction", jurisdiction);
+    form.set("privacyMode", privacyMode);
+    if (privacyMode === "anonymous") {
+      form.set("contactName", "");
+      form.set("contactEmail", "");
+    }
     files.forEach((file) => form.append("attachments", file));
     setSubmitState("submitting");
     setStatusText("Enviando aporte para revisión privada...");
@@ -139,7 +180,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
         <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>
-          Aportá una fuente, subí un archivo o foto, corregí un dato o sugerí una pista verificable.
+          Aportá una fuente, corregí un dato visible o subí material propio para revisión.
           Todo material enviado pasa por revisión antes de usarse en Faro.
         </p>
         <div className={styles.rules} aria-label="Reglas de revisión">
@@ -168,7 +209,7 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           <section className={styles.section} aria-labelledby="aporte-tipo">
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle} id="aporte-tipo">Paso 1 · Tipo de aporte</h2>
-              <p className={styles.sectionHint}>Elegí el camino más cercano. Todo entra a la misma revisión.</p>
+              <p className={styles.sectionHint}>Tres caminos claros. Todo entra a revisión privada.</p>
             </div>
             <div className={styles.typeGrid}>
               {contributionTypes.map((option) => {
@@ -191,13 +232,20 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
           </section>
           <section className={styles.section} aria-labelledby="aporte-datos">
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} id="aporte-datos">Paso 2 · Datos y archivos</h2>
-              <p className={styles.sectionHint}>El aporte es más útil cuando tiene una fuente, un caso o una ubicación para revisar.</p>
+              <h2 className={styles.sectionTitle} id="aporte-datos">{selectedCopy.heading}</h2>
+              <p className={styles.sectionHint}>{selectedCopy.hint}</p>
             </div>
             <div className={styles.grid}>
               <label className={styles.field}>
-                <span className={styles.label}>Título neutral</span>
-                <input className={styles.input} name="title" required maxLength={140} />
+                <span className={styles.label}>{selectedCopy.titleLabel}</span>
+                <input
+                  className={styles.input}
+                  name="title"
+                  required
+                  maxLength={140}
+                  aria-label={selectedCopy.titleLabel}
+                  placeholder={selectedCopy.titlePlaceholder}
+                />
               </label>
               <label className={styles.field}>
                 <span className={styles.label}>País o jurisdicción</span>
@@ -210,36 +258,79 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 </select>
               </label>
               <label className={`${styles.field} ${styles.fieldWide}`}>
-                <span className={styles.label}>Qué aporta o qué deberíamos revisar</span>
-                <textarea className={styles.textarea} name="explanation" required />
+                <span className={styles.label}>{selectedCopy.explanationLabel}</span>
+                <textarea
+                  className={styles.textarea}
+                  name="explanation"
+                  required
+                  aria-label={selectedCopy.explanationLabel}
+                  placeholder={selectedCopy.explanationPlaceholder}
+                />
               </label>
-              <label className={styles.field}>
-                <span className={styles.label}>Link público u oficial</span>
-                <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" />
-              </label>
-              <label className={styles.field}>
-                <span className={styles.label}>Caso Faro relacionado</span>
-                <input className={styles.input} name="relatedCase" placeholder="ID o URL del caso" />
-              </label>
-              <label className={styles.field}>
-                <span className={styles.label}>Ubicacion aproximada</span>
-                <input className={styles.input} name="approximateLocation" />
-              </label>
-              <label className={styles.field}>
-                <span className={styles.label}>Fecha de la foto o dato</span>
-                <input className={styles.input} name="capturedAt" type="date" />
-              </label>
+              {type === "add_source" && (
+                <>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Link oficial o público</span>
+                    <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" required placeholder="https://..." />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Caso Faro relacionado</span>
+                    <input className={styles.input} name="relatedCase" placeholder="ID o URL del caso si existe" />
+                  </label>
+                </>
+              )}
+              {type === "correct_data" && (
+                <>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Caso Faro relacionado</span>
+                    <input className={styles.input} name="relatedCase" required placeholder="ID o URL del expediente" />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Fuente que respalda la corrección</span>
+                    <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" required placeholder="https://..." />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Campo a corregir</span>
+                    <input className={styles.input} name="missingVerification" required placeholder="Monto, proveedor, fecha, ubicación..." />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Valor sugerido</span>
+                    <input className={styles.input} name="amountOrDate" required placeholder="Dato corregido o explicación breve" />
+                  </label>
+                </>
+              )}
+              {type === "add_photo" && (
+                <>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Ubicación aproximada</span>
+                    <input className={styles.input} name="approximateLocation" required placeholder="Provincia, localidad o referencia" />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Fecha de la foto o dato</span>
+                    <input className={styles.input} name="capturedAt" type="date" />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Caso Faro relacionado</span>
+                    <input className={styles.input} name="relatedCase" placeholder="ID o URL si lo conocés" />
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.label}>Link público u oficial</span>
+                    <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" placeholder="Opcional" />
+                  </label>
+                </>
+              )}
             </div>
-            <h3 className={styles.subsectionTitle}>Archivos privados</h3>
+            <h3 className={styles.subsectionTitle}>{selectedCopy.fileTitle}</h3>
             <div className={styles.dropzone}>
               <label className={styles.field}>
-                <span className={styles.label}>JPG, PNG, WebP o PDF. Hasta 5 archivos, 10 MB cada uno.</span>
+                <span className={styles.label}>{selectedCopy.fileHint}</span>
                 <input
                   className={styles.fileInput}
                   name="attachmentsInput"
                   type="file"
                   accept="image/jpeg,image/png,image/webp,application/pdf"
                   multiple
+                  required={type === "add_photo" && files.length === 0}
                   onChange={handleFiles}
                 />
               </label>
@@ -260,14 +351,54 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
               <h2 className={styles.sectionTitle} id="aporte-contacto">Paso 3 · Revisión y contacto</h2>
               <p className={styles.sectionHint}>Faro guarda esto como material privado hasta que el equipo lo valide.</p>
             </div>
+            <fieldset className={styles.privacyModes}>
+              <legend className={styles.srOnly}>Modo de contacto</legend>
+              <label className={`${styles.privacyMode} ${privacyMode === "anonymous" ? styles.privacyModeActive : ""}`}>
+                <input
+                  type="radio"
+                  name="privacyMode"
+                  value="anonymous"
+                  checked={privacyMode === "anonymous"}
+                  onChange={() => setPrivacyMode("anonymous")}
+                />
+                <UserRoundX size={17} aria-hidden />
+                <span className={styles.privacyModeTitle}>Enviar sin contacto</span>
+                <span className={styles.privacyModeText}>No pedimos nombre ni email para este aporte.</span>
+              </label>
+              <label className={`${styles.privacyMode} ${privacyMode === "contact" ? styles.privacyModeActive : ""}`}>
+                <input
+                  type="radio"
+                  name="privacyMode"
+                  value="contact"
+                  checked={privacyMode === "contact"}
+                  onChange={() => setPrivacyMode("contact")}
+                />
+                <ShieldCheck size={17} aria-hidden />
+                <span className={styles.privacyModeTitle}>Permitir contacto</span>
+                <span className={styles.privacyModeText}>Requiere email para poder pedir contexto adicional.</span>
+              </label>
+            </fieldset>
+            <div className={styles.securityNote}>
+              <ShieldCheck size={16} aria-hidden />
+              <p>
+                Sin contacto no significa anonimato absoluto: navegador, red, hosting o requerimientos legales pueden generar metadata tecnica. Ver{" "}
+                <Link href="/seguridad">seguridad y anonimato</Link>.
+              </p>
+            </div>
             <div className={styles.grid}>
               <label className={styles.field}>
                 <span className={styles.label}>Nombre</span>
-                <input className={styles.input} name="contactName" />
+                <input className={styles.input} name="contactName" disabled={privacyMode === "anonymous"} />
               </label>
               <label className={styles.field}>
                 <span className={styles.label}>Email</span>
-                <input className={styles.input} name="contactEmail" type="email" />
+                <input
+                  className={styles.input}
+                  name="contactEmail"
+                  type="email"
+                  required={privacyMode === "contact"}
+                  disabled={privacyMode === "anonymous"}
+                />
               </label>
             </div>
             <div className={styles.checks}>
@@ -280,6 +411,10 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
                 <span>Entiendo que el aporte entra a revisión y no se publica automáticamente.</span>
               </label>
             </div>
+            <p className={styles.policyLinks}>
+              Antes de enviar, revisá la <Link href="/aportes/politica">política de aportes</Link>, la{" "}
+              <Link href="/privacidad">privacidad</Link> y los <Link href="/terminos">términos</Link>.
+            </p>
           </section>
           <div className={styles.actions}>
             <button className={styles.submit} type="submit" disabled={submitState === "submitting"}>
@@ -287,7 +422,10 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
               Enviar aporte para revisión
             </button>
             {statusText && (
-              <p className={`${styles.status} ${submitState === "error" ? styles.statusError : ""} ${submitState === "success" ? styles.statusSuccess : ""}`}>
+              <p
+                className={`${styles.status} ${submitState === "error" ? styles.statusError : ""} ${submitState === "success" ? styles.statusSuccess : ""}`}
+                aria-live="polite"
+              >
                 {statusText}
               </p>
             )}

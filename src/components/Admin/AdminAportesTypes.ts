@@ -1,5 +1,6 @@
 export type ReviewStatus = "submitted" | "needs_more_info" | "accepted_for_review" | "approved" | "rejected";
 export type ReviewLinkTarget = "case" | "workspace";
+export type ContributionPrivacyMode = "anonymous" | "contact";
 
 export interface Attachment {
   id: string;
@@ -34,6 +35,7 @@ export interface Contribution {
   approximateLocation: string | null;
   capturedAt: string | null;
   missingVerification: string | null;
+  privacyMode?: ContributionPrivacyMode;
   contactName: string | null;
   contactEmail: string | null;
   status: ReviewStatus;

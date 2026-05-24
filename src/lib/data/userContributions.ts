@@ -1,9 +1,7 @@
 export const CONTRIBUTION_TYPES = [
-  "suggest_lead",
   "add_source",
   "correct_data",
   "add_photo",
-  "report_issue",
 ] as const;
 
 export type ContributionType = (typeof CONTRIBUTION_TYPES)[number];
@@ -17,6 +15,10 @@ export const CONTRIBUTION_REVIEW_STATUSES = [
 ] as const;
 
 export type ContributionReviewStatus = (typeof CONTRIBUTION_REVIEW_STATUSES)[number];
+
+export const CONTRIBUTION_PRIVACY_MODES = ["anonymous", "contact"] as const;
+
+export type ContributionPrivacyMode = (typeof CONTRIBUTION_PRIVACY_MODES)[number];
 
 export interface ContributionAttachmentDraft {
   filename: string;
@@ -39,6 +41,7 @@ export interface UserContributionDraft {
   approximateLocation?: string;
   capturedAt?: string;
   missingVerification?: string;
+  privacyMode?: string;
   contactName?: string;
   contactEmail?: string;
   sourcePermissionConfirmed: boolean;
@@ -82,6 +85,7 @@ export interface UserContribution {
   approximateLocation: string | null;
   capturedAt: string | null;
   missingVerification: string | null;
+  privacyMode: ContributionPrivacyMode;
   contactName: string | null;
   contactEmail: string | null;
   sourcePermissionConfirmed: true;
@@ -117,10 +121,18 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
   const explanation = normalizeString(draft.explanation);
   const publicSourceUrl = normalizeString(draft.publicSourceUrl);
   const relatedCase = normalizeString(draft.relatedCase);
+  const amountOrDate = normalizeString(draft.amountOrDate);
   const approximateLocation = normalizeString(draft.approximateLocation);
+  const missingVerification = normalizeString(draft.missingVerification);
+  const contactName = normalizeString(draft.contactName);
+  const contactEmail = normalizeString(draft.contactEmail);
+  const privacyMode = resolvePrivacyMode(draft.privacyMode, contactName, contactEmail);
 
   if (!isContributionType(type)) {
     errors.push({ field: "type", message: "Selecciona un tipo de aporte valido." });
+  }
+  if (!privacyMode) {
+    errors.push({ field: "privacyMode", message: "Selecciona si queres enviar el aporte sin contacto o con contacto." });
   }
   if (!title) {
     errors.push({ field: "title", message: "Agrega un titulo neutral." });
@@ -138,12 +150,31 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
   if (publicSourceUrl && !isValidHttpUrl(publicSourceUrl)) {
     errors.push({ field: "publicSourceUrl", message: "El link publico debe ser una URL valida." });
   }
-  if (!hasReviewAnchor({ publicSourceUrl, relatedCase, approximateLocation, attachments })) {
+  if (contactEmail && !isValidEmail(contactEmail)) {
+    errors.push({ field: "contactEmail", message: "El email de contacto no parece valido." });
+  }
+  if (privacyMode === "contact" && !contactEmail) {
     errors.push({
-      field: "reviewAnchor",
-      message: "Necesitamos un link publico, un caso relacionado, una ubicacion o un archivo con contexto para poder revisar.",
+      field: "contactEmail",
+      message: "Para permitir contacto, agrega un email o elegi enviar sin contacto.",
     });
   }
+  if (privacyMode === "anonymous" && (contactName || contactEmail)) {
+    errors.push({
+      field: "privacyMode",
+      message: "Para enviar sin contacto, deja nombre y email vacios.",
+    });
+  }
+  validateTypeSpecificFields({
+    errors,
+    type,
+    publicSourceUrl,
+    relatedCase,
+    amountOrDate,
+    approximateLocation,
+    missingVerification,
+    attachments,
+  });
   if (!draft.sourcePermissionConfirmed) {
     errors.push({
       field: "sourcePermissionConfirmed",
@@ -199,6 +230,7 @@ export function buildUserContribution(
   }
   const attachments = draft.attachments ?? [];
   const attachmentKeys = options.attachmentKeys ?? [];
+  const privacyMode = resolvePrivacyMode(draft.privacyMode, draft.contactName, draft.contactEmail) ?? "anonymous";
   return {
     id: options.id,
     type: normalizeString(draft.type) as ContributionType,
@@ -214,15 +246,18 @@ export function buildUserContribution(
     approximateLocation: optionalString(draft.approximateLocation),
     capturedAt: optionalString(draft.capturedAt),
     missingVerification: optionalString(draft.missingVerification),
-    contactName: optionalString(draft.contactName),
-    contactEmail: optionalString(draft.contactEmail),
+    privacyMode,
+    contactName: privacyMode === "anonymous" ? null : optionalString(draft.contactName),
+    contactEmail: privacyMode === "anonymous" ? null : optionalString(draft.contactEmail),
     sourcePermissionConfirmed: true,
     reviewConfirmed: true,
     status: "submitted",
     createdAt: options.createdAt,
     attachments: attachments.map((attachment, index) => ({
       id: `ATT-${String(index + 1).padStart(3, "0")}`,
-      originalFilename: normalizeFilename(attachment.filename),
+      originalFilename: privacyMode === "anonymous"
+        ? anonymousFilename(index, attachment.filename, attachment.mimeType)
+        : normalizeFilename(attachment.filename),
       objectKey: attachmentKeys[index] ?? "",
       mimeType: normalizeString(attachment.mimeType).toLowerCase(),
       sizeBytes: attachment.sizeBytes,
@@ -235,6 +270,10 @@ export function buildUserContribution(
 
 export function isContributionType(value: string): value is ContributionType {
   return CONTRIBUTION_TYPES.includes(value as ContributionType);
+}
+
+export function isContributionPrivacyMode(value: string): value is ContributionPrivacyMode {
+  return CONTRIBUTION_PRIVACY_MODES.includes(value as ContributionPrivacyMode);
 }
 
 export function extensionForAttachment(filename: string, mimeType: string): string {
@@ -257,19 +296,50 @@ export function extensionForAttachment(filename: string, mimeType: string): stri
   }
 }
 
-function hasReviewAnchor({
+function validateTypeSpecificFields({
+  errors,
+  type,
   publicSourceUrl,
   relatedCase,
+  amountOrDate,
   approximateLocation,
+  missingVerification,
   attachments,
 }: {
+  errors: ContributionValidationError[];
+  type: string;
   publicSourceUrl: string;
   relatedCase: string;
+  amountOrDate: string;
   approximateLocation: string;
+  missingVerification: string;
   attachments: readonly ContributionAttachmentDraft[];
-}): boolean {
-  if (publicSourceUrl || relatedCase) return true;
-  return attachments.length > 0 && Boolean(approximateLocation);
+}) {
+  if (type === "add_source" && !publicSourceUrl) {
+    errors.push({ field: "publicSourceUrl", message: "Agrega el link oficial o publico de la fuente." });
+  }
+  if (type === "correct_data") {
+    if (!relatedCase) {
+      errors.push({ field: "relatedCase", message: "Indica el expediente o caso Faro que queres corregir." });
+    }
+    if (!publicSourceUrl) {
+      errors.push({ field: "publicSourceUrl", message: "Agrega una fuente que respalde la correccion." });
+    }
+    if (!missingVerification) {
+      errors.push({ field: "missingVerification", message: "Indica que campo visible deberiamos corregir." });
+    }
+    if (!amountOrDate) {
+      errors.push({ field: "amountOrDate", message: "Agrega el valor sugerido o la correccion propuesta." });
+    }
+  }
+  if (type === "add_photo") {
+    if (!approximateLocation) {
+      errors.push({ field: "approximateLocation", message: "Agrega una ubicacion aproximada para revisar el material." });
+    }
+    if (attachments.length === 0) {
+      errors.push({ field: "attachments", message: "Subi al menos un archivo o foto para este tipo de aporte." });
+    }
+  }
 }
 
 function hasUnsafeCopy(value: string): boolean {
@@ -283,6 +353,27 @@ function isValidHttpUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function resolvePrivacyMode(
+  value: unknown,
+  contactName: unknown,
+  contactEmail: unknown,
+): ContributionPrivacyMode | null {
+  const normalized = normalizeString(value);
+  if (!normalized) {
+    return normalizeString(contactName) || normalizeString(contactEmail) ? "contact" : "anonymous";
+  }
+  return isContributionPrivacyMode(normalized) ? normalized : null;
+}
+
+function anonymousFilename(index: number, filename: string, mimeType: string): string {
+  const extension = extensionForAttachment(filename, mimeType);
+  return `archivo-${String(index + 1).padStart(3, "0")}.${extension}`;
 }
 
 function normalizeString(value: unknown): string {

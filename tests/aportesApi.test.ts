@@ -19,6 +19,7 @@ test("POST /api/aportes stores a private photo contribution in local review stor
     form.set("explanation", "La imagen muestra el estado visible de la obra para revisar internamente.");
     form.set("relatedCase", "AR-CONTRATAR-CONTRATOS-381-1001-CON21");
     form.set("approximateLocation", "Santa Cruz");
+    form.set("privacyMode", "anonymous");
     form.set("sourcePermissionConfirmed", "true");
     form.set("reviewConfirmed", "true");
     form.append("attachments", new File(["fake image"], "obra.webp", { type: "image/webp" }));
@@ -35,7 +36,10 @@ test("POST /api/aportes stores a private photo contribution in local review stor
     );
     assert.equal(stored.type, "add_photo");
     assert.equal(stored.status, "submitted");
+    assert.equal(stored.privacyMode, "anonymous");
+    assert.equal(stored.contactEmail, null);
     assert.equal(stored.attachments[0].mimeType, "image/webp");
+    assert.equal(stored.attachments[0].originalFilename, "archivo-001.webp");
     assert.equal(stored.attachments[0].publicUrl, undefined);
 
     const attachment = await readFile(join(storageDir, stored.attachments[0].objectKey));
@@ -55,6 +59,7 @@ test("POST /api/aportes rejects invalid contribution payloads", async () => {
   form.set("title", "Fraude en obra publica");
   form.set("jurisdiction", "AR");
   form.set("explanation", "Esto demuestra corrupcion.");
+  form.set("privacyMode", "anonymous");
   form.set("sourcePermissionConfirmed", "true");
   form.set("reviewConfirmed", "true");
 
@@ -62,7 +67,12 @@ test("POST /api/aportes rejects invalid contribution payloads", async () => {
   const payload = await response.json() as { errors: Array<{ field: string }> };
 
   assert.equal(response.status, 400);
-  assert.deepEqual(payload.errors.map((error) => error.field), ["title", "explanation", "reviewAnchor"]);
+  assert.deepEqual(payload.errors.map((error) => error.field), [
+    "title",
+    "explanation",
+    "approximateLocation",
+    "attachments",
+  ]);
 });
 
 test("POST /api/aportes hides internal storage failures from public responses", async () => {
@@ -86,6 +96,7 @@ test("POST /api/aportes hides internal storage failures from public responses", 
     form.set("jurisdiction", "AR");
     form.set("explanation", "La fuente agrega contexto verificable para revisión interna.");
     form.set("publicSourceUrl", "https://example.com/fuente");
+    form.set("privacyMode", "anonymous");
     form.set("sourcePermissionConfirmed", "true");
     form.set("reviewConfirmed", "true");
 
