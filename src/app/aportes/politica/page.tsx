@@ -12,12 +12,24 @@ export default function ContributionPolicyPage() {
       eyebrow="Aportes"
       title="Politica de aportes"
       intro="Los aportes ayudan a encontrar fuentes, corregir datos y sumar contexto. No son publicaciones publicas ni acusaciones."
-      updatedAt="24 de mayo de 2026"
+      updatedAt="25 de mayo de 2026"
       sections={[
         {
           title: "Revision privada",
           body: (
             <p>Todo aporte entra a una bandeja privada. No aparece automaticamente en el mapa, Explorer, informes, exports ni expedientes publicos.</p>
+          ),
+        },
+        {
+          title: "Modo sin contacto",
+          body: (
+            <p>Si elegis enviar sin contacto, Faro no pide nombre ni email para ese aporte. Ese modo reduce datos pedidos, pero no garantiza anonimato absoluto: red, navegador, infraestructura, requerimientos legales o archivos subidos pueden conservar datos tecnicos.</p>
+          ),
+        },
+        {
+          title: "Archivos y metadatos",
+          body: (
+            <p>En aportes sin contacto, Faro puede guardar nombres de archivo neutralizados en el manifiesto interno. El contenido del archivo puede conservar metadatos EXIF o PDF, texto visible, ubicacion embebida o datos de terceros. Revisá el material antes de enviarlo.</p>
           ),
         },
         {
@@ -52,6 +64,12 @@ export default function ContributionPolicyPage() {
           title: "Que significa aprobado",
           body: (
             <p>Un aporte aprobado no significa verdadero, probado ni publicado. Significa que puede seguir dentro del flujo interno de revision, relacionarse con un expediente o alimentar una mejora controlada.</p>
+          ),
+        },
+        {
+          title: "Retencion y descarte",
+          body: (
+            <p>El equipo debe conservar aportes solo durante el tiempo necesario para revision, auditoria, seguridad o trazabilidad. El descarte debe impedir que el material siga avanzando en producto salvo que exista una razon legal, tecnica o de seguridad para conservar un registro limitado.</p>
           ),
         },
       ]}

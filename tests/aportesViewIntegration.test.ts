@@ -46,6 +46,8 @@ test("AportesView submits private contributions with file attachments", async ()
   assert.match(source, /name="contactEmail"[\s\S]*required=\{privacyMode === "contact"\}/);
   assert.doesNotMatch(source, /role="radiogroup"/);
   assert.match(source, /no significa anonimato absoluto/i);
+  assert.match(source, /nombre neutralizado/);
+  assert.match(source, /metadatos EXIF o PDF/);
   assert.match(source, /\/aportes\/politica/);
   assert.match(source, /\/privacidad/);
   assert.match(source, /\/terminos/);
@@ -149,6 +151,16 @@ test("legal policy pages exist as static app routes", async () => {
   for (const routeUrl of routeUrls) {
     const source = await readFile(routeUrl, "utf8");
     assert.match(source, /LegalDocument/);
-    assert.match(source, /24 de mayo de 2026/);
+    assert.match(source, /mayo de 2026/);
   }
+
+  const privacySource = await readFile(routeUrls[0], "utf8");
+  const securitySource = await readFile(routeUrls[2], "utf8");
+  const policySource = await readFile(routeUrls[3], "utf8");
+  assert.match(privacySource, /Retencion/);
+  assert.match(privacySource, /transferencias internacionales/);
+  assert.match(securitySource, /Metadatos de archivos/);
+  assert.match(securitySource, /URLs publicas permanentes/);
+  assert.match(policySource, /Modo sin contacto/);
+  assert.match(policySource, /Retencion y descarte/);
 });

@@ -177,7 +177,14 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /initialPreset/);
   assert.match(source, /CURATED_CASES/);
   assert.match(source, /selectedCaseIds/);
-  assert.match(source, /Expedientes seleccionados/);
+  assert.match(source, /selectedCasesForBanner/);
+  assert.match(source, /Casos para presentar/);
+  assert.match(source, /Criterio de selección/);
+  assert.match(source, /presetBannerHeader/);
+  assert.match(source, /presentationReason/);
+  assert.match(source, /officialBasis/);
+  assert.match(source, /caveat/);
+  assert.match(source, /nextStep/);
   assert.match(source, /Ver todos los expedientes|Limpiar filtro/);
   assert.match(source, /preset === "selected"/);
   assert.match(source, /selectedDetailCase/);
@@ -188,4 +195,10 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /router\.replace/);
   assert.match(source, /presetScopedCases/);
   assert.match(css, /\.presetBanner/);
+  assert.match(css, /\[data-platform-theme="light"\]\) \.presetBanner/);
+  assert.match(css, /\.presetBannerHeader/);
+  assert.match(css, /\.presetRationaleList/);
+  assert.match(css, /\.presetRationaleItem/);
+  assert.match(css, /repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 1280px\)/);
 });

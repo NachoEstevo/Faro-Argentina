@@ -10,12 +10,13 @@ const curatedCasesUrl = new URL("../src/data/curatedCases.ts", import.meta.url);
 const regionalMapUrl = new URL("../src/components/RegionalMap/RegionalMap.tsx", import.meta.url);
 const countryMapUrl = new URL("../src/components/RegionalMap/CountryMap.tsx", import.meta.url);
 const trustStripUrl = new URL("../src/components/RegionalMap/TrustStrip.tsx", import.meta.url);
+const presentationPackageUrl = new URL("../docs/presentation/2026-05-25-institutional-demo-package.md", import.meta.url);
 
 const forbiddenCopy = /corrup|fraude|culpable|sospech|obra fantasma|red de corrup/i;
 
 test("curated cases are a small evidence-first set, not a forced grid", () => {
   assert.ok(CURATED_CASES.length >= 1);
-  assert.ok(CURATED_CASES.length <= 5);
+  assert.ok(CURATED_CASES.length <= 6);
 });
 
 test("curated cases point to real Faro cases with receipts and caveats", () => {
@@ -24,6 +25,8 @@ test("curated cases point to real Faro cases with receipts and caveats", () => {
     assert.ok(caseFile, `${curated.caseId} should exist`);
     assert.ok(caseFile.receipt, `${curated.caseId} should have a receipt`);
     assert.ok(caseFile.caveats?.length, `${curated.caseId} should expose caveats`);
+    assert.ok(curated.presentationReason.length >= 40, `${curated.caseId} should explain why it is selected`);
+    assert.ok(curated.nextStep.length >= 40, `${curated.caseId} should expose a next verification step`);
   }
 });
 
@@ -82,4 +85,22 @@ test("regional home keeps the map clean and links selected cases from the trust 
   assert.match(trustStripSource, /Seleccionados/);
   assert.match(trustStripSource, /preset=selected/);
   assert.match(curatedDataSource, /sin punto de mapa validado/i);
+});
+
+test("institutional package stays grounded in selected cases and evidence boundaries", async () => {
+  const source = await readFile(presentationPackageUrl, "utf8");
+
+  assert.doesNotMatch(source, forbiddenCopy);
+  assert.match(source, /Faro no acusa/);
+  assert.match(source, /\/pais\/AR\?mode=explorer&preset=selected/);
+  assert.match(source, /\/pais\/AR\?mode=aportes/);
+  assert.match(source, /\/pais\/AR\?mode=investigations/);
+  assert.match(source, /\/admin\/aportes/);
+  assert.match(source, /\/expediente\/AR-CONTRACT-74-0052-CON23\/informe/);
+  assert.match(source, /Frontera de evidencia/);
+  assert.match(source, /Que no afirmar/);
+
+  for (const curated of CURATED_CASES) {
+    assert.match(source, new RegExp(curated.caseId), `${curated.caseId} should be in the package`);
+  }
 });

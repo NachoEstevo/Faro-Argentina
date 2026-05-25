@@ -12,7 +12,7 @@ export default function SecurityPage() {
       eyebrow="Seguridad"
       title="Seguridad y anonimato"
       intro="Faro ofrece modos de uso con distintos niveles de identificacion. La promesa debe ser clara: podemos reducir datos pedidos, pero no prometer anonimato absoluto en una aplicacion web."
-      updatedAt="24 de mayo de 2026"
+      updatedAt="25 de mayo de 2026"
       sections={[
         {
           title: "Modos de uso",
@@ -37,10 +37,17 @@ export default function SecurityPage() {
             <ul>
               <li>Los aportes quedan en revision privada.</li>
               <li>Los archivos no se publican como adjuntos publicos automaticamente.</li>
+              <li>Los archivos privados deben servirse por accesos limitados, no por URLs publicas permanentes.</li>
               <li>Las carpetas privadas requieren cuenta.</li>
               <li>Los accesos administrativos deben estar limitados a roles internos.</li>
               <li>La evidencia oficial se mantiene separada del material aportado por usuarios.</li>
             </ul>
+          ),
+        },
+        {
+          title: "Metadatos de archivos",
+          body: (
+            <p>Faro puede neutralizar el nombre de archivo que guarda en su manifiesto interno para aportes sin contacto. Eso no elimina metadatos dentro del archivo original, como EXIF, autor de PDF, ubicacion embebida, miniaturas o texto visible. El equipo revisor debe revisar ese material antes de usarlo.</p>
           ),
         },
         {

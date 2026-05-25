@@ -538,18 +538,28 @@
 
 .presetBanner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 18px;
-  padding: 18px 20px;
-  background: linear-gradient(135deg, rgba(22, 26, 34, 0.98), rgba(20, 31, 42, 0.94));
+  gap: 16px;
+  padding: 18px;
+  background: var(--cf-workspace-panel-bg, linear-gradient(135deg, rgba(22, 26, 34, 0.98), rgba(20, 31, 42, 0.94)));
   border: 1px solid rgba(90, 169, 229, 0.28);
   border-radius: 10px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.presetBannerHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.presetBannerIntro {
+  display: grid;
+  gap: 4px;
+}
+
 .presetEyebrow {
-  margin: 0 0 5px;
+  margin: 0;
   font-family: var(--cf-font-data);
   font-size: 10px;
   font-weight: 700;
@@ -562,17 +572,83 @@
   margin: 0;
   color: var(--cf-text);
   font-family: var(--cf-font-heading);
-  font-size: 18px;
+  font-size: clamp(20px, 1.8vw, 26px);
   font-weight: 600;
   letter-spacing: 0;
 }
 
 .presetBanner p {
-  margin: 6px 0 0;
+  margin: 0;
   max-width: 68ch;
   color: var(--cf-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
+}
+
+.presetRationaleList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.presetRationaleItem {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  min-height: 150px;
+  padding: 14px;
+  border: 1px solid var(--cf-border);
+  border-radius: 8px;
+  background: var(--cf-workspace-card-bg, var(--cf-bg-elev));
+  color: var(--cf-text-secondary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--cf-shadow-soft);
+}
+
+.presetRationaleItem:hover {
+  border-color: var(--cf-accent-dim);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text);
+}
+
+.presetCaseKicker {
+  width: fit-content;
+  color: var(--cf-accent);
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.presetRationaleItem strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--cf-text);
+  font-size: 16px;
+  line-height: 1.2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.presetRationaleItem small {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.presetCaseMeta {
+  align-self: end;
+  margin-top: 2px;
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-data);
+  font-size: 11px;
 }
 
 .presetClearButton {
@@ -595,6 +671,27 @@
 .presetClearButton:hover {
   border-color: var(--cf-accent);
   color: var(--cf-accent-hi);
+}
+
+:global([data-platform-theme="light"]) .presetBanner {
+  border-color: #c8d8e6;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(23, 32, 43, 0.08);
+}
+
+:global([data-platform-theme="light"]) .presetRationaleItem {
+  background: #f8fbfd;
+  box-shadow: none;
+}
+
+:global([data-platform-theme="light"]) .presetRationaleItem:hover {
+  background: #eef6fc;
+}
+
+@media (max-width: 1280px) {
+  .presetRationaleList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .searchBox {
@@ -1638,6 +1735,12 @@
     grid-template-columns: 1fr;
     gap: 12px;
     padding: 15px;
+  }
+  .presetBannerHeader {
+    flex-direction: column;
+  }
+  .presetRationaleList {
+    grid-template-columns: 1fr;
   }
   .presetClearButton {
     width: fit-content;

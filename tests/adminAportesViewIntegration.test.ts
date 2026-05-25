@@ -36,6 +36,8 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Modo de contacto/);
   assert.match(source, /Sin contacto/);
   assert.match(source, /Permite contacto/);
+  assert.match(source, /Revisar metadatos/);
+  assert.match(source, /archivo aportado/);
   assert.match(source, /Material no verificado/);
   assert.match(source, /No se publica automáticamente/);
   assert.match(source, /aria-live="polite"/);

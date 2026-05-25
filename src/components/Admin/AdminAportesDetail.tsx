@@ -74,6 +74,9 @@ export default function AdminAportesDetail({
       </dl>
       <section className={styles.files}>
         <h4>Archivos privados</h4>
+        <p className={styles.reviewCaution}>
+          Revisar metadatos, contenido visible y permisos antes de usar un archivo aportado. El modo sin contacto no vuelve anonimo el archivo original.
+        </p>
         {contribution.attachments.length === 0 ? (
           <p className={styles.empty}>Sin archivos adjuntos.</p>
         ) : contribution.attachments.map((attachment) => (

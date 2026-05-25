@@ -117,6 +117,12 @@ export default function ExplorerView({
     () => new Set(CURATED_CASES.map((caseFile) => caseFile.caseId)),
     [],
   );
+  const selectedCasesForBanner = useMemo(
+    () => CURATED_CASES.filter((caseFile) =>
+      cases.some((candidate) => candidate.id === caseFile.caseId && candidate.countryCode === countryScope)
+    ),
+    [cases, countryScope],
+  );
 
   function switchPlatformMode(mode: PlatformMode) {
     if (mode === "map") onSwitchToMap();
@@ -458,17 +464,32 @@ export default function ExplorerView({
         <div className={styles.searchWrap}>
           {preset === "selected" && (
             <section className={styles.presetBanner} aria-label="Expedientes seleccionados">
-              <div>
-                <p className={styles.presetEyebrow}>Selección curada</p>
-                <h2>Expedientes seleccionados</h2>
-                <p>
-                  Lista breve de casos con recibos, caveats y próximos pasos claros.
-                  No reemplaza una búsqueda completa.
-                </p>
+              <div className={styles.presetBannerHeader}>
+                <div className={styles.presetBannerIntro}>
+                  <p className={styles.presetEyebrow}>Selección curada</p>
+                  <h2>Casos para presentar</h2>
+                  <p>Un set corto para mostrar el flujo sin convertirlo en galería.</p>
+                </div>
+                <button type="button" className={styles.presetClearButton} onClick={clearPreset}>
+                  Ver todos los expedientes
+                </button>
               </div>
-              <button type="button" className={styles.presetClearButton} onClick={clearPreset}>
-                Ver todos los expedientes
-              </button>
+              <div className={styles.presetRationaleList} aria-label="Criterio de selección">
+                {selectedCasesForBanner.map((caseFile) => (
+                  <button
+                    key={caseFile.caseId}
+                    type="button"
+                    className={styles.presetRationaleItem}
+                    onClick={() => onSelectCase(caseFile.caseId, caseFile.countryCode)}
+                    aria-label={`${caseFile.title}. ${caseFile.presentationReason} ${caseFile.officialBasis} ${caseFile.caveat} Próximo paso: ${caseFile.nextStep}`}
+                  >
+                    <span className={styles.presetCaseKicker}>{caseFile.kicker}</span>
+                    <strong>{caseFile.title}</strong>
+                    <small>{caseFile.presentationReason}</small>
+                    <span className={styles.presetCaseMeta}>{caseFile.officialBasis}</span>
+                  </button>
+                ))}
+              </div>
             </section>
           )}
           <label className={styles.searchBox}>
