@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import type { InvestigationDossier } from "@/lib/data/investigationDossiers";
 import {
   getInvestigationRelationReasonLabel,
   type InvestigationAggregate,
@@ -58,6 +59,11 @@ interface AnalysisPanelProps {
 
 interface WorkspaceHeaderProps {
   workspace: InvestigationWorkspace;
+}
+
+interface DossierBuilderPanelProps {
+  dossier: InvestigationDossier | null;
+  caseCount: number;
 }
 
 interface CaseSearchPanelProps {
@@ -438,6 +444,79 @@ export function WorkspaceExportPanel({
   );
 }
 
+export function DossierBuilderPanel({ dossier, caseCount }: DossierBuilderPanelProps) {
+  if (!dossier) {
+    return (
+      <section className={styles.panel}>
+        <h3>Dossier de trabajo</h3>
+        <p className={styles.empty}>
+          {caseCount > 0
+            ? "Cargando matriz de evidencia con los expedientes guardados."
+            : "Agregá expedientes para construir una matriz de evidencia."}
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className={styles.panel}>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Dossier de trabajo</h3>
+          <p>Ordena evidencia oficial, contexto del usuario, brechas y próximos pasos. No publica ni concluye por sí solo.</p>
+        </div>
+      </div>
+      <div className={styles.dossierGrid}>
+        <div className={styles.dossierMatrix}>
+          <h4>Matriz de evidencia</h4>
+          {dossier.matrix.length === 0 ? (
+            <p className={styles.empty}>Sin expedientes seleccionados.</p>
+          ) : (
+            dossier.matrix.slice(0, 5).map((row) => (
+              <div key={row.caseId} className={styles.matrixRow}>
+                <div className={styles.matrixMeta}>
+                  <strong>{row.caseId}</strong>
+                  <em>{row.title}</em>
+                  <span>{row.relation}</span>
+                </div>
+                <div className={styles.matrixBody}>
+                  <span><b>Oficial</b>{row.officialEvidence}</span>
+                  <span><b>Contexto del usuario</b>{row.userContext}</span>
+                  <span><b>Caveat</b>{row.caveat}</span>
+                  <span><b>Brecha</b>{row.gap}</span>
+                  <span><b>Próximo paso</b>{row.nextStep}</span>
+                </div>
+              </div>
+            ))
+          )}
+          {dossier.matrix.length > 5 && (
+            <p className={styles.empty}>Mostrando 5 de {dossier.matrix.length} expedientes. El ZIP exporta la matriz completa.</p>
+          )}
+        </div>
+        <div className={styles.dossierSide}>
+          <DossierList
+            title="Actores comunes"
+            emptyText="Sin actores repetidos o cargados."
+            items={dossier.actors.slice(0, 5).map((actor) =>
+              `${actor.kind}: ${actor.label} · ${actor.count} expediente${actor.count === 1 ? "" : "s"} · Base de identidad: ${actor.basis}`
+            )}
+          />
+          <DossierList
+            title="Brechas para verificar"
+            emptyText="Sin brechas automáticas."
+            items={dossier.gaps}
+          />
+          <DossierList
+            title="Próximos pasos"
+            emptyText="Sin próximos pasos."
+            items={dossier.nextSteps}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function CaseSearchPanel({
   query,
   relationReason,
@@ -572,6 +651,21 @@ export function InvestigationSummaryPanel({ aggregate }: { aggregate: Investigat
 function SummaryList({ title, items, emptyText }: { title: string; items: string[]; emptyText: string }) {
   return (
     <div className={styles.summaryList}>
+      <h4>{title}</h4>
+      {items.length === 0 ? (
+        <p>{emptyText}</p>
+      ) : (
+        <ul>
+          {items.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function DossierList({ title, items, emptyText }: { title: string; items: string[]; emptyText: string }) {
+  return (
+    <div className={styles.dossierList}>
       <h4>{title}</h4>
       {items.length === 0 ? (
         <p>{emptyText}</p>

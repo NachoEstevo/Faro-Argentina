@@ -48,6 +48,8 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /workspace\.json/);
   assert.match(text, /README\.txt/);
   assert.match(text, /summary\.md/);
+  assert.match(text, /dossier\.md/);
+  assert.match(text, /evidence-matrix\.csv/);
   assert.match(text, /timeline\.md/);
   assert.match(text, /entities\.md/);
   assert.match(text, /notes\.md/);
@@ -58,6 +60,10 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /Carpeta de investigación Faro/);
   assert.match(text, /Mismo contexto judicial/);
   assert.match(text, /Expediente agregado por contexto judicial oficial compartido/);
+  assert.match(text, /Matriz de evidencia/);
+  assert.match(text, /Brechas para verificar/);
+  assert.match(text, /Próximos pasos/);
+  assert.match(text, /Contexto del usuario/);
   assert.match(text, /Sin geometría oficial: 1 expediente/);
   assert.match(text, /Proveedor/);
 });

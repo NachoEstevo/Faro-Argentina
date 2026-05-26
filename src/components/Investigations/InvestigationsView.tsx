@@ -23,6 +23,7 @@ import {
 } from "@/lib/data/investigationWorkspaceCollections";
 import { caseMatchesSearch } from "@/lib/data/searchSuggestions";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import { buildInvestigationDossier } from "@/lib/data/investigationDossiers";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
 import {
   INVESTIGATION_WORKSPACE_UPDATED_EVENT,
@@ -35,6 +36,7 @@ import {
 import {
   CaseSearchPanel,
   CreateWorkspaceForm,
+  DossierBuilderPanel,
   InvestigationAnalysisPanel,
   InvestigationSummaryPanel,
   InvestigationsSidebar,
@@ -154,6 +156,14 @@ export default function InvestigationsView({
       if (!workspace) return null;
       if (workspace.caseIds.length > 0 && selectedCasePacks.length === 0) return null;
       return buildInvestigationAggregate(workspace, selectedCasePacks.map((pack) => pack.evidencePack));
+    },
+    [selectedCasePacks, workspace],
+  );
+  const dossier = useMemo(
+    () => {
+      if (!workspace) return null;
+      if (workspace.caseIds.length > 0 && selectedCasePacks.length === 0) return null;
+      return buildInvestigationDossier(workspace, selectedCasePacks.map((pack) => pack.evidencePack));
     },
     [selectedCasePacks, workspace],
   );
@@ -391,6 +401,7 @@ export default function InvestigationsView({
             {activeTab === "resumen" && (
               <>
                 <WorkspaceOverviewPanel workspace={workspace} aggregate={visibleAggregate} />
+                <DossierBuilderPanel dossier={dossier} caseCount={workspace.caseIds.length} />
                 <InvestigationSummaryPanel aggregate={visibleAggregate} />
               </>
             )}

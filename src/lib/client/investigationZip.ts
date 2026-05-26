@@ -4,6 +4,10 @@ import {
   type InvestigationAggregate,
   type InvestigationWorkspace,
 } from "../data/investigationWorkspaces.ts";
+import {
+  buildInvestigationDossier,
+  type InvestigationDossier,
+} from "../data/investigationDossiers.ts";
 import { cleanInvestigationAnalysisMarkdown } from "../data/investigationAnalysisText.ts";
 
 export interface BuildInvestigationZipInput {
@@ -44,6 +48,10 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     input.workspace,
     input.casePacks.map((pack) => pack.evidencePack),
   );
+  const dossier = buildInvestigationDossier(
+    input.workspace,
+    input.casePacks.map((pack) => pack.evidencePack),
+  );
   const files: Array<{ name: string; content: string }> = [
     {
       name: "workspace.json",
@@ -56,6 +64,14 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     {
       name: "summary.md",
       content: buildSummary(input.workspace, aggregate),
+    },
+    {
+      name: "dossier.md",
+      content: buildDossier(input.workspace, dossier),
+    },
+    {
+      name: "evidence-matrix.csv",
+      content: buildEvidenceMatrixCsv(dossier),
     },
     {
       name: "timeline.md",
@@ -107,6 +123,8 @@ function buildReadme(workspace: InvestigationWorkspace): string {
     "Archivos principales:",
     "- workspace.json: datos estructurados de la carpeta.",
     "- summary.md: resumen determinístico de expedientes, vínculos y brechas.",
+    "- dossier.md: matriz de evidencia, actores, brechas y próximos pasos.",
+    "- evidence-matrix.csv: matriz portable por expediente.",
     "- timeline.md: línea temporal de expedientes seleccionados.",
     "- entities.md: entidades cargadas y coincidencias detectadas.",
     "- notes.md: notas del usuario.",
@@ -114,6 +132,66 @@ function buildReadme(workspace: InvestigationWorkspace): string {
     "- cases/: expedientes y evidence packs seleccionados.",
     "- sources/links.json: links cargados manualmente.",
   ].join("\n");
+}
+
+function buildDossier(workspace: InvestigationWorkspace, dossier: InvestigationDossier): string {
+  return [
+    `# Dossier de trabajo: ${workspace.title}`,
+    "",
+    "Este dossier ordena evidencia oficial, contexto del usuario, brechas y próximos pasos. No es una publicación ni una conclusión.",
+    "",
+    "## Matriz de evidencia",
+    "",
+    ...formatEmptyableList(
+      dossier.matrix,
+      (row) => [
+        `### ${row.caseId}`,
+        "",
+        `- Título: ${row.title}`,
+        `- Relación declarada: ${row.relation}`,
+        `- Evidencia oficial: ${row.officialEvidence}`,
+        `- Contexto del usuario: ${row.userContext}`,
+        `- Caveat: ${row.caveat}`,
+        `- Brecha: ${row.gap}`,
+        `- Próximo paso: ${row.nextStep}`,
+      ].join("\n"),
+      "Sin expedientes seleccionados.",
+    ),
+    "",
+    "## Actores comunes",
+    "",
+    ...formatEmptyableList(
+      dossier.actors,
+      (actor) =>
+        `- ${actor.kind}: ${actor.label} (${formatCount(actor.count, "expediente")}; base de identidad: ${actor.basis})`,
+      "- Sin actores repetidos o cargados.",
+    ),
+    "",
+    "## Brechas para verificar",
+    "",
+    ...formatEmptyableList(dossier.gaps, (gap) => `- ${gap}`, "- Sin brechas automáticas."),
+    "",
+    "## Próximos pasos",
+    "",
+    ...formatEmptyableList(dossier.nextSteps, (step) => `- ${step}`, "- Sin próximos pasos."),
+  ].join("\n");
+}
+
+function buildEvidenceMatrixCsv(dossier: InvestigationDossier): string {
+  const rows = [
+    ["caseId", "title", "relation", "officialEvidence", "userContext", "caveat", "gap", "nextStep"],
+    ...dossier.matrix.map((row) => [
+      row.caseId,
+      row.title,
+      row.relation,
+      row.officialEvidence,
+      row.userContext,
+      row.caveat,
+      row.gap,
+      row.nextStep,
+    ]),
+  ];
+  return rows.map((row) => row.map(escapeCsvCell).join(",")).join("\n");
 }
 
 function buildSummary(workspace: InvestigationWorkspace, aggregate: InvestigationAggregate): string {
@@ -360,6 +438,10 @@ function formatEmptyableList<T>(items: T[], formatter: (item: T) => string, empt
 
 function formatCount(count: number, singular: string): string {
   return `${count} ${singular}${count === 1 ? "" : "s"}`;
+}
+
+function escapeCsvCell(value: string): string {
+  return `"${String(value).replace(/"/g, '""')}"`;
 }
 
 function formatCaseIds(caseIds: string[]): string {

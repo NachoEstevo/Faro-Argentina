@@ -45,6 +45,14 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /analysisTable/);
   assert.match(source, /WorkspaceSwitcher/);
   assert.match(source, /WorkspaceSyncPanel/);
+  assert.match(source, /buildInvestigationDossier/);
+  assert.match(source, /Dossier de trabajo/);
+  assert.match(source, /Matriz de evidencia/);
+  assert.match(source, /Actores comunes/);
+  assert.match(source, /Base de identidad/);
+  assert.match(source, /Brechas para verificar/);
+  assert.match(source, /Próximos pasos/);
+  assert.match(source, /contexto del usuario/i);
   assert.match(source, /\/api\/investigations\/workspaces/);
   assert.match(source, /SignInButton/);
   assert.match(source, /UserButton/);

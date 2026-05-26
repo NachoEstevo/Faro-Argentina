@@ -315,6 +315,21 @@
   font-weight: 600;
 }
 
+.panelHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.panelHeading p {
+  margin: 6px 0 0;
+  max-width: 72ch;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .field,
 .fieldWide {
   display: grid;
@@ -471,7 +486,9 @@
   min-width: 0;
 }
 
-.summaryList h4 {
+.summaryList h4,
+.dossierList h4,
+.dossierMatrix h4 {
   margin: 0 0 8px;
   color: var(--cf-text-secondary);
   font-size: 12px;
@@ -479,17 +496,97 @@
 }
 
 .summaryList p,
-.summaryList ul {
+.summaryList ul,
+.dossierList p,
+.dossierList ul {
   margin: 0;
   color: var(--cf-text-muted);
   font-size: 12px;
   line-height: 1.45;
 }
 
-.summaryList ul {
+.summaryList ul,
+.dossierList ul {
   display: grid;
   gap: 5px;
   padding-left: 16px;
+}
+
+.dossierGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.dossierMatrix,
+.dossierSide {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.matrixRow {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--cf-border);
+}
+
+.matrixRow:first-of-type {
+  border-top: 0;
+}
+
+.matrixMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.matrixMeta strong {
+  color: var(--cf-text);
+  font-family: var(--cf-font-data);
+  font-size: 12px;
+}
+
+.matrixMeta em {
+  min-width: min(100%, 220px);
+  overflow: hidden;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matrixMeta span {
+  color: var(--cf-text-muted);
+  font-size: 12px;
+}
+
+.matrixBody {
+  display: grid;
+  gap: 7px;
+}
+
+.matrixBody span {
+  display: grid;
+  gap: 2px;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.matrixBody b {
+  color: var(--cf-text);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.dossierList {
+  padding-top: 10px;
+  border-top: 1px solid var(--cf-border);
 }
 
 .analysisReport {
