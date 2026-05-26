@@ -185,6 +185,7 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /officialBasis/);
   assert.match(source, /caveat/);
   assert.match(source, /nextStep/);
+  assert.match(source, /preset !== "selected"/);
   assert.match(source, /Ver todos los expedientes|Limpiar filtro/);
   assert.match(source, /preset === "selected"/);
   assert.match(source, /selectedDetailCase/);

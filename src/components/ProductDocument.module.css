@@ -1,0 +1,149 @@
+.shell {
+  min-height: 100dvh;
+  background: #f5f7fa;
+  color: #17202b;
+  font-family: var(--cf-font-body);
+}
+
+.frame {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 820px);
+  gap: clamp(28px, 6vw, 72px);
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(28px, 6vw, 72px) 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: 22px;
+  padding: 20px;
+  border: 1px solid #d8e0ea;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.brandLink {
+  color: #17202b;
+  font-family: var(--cf-font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav {
+  display: grid;
+  gap: 6px;
+}
+
+.navLink {
+  padding: 9px 0;
+  border-bottom: 1px solid #e6ebf1;
+  color: #485465;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #145b86;
+}
+
+.notice {
+  margin: 0;
+  color: #748092;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.document {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #748092;
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.document h1 {
+  margin: 0;
+  max-width: 15ch;
+  font-family: var(--cf-font-heading);
+  font-size: clamp(42px, 7vw, 76px);
+  font-weight: 500;
+  line-height: 0.98;
+}
+
+.intro {
+  margin: 0;
+  max-width: 66ch;
+  color: #485465;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.sections {
+  display: grid;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.section {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid #d8e0ea;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.section h2 {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.body {
+  display: grid;
+  gap: 10px;
+  color: #485465;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.body p,
+.body ul,
+.body ol {
+  margin: 0;
+}
+
+.body ul,
+.body ol {
+  padding-left: 20px;
+}
+
+.body a {
+  color: #145b86;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .frame {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+}

@@ -461,8 +461,8 @@ export default function ExplorerView({
             })}
           </div>
         </header>
-        <div className={styles.searchWrap}>
-          {preset === "selected" && (
+        {preset === "selected" && (
+          <div className={styles.searchWrap}>
             <section className={styles.presetBanner} aria-label="Expedientes seleccionados">
               <div className={styles.presetBannerHeader}>
                 <div className={styles.presetBannerIntro}>
@@ -491,147 +491,153 @@ export default function ExplorerView({
                 ))}
               </div>
             </section>
-          )}
-          <label className={styles.searchBox}>
-            <Search size={15} aria-hidden />
-            <input
-              type="text"
-              value={query}
-              onChange={(event) => handleQueryChange(event.target.value)}
-              placeholder="Buscar proveedor, organismo, fuente, receipt, señal o expediente…"
-              aria-label="Buscar"
-            />
-          </label>
-          <SearchSuggestionsList
-            suggestions={searchSuggestions}
-            onSelectSuggestion={handleSuggestionSelect}
-          />
-        </div>
-        <div className={styles.statsGrid} aria-label="Resumen">
-          <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
-          <StatCard label="Con señal prioritaria" value={explorer.stats.filteredCasesWithPrimarySignal.toLocaleString("es-AR")} />
-          <StatCard label="Sin geometría de mapa" value={explorer.stats.filteredCasesWithoutMapGeometry.toLocaleString("es-AR")} />
-          <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
-        </div>
-        <div className={styles.tableWrap}>
-          {(() => {
-            const totalPages = Math.max(1, Math.ceil(explorer.rows.length / PAGE_SIZE));
-            const safePage = Math.min(page, totalPages - 1);
-            const from = explorer.rows.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
-            const to = Math.min(explorer.rows.length, (safePage + 1) * PAGE_SIZE);
-            return (
-              <div className={styles.tableFoot}>
-                <span className={styles.tableFootLabel}>
-                  Mostrando {from}-{to} de {explorer.rows.length.toLocaleString("es-AR")}
-                </span>
-                <div className={styles.pagination} role="navigation" aria-label="Paginación">
-                  <button
-                    type="button"
-                    className={styles.pageNav}
-                    onClick={() => setPage(Math.max(0, safePage - 1))}
-                    disabled={safePage === 0}
-                    aria-label="Página anterior"
-                  >
-                    <ChevronLeft size={14} aria-hidden />
-                  </button>
-                  {buildPageList(safePage, totalPages).map((entry, idx) =>
-                    entry === "…" ? (
-                      <span key={`gap-${idx}`} className={styles.pageGap}>…</span>
-                    ) : (
-                      <button
-                        key={entry}
-                        type="button"
-                        className={`${styles.pageBtn} ${entry === safePage ? styles.pageBtnActive : ""}`}
-                        onClick={() => setPage(entry)}
-                        aria-current={entry === safePage ? "page" : undefined}
-                      >
-                        {entry + 1}
-                      </button>
-                    ),
-                  )}
-                  <button
-                    type="button"
-                    className={styles.pageNav}
-                    onClick={() => setPage(Math.min(totalPages - 1, safePage + 1))}
-                    disabled={safePage >= totalPages - 1}
-                    aria-label="Página siguiente"
-                  >
-                    <ChevronRight size={14} aria-hidden />
-                  </button>
-                </div>
-              </div>
-            );
-          })()}
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Organismo</th>
-                <th>Proveedor</th>
-                <th className={styles.tableNumeric}>Monto</th>
-                <th>Fuente</th>
-                <th>Señal</th>
-                <th>Carpeta</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pagedRows.length === 0 && (
-                <tr className={styles.tableEmptyRow}>
-                  <td colSpan={8} className={styles.tableEmpty}>
-                    No hay expedientes que coincidan con los filtros actuales.
-                  </td>
-                </tr>
-              )}
-              {pagedRows.map((caseFile) => {
-                const state = computeRowState(caseFile);
+          </div>
+        )}
+        {preset !== "selected" && (
+          <>
+            <div className={styles.searchWrap}>
+              <label className={styles.searchBox}>
+                <Search size={15} aria-hidden />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(event) => handleQueryChange(event.target.value)}
+                  placeholder="Buscar proveedor, organismo, fuente, receipt, señal o expediente…"
+                  aria-label="Buscar"
+                />
+              </label>
+              <SearchSuggestionsList
+                suggestions={searchSuggestions}
+                onSelectSuggestion={handleSuggestionSelect}
+              />
+            </div>
+            <div className={styles.statsGrid} aria-label="Resumen">
+              <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
+              <StatCard label="Con señal prioritaria" value={explorer.stats.filteredCasesWithPrimarySignal.toLocaleString("es-AR")} />
+              <StatCard label="Sin geometría de mapa" value={explorer.stats.filteredCasesWithoutMapGeometry.toLocaleString("es-AR")} />
+              <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
+            </div>
+            <div className={styles.tableWrap}>
+              {(() => {
+                const totalPages = Math.max(1, Math.ceil(explorer.rows.length / PAGE_SIZE));
+                const safePage = Math.min(page, totalPages - 1);
+                const from = explorer.rows.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
+                const to = Math.min(explorer.rows.length, (safePage + 1) * PAGE_SIZE);
                 return (
-                  <tr
-                    key={caseFile.caseId}
-                    className={styles.tableRow}
-                    onClick={() => onSelectCase(caseFile.caseId, caseFile.countryCode)}
-                  >
-                    <td className={styles.cellId}>
-                      <span>{caseFile.countryCode}</span>
-                      <span>#{caseFile.workNumber || caseFile.caseId}</span>
-                    </td>
-                    <td>{caseTypeLabel(caseFile.caseType)}</td>
-                    <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
-                    <td className={styles.cellEllipsis}>{caseFile.supplierLabel}</td>
-                    <td className={styles.tableNumeric}>
-                      <span className={styles.rowAmount}>{caseFile.amountLabel}</span>
-                    </td>
-                    <td className={styles.cellEllipsis}>
-                      <span className={styles.sourceStack}>
-                        <span>{caseFile.sourceName}</span>
-                        <span>{caseFile.locatorLabel}</span>
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
-                        <span className={styles.stateBadgeDot} aria-hidden />
-                        {state.label}
-                      </span>
-                    </td>
-                    <td className={styles.tableActionCell}>
+                  <div className={styles.tableFoot}>
+                    <span className={styles.tableFootLabel}>
+                      Mostrando {from}-{to} de {explorer.rows.length.toLocaleString("es-AR")}
+                    </span>
+                    <div className={styles.pagination} role="navigation" aria-label="Paginación">
                       <button
                         type="button"
-                        className={`${styles.saveCaseButton} ${
-                          folderStatus?.caseId === caseFile.caseId ? styles.saveCaseButtonSaved : ""
-                        }`}
-                        onClick={(event) => saveRowToFolder(event, caseFile)}
-                        aria-label={`Guardar ${caseFile.caseId} en carpeta`}
+                        className={styles.pageNav}
+                        onClick={() => setPage(Math.max(0, safePage - 1))}
+                        disabled={safePage === 0}
+                        aria-label="Página anterior"
                       >
-                        <FolderPlus size={13} aria-hidden />
-                        <span>{folderStatus?.caseId === caseFile.caseId ? "Guardado" : "Guardar"}</span>
+                        <ChevronLeft size={14} aria-hidden />
                       </button>
-                    </td>
-                  </tr>
+                      {buildPageList(safePage, totalPages).map((entry, idx) =>
+                        entry === "…" ? (
+                          <span key={`gap-${idx}`} className={styles.pageGap}>…</span>
+                        ) : (
+                          <button
+                            key={entry}
+                            type="button"
+                            className={`${styles.pageBtn} ${entry === safePage ? styles.pageBtnActive : ""}`}
+                            onClick={() => setPage(entry)}
+                            aria-current={entry === safePage ? "page" : undefined}
+                          >
+                            {entry + 1}
+                          </button>
+                        ),
+                      )}
+                      <button
+                        type="button"
+                        className={styles.pageNav}
+                        onClick={() => setPage(Math.min(totalPages - 1, safePage + 1))}
+                        disabled={safePage >= totalPages - 1}
+                        aria-label="Página siguiente"
+                      >
+                        <ChevronRight size={14} aria-hidden />
+                      </button>
+                    </div>
+                  </div>
                 );
-              })}
-            </tbody>
-          </table>
-        </div>
+              })()}
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Organismo</th>
+                    <th>Proveedor</th>
+                    <th className={styles.tableNumeric}>Monto</th>
+                    <th>Fuente</th>
+                    <th>Señal</th>
+                    <th>Carpeta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pagedRows.length === 0 && (
+                    <tr className={styles.tableEmptyRow}>
+                      <td colSpan={8} className={styles.tableEmpty}>
+                        No hay expedientes que coincidan con los filtros actuales.
+                      </td>
+                    </tr>
+                  )}
+                  {pagedRows.map((caseFile) => {
+                    const state = computeRowState(caseFile);
+                    return (
+                      <tr
+                        key={caseFile.caseId}
+                        className={styles.tableRow}
+                        onClick={() => onSelectCase(caseFile.caseId, caseFile.countryCode)}
+                      >
+                        <td className={styles.cellId}>
+                          <span>{caseFile.countryCode}</span>
+                          <span>#{caseFile.workNumber || caseFile.caseId}</span>
+                        </td>
+                        <td>{caseTypeLabel(caseFile.caseType)}</td>
+                        <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
+                        <td className={styles.cellEllipsis}>{caseFile.supplierLabel}</td>
+                        <td className={styles.tableNumeric}>
+                          <span className={styles.rowAmount}>{caseFile.amountLabel}</span>
+                        </td>
+                        <td className={styles.cellEllipsis}>
+                          <span className={styles.sourceStack}>
+                            <span>{caseFile.sourceName}</span>
+                            <span>{caseFile.locatorLabel}</span>
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
+                            <span className={styles.stateBadgeDot} aria-hidden />
+                            {state.label}
+                          </span>
+                        </td>
+                        <td className={styles.tableActionCell}>
+                          <button
+                            type="button"
+                            className={`${styles.saveCaseButton} ${
+                              folderStatus?.caseId === caseFile.caseId ? styles.saveCaseButtonSaved : ""
+                            }`}
+                            onClick={(event) => saveRowToFolder(event, caseFile)}
+                            aria-label={`Guardar ${caseFile.caseId} en carpeta`}
+                          >
+                            <FolderPlus size={13} aria-hidden />
+                            <span>{folderStatus?.caseId === caseFile.caseId ? "Guardado" : "Guardar"}</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
         </>
         )}
       </main>

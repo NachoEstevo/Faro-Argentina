@@ -135,8 +135,16 @@ test("regional landing exposes Aportes as a secondary action", async () => {
   assert.match(source, /mode="aportes"/);
   assert.match(source, /Aportar/);
   assert.match(source, /MessageSquarePlus/);
+  assert.match(resourcesSource, /Metodología/);
+  assert.match(resourcesSource, /\/metodologia/);
+  assert.match(resourcesSource, /Datos abiertos/);
+  assert.match(resourcesSource, /\/datos/);
   assert.match(resourcesSource, /Privacidad y seguridad/);
   assert.match(resourcesSource, /\/privacidad/);
+  assert.match(resourcesSource, /Reportar un error/);
+  assert.match(resourcesSource, /\/pais\/AR\?mode=aportes/);
+  assert.doesNotMatch(resourcesSource, /github\.com\/NachoEstevo\/Faro/);
+  assert.doesNotMatch(resourcesSource, /target="_blank"|externalLinkProps/);
   assert.doesNotMatch(source, /Comunidad|Denuncia/);
 });
 
