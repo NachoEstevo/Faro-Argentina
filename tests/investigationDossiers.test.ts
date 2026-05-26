@@ -41,6 +41,7 @@ test("buildInvestigationDossier keeps evidence, user context, gaps and actor ide
 
   assert.equal(dossier.matrix.length, 2);
   assert.match(dossier.matrix[0].officialEvidence, /Fuente: Fuente oficial/);
+  assert.equal(dossier.matrix[0].officialSourceUrl, "https://example.test");
   assert.match(dossier.matrix[0].userContext, /Contexto del usuario: Comparar proveedor recurrente/);
   assert.match(dossier.matrix[0].gap, /geometría/i);
   assert.match(dossier.matrix[1].gap, /geometría/i);

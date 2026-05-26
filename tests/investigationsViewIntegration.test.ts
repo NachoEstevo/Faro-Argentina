@@ -52,6 +52,12 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Base de identidad/);
   assert.match(source, /Brechas para verificar/);
   assert.match(source, /Próximos pasos/);
+  assert.match(source, /Abrir fuente oficial/);
+  assert.match(source, /Guardar próximos pasos como nota/);
+  assert.match(source, /handleSaveDossierNextSteps/);
+  assert.match(source, /setActiveTab\("notas"\)/);
+  assert.match(source, /noteList/);
+  assert.match(source, /formatNoteDate/);
   assert.match(source, /contexto del usuario/i);
   assert.match(source, /\/api\/investigations\/workspaces/);
   assert.match(source, /SignInButton/);

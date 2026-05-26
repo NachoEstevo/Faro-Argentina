@@ -64,6 +64,7 @@ interface WorkspaceHeaderProps {
 interface DossierBuilderPanelProps {
   dossier: InvestigationDossier | null;
   caseCount: number;
+  onSaveNextSteps: (steps: string[]) => void;
 }
 
 interface CaseSearchPanelProps {
@@ -444,7 +445,7 @@ export function WorkspaceExportPanel({
   );
 }
 
-export function DossierBuilderPanel({ dossier, caseCount }: DossierBuilderPanelProps) {
+export function DossierBuilderPanel({ dossier, caseCount, onSaveNextSteps }: DossierBuilderPanelProps) {
   if (!dossier) {
     return (
       <section className={styles.panel}>
@@ -480,7 +481,13 @@ export function DossierBuilderPanel({ dossier, caseCount }: DossierBuilderPanelP
                   <span>{row.relation}</span>
                 </div>
                 <div className={styles.matrixBody}>
-                  <span><b>Oficial</b>{row.officialEvidence}</span>
+                  <span>
+                    <b>Oficial</b>
+                    {row.officialEvidence}
+                    <a className={styles.matrixAction} href={row.officialSourceUrl} target="_blank" rel="noreferrer">
+                      Abrir fuente oficial
+                    </a>
+                  </span>
                   <span><b>Contexto del usuario</b>{row.userContext}</span>
                   <span><b>Caveat</b>{row.caveat}</span>
                   <span><b>Brecha</b>{row.gap}</span>
@@ -511,6 +518,14 @@ export function DossierBuilderPanel({ dossier, caseCount }: DossierBuilderPanelP
             emptyText="Sin próximos pasos."
             items={dossier.nextSteps}
           />
+          <button
+            className={styles.secondary}
+            type="button"
+            onClick={() => onSaveNextSteps(dossier.nextSteps)}
+            disabled={dossier.nextSteps.length === 0}
+          >
+            Guardar próximos pasos como nota
+          </button>
         </div>
       </div>
     </section>

@@ -63,6 +63,7 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /Matriz de evidencia/);
   assert.match(text, /Brechas para verificar/);
   assert.match(text, /Próximos pasos/);
+  assert.match(text, /officialSourceUrl/);
   assert.match(text, /Contexto del usuario/);
   assert.match(text, /Sin geometría oficial: 1 expediente/);
   assert.match(text, /Proveedor/);

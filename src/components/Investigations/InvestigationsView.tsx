@@ -257,6 +257,24 @@ export default function InvestigationsView({
     setNoteText("");
   }
 
+  function handleSaveDossierNextSteps(steps: string[]) {
+    if (!workspace || steps.length === 0) return;
+    const createdAt = new Date().toISOString();
+    persistActiveWorkspace({
+      ...workspace,
+      notes: [
+        ...workspace.notes,
+        {
+          id: `NOTE-${workspace.notes.length + 1}`,
+          body: buildVerificationPlanNote(steps),
+          createdAt,
+        },
+      ],
+      updatedAt: createdAt,
+    });
+    setActiveTab("notas");
+  }
+
   function handleAddSource() {
     if (!workspace || !sourceUrl.trim()) return;
     const source: InvestigationSourceLink = {
@@ -401,7 +419,11 @@ export default function InvestigationsView({
             {activeTab === "resumen" && (
               <>
                 <WorkspaceOverviewPanel workspace={workspace} aggregate={visibleAggregate} />
-                <DossierBuilderPanel dossier={dossier} caseCount={workspace.caseIds.length} />
+                <DossierBuilderPanel
+                  dossier={dossier}
+                  caseCount={workspace.caseIds.length}
+                  onSaveNextSteps={handleSaveDossierNextSteps}
+                />
                 <InvestigationSummaryPanel aggregate={visibleAggregate} />
               </>
             )}
@@ -433,6 +455,16 @@ export default function InvestigationsView({
                   <h3>Notas</h3>
                   <textarea className={styles.textarea} value={noteText} onChange={(event) => setNoteText(event.target.value)} />
                   <button className={styles.secondary} type="button" onClick={handleAddNote}>Agregar nota</button>
+                  {workspace.notes.length > 0 && (
+                    <ul className={styles.noteList}>
+                      {workspace.notes.map((note) => (
+                        <li key={note.id} className={styles.noteItem}>
+                          <small>Nota guardada · {formatNoteDate(note.createdAt)}</small>
+                          <p>{note.body}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <div className={styles.panel}>
                   <h3>Fuentes y entidades</h3>
@@ -476,6 +508,20 @@ function upsertWorkspaceList(
     workspace,
     ...current.filter((item) => item.id !== workspace.id),
   ];
+}
+
+function buildVerificationPlanNote(steps: string[]): string {
+  return [
+    "Plan de verificación",
+    "",
+    ...steps.map((step, index) => `${index + 1}. ${step}`),
+  ].join("\n");
+}
+
+function formatNoteDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "sin fecha";
+  return date.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
 function WorkspaceOverviewPanel({

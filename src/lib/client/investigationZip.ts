@@ -179,12 +179,13 @@ function buildDossier(workspace: InvestigationWorkspace, dossier: InvestigationD
 
 function buildEvidenceMatrixCsv(dossier: InvestigationDossier): string {
   const rows = [
-    ["caseId", "title", "relation", "officialEvidence", "userContext", "caveat", "gap", "nextStep"],
+    ["caseId", "title", "relation", "officialEvidence", "officialSourceUrl", "userContext", "caveat", "gap", "nextStep"],
     ...dossier.matrix.map((row) => [
       row.caseId,
       row.title,
       row.relation,
       row.officialEvidence,
+      row.officialSourceUrl,
       row.userContext,
       row.caveat,
       row.gap,

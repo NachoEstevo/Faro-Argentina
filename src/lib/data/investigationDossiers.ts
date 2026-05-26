@@ -13,6 +13,7 @@ export interface InvestigationDossierMatrixRow {
   title: string;
   relation: string;
   officialEvidence: string;
+  officialSourceUrl: string;
   userContext: string;
   caveat: string;
   gap: string;
@@ -67,6 +68,7 @@ function buildMatrixRow(
     title: caseFile.title,
     relation: relationNote ? `${relationLabel}. ${relationNote}` : relationLabel,
     officialEvidence: formatOfficialEvidence(pack),
+    officialSourceUrl: pack.receipt.sourceUrl,
     userContext: relationNote
       ? `Contexto del usuario: ${relationNote}`
       : "Sin contexto del usuario para este expediente.",
