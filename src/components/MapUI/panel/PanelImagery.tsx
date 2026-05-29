@@ -8,27 +8,35 @@ import styles from "../casePanel.module.css";
 
 interface Props {
   state: WaybackState;
+  tilesLoading: boolean;
   onActiveReleaseChange: (releaseId: number) => void;
   onClose: () => void;
   onRetry: () => void;
 }
 
-export default function PanelImagery({ state, onActiveReleaseChange, onRetry }: Props) {
+export default function PanelImagery({ state, tilesLoading, onActiveReleaseChange, onRetry }: Props) {
   if (state.status === "off") return null;
   return (
     <section className={styles.section}>
       <p className={styles.sectionKicker}>Imagen satelital</p>
-      <Body state={state} onActiveReleaseChange={onActiveReleaseChange} onRetry={onRetry} />
+      <Body
+        state={state}
+        tilesLoading={tilesLoading}
+        onActiveReleaseChange={onActiveReleaseChange}
+        onRetry={onRetry}
+      />
     </section>
   );
 }
 
 function Body({
   state,
+  tilesLoading,
   onActiveReleaseChange,
   onRetry,
 }: {
   state: Exclude<WaybackState, { status: "off" }>;
+  tilesLoading: boolean;
   onActiveReleaseChange: (releaseId: number) => void;
   onRetry: () => void;
 }) {
@@ -61,6 +69,7 @@ function Body({
     <Scrubber
       releases={releases}
       activeReleaseId={activeReleaseId}
+      tilesLoading={tilesLoading}
       onChange={onActiveReleaseChange}
     />
   );
@@ -69,10 +78,12 @@ function Body({
 function Scrubber({
   releases,
   activeReleaseId,
+  tilesLoading,
   onChange,
 }: {
   releases: WaybackRelease[];
   activeReleaseId: number;
+  tilesLoading: boolean;
   onChange: (releaseId: number) => void;
 }) {
   const activeIndex = Math.max(
@@ -115,6 +126,25 @@ function Scrubber({
           <span>{lastRelease.year}</span>
         </div>
       </div>
+      <TileLoadStatus active={tilesLoading} />
+    </div>
+  );
+}
+
+function TileLoadStatus({ active }: { active: boolean }) {
+  return (
+    <div
+      className={`${styles.imageryTileLoader} ${active ? styles.imageryTileLoaderActive : ""}`}
+      role={active ? "status" : undefined}
+      aria-live={active ? "polite" : undefined}
+      aria-hidden={active ? undefined : true}
+    >
+      <span className={styles.imageryTileLoaderLabel}>
+        {active ? "Cargando vista satelital" : "Vista satelital lista"}
+      </span>
+      <span className={styles.imageryTileLoaderTrack} aria-hidden>
+        <span />
+      </span>
     </div>
   );
 }

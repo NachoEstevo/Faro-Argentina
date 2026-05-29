@@ -18,6 +18,7 @@ interface Props {
   onTraceModeChange: (next: boolean) => void;
   onClose: () => void;
   waybackState: WaybackState;
+  waybackTileLoading: boolean;
   onWaybackReleaseChange: (releaseId: number) => void;
   onWaybackRetry: () => void;
 }
@@ -29,6 +30,7 @@ export default function CasePanel({
   onTraceModeChange,
   onClose,
   waybackState,
+  waybackTileLoading,
   onWaybackReleaseChange,
   onWaybackRetry,
 }: Props) {
@@ -43,6 +45,7 @@ export default function CasePanel({
             <div className={styles.divider} aria-hidden />
             <PanelImagery
               state={waybackState}
+              tilesLoading={waybackTileLoading}
               onActiveReleaseChange={onWaybackReleaseChange}
               onClose={onClose}
               onRetry={onWaybackRetry}

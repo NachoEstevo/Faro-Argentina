@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 import type { Map as LeafletMap } from "leaflet";
 
@@ -20,6 +20,7 @@ interface Props {
   traceMode: boolean;
   onSelectCase: (id: string) => void;
   waybackState: WaybackState;
+  onWaybackTileLoadingChange: (loading: boolean) => void;
 }
 
 const ARGENMAP_DARK_URL =
@@ -30,10 +31,14 @@ const WAYBACK_PREFETCH_ZOOM = 17;
 const WAYBACK_TILE_SIZE = 256;
 const prefetchedWaybackTiles = new Set<string>();
 
-type TileLoadingState = "idle" | "loading" | "ready";
-
-export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase, waybackState }: Props) {
-  const [tileLoadingState, setTileLoadingState] = useState<TileLoadingState>("idle");
+export default function CaseMap({
+  cases,
+  selectedCaseId,
+  traceMode,
+  onSelectCase,
+  waybackState,
+  onWaybackTileLoadingChange,
+}: Props) {
   const selectedCase = cases.find(
     (caseFile) => caseFile.id === selectedCaseId && isMapMarkerEligible(caseFile),
   ) ?? null;
@@ -53,13 +58,10 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
 
   const waybackTileUrl =
     waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
-  const activeWaybackRelease = waybackState.status === "active"
-    ? waybackState.releases.find((release) => release.releaseId === waybackState.activeReleaseId) ?? null
-    : null;
 
   useEffect(() => {
-    setTileLoadingState(waybackTileUrl ? "loading" : "idle");
-  }, [waybackTileUrl]);
+    onWaybackTileLoadingChange(Boolean(waybackTileUrl));
+  }, [onWaybackTileLoadingChange, waybackTileUrl]);
 
   return (
     <MapContainer
@@ -80,8 +82,8 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
             keepBuffer={3}
             updateWhenZooming={false}
             eventHandlers={{
-              loading: () => setTileLoadingState("loading"),
-              load: () => setTileLoadingState("ready"),
+              loading: () => onWaybackTileLoadingChange(true),
+              load: () => onWaybackTileLoadingChange(false),
             }}
             // Some Wayback releases lack tiles past z=17 and return 404s. Cap
             // tile requests at 17 and let Leaflet upscale for z=18-19 instead.
@@ -98,10 +100,6 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           onDeselect={handleClose}
         />
         <WaybackTilePrefetcher selectedCase={selectedCase} waybackState={waybackState} />
-        <WaybackTileLoader
-          state={tileLoadingState}
-          label={activeWaybackRelease ? String(activeWaybackRelease.year) : null}
-        />
         {selectedCase?.coordinates && traceMode && (
           <Circle
             center={[selectedCase.coordinates.lat, selectedCase.coordinates.lon]}
@@ -151,21 +149,6 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           );
         })}
       </MapContainer>
-  );
-}
-
-function WaybackTileLoader({ state, label }: { state: TileLoadingState; label: string | null }) {
-  if (state !== "loading") return null;
-  return (
-    <div className="waybackTileLoader" role="status" aria-live="polite">
-      <div className="waybackTileLoaderHeader">
-        <span className="waybackTileLoaderDot" aria-hidden />
-        <span>Preparando imagen satelital</span>
-        {label ? <strong>{label}</strong> : null}
-      </div>
-      <div className="waybackTileLoaderTrack" aria-hidden />
-      <p>Primero se carga la vista actual; el resto queda en segundo plano.</p>
-    </div>
   );
 }
 

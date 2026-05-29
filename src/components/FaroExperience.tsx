@@ -99,6 +99,7 @@ export default function FaroExperience({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
+  const [waybackTileLoading, setWaybackTileLoading] = useState(false);
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
@@ -393,6 +394,10 @@ export default function FaroExperience({
     setLeadsPanelOpen(false);
   }, []);
 
+  const handleWaybackTileLoadingChange = useCallback((loading: boolean) => {
+    setWaybackTileLoading(loading);
+  }, []);
+
   const country = COUNTRY_META[selectedCountry];
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
@@ -422,6 +427,7 @@ export default function FaroExperience({
               traceMode={traceMode}
               onSelectCase={setSelectedCaseId}
               waybackState={waybackState}
+              onWaybackTileLoadingChange={handleWaybackTileLoadingChange}
             />
           ) : (
             <div className="explorerBackdrop" />
@@ -567,6 +573,7 @@ export default function FaroExperience({
             onTraceModeChange={setTraceMode}
             onClose={() => setSelectedCaseId("")}
             waybackState={waybackState}
+            waybackTileLoading={waybackTileLoading}
             onWaybackReleaseChange={(releaseId) => {
               setWaybackState((current) =>
                 current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,

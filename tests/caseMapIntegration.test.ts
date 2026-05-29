@@ -3,6 +3,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const caseMapUrl = new URL("../src/components/CaseMap.tsx", import.meta.url);
+const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
+const casePanelUrl = new URL("../src/components/MapUI/CasePanel.tsx", import.meta.url);
+const panelImageryUrl = new URL("../src/components/MapUI/panel/PanelImagery.tsx", import.meta.url);
+const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 
 test("CaseMap filters markers through the map eligibility gate", async () => {
   const source = await readFile(caseMapUrl, "utf8");
@@ -37,11 +41,20 @@ test("CaseMap uses the official Argenmap dark base layer outside Wayback mode", 
 });
 
 test("CaseMap shows Wayback tile loading feedback and prefetches the active release first", async () => {
-  const source = await readFile(caseMapUrl, "utf8");
+  const source = [
+    await readFile(caseMapUrl, "utf8"),
+    await readFile(faroExperienceUrl, "utf8"),
+    await readFile(casePanelUrl, "utf8"),
+    await readFile(panelImageryUrl, "utf8"),
+    await readFile(casePanelStylesUrl, "utf8"),
+  ].join("\n");
 
-  assert.match(source, /waybackTileLoader/);
-  assert.match(source, /loading:\s*\(\) => setTileLoadingState\("loading"\)/);
-  assert.match(source, /load:\s*\(\) => setTileLoadingState\("ready"\)/);
+  assert.match(source, /onWaybackTileLoadingChange\(true\)/);
+  assert.match(source, /onWaybackTileLoadingChange\(false\)/);
+  assert.match(source, /waybackTileLoading/);
+  assert.match(source, /tilesLoading/);
+  assert.match(source, /imageryTileLoader/);
+  assert.match(source, /Cargando vista satelital/);
   assert.match(source, /WaybackTilePrefetcher/);
   assert.match(source, /preloadWaybackTile\(activeTileUrl, "high"\)/);
   assert.match(source, /scheduleIdlePrefetch/);
