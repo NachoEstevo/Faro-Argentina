@@ -403,6 +403,9 @@ export default function FaroExperience({
   const showMapChrome = viewMode === "map";
   const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
   const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
+  const activeWaybackYear = waybackState.status === "active"
+    ? waybackState.releases.find((release) => release.releaseId === waybackState.activeReleaseId)?.year ?? null
+    : null;
 
   const shellClasses = [
     styles.shell,
@@ -433,6 +436,19 @@ export default function FaroExperience({
             <div className="explorerBackdrop" />
           )}
         </div>
+        {showMapChrome && waybackTileLoading && (
+          <div
+            className={`${styles.mapTileStatusRegion} ${selectedCase ? styles.mapTileStatusRegionWithCase : ""}`}
+          >
+            <div className={styles.mapTileStatus} role="status" aria-live="polite">
+              <span className={styles.mapTileStatusOrb} aria-hidden />
+              <span className={styles.mapTileStatusCopy}>
+                <strong>Cargando imagen satelital</strong>
+                <span>{activeWaybackYear ? `Vista ${activeWaybackYear}` : "Vista actual"} primero</span>
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {showMapChrome && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}

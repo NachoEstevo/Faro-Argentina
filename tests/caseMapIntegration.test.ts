@@ -7,6 +7,7 @@ const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import
 const casePanelUrl = new URL("../src/components/MapUI/CasePanel.tsx", import.meta.url);
 const panelImageryUrl = new URL("../src/components/MapUI/panel/PanelImagery.tsx", import.meta.url);
 const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
+const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 
 test("CaseMap filters markers through the map eligibility gate", async () => {
   const source = await readFile(caseMapUrl, "utf8");
@@ -47,6 +48,7 @@ test("CaseMap shows Wayback tile loading feedback and prefetches the active rele
     await readFile(casePanelUrl, "utf8"),
     await readFile(panelImageryUrl, "utf8"),
     await readFile(casePanelStylesUrl, "utf8"),
+    await readFile(regionalMapStylesUrl, "utf8"),
   ].join("\n");
 
   assert.match(source, /onWaybackTileLoadingChange\(true\)/);
@@ -54,7 +56,10 @@ test("CaseMap shows Wayback tile loading feedback and prefetches the active rele
   assert.match(source, /waybackTileLoading/);
   assert.match(source, /tilesLoading/);
   assert.match(source, /imageryTileLoader/);
+  assert.match(source, /mapTileStatusRegion/);
+  assert.match(source, /mapTileStatusOrb/);
   assert.match(source, /Cargando vista satelital/);
+  assert.match(source, /Cargando imagen satelital/);
   assert.match(source, /WaybackTilePrefetcher/);
   assert.match(source, /preloadWaybackTile\(activeTileUrl, "high"\)/);
   assert.match(source, /scheduleIdlePrefetch/);

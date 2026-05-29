@@ -854,6 +854,101 @@
   z-index: 0;
 }
 
+.mapTileStatusRegion {
+  position: absolute;
+  inset: 0;
+  left: var(--sidebar-width);
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.mapTileStatusRegionWithCase {
+  right: 420px;
+}
+
+.mapTileStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 260px;
+  max-width: min(360px, calc(100vw - 48px));
+  border: 1px solid rgba(184, 218, 240, 0.28);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(90, 169, 229, 0.2), transparent 34%),
+    rgba(9, 12, 16, 0.86);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+  color: rgba(246, 248, 250, 0.94);
+  padding: 14px 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.mapTileStatusOrb {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(184, 218, 240, 0.36);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 169, 229, 0.76) 0 18%, rgba(90, 169, 229, 0.16) 19% 100%);
+  box-shadow: 0 0 28px rgba(90, 169, 229, 0.24);
+  flex: 0 0 auto;
+}
+
+.mapTileStatusOrb::before,
+.mapTileStatusOrb::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(90, 169, 229, 0.24);
+  border-radius: inherit;
+  animation: mapTileStatusPulse 1.6s ease-out infinite;
+}
+
+.mapTileStatusOrb::after {
+  animation-delay: 0.45s;
+}
+
+.mapTileStatusCopy {
+  display: grid;
+  gap: 3px;
+}
+
+.mapTileStatusCopy strong {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.mapTileStatusCopy span {
+  color: rgba(222, 231, 238, 0.68);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+@keyframes mapTileStatusPulse {
+  from {
+    opacity: 0.82;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+@media (max-width: 720px) {
+  .mapTileStatusRegion,
+  .mapTileStatusRegionWithCase {
+    left: 0;
+    right: 0;
+  }
+}
+
 .overlayLayer {
   position: absolute;
   top: 0;
