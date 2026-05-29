@@ -15,6 +15,8 @@ test("AportesView submits private contributions with file attachments", async ()
 
   assert.match(source, /Ayudanos a mejorar Faro/);
   assert.match(source, /\/api\/aportes/);
+  assert.match(source, /FaroMark compact/);
+  assert.match(source, /sidebarBrandName}>Faro/);
   assert.match(source, /className=\{styles\.stepper\}/);
   assert.match(source, /Paso 1/);
   assert.match(source, /Paso 2/);
@@ -84,6 +86,8 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
   assert.match(styles, /background:\s*var\(--cf-workspace-sidebar-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
+  assert.match(styles, /\.sidebarBrandIdentity\s*\{[\s\S]*gap: 12px;/);
+  assert.match(styles, /\.sidebarBrandName\s*\{[\s\S]*font-size: 22px;/);
   assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
   assert.match(styles, /\.form\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
   assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);

@@ -14,6 +14,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 
+import FaroMark from "../FaroMark";
 import styles from "./AportesView.module.css";
 
 interface Props {
@@ -152,6 +153,12 @@ export default function AportesView({ selectedCountry }: Props) {
   return (
     <section className={styles.shell} aria-label="Aportes">
       <aside className={styles.sidebar}>
+        <header className={styles.sidebarBrand}>
+          <div className={styles.sidebarBrandIdentity}>
+            <FaroMark compact />
+            <span className={styles.sidebarBrandName}>Faro</span>
+          </div>
+        </header>
         <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>

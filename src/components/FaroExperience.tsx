@@ -498,7 +498,7 @@ export default function FaroExperience({
         />
       )}
 
-      <div className={`${styles.overlayLayer} ${!showMapChrome ? styles.overlayLayerGlobal : ""}`}>
+      <div className={styles.overlayLayer}>
         {showBackControl && (
           <button
             type="button"

@@ -19,6 +19,8 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   ].join("\n");
 
   assert.match(source, /Carpeta de investigación/);
+  assert.match(source, /FaroMark compact/);
+  assert.match(source, /sidebarBrandName}>Faro/);
   assert.match(source, /\/api\/investigations\/case-pack/);
   assert.match(source, /\/api\/investigations\/analyze/);
   assert.match(source, /readStoredInvestigationWorkspace/);
@@ -101,7 +103,8 @@ test("FaroExperience keeps private modes isolated from the map sidebar", async (
   assert.match(source, /{showMapChrome && <MobileHeader/);
   assert.match(source, /{showMapChrome && \(\s*<CountrySidebar/s);
   assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*variant="floating"/);
-  assert.match(source, /styles\.overlayLayerGlobal/);
+  assert.match(source, /<div className=\{styles\.overlayLayer\}>/);
+  assert.doesNotMatch(source, /overlayLayerGlobal/);
 });
 
 test("InvestigationsView inherits platform work-view theme surfaces", async () => {
@@ -112,6 +115,8 @@ test("InvestigationsView inherits platform work-view theme surfaces", async () =
   assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-analysis-bg/);
+  assert.match(styles, /\.sidebarBrandIdentity\s*\{[\s\S]*gap: 12px;/);
+  assert.match(styles, /\.sidebarBrandName\s*\{[\s\S]*font-size: 22px;/);
   assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
   assert.match(styles, /\.form,[\s\S]*\.workspace\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
   assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
@@ -144,7 +149,8 @@ test("regional landing exposes Carpetas while aportes mode can still link to it"
   assert.doesNotMatch(floatingSource, /Mis carpetas/);
   assert.match(floatingSource, /Explorar/);
   assert.match(stylesSource, /text-decoration: none/);
-  assert.match(stylesSource, /\.overlayLayerGlobal\s*\{[\s\S]*left: 0;/);
+  assert.match(stylesSource, /\.overlayLayer\s*\{[\s\S]*left: 0;[\s\S]*right: 0;/);
+  assert.match(stylesSource, /\.backToGlobal\s*\{[\s\S]*left: calc\(var\(--sidebar-width\) \+ 20px\);/);
   assert.match(floatingSource, /FolderOpen/);
   assert.doesNotMatch(aportesSource, /variant="sidebar"|switchPlatformMode/);
   assert.match(aportesSource, /Carpetas/);

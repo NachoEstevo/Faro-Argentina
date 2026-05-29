@@ -909,14 +909,10 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--sidebar-width);
+  left: 0;
   right: 0;
   pointer-events: none;
   z-index: 80;
-}
-
-.overlayLayerGlobal {
-  left: 0;
 }
 
 .overlayLayer > * {
@@ -998,7 +994,7 @@
 .backToGlobal {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: calc(var(--sidebar-width) + 20px);
   display: inline-flex;
   align-items: center;
   gap: 8px;

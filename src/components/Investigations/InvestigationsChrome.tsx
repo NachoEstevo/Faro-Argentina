@@ -13,6 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 
+import FaroMark from "../FaroMark";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { InvestigationDossier } from "@/lib/data/investigationDossiers";
 import {
@@ -105,6 +106,12 @@ export function InvestigationsSidebar({
 }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
+      <header className={styles.sidebarBrand}>
+        <div className={styles.sidebarBrandIdentity}>
+          <FaroMark compact />
+          <span className={styles.sidebarBrandName}>Faro</span>
+        </div>
+      </header>
       <p className={styles.eyebrow}>Carpeta privada</p>
       <h1 className={styles.title}>Carpeta de investigación</h1>
       <p className={styles.intro}>

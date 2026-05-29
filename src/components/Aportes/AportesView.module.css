@@ -20,6 +20,29 @@
   background: var(--cf-workspace-sidebar-bg, rgba(13, 15, 19, 0.62));
 }
 
+.sidebarBrand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -6px -2px 4px;
+}
+
+.sidebarBrandIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sidebarBrandName {
+  color: var(--cf-text);
+  font-family: var(--cf-font-heading);
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.2px;
+  line-height: 1;
+}
+
 .eyebrow {
   margin: 0;
   font-family: var(--cf-font-data);
