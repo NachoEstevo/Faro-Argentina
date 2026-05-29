@@ -129,6 +129,109 @@ a {
   background: var(--cf-bg-surface) !important;
 }
 
+.waybackTileLoader {
+  position: absolute;
+  top: 106px;
+  left: 50%;
+  z-index: 520;
+  display: grid;
+  gap: 10px;
+  width: min(390px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  border: 1px solid rgba(184, 218, 240, 0.24);
+  border-radius: 12px;
+  background: rgba(13, 15, 19, 0.84);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
+  color: rgba(246, 248, 250, 0.92);
+  padding: 14px 16px 13px;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.waybackTileLoaderHeader {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.waybackTileLoaderHeader strong {
+  margin-left: auto;
+  color: #b8daf0;
+  font-family: var(--cf-font-data);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.waybackTileLoader p {
+  margin: 0;
+  color: rgba(222, 231, 238, 0.66);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.waybackTileLoaderDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #5aa9e5;
+  box-shadow: 0 0 0 0 rgba(90, 169, 229, 0.45);
+  animation: waybackTilePulse 1.2s ease-out infinite;
+  flex: 0 0 auto;
+}
+
+.waybackTileLoaderTrack {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(184, 218, 240, 0.14);
+}
+
+.waybackTileLoaderTrack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, #5aa9e5, transparent);
+  animation: waybackTileTrack 1.45s ease-in-out infinite;
+}
+
+@keyframes waybackTilePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(90, 169, 229, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 11px rgba(90, 169, 229, 0);
+  }
+}
+
+@keyframes waybackTileTrack {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+@media (max-width: 640px) {
+  .waybackTileLoader {
+    top: 76px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    transform: none;
+  }
+}
+
 .leaflet-interactive:focus,
 .leaflet-interactive:focus-visible,
 .leaflet-container path:focus,

@@ -35,3 +35,15 @@ test("CaseMap uses the official Argenmap dark base layer outside Wayback mode", 
   assert.match(source, /Instituto Geogr[aá]fico Nacional - Argenmap/);
   assert.doesNotMatch(source, /basemaps\.cartocdn\.com/);
 });
+
+test("CaseMap shows Wayback tile loading feedback and prefetches the active release first", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+
+  assert.match(source, /waybackTileLoader/);
+  assert.match(source, /loading:\s*\(\) => setTileLoadingState\("loading"\)/);
+  assert.match(source, /load:\s*\(\) => setTileLoadingState\("ready"\)/);
+  assert.match(source, /WaybackTilePrefetcher/);
+  assert.match(source, /preloadWaybackTile\(activeTileUrl, "high"\)/);
+  assert.match(source, /scheduleIdlePrefetch/);
+  assert.match(source, /preloadWaybackTile\(url, "low"\)/);
+});

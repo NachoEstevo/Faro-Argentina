@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
+import type { Map as LeafletMap } from "leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildCaseMarkerKey, isMapMarkerEligible } from "@/lib/data/mapMarkers";
@@ -25,8 +26,14 @@ const ARGENMAP_DARK_URL =
   "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/argenmap_oscuro@EPSG%3A3857@png/{z}/{x}/{-y}.png";
 const ARGENMAP_ATTRIBUTION = "Mapa base: Instituto Geográfico Nacional - Argenmap";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
+const WAYBACK_PREFETCH_ZOOM = 17;
+const WAYBACK_TILE_SIZE = 256;
+const prefetchedWaybackTiles = new Set<string>();
+
+type TileLoadingState = "idle" | "loading" | "ready";
 
 export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase, waybackState }: Props) {
+  const [tileLoadingState, setTileLoadingState] = useState<TileLoadingState>("idle");
   const selectedCase = cases.find(
     (caseFile) => caseFile.id === selectedCaseId && isMapMarkerEligible(caseFile),
   ) ?? null;
@@ -46,6 +53,13 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
 
   const waybackTileUrl =
     waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
+  const activeWaybackRelease = waybackState.status === "active"
+    ? waybackState.releases.find((release) => release.releaseId === waybackState.activeReleaseId) ?? null
+    : null;
+
+  useEffect(() => {
+    setTileLoadingState(waybackTileUrl ? "loading" : "idle");
+  }, [waybackTileUrl]);
 
   return (
     <MapContainer
@@ -63,6 +77,12 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
             attribution={ESRI_ATTRIBUTION}
             url={waybackTileUrl}
             maxZoom={19}
+            keepBuffer={3}
+            updateWhenZooming={false}
+            eventHandlers={{
+              loading: () => setTileLoadingState("loading"),
+              load: () => setTileLoadingState("ready"),
+            }}
             // Some Wayback releases lack tiles past z=17 and return 404s. Cap
             // tile requests at 17 and let Leaflet upscale for z=18-19 instead.
             maxNativeZoom={17}
@@ -76,6 +96,11 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
           selectedCase={selectedCase}
           waybackActive={selectedCase?.coordinates != null && waybackState.status !== "off" && waybackState.status !== "error"}
           onDeselect={handleClose}
+        />
+        <WaybackTilePrefetcher selectedCase={selectedCase} waybackState={waybackState} />
+        <WaybackTileLoader
+          state={tileLoadingState}
+          label={activeWaybackRelease ? String(activeWaybackRelease.year) : null}
         />
         {selectedCase?.coordinates && traceMode && (
           <Circle
@@ -129,6 +154,72 @@ export default function CaseMap({ cases, selectedCaseId, traceMode, onSelectCase
   );
 }
 
+function WaybackTileLoader({ state, label }: { state: TileLoadingState; label: string | null }) {
+  if (state !== "loading") return null;
+  return (
+    <div className="waybackTileLoader" role="status" aria-live="polite">
+      <div className="waybackTileLoaderHeader">
+        <span className="waybackTileLoaderDot" aria-hidden />
+        <span>Preparando imagen satelital</span>
+        {label ? <strong>{label}</strong> : null}
+      </div>
+      <div className="waybackTileLoaderTrack" aria-hidden />
+      <p>Primero se carga la vista actual; el resto queda en segundo plano.</p>
+    </div>
+  );
+}
+
+function WaybackTilePrefetcher({
+  selectedCase,
+  waybackState,
+}: {
+  selectedCase: ExplorerCase | null;
+  waybackState: WaybackState;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (waybackState.status !== "active" || !selectedCase?.coordinates) return;
+    let cancelled = false;
+    let cancelIdlePrefetch: (() => void) | null = null;
+    const coordinates = selectedCase.coordinates;
+
+    const activeTileUrl = buildWaybackCenterTileUrl(
+      map,
+      coordinates,
+      waybackState.activeReleaseId,
+    );
+    if (!activeTileUrl) return;
+
+    void preloadWaybackTile(activeTileUrl, "high").finally(() => {
+      if (cancelled) return;
+      const followUpReleases = getFollowUpPrefetchReleases(
+        waybackState.releases,
+        waybackState.activeReleaseId,
+      );
+      cancelIdlePrefetch = scheduleIdlePrefetch(() => {
+        for (const release of followUpReleases) {
+          const url = buildWaybackCenterTileUrl(map, coordinates, release.releaseId);
+          if (url) void preloadWaybackTile(url, "low");
+        }
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      cancelIdlePrefetch?.();
+    };
+  }, [
+    map,
+    selectedCase?.coordinates?.lat,
+    selectedCase?.coordinates?.lon,
+    selectedCase?.id,
+    waybackState,
+  ]);
+
+  return null;
+}
+
 function pickMarkerColors(
   isSelected: boolean,
   severity: CaseAlertSeverity | null,
@@ -176,6 +267,60 @@ function buildReferenceLabel(
     return "Referencia distrital, no ubicacion exacta";
   }
   return "Referencia administrativa, no ubicacion exacta";
+}
+
+function buildWaybackCenterTileUrl(
+  map: LeafletMap,
+  coordinates: NonNullable<ExplorerCase["coordinates"]>,
+  releaseId: number,
+): string | null {
+  const point = map
+    .project([coordinates.lat, coordinates.lon], WAYBACK_PREFETCH_ZOOM)
+    .divideBy(WAYBACK_TILE_SIZE)
+    .floor();
+  if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return null;
+  return tileUrlForRelease(releaseId)
+    .replace("{z}", String(WAYBACK_PREFETCH_ZOOM))
+    .replace("{x}", String(point.x))
+    .replace("{y}", String(point.y));
+}
+
+function preloadWaybackTile(url: string, priority: "high" | "low"): Promise<void> {
+  if (prefetchedWaybackTiles.has(url)) return Promise.resolve();
+  prefetchedWaybackTiles.add(url);
+  return new Promise((resolve) => {
+    const image = new window.Image();
+    image.decoding = "async";
+    (image as HTMLImageElement & { fetchPriority?: "high" | "low" }).fetchPriority = priority;
+    image.onload = () => resolve();
+    image.onerror = () => resolve();
+    image.src = url;
+  });
+}
+
+function getFollowUpPrefetchReleases(releases: Array<{ releaseId: number }>, activeReleaseId: number) {
+  const activeIndex = releases.findIndex((release) => release.releaseId === activeReleaseId);
+  return releases
+    .map((release, index) => ({ release, index }))
+    .filter(({ release }) => release.releaseId !== activeReleaseId)
+    .sort((left, right) => {
+      if (activeIndex < 0) return left.index - right.index;
+      return Math.abs(left.index - activeIndex) - Math.abs(right.index - activeIndex);
+    })
+    .map(({ release }) => release);
+}
+
+function scheduleIdlePrefetch(callback: () => void): () => void {
+  const idleWindow = window as Window & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+    cancelIdleCallback?: (handle: number) => void;
+  };
+  if (idleWindow.requestIdleCallback) {
+    const handle = idleWindow.requestIdleCallback(callback, { timeout: 1400 });
+    return () => idleWindow.cancelIdleCallback?.(handle);
+  }
+  const handle = window.setTimeout(callback, 350);
+  return () => window.clearTimeout(handle);
 }
 
 const WAYBACK_TARGET_ZOOM = 17;
