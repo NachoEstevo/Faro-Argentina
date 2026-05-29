@@ -403,9 +403,6 @@ export default function FaroExperience({
   const showMapChrome = viewMode === "map";
   const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
   const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
-  const activeWaybackYear = waybackState.status === "active"
-    ? waybackState.releases.find((release) => release.releaseId === waybackState.activeReleaseId)?.year ?? null
-    : null;
 
   const shellClasses = [
     styles.shell,
@@ -441,11 +438,8 @@ export default function FaroExperience({
             className={`${styles.mapTileStatusRegion} ${selectedCase ? styles.mapTileStatusRegionWithCase : ""}`}
           >
             <div className={styles.mapTileStatus} role="status" aria-live="polite">
-              <span className={styles.mapTileStatusOrb} aria-hidden />
-              <span className={styles.mapTileStatusCopy}>
-                <strong>Cargando imagen satelital</strong>
-                <span>{activeWaybackYear ? `Vista ${activeWaybackYear}` : "Vista actual"} primero</span>
-              </span>
+              <span className={styles.mapTileSpinner} aria-hidden />
+              <span>Cargando imagen satelital</span>
             </div>
           </div>
         )}
@@ -589,7 +583,6 @@ export default function FaroExperience({
             onTraceModeChange={setTraceMode}
             onClose={() => setSelectedCaseId("")}
             waybackState={waybackState}
-            waybackTileLoading={waybackTileLoading}
             onWaybackReleaseChange={(releaseId) => {
               setWaybackState((current) =>
                 current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,

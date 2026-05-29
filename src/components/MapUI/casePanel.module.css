@@ -453,52 +453,6 @@
   pointer-events: none;
 }
 
-.imageryTileLoader {
-  display: grid;
-  gap: 8px;
-  min-height: 28px;
-  opacity: 0;
-  transform: translateY(-3px);
-  transition: opacity 160ms var(--cp-ease), transform 160ms var(--cp-ease);
-}
-
-.imageryTileLoaderActive {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.imageryTileLoaderLabel {
-  color: var(--cp-text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.imageryTileLoaderTrack {
-  position: relative;
-  height: 3px;
-  overflow: hidden;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(90, 169, 229, 0.28), rgba(90, 169, 229, 0.08)),
-    rgba(255, 255, 255, 0.08);
-}
-
-.imageryTileLoaderTrack span {
-  position: absolute;
-  inset: 0;
-  width: 34%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, transparent, var(--cp-accent), transparent);
-  animation: cpImageryTileLoad 1.05s var(--cp-ease) infinite;
-}
-
-@keyframes cpImageryTileLoad {
-  from { transform: translateX(-120%); }
-  to   { transform: translateX(320%); }
-}
-
 /* Single discreet attribution line under the stage. */
 .imageryAttribution {
   margin: 0;
