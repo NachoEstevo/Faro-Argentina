@@ -8,7 +8,6 @@ const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
-const platformModeNavStylesUrl = new URL("../src/components/PlatformModeNav.module.css", import.meta.url);
 const resourcesSectionUrl = new URL("../src/components/RegionalMap/ResourcesSection.tsx", import.meta.url);
 
 test("AportesView submits private contributions with file attachments", async () => {
@@ -70,15 +69,12 @@ test("AportesView does not surface raw JavaScript errors to users", async () => 
   assert.doesNotMatch(source, /setStatusText\(error instanceof Error \? error\.message/);
 });
 
-test("Aportes sidebar mode switch stays inside the sidebar", async () => {
+test("AportesView relies on the global platform nav instead of a local sidebar nav", async () => {
   const source = await readFile(aportesViewUrl, "utf8");
-  const styles = await readFile(platformModeNavStylesUrl, "utf8");
 
-  assert.match(source, /<PlatformModeNav[\s\S]*activeMode="aportes"[\s\S]*variant="sidebar"/);
-  assert.match(styles, /\.sidebar \.primary\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);[\s\S]*width: 100%;/);
-  assert.match(styles, /\.sidebar \.item\s*\{[\s\S]*padding: 0 9px;/);
-  assert.match(styles, /\.sidebar \.secondary\s*\{[\s\S]*width: 100%;/);
-  assert.doesNotMatch(styles, /width: fit-content/);
+  assert.doesNotMatch(source, /PlatformModeNav/);
+  assert.doesNotMatch(source, /variant="sidebar"/);
+  assert.doesNotMatch(source, /switchPlatformMode/);
 });
 
 test("AportesView inherits platform work-view theme surfaces", async () => {
@@ -88,6 +84,11 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
   assert.match(styles, /background:\s*var\(--cf-workspace-sidebar-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
+  assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
+  assert.match(styles, /\.form\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
+  assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
+  assert.match(styles, /\.step\s*\{[\s\S]*min-height: 62px;[\s\S]*padding: 10px 12px;/);
+  assert.match(styles, /\.typeButton\s*\{[\s\S]*min-height: 98px;[\s\S]*padding: 14px;/);
   assert.match(styles, /\.typeGrid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/);
   assert.match(styles, /\.privacyModes/);
   assert.match(styles, /\.securityNote/);

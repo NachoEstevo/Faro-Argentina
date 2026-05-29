@@ -67,6 +67,9 @@ test("ExplorerView keeps filter controls fixed while pivots scroll", async () =>
   const source = await readFile(explorerViewUrl, "utf8");
   const css = await readFile(explorerStylesUrl, "utf8");
 
+  assert.match(source, /sidebarBrandIdentity/);
+  assert.match(source, /sidebarBrandName}>Faro/);
+  assert.match(css, /\.sidebarBrandName\s*\{[\s\S]*font-size: 22px;/);
   assert.match(source, /className=\{styles\.sidebarStaticFilters\}/);
   assert.match(source, /className=\{styles\.sidebarScrollRegion\}/);
   assert.match(source, /Ubicación en mapa/);
@@ -107,7 +110,6 @@ test("ExplorerView lets investigators save expedientes into local case folders",
 
   assert.match(source, /addCaseToStoredInvestigationWorkspace/);
   assert.match(source, /onSwitchToInvestigations/);
-  assert.match(source, /onSwitchToAportes/);
   assert.match(source, /Carpetas/);
   assert.match(source, /Aportar/);
   assert.doesNotMatch(source, /Mis carpetas/);
@@ -142,10 +144,14 @@ test("ExplorerView renders the approved tabbed case detail structure", async () 
   assert.match(css, /\.detailTabPanel/);
 });
 
-test("ExplorerView only offers country-specific search scopes", async () => {
+test("ExplorerView keeps Argentina context out of the Explorer header", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 
-  assert.match(source, /{ code: "AR", short: "AR", label: "Argentina" }/);
+  assert.doesNotMatch(source, /COUNTRY_OPTIONS/);
+  assert.doesNotMatch(source, /countrySelector/);
+  assert.doesNotMatch(source, /CountryFlag/);
+  assert.doesNotMatch(source, /aria-label="País"/);
+  assert.doesNotMatch(source, /onSelectCountry/);
   assert.doesNotMatch(source, /code: "ALL"/);
   assert.doesNotMatch(source, /Todos/);
   assert.doesNotMatch(source, /countryScope === "ALL"/);
@@ -185,6 +191,9 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /officialBasis/);
   assert.match(source, /caveat/);
   assert.match(source, /nextStep/);
+  assert.match(source, /Abrir expediente/);
+  assert.doesNotMatch(source, /Fechas clave/);
+  assert.doesNotMatch(source, /Datos clave/);
   assert.match(source, /preset !== "selected"/);
   assert.match(source, /Ver todos los expedientes|Limpiar filtro/);
   assert.match(source, /preset === "selected"/);
@@ -200,6 +209,7 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(css, /\.presetBannerHeader/);
   assert.match(css, /\.presetRationaleList/);
   assert.match(css, /\.presetRationaleItem/);
+  assert.match(css, /min-height: 150px/);
   assert.match(css, /repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 1280px\)/);
 });

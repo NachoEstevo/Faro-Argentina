@@ -32,6 +32,22 @@
   border-bottom: 1px solid var(--cf-border-subtle, var(--cf-border));
 }
 
+.sidebarBrandIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sidebarBrandName {
+  color: var(--cf-text);
+  font-family: var(--cf-font-heading);
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.2px;
+  line-height: 1;
+}
+
 .sidebarCollapse {
   display: inline-flex;
   align-items: center;
@@ -470,66 +486,6 @@
   color: var(--cf-text);
 }
 
-.headerActions {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.countrySelector {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.countryChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 12px;
-  background: var(--cf-bg-overlay);
-  border: 1px solid var(--cf-border);
-  color: var(--cf-text-secondary);
-  font-family: var(--cf-font-body);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.countryChip:hover {
-  border-color: var(--cf-border-strong);
-  color: var(--cf-text);
-}
-
-.countryChipActive {
-  background: var(--cf-accent-faint);
-  border-color: var(--cf-accent);
-  color: var(--cf-text);
-}
-
-.countryShort {
-  font-family: var(--cf-font-data);
-  font-size: 11px;
-  color: var(--cf-text-muted);
-  letter-spacing: 0.06em;
-}
-
-.countryChipActive .countryShort {
-  color: var(--cf-accent);
-}
-
-.countryFlag {
-  display: block;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px var(--cf-border);
-  flex-shrink: 0;
-}
-
-.countryName {
-  font-family: var(--cf-font-heading);
-  font-weight: 500;
-}
-
 .searchWrap {
   display: grid;
   gap: 14px;
@@ -639,16 +595,28 @@
   color: var(--cf-text-secondary);
   font-size: 13px;
   line-height: 1.35;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
 .presetCaseMeta {
+  display: flex;
   align-self: end;
-  margin-top: 2px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
   color: var(--cf-text-muted);
   font-family: var(--cf-font-data);
   font-size: 11px;
+}
+
+.presetCaseMeta span {
+  color: var(--cf-accent);
+  font-family: var(--cf-font-body);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
 }
 
 .presetClearButton {
@@ -1686,40 +1654,6 @@
   .mainTitle {
     font-size: 18px;
     letter-spacing: -0.2px;
-  }
-  .headerActions {
-    margin-left: auto;
-  }
-  .countrySelector {
-    width: 100%;
-    overflow-x: auto;
-    gap: 0;
-    border-bottom: 1px solid var(--cf-border);
-  }
-  .countryName {
-    display: none;
-  }
-  .countryChip {
-    padding: 10px 16px;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    color: var(--cf-text-muted);
-  }
-  .countryChip:hover {
-    color: var(--cf-text);
-    border-color: transparent;
-  }
-  .countryChipActive {
-    background: transparent;
-    border-bottom-color: var(--cf-accent);
-    color: var(--cf-text);
-  }
-  .countryShort {
-    font-size: 12px;
-    color: inherit;
-    letter-spacing: 0.08em;
   }
   .searchWrap,
   .statsGrid,

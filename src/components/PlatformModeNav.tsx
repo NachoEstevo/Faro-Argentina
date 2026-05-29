@@ -13,7 +13,7 @@ import styles from "./PlatformModeNav.module.css";
 
 export type PlatformMode = "map" | "explorer" | "investigations" | "aportes";
 type PrimaryMode = Exclude<PlatformMode, "aportes">;
-type PlatformModeNavVariant = "floating" | "header" | "sidebar";
+type PlatformModeNavVariant = "floating" | "header";
 
 interface PlatformModeItem {
   mode: PrimaryMode;

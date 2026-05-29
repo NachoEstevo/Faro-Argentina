@@ -401,7 +401,7 @@ export default function FaroExperience({
   const country = COUNTRY_META[selectedCountry];
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
-  const showOverlayChrome = viewMode === "map" || viewMode === "explorer";
+  const showBackControl = viewMode === "map";
   const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
 
   const shellClasses = [
@@ -498,8 +498,8 @@ export default function FaroExperience({
         />
       )}
 
-      {showOverlayChrome && (
-        <div className={styles.overlayLayer}>
+      <div className={`${styles.overlayLayer} ${!showMapChrome ? styles.overlayLayerGlobal : ""}`}>
+        {showBackControl && (
           <button
             type="button"
             className={styles.backToGlobal}
@@ -515,20 +515,20 @@ export default function FaroExperience({
             <ArrowLeft size={14} aria-hidden />
             <span>{selectedCaseId ? country.label : "Mapa general"}</span>
           </button>
-          <PlatformModeNav
-            activeMode={viewMode}
-            onModeChange={switchViewMode}
-            variant="floating"
+        )}
+        <PlatformModeNav
+          activeMode={viewMode}
+          onModeChange={switchViewMode}
+          variant="floating"
+        />
+        {viewMode === "map" && !selectedCase && (
+          <MapLegend
+            highCount={severityCounts.high}
+            mediumCount={severityCounts.medium}
+            totalCount={severityCounts.total}
           />
-          {viewMode === "map" && !selectedCase && (
-            <MapLegend
-              highCount={severityCounts.high}
-              mediumCount={severityCounts.medium}
-              totalCount={severityCounts.total}
-            />
-          )}
-        </div>
-      )}
+        )}
+      </div>
 
       {viewMode !== "map" && (
         <InterfaceThemeToggle
@@ -541,16 +541,13 @@ export default function FaroExperience({
         <ExplorerView
           cases={allCases}
           selectedCountry={selectedCountry}
-          onSelectCountry={setSelectedCountry}
           selectedCase={selectedCase}
           onSelectCase={(caseId, countryCode) => {
             setSelectedCountry(countryCode);
             setSelectedCaseId(caseId);
           }}
           onClearSelection={() => setSelectedCaseId("")}
-          onSwitchToMap={() => switchViewMode("map")}
           onSwitchToInvestigations={() => switchViewMode("investigations")}
-          onSwitchToAportes={() => switchViewMode("aportes")}
           initialPreset={initialExplorerPreset}
         />
       )}
@@ -558,9 +555,6 @@ export default function FaroExperience({
       {viewMode === "aportes" && (
         <AportesView
           selectedCountry={selectedCountry}
-          onSwitchToMap={() => switchViewMode("map")}
-          onSwitchToExplorer={() => switchViewMode("explorer")}
-          onSwitchToInvestigations={() => switchViewMode("investigations")}
         />
       )}
 
@@ -568,9 +562,6 @@ export default function FaroExperience({
         <InvestigationsView
           cases={allCases}
           selectedCountry={selectedCountry}
-          onSwitchToMap={() => switchViewMode("map")}
-          onSwitchToExplorer={() => switchViewMode("explorer")}
-          onSwitchToAportes={() => switchViewMode("aportes")}
         />
       )}
 

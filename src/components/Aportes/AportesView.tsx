@@ -14,14 +14,10 @@ import {
   UploadCloud,
 } from "lucide-react";
 
-import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./AportesView.module.css";
 
 interface Props {
   selectedCountry: "AR";
-  onSwitchToMap: () => void;
-  onSwitchToExplorer: () => void;
-  onSwitchToInvestigations: () => void;
 }
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -98,7 +94,7 @@ const aporteSteps = [
   { eyebrow: "Paso 3", title: "Revisión", detail: "Confirmá permisos y contacto opcional." },
 ] as const;
 
-export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchToExplorer, onSwitchToInvestigations }: Props) {
+export default function AportesView({ selectedCountry }: Props) {
   const [type, setType] = useState<ContributionTypeId>("add_source");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
   const [privacyMode, setPrivacyMode] = useState<PrivacyMode>("anonymous");
@@ -153,20 +149,9 @@ export default function AportesView({ selectedCountry, onSwitchToMap, onSwitchTo
     setFiles(selected);
   }
 
-  function switchPlatformMode(mode: PlatformMode) {
-    if (mode === "map") onSwitchToMap();
-    else if (mode === "explorer") onSwitchToExplorer();
-    else if (mode === "investigations") onSwitchToInvestigations();
-  }
-
   return (
     <section className={styles.shell} aria-label="Aportes">
       <aside className={styles.sidebar}>
-        <PlatformModeNav
-          activeMode="aportes"
-          onModeChange={switchPlatformMode}
-          variant="sidebar"
-        />
         <p className={styles.eyebrow}>Revisión privada</p>
         <h1 className={styles.title}>Ayudanos a mejorar Faro</h1>
         <p className={styles.intro}>

@@ -51,9 +51,6 @@ import styles from "./InvestigationsView.module.css";
 interface Props {
   cases: ExplorerCase[];
   selectedCountry: "AR";
-  onSwitchToMap: () => void;
-  onSwitchToExplorer: () => void;
-  onSwitchToAportes: () => void;
 }
 
 type AnalysisState = "idle" | "loading" | "success" | "error";
@@ -62,9 +59,6 @@ type WorkspaceSyncState = "idle" | "loading" | "saving" | "success" | "error";
 export default function InvestigationsView({
   cases,
   selectedCountry,
-  onSwitchToMap,
-  onSwitchToExplorer,
-  onSwitchToAportes,
 }: Props) {
   const [workspaces, setWorkspaces] = useState<InvestigationWorkspace[]>([]);
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
@@ -393,9 +387,6 @@ export default function InvestigationsView({
   return (
     <section className={styles.shell} aria-label="Investigaciones">
       <InvestigationsSidebar
-        onSwitchToMap={onSwitchToMap}
-        onSwitchToExplorer={onSwitchToExplorer}
-        onSwitchToAportes={onSwitchToAportes}
         workspaces={workspaces}
         activeWorkspaceId={activeWorkspaceId}
         onSelectWorkspace={handleSelectWorkspace}

@@ -42,25 +42,17 @@ import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 import { ContextualCitationsPanel } from "../ContextualCitations";
 import FaroMark from "../FaroMark";
-import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./Explorer.module.css";
 
 interface Props {
   cases: ExplorerCase[];
   selectedCountry: CountryCode;
-  onSelectCountry: (code: CountryCode) => void;
   selectedCase: ExplorerCase | null;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onClearSelection: () => void;
-  onSwitchToMap: () => void;
   onSwitchToInvestigations: () => void;
-  onSwitchToAportes: () => void;
   initialPreset?: ExplorerPreset;
 }
-
-const COUNTRY_OPTIONS: Array<{ code: CountryCode; short: string; label: string }> = [
-  { code: "AR", short: "AR", label: "Argentina" },
-];
 
 const GEOMETRY_OPTIONS: Array<{ id: InvestigatorGeometryFilter; label: string }> = [
   { id: "any", label: "Todas" },
@@ -92,19 +84,16 @@ const LEADING_AGENCY_CODE_PATTERN = /^\d+\s*-?\s*/;
 export default function ExplorerView({
   cases,
   selectedCountry,
-  onSelectCountry,
   selectedCase,
   onSelectCase,
   onClearSelection,
-  onSwitchToMap,
   onSwitchToInvestigations,
-  onSwitchToAportes,
   initialPreset = null,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [countryScope, setCountryScope] = useState<CountryCode>(selectedCountry);
+  const countryScope = selectedCountry;
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
   const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
@@ -123,12 +112,6 @@ export default function ExplorerView({
     ),
     [cases, countryScope],
   );
-
-  function switchPlatformMode(mode: PlatformMode) {
-    if (mode === "map") onSwitchToMap();
-    else if (mode === "investigations") onSwitchToInvestigations();
-    else if (mode === "aportes") onSwitchToAportes();
-  }
 
   const presetScopedCases = useMemo(
     () =>
@@ -244,13 +227,6 @@ export default function ExplorerView({
     setYearTo(yearBounds.max);
   };
 
-  const selectCountryScope = (code: CountryCode) => {
-    clearPreset();
-    setCountryScope(code);
-    setActiveFacets([]);
-    onSelectCountry(code);
-  };
-
   const toggleFacet = (facet: InvestigatorFacet) => {
     clearPreset();
     setActiveFacets((prev) => {
@@ -304,7 +280,10 @@ export default function ExplorerView({
     <section className={styles.shell} aria-label="Explorar">
       <aside className={styles.sidebar} aria-label="Filtros y guardados">
         <header className={styles.sidebarBrand}>
-          <FaroMark compact />
+          <div className={styles.sidebarBrandIdentity}>
+            <FaroMark compact />
+            <span className={styles.sidebarBrandName}>Faro</span>
+          </div>
           <button type="button" className={styles.sidebarCollapse} aria-label="Colapsar">
             <PanelLeftClose size={16} aria-hidden />
           </button>
@@ -436,30 +415,6 @@ export default function ExplorerView({
         <>
         <header className={styles.mainHeader}>
           <h1 className={styles.mainTitle}>Explorar</h1>
-          <div className={styles.headerActions}>
-            <PlatformModeNav
-              activeMode="explorer"
-              onModeChange={switchPlatformMode}
-              variant="header"
-            />
-          </div>
-          <div className={styles.countrySelector} role="group" aria-label="País">
-            {COUNTRY_OPTIONS.map((country) => {
-              const isActive = country.code === countryScope;
-              return (
-                <button
-                  key={country.code}
-                  type="button"
-                  className={`${styles.countryChip} ${isActive ? styles.countryChipActive : ""}`}
-                  onClick={() => selectCountryScope(country.code)}
-                  aria-pressed={isActive}
-                >
-                  <CountryFlag code={country.code} />
-                  <span className={styles.countryName}>{country.label}</span>
-                </button>
-              );
-            })}
-          </div>
         </header>
         {preset === "selected" && (
           <div className={styles.searchWrap}>
@@ -486,7 +441,10 @@ export default function ExplorerView({
                     <span className={styles.presetCaseKicker}>{caseFile.kicker}</span>
                     <strong>{caseFile.title}</strong>
                     <small>{caseFile.presentationReason}</small>
-                    <span className={styles.presetCaseMeta}>{caseFile.officialBasis}</span>
+                    <span className={styles.presetCaseMeta}>
+                      {caseFile.officialBasis}
+                      <span>Abrir expediente</span>
+                    </span>
                   </button>
                 ))}
               </div>
@@ -1193,23 +1151,6 @@ function DetailRow({
         <span className={styles.detailRowValue}>{value}</span>
       )}
     </div>
-  );
-}
-
-function CountryFlag({ code }: { code: CountryCode }) {
-  return (
-    <svg
-      width="22"
-      height="14"
-      viewBox="0 0 22 14"
-      role="img"
-      aria-label={code}
-      className={styles.countryFlag}
-    >
-      <rect width="22" height="14" fill="#74acdf" />
-      <rect y="4.66" width="22" height="4.68" fill="#ffffff" />
-      <circle cx="11" cy="7" r="1.6" fill="#f6b40e" />
-    </svg>
   );
 }
 

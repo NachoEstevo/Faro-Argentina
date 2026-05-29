@@ -32,11 +32,11 @@
 
 .title {
   margin: 0;
-  max-width: 12ch;
+  max-width: 13ch;
   font-family: var(--cf-font-heading);
-  font-size: clamp(34px, 6vw, 64px);
+  font-size: clamp(36px, 4vw, 50px);
   font-weight: 500;
-  line-height: 0.98;
+  line-height: 1.04;
   letter-spacing: 0;
 }
 
@@ -71,15 +71,18 @@
 }
 
 .content {
+  display: flex;
+  justify-content: center;
   min-height: 0;
   overflow-y: auto;
-  padding: clamp(22px, 5vw, 56px);
+  padding: clamp(84px, 10vh, 104px) clamp(22px, 5vw, 56px) clamp(22px, 5vw, 56px);
 }
 
 .form {
   display: grid;
   gap: 22px;
-  max-width: 980px;
+  width: 100%;
+  max-width: 1080px;
 }
 
 .stepper {
@@ -93,9 +96,10 @@
 
 .step {
   display: grid;
-  gap: 5px;
-  min-height: 96px;
-  padding: 14px;
+  align-content: start;
+  gap: 3px;
+  min-height: 62px;
+  padding: 10px 12px;
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-sm);
   background: var(--cf-workspace-card-bg, rgba(21, 28, 35, 0.52));
@@ -105,18 +109,18 @@
 .step strong {
   color: var(--cf-text);
   font-family: var(--cf-font-heading);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .step span:last-child {
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 11px;
+  line-height: 1.3;
 }
 
 .stepEyebrow {
   font-family: var(--cf-font-data);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -171,8 +175,8 @@
 .typeButton {
   display: grid;
   gap: 7px;
-  min-height: 86px;
-  padding: 12px;
+  min-height: 98px;
+  padding: 14px;
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-sm);
   background: var(--cf-bg-surface);
@@ -475,7 +479,7 @@
   }
 
   .content {
-    padding: 18px;
+    padding: 72px 18px 18px;
   }
 
   .stepper,

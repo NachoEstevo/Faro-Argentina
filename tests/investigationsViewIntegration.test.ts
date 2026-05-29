@@ -52,6 +52,8 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Base de identidad/);
   assert.match(source, /Brechas para verificar/);
   assert.match(source, /Próximos pasos/);
+  assert.match(source, /Crear carpeta de investigación/);
+  assert.match(source, /Definí una pregunta de trabajo/);
   assert.match(source, /Abrir fuente oficial/);
   assert.match(source, /Guardar próximos pasos como nota/);
   assert.match(source, /handleSaveDossierNextSteps/);
@@ -95,9 +97,11 @@ test("FaroExperience keeps private modes isolated from the map sidebar", async (
   const source = await readFile(faroExperienceUrl, "utf8");
 
   assert.match(source, /const showMapChrome = viewMode === "map";/);
+  assert.match(source, /const showBackControl = viewMode === "map";/);
   assert.match(source, /{showMapChrome && <MobileHeader/);
   assert.match(source, /{showMapChrome && \(\s*<CountrySidebar/s);
-  assert.match(source, /const showOverlayChrome = viewMode === "map" \|\| viewMode === "explorer";/);
+  assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*variant="floating"/);
+  assert.match(source, /styles\.overlayLayerGlobal/);
 });
 
 test("InvestigationsView inherits platform work-view theme surfaces", async () => {
@@ -108,6 +112,12 @@ test("InvestigationsView inherits platform work-view theme surfaces", async () =
   assert.match(styles, /background:\s*var\(--cf-workspace-card-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-input-bg/);
   assert.match(styles, /background:\s*var\(--cf-workspace-analysis-bg/);
+  assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
+  assert.match(styles, /\.form,[\s\S]*\.workspace\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
+  assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
+  assert.match(styles, /\.tabs\s*\{[\s\S]*min-height: 48px;[\s\S]*border-radius: var\(--cf-radius-md\);/);
+  assert.match(styles, /\.tabButton\s*\{[\s\S]*min-height: 38px;[\s\S]*font-size: 13px;[\s\S]*font-weight: 650;/);
+  assert.match(styles, /\.tabButtonActive\s*\{[\s\S]*background: var\(--cf-accent\);[\s\S]*color: var\(--cf-on-accent\);/);
 });
 
 test("country route can open investigations mode directly", async () => {
@@ -134,7 +144,8 @@ test("regional landing exposes Carpetas while aportes mode can still link to it"
   assert.doesNotMatch(floatingSource, /Mis carpetas/);
   assert.match(floatingSource, /Explorar/);
   assert.match(stylesSource, /text-decoration: none/);
+  assert.match(stylesSource, /\.overlayLayerGlobal\s*\{[\s\S]*left: 0;/);
   assert.match(floatingSource, /FolderOpen/);
-  assert.match(aportesSource, /onSwitchToInvestigations/);
+  assert.doesNotMatch(aportesSource, /variant="sidebar"|switchPlatformMode/);
   assert.match(aportesSource, /Carpetas/);
 });

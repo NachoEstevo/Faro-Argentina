@@ -22,13 +22,9 @@ import {
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
 import { parseInvestigationAnalysisBlocks } from "@/lib/data/investigationAnalysisText";
-import PlatformModeNav, { type PlatformMode } from "../PlatformModeNav";
 import styles from "./InvestigationsView.module.css";
 
 interface SidebarProps {
-  onSwitchToMap: () => void;
-  onSwitchToExplorer: () => void;
-  onSwitchToAportes: () => void;
   workspaces: InvestigationWorkspace[];
   activeWorkspaceId: string | null;
   onSelectWorkspace: (workspaceId: string) => void;
@@ -96,9 +92,6 @@ const WORKSPACE_TABS: Array<{ id: WorkspaceTab; label: string }> = [
 ];
 
 export function InvestigationsSidebar({
-  onSwitchToMap,
-  onSwitchToExplorer,
-  onSwitchToAportes,
   workspaces,
   activeWorkspaceId,
   onSelectWorkspace,
@@ -110,19 +103,8 @@ export function InvestigationsSidebar({
   syncStatusText,
   syncIsError,
 }: SidebarProps) {
-  function switchPlatformMode(mode: PlatformMode) {
-    if (mode === "map") onSwitchToMap();
-    else if (mode === "explorer") onSwitchToExplorer();
-    else if (mode === "aportes") onSwitchToAportes();
-  }
-
   return (
     <aside className={styles.sidebar}>
-      <PlatformModeNav
-        activeMode="investigations"
-        onModeChange={switchPlatformMode}
-        variant="sidebar"
-      />
       <p className={styles.eyebrow}>Carpeta privada</p>
       <h1 className={styles.title}>Carpeta de investigación</h1>
       <p className={styles.intro}>
@@ -266,6 +248,13 @@ export function WorkspaceSyncPanel({
 export function CreateWorkspaceForm({ onSubmit }: CreateFormProps) {
   return (
     <form className={styles.form} onSubmit={onSubmit}>
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>Nueva carpeta</p>
+          <h2>Crear carpeta de investigación</h2>
+          <p>Definí una pregunta de trabajo antes de reunir expedientes, fuentes y notas.</p>
+        </div>
+      </header>
       <label className={styles.field}>
         <span>Título</span>
         <input className={styles.input} name="title" required maxLength={120} placeholder="Causa Vialidad" />

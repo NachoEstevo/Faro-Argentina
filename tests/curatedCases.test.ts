@@ -30,6 +30,30 @@ test("curated cases point to real Faro cases with receipts and caveats", () => {
   }
 });
 
+test("curated cases expose compact chronology and investigation facts", () => {
+  for (const curated of CURATED_CASES) {
+    assert.equal(curated.timeline.length, 3, `${curated.caseId} should expose three timeline anchors`);
+    assert.equal(curated.keyFacts.length, 3, `${curated.caseId} should expose three key facts`);
+    assert.ok(curated.contextNote.length >= 60, `${curated.caseId} should explain the evidence boundary`);
+
+    for (const item of curated.timeline) {
+      assert.ok(item.label.length > 0, `${curated.caseId} timeline item should have a label`);
+      assert.ok(item.value.length > 0, `${curated.caseId} timeline item should have a value`);
+      assert.ok(item.source.length > 0, `${curated.caseId} timeline item should have a source`);
+    }
+  }
+});
+
+test("curated chronology avoids known overclaims", () => {
+  const rn3 = CURATED_CASES.find((caseFile) => caseFile.caseId === "AR-CONTRACT-46-1585-CON21");
+  assert.ok(rn3, "RN3 selected case should exist");
+  assert.doesNotMatch(JSON.stringify(rn3.timeline), /11\/02\/2022|firma|Contrato/i);
+
+  const camposDelTuyu = CURATED_CASES.find((caseFile) => caseFile.caseId === "AR-CONTRACT-74-0052-CON23");
+  assert.ok(camposDelTuyu, "Campos del Tuyu selected case should exist");
+  assert.match(camposDelTuyu.contextNote, /revisar pliegos y actas/i);
+});
+
 test("curated editorial copy remains non-accusatory", () => {
   assert.doesNotMatch(JSON.stringify(CURATED_CASES), forbiddenCopy);
 });

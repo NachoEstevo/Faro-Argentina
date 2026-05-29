@@ -16,13 +16,13 @@ Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El 
 
 ## Casos seleccionados
 
-| Caso | Por que entra | Limite |
-| --- | --- | --- |
-| `AR-CONTRACT-46-1585-CON21` Ruta Nacional 3 Patagonia | Caso con punto oficial, contrato, proveedor, monto y fuente. | El contrato no confirma pago ni avance fisico por si solo. |
-| `AR-MAPA-INV-1003129182` Acueducto Rio Colorado | Muestra una brecha real: hay datos de fuente oficial, pero no punto confiable para mapa. | No debe dibujarse como ubicacion territorial hasta tener geometria oficial validada. |
-| `AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME` Causa Vialidad | Sirve para separar contexto judicial oficial de contratos administrativos actuales. | No reemplaza expedientes administrativos ni crea relaciones automaticas. |
-| `AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026` Cuadernos / La Camarita | Permite mostrar contexto oficial y cruces documentales posibles. | Una mencion contextual no alcanza para relacionar contratos. |
-| `AR-CONTRACT-74-0052-CON23` Sistema cloacal en Parque Nacional Campos del Tuyu | Suma otro organismo y un expediente chico, completo y con geometria validada. | Requiere revisar actas, ampliaciones, certificados y recepcion para avanzar. |
+| Caso | Fechas y dato fuerte | Por que entra | Limite |
+| --- | --- | --- | --- |
+| `AR-CONTRACT-46-1585-CON21` Ruta Nacional 3 Patagonia | Publicado 02/09/2021; apertura 15/10/2021; ARS 6.692,98 M; 2 oferentes. | Caso con punto oficial, contrato, proveedor, monto y fuente. | El contrato no confirma pago ni avance fisico por si solo. No afirmar fecha de firma si la fila contractual no la trae. |
+| `AR-MAPA-INV-1003129182` Acueducto Rio Colorado | Inicio 2023; fin previsto 2026; ARS 124.165,7 M; avance fisico 6,11%. | Muestra una brecha real: hay datos de fuente oficial, pero no punto confiable para mapa. | No debe dibujarse como ubicacion territorial hasta tener geometria oficial validada. |
+| `AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME` Causa Vialidad | Procesos 2003-2015; veredicto 06/12/2022; firmeza 10/06/2025; 51 procesos viales. | Sirve para separar contexto judicial oficial de contratos administrativos actuales. | No reemplaza expedientes administrativos ni crea relaciones automaticas. La carga completa de las 51 obras requiere otro sprint de datos. |
+| `AR-HIST-JUD-CUADERNOS-CAMARITA-TOF7-2026` Cuadernos / La Camarita | Causa base 2018; requerimiento 2019; lectura 09/12/2025; juicio en curso al snapshot. | Permite mostrar contexto oficial y cruces documentales posibles. | Una mencion contextual no alcanza para relacionar contratos. No presentarlo como sentencia. |
+| `AR-CONTRACT-74-0052-CON23` Sistema cloacal en Parque Nacional Campos del Tuyu | Publicado 29/09/2022; apertura 18/11/2022; contrato 31/01/2023; 1 oferente. | Suma otro organismo y un expediente chico, completo y con geometria validada. | Requiere revisar actas, ampliaciones, certificados y recepcion para avanzar. No presentar baja competencia como conclusion. |
 
 ## Frontera de evidencia
 

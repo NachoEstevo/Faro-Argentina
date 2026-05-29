@@ -34,9 +34,9 @@
   margin: 0;
   max-width: 100%;
   font-family: var(--cf-font-heading);
-  font-size: clamp(30px, 4vw, 44px);
+  font-size: clamp(36px, 4vw, 50px);
   font-weight: 500;
-  line-height: 1.03;
+  line-height: 1.04;
   overflow-wrap: anywhere;
   hyphens: auto;
 }
@@ -228,15 +228,18 @@
 }
 
 .content {
+  display: flex;
+  justify-content: center;
   min-height: 0;
   overflow-y: auto;
-  padding: clamp(20px, 4vw, 48px);
+  padding: clamp(84px, 10vh, 104px) clamp(22px, 5vw, 56px) clamp(22px, 5vw, 56px);
 }
 
 .form,
 .workspace {
   display: grid;
   gap: 18px;
+  width: 100%;
   max-width: 1080px;
 }
 
@@ -259,14 +262,15 @@
 .tabs {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   width: fit-content;
   max-width: 100%;
+  min-height: 48px;
   overflow-x: auto;
-  padding: 4px;
+  padding: 5px;
   border: 1px solid var(--cf-border);
-  border-radius: 999px;
-  background: var(--cf-bg-overlay);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-workspace-card-bg, rgba(21, 28, 35, 0.52));
 }
 
 .tabButton {
@@ -274,25 +278,28 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  min-height: 34px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 999px;
+  min-height: 38px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--cf-radius-sm);
   background: transparent;
   color: var(--cf-text-muted);
   cursor: pointer;
   font-family: var(--cf-font-body);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 650;
 }
 
 .tabButton:hover {
+  border-color: var(--cf-border);
+  background: var(--cf-bg-surface);
   color: var(--cf-text);
 }
 
 .tabButtonActive {
-  border: 1px solid var(--cf-border-strong);
-  background: var(--cf-bg);
-  color: var(--cf-text);
+  border-color: var(--cf-accent);
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
 }
 
 .grid {
@@ -722,6 +729,10 @@
 
   .header {
     display: grid;
+  }
+
+  .content {
+    padding: 72px 18px 18px;
   }
 
   .tabs {

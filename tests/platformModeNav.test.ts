@@ -9,7 +9,7 @@ const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const sidebarFiltersUrl = new URL("../src/components/RegionalMap/SidebarFilters.tsx", import.meta.url);
 
-test("PlatformModeNav keeps Aportes as a secondary action across work surfaces", async () => {
+test("PlatformModeNav keeps primary modes centered and Aportes docked right", async () => {
   const source = await readFile(navUrl, "utf8");
   const styles = await readFile(navStylesUrl, "utf8");
 
@@ -19,8 +19,11 @@ test("PlatformModeNav keeps Aportes as a secondary action across work surfaces",
   assert.match(source, /mode: "investigations"/);
   assert.match(source, /mode="aportes"/);
   assert.match(source, /styles\.secondary/);
-  assert.match(styles, /\.sidebar \.primary[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.floating\s*\{[\s\S]*left: 20px;[\s\S]*right: 20px;[\s\S]*justify-content: center;/);
+  assert.match(styles, /\.floating \.secondary\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.secondary[\s\S]*border: 1px solid var\(--cf-border\)/);
+  assert.doesNotMatch(source, /"sidebar"/);
+  assert.doesNotMatch(styles, /\.sidebar/);
   assert.doesNotMatch(source, /Mis carpetas|Aportes<\/span>/);
 });
 
