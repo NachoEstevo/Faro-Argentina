@@ -14,7 +14,9 @@ import {
 } from "lucide-react";
 
 import FaroMark from "../FaroMark";
+import SearchSuggestionGroups from "../SearchSuggestionGroups";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import type { SearchSuggestion } from "@/lib/data/searchSuggestions";
 import type { InvestigationDossier } from "@/lib/data/investigationDossiers";
 import {
   getInvestigationRelationReasonLabel,
@@ -69,8 +71,11 @@ interface CaseSearchPanelProps {
   relationReason: InvestigationCaseRelationReason;
   relationNote: string;
   results: ExplorerCase[];
+  searchSuggestions: SearchSuggestion[];
+  investigationQuestion: string | null;
   relationReasonOptions: Array<{ value: InvestigationCaseRelationReason; label: string }>;
   onQueryChange: (value: string) => void;
+  onSelectSearchSuggestion: (suggestion: SearchSuggestion) => void;
   onRelationReasonChange: (value: InvestigationCaseRelationReason) => void;
   onRelationNoteChange: (value: string) => void;
   onAddCase: (caseId: string, reason: InvestigationCaseRelationReason, note: string) => void;
@@ -533,8 +538,11 @@ export function CaseSearchPanel({
   relationReason,
   relationNote,
   results,
+  searchSuggestions,
+  investigationQuestion,
   relationReasonOptions,
   onQueryChange,
+  onSelectSearchSuggestion,
   onRelationReasonChange,
   onRelationNoteChange,
   onAddCase,
@@ -542,11 +550,21 @@ export function CaseSearchPanel({
   return (
     <section className={styles.panel}>
       <h3>Agregar expedientes Faro</h3>
+      <p className={styles.panelHint}>
+        {investigationQuestion
+          ? `Buscá qué expediente ayuda a verificar: ${investigationQuestion}`
+          : "Buscá por provincia, proveedor, organismo, CUIT, señal, fuente o expediente."}
+      </p>
       <input
         className={styles.input}
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
-        placeholder="Buscar por proveedor, organismo, señal o id"
+        placeholder="Buscar provincia, proveedor, CUIT, organismo, fuente o expediente"
+      />
+      <SearchSuggestionGroups
+        suggestions={searchSuggestions}
+        onSelectSuggestion={onSelectSearchSuggestion}
+        compact
       />
       <div className={styles.relationControls}>
         <label className={styles.field}>
@@ -567,7 +585,7 @@ export function CaseSearchPanel({
             className={styles.input}
             value={relationNote}
             onChange={(event) => onRelationNoteChange(event.target.value)}
-            placeholder="Por qué entra en esta carpeta"
+            placeholder="Qué ayuda a verificar o qué queda pendiente"
           />
         </label>
       </div>
@@ -581,11 +599,35 @@ export function CaseSearchPanel({
           >
             <span>{caseFile.title}</span>
             <small>{caseFile.id}</small>
+            <small>{caseFile.receipt.sourceName} · {describeCaseEvidenceMarker(caseFile)}</small>
           </button>
         ))}
       </div>
     </section>
   );
+}
+
+function describeCaseEvidenceMarker(caseFile: ExplorerCase): string {
+  const record = caseFile as ExplorerCase & {
+    bidderCount?: number | null;
+    offerCount?: number | null;
+    amount?: { value: number; currency: string } | null;
+    officialBudget?: { value: number; currency: string } | null;
+  };
+  if (!caseFile.coordinates) return "brecha: sin geometría oficial";
+  if (record.bidderCount === 1 || record.offerCount === 1) return "señal: competencia limitada";
+  if (!record.amount || !Number.isFinite(record.amount.value) || record.amount.value <= 0) {
+    return "brecha: sin monto comparable";
+  }
+  if (
+    record.amount &&
+    record.officialBudget &&
+    record.amount.currency === record.officialBudget.currency &&
+    record.amount.value > record.officialBudget.value * 1.05
+  ) {
+    return "señal: revisar presupuesto";
+  }
+  return "fuente oficial disponible";
 }
 
 export function SelectedCasesPanel({ selectedCases, workspace, onRemoveCase }: SelectedCasesPanelProps) {

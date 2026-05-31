@@ -29,6 +29,14 @@ test("AportesView submits private contributions with file attachments", async ()
   assert.match(source, /Fuente para revisar/);
   assert.match(source, /Corrección de dato/);
   assert.match(source, /Archivo o foto/);
+  assert.match(source, /buildCaseLinkSuggestions/);
+  assert.match(source, /RelatedCaseField/);
+  assert.match(source, /SearchSuggestionGroups/);
+  assert.match(source, /name="relatedCase"/);
+  assert.match(source, /Ayuda a orientar la revisión; no confirma relación y no se publica automáticamente/);
+  assert.match(source, /resolveRelatedCaseValue/);
+  assert.match(source, /setRelatedCase\(""\)/);
+  assert.match(source, /setRelatedCaseQuery\(""\)/);
   assert.match(source, /aria-label=\{selectedCopy\.titleLabel\}/);
   assert.match(source, /aria-label=\{selectedCopy\.explanationLabel\}/);
   assert.doesNotMatch(source, /Sugerir pista|Reportar problema/);
@@ -105,6 +113,7 @@ test("FaroExperience exposes Aportes as a secondary action, not a primary mode t
   ].join("\n");
 
   assert.match(source, /AportesView/);
+  assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
   assert.match(source, /type PlatformMode = "map" \| "explorer" \| "investigations" \| "aportes"/);
   assert.match(source, /viewMode === "aportes"/);
   assert.match(source, /MessageSquarePlus/);

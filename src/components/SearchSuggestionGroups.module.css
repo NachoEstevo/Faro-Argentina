@@ -1,0 +1,218 @@
+.panel {
+  --suggest-text: var(--cf-workspace-text, var(--cf-text, #eef2f7));
+  --suggest-secondary: var(--cf-workspace-secondary, var(--cf-text-secondary, #a8b2c1));
+  --suggest-muted: var(--cf-workspace-muted, var(--cf-text-muted, #94a3b8));
+  --suggest-border: var(--cf-workspace-border, var(--cf-border, rgba(148, 163, 184, 0.24)));
+  --suggest-surface: var(--cf-workspace-card-bg, var(--cf-bg-elev, rgba(15, 23, 42, 0.78)));
+  --suggest-row: var(--cf-workspace-input-bg, var(--cf-bg-surface, rgba(15, 23, 42, 0.52)));
+  --suggest-success: var(--cf-workspace-success, var(--cf-state-verified, #38a169));
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--suggest-border);
+  border-radius: var(--cf-radius-md, 12px);
+  background: var(--suggest-surface);
+  box-shadow: var(--cf-workspace-shadow, 0 18px 45px rgba(2, 6, 23, 0.18));
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header span {
+  color: var(--suggest-text);
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.header small {
+  color: var(--suggest-muted);
+  font-size: 12px;
+  font-weight: 620;
+  text-align: right;
+}
+
+.groups {
+  display: grid;
+  gap: 10px;
+}
+
+.group {
+  display: grid;
+  gap: 6px;
+}
+
+.groupHead {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.groupHead::after {
+  content: "";
+  order: 2;
+  height: 1px;
+  background: var(--suggest-border);
+}
+
+.groupTitle {
+  order: 1;
+  color: var(--cf-accent, #56b2ef);
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.groupHead small {
+  order: 3;
+  color: var(--suggest-muted);
+  font-size: 11px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 6px;
+}
+
+.button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "match count"
+    "meta count";
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 5px;
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid var(--suggest-border);
+  border-radius: var(--cf-radius-sm, 8px);
+  background: var(--suggest-row);
+  color: var(--suggest-text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.button:hover {
+  border-color: var(--cf-accent, #56b2ef);
+  background: color-mix(in srgb, var(--cf-accent, #56b2ef) 10%, var(--suggest-row));
+  transform: translateY(-1px);
+}
+
+.match {
+  grid-area: match;
+  min-width: 0;
+  color: var(--suggest-text);
+  font-size: 14px;
+  font-weight: 740;
+  line-height: 1.22;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  grid-area: meta;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  color: var(--suggest-muted);
+  font-size: 11px;
+  font-weight: 620;
+  line-height: 1.3;
+}
+
+.meta > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  flex: 0 0 auto;
+  color: var(--cf-accent, #56b2ef);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.count {
+  grid-area: count;
+  color: var(--suggest-success);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+.compact {
+  gap: 10px;
+  padding: 10px;
+  box-shadow: none;
+}
+
+.compact .header {
+  display: grid;
+  gap: 3px;
+}
+
+.compact .header small {
+  text-align: left;
+}
+
+.compact .groups {
+  gap: 10px;
+}
+
+.compact .grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.compact .button {
+  min-height: 52px;
+  padding: 9px 10px;
+}
+
+.compact .match {
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .header {
+    display: grid;
+    gap: 4px;
+  }
+
+  .header small {
+    text-align: left;
+  }
+
+  .grid,
+  .compact .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "match"
+      "meta"
+      "count";
+  }
+
+  .count {
+    justify-self: start;
+  }
+}

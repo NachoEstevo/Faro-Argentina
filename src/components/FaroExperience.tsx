@@ -555,6 +555,7 @@ export default function FaroExperience({
       {viewMode === "aportes" && (
         <AportesView
           selectedCountry={selectedCountry}
+          cases={allCases}
         />
       )}
 

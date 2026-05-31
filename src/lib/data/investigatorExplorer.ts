@@ -96,6 +96,13 @@ export interface InvestigatorExplorerView {
   activeEntity: InvestigatorFacet | null;
 }
 
+export interface InvestigatorExplorerIndex {
+  viewType: "faro_investigator_explorer_index_v1";
+  filters: InvestigatorExplorerFilters;
+  totalCases: number;
+  rows: InvestigatorCaseRow[];
+}
+
 const DEFAULT_LIMIT = 120;
 const MAX_LIMIT = 500;
 
@@ -103,18 +110,38 @@ export function buildInvestigatorExplorer(
   cases: InvestigatorExplorerCase[],
   filters: InvestigatorExplorerFilters = {},
 ): InvestigatorExplorerView {
+  return buildInvestigatorExplorerFromIndex(buildInvestigatorExplorerIndex(cases, filters), filters);
+}
+
+export function buildInvestigatorExplorerIndex(
+  cases: InvestigatorExplorerCase[],
+  filters: InvestigatorExplorerFilters = {},
+): InvestigatorExplorerIndex {
   const contextCases = cases.filter((caseFile) => matchesContextScope(caseFile, filters));
   const signalContexts = buildCaseSignalContextsByCountry(contextCases as SignalCaseFile[]);
   const fallbackContext = buildCaseSignalContext(cases as SignalCaseFile[]);
   const allRows = cases.map((caseFile) =>
     toInvestigatorRow(caseFile, signalContexts.get(caseFile.countryCode) ?? fallbackContext),
   );
-  const facetRows = allRows.filter((row) => matchesFilters(row, {
+
+  return {
+    viewType: "faro_investigator_explorer_index_v1",
+    filters,
+    totalCases: cases.length,
+    rows: allRows,
+  };
+}
+
+export function buildInvestigatorExplorerFromIndex(
+  index: InvestigatorExplorerIndex,
+  filters: InvestigatorExplorerFilters = {},
+): InvestigatorExplorerView {
+  const facetRows = index.rows.filter((row) => matchesFilters(row, {
     ...filters,
     entity: undefined,
     entities: undefined,
   }));
-  const filteredRows = allRows
+  const filteredRows = index.rows
     .filter((row) => matchesFilters(row, filters))
     .sort(compareRows);
   const filteredSummary = summarizeRows(filteredRows);
@@ -129,7 +156,7 @@ export function buildInvestigatorExplorer(
     viewType: "faro_investigator_explorer_v1",
     filters,
     stats: {
-      totalCases: cases.length,
+      totalCases: index.totalCases,
       filteredCases: filteredRows.length,
       filteredCasesWithPrimarySignal: filteredSummary.withPrimarySignal,
       filteredCasesWithoutMapGeometry: filteredSummary.withoutMapGeometry,

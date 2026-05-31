@@ -45,6 +45,17 @@ La ruta ideal de Faro es:
 pregunta -> mapa/explorer -> pista -> expediente -> rastro oficial -> export -> accion
 ```
 
+Para periodistas e investigadores, la ruta operativa agrega una carpeta privada:
+
+```text
+pregunta de investigacion -> busqueda por entidad/lugar/fuente -> expediente relacionado
+-> motivo y nota de relacion -> matriz de evidencia -> brechas -> proximos pasos
+-> paquete exportable
+```
+
+La carpeta no confirma relaciones. Sirve para ordenar hipotesis de trabajo,
+recibos oficiales, caveats y tareas de verificacion.
+
 El usuario deberia poder responder rapido:
 
 1. Que estoy mirando?
@@ -113,6 +124,44 @@ Incluye:
 - caveats;
 - siguientes pasos de verificacion;
 - paquete exportable.
+
+### Carpeta De Investigacion
+
+Una carpeta es un espacio privado de trabajo, no una publicacion.
+
+Debe conservar:
+
+- pregunta de investigacion;
+- expedientes relacionados;
+- motivo de relacion declarado por el usuario;
+- nota de relacion o pendiente de verificacion;
+- actores comunes;
+- matriz de evidencia;
+- brechas;
+- proximos pasos;
+- fuentes manuales;
+- export descargable.
+
+El motivo por defecto debe ser neutral, por ejemplo "Hipotesis de trabajo". No
+usar "Mismo contexto judicial" como default porque puede sobreafirmar una
+relacion.
+
+### Aportes
+
+Los aportes de usuarios son material privado de revision. Aunque apunten a un
+expediente Faro, ese vinculo es sugerido por el usuario y no queda aprobado hasta
+que alguien lo revise.
+
+Reglas:
+
+- no publicar aportes automaticamente;
+- no mostrar aportes en mapa, Explorer, informes o exports publicos sin curacion
+  manual;
+- mantener visible que "sin contacto" no significa anonimato absoluto;
+- explicar que archivos pueden conservar metadatos EXIF o PDF;
+- separar sugerencia de relacion de relacion validada;
+- si un aporte se usa publicamente despues, debe tener fuente/caveat/redaccion
+  explicita.
 
 ### Receipt
 

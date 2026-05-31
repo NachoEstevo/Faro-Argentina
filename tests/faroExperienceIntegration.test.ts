@@ -20,6 +20,7 @@ test("FaroExperience preserves operational map case rendering", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
 
   assert.match(source, /<CaseMap[\s\S]*cases=\{countryReviewCases\}/);
+  assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
 });

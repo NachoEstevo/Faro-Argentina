@@ -5,6 +5,8 @@ import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: 
 import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import {
   buildInvestigatorExplorer,
+  buildInvestigatorExplorerFromIndex,
+  buildInvestigatorExplorerIndex,
   type InvestigatorExplorerCase,
 } from "../src/lib/data/investigatorExplorer.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
@@ -51,6 +53,21 @@ test("buildInvestigatorExplorer searches by supplier, source, record id, and sig
 
   const signalSearch = buildInvestigatorExplorer(allCases, { query: "competencia baja", limit: 50 });
   assert.equal(signalSearch.rows.some((row) => row.primarySignal?.code === "single_bidder"), true);
+});
+
+test("buildInvestigatorExplorerFromIndex filters a reusable row index", () => {
+  const index = buildInvestigatorExplorerIndex(allCases, { countries: ["AR"] });
+  const firstIndexedRow = index.rows[0];
+  const supplierSearch = buildInvestigatorExplorerFromIndex(index, { query: "warlet", limit: 50 });
+  const sourceSearch = buildInvestigatorExplorerFromIndex(index, { query: "contrat.ar", limit: 50 });
+
+  assert.equal(index.rows.length, allCases.length);
+  assert.equal(index.rows[0], firstIndexedRow);
+  assert.equal(
+    supplierSearch.rows.some((row) => row.caseId === "AR-CONTRACT-14-1002-CON21"),
+    true,
+  );
+  assert.equal(sourceSearch.rows.every((row) => row.sourceName.toLowerCase().includes("contrat.ar")), true);
 });
 
 test("buildInvestigatorExplorer searches by official location fields used by suggestions", () => {

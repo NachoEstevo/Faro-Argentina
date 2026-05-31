@@ -10,6 +10,15 @@ evidence exists, and what still needs verification.
 Do not add copy or logic that implies guilt, corruption, fraud, theft, or a
 wrongdoing score.
 
+## Investigation Workflow Rules
+
+- Carpetas are case-starter workspaces, not generic saved lists: question,
+  related expedientes, relation reason, relation note, evidence matrix, gaps,
+  verification steps, export.
+- Aportes remain private review material. A user-suggested related case is not a
+  reviewed relationship, and approved private material is still not public
+  evidence until manually curated, redacted and caveated.
+
 ## Engineering Rules
 
 - Prefer simple functions over abstract class hierarchies.

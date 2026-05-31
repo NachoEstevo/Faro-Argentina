@@ -33,6 +33,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /INVESTIGATION_RELATION_REASON_OPTIONS/);
   assert.match(source, /Motivo de relación/);
   assert.match(source, /Nota de relación/);
+  assert.match(source, /useState<InvestigationCaseRelationReason>\("manual_hypothesis"\)/);
   assert.match(source, /Resumen de carpeta/);
   assert.match(source, /Motivos declarados/);
   assert.match(source, /WorkspaceTabs/);
@@ -58,6 +59,15 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Definí una pregunta de trabajo/);
   assert.match(source, /Abrir fuente oficial/);
   assert.match(source, /Guardar próximos pasos como nota/);
+  assert.match(source, /buildSearchSuggestions/);
+  assert.match(source, /SearchSuggestionGroups/);
+  assert.match(source, /Buscar provincia, proveedor, CUIT, organismo, fuente o expediente/);
+  assert.match(source, /Qué ayuda a verificar o qué queda pendiente/);
+  assert.match(source, /Pregunta de investigación/);
+  assert.match(source, /Buscar primer expediente/);
+  assert.match(source, /Agregar más expedientes/);
+  assert.match(source, /brecha: sin geometría oficial/);
+  assert.match(source, /fuente oficial disponible/);
   assert.match(source, /handleSaveDossierNextSteps/);
   assert.match(source, /setActiveTab\("notas"\)/);
   assert.match(source, /noteList/);

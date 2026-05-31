@@ -15,10 +15,17 @@ import {
 } from "lucide-react";
 
 import FaroMark from "../FaroMark";
+import SearchSuggestionGroups from "../SearchSuggestionGroups";
+import {
+  buildCaseLinkSuggestions,
+  type SearchSuggestion,
+  type SearchSuggestionCase,
+} from "@/lib/data/searchSuggestions";
 import styles from "./AportesView.module.css";
 
 interface Props {
   selectedCountry: "AR";
+  cases: SearchSuggestionCase[];
 }
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -95,11 +102,13 @@ const aporteSteps = [
   { eyebrow: "Paso 3", title: "Revisión", detail: "Confirmá permisos y contacto opcional." },
 ] as const;
 
-export default function AportesView({ selectedCountry }: Props) {
+export default function AportesView({ selectedCountry, cases }: Props) {
   const [type, setType] = useState<ContributionTypeId>("add_source");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
   const [privacyMode, setPrivacyMode] = useState<PrivacyMode>("anonymous");
   const [files, setFiles] = useState<File[]>([]);
+  const [relatedCaseQuery, setRelatedCaseQuery] = useState("");
+  const [relatedCase, setRelatedCase] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [statusText, setStatusText] = useState("");
   const selectedCopy = formCopy[type];
@@ -108,14 +117,25 @@ export default function AportesView({ selectedCountry }: Props) {
     () => files.map((file) => `${file.name} · ${formatBytes(file.size)}`),
     [files],
   );
+  const relatedCaseSuggestions = useMemo(
+    () => buildCaseLinkSuggestions(cases, relatedCaseQuery, { limit: 6 }),
+    [cases, relatedCaseQuery],
+  );
+  const submittedRelatedCase = resolveRelatedCaseValue(relatedCase, relatedCaseQuery);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (type === "correct_data" && !submittedRelatedCase) {
+      setSubmitState("error");
+      setStatusText("Para corregir un dato, seleccioná un expediente Faro o pegá un ID/URL de expediente.");
+      return;
+    }
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
     form.set("type", type);
     form.set("jurisdiction", jurisdiction);
     form.set("privacyMode", privacyMode);
+    form.set("relatedCase", submittedRelatedCase);
     if (privacyMode === "anonymous") {
       form.set("contactName", "");
       form.set("contactEmail", "");
@@ -139,6 +159,8 @@ export default function AportesView({ selectedCountry }: Props) {
       setStatusText(`Aporte recibido para revisión: ${payload.submissionId}.`);
       formElement.reset();
       setFiles([]);
+      setRelatedCase("");
+      setRelatedCaseQuery("");
     } catch (error) {
       setSubmitState("error");
       setStatusText(formatSubmitFailureMessage(error));
@@ -255,18 +277,32 @@ export default function AportesView({ selectedCountry }: Props) {
                     <span className={styles.label}>Link oficial o público</span>
                     <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" required placeholder="https://..." />
                   </label>
-                  <label className={styles.field}>
-                    <span className={styles.label}>Caso Faro relacionado</span>
-                    <input className={styles.input} name="relatedCase" placeholder="ID o URL del caso si existe" />
-                  </label>
+                  <RelatedCaseField
+                    query={relatedCaseQuery}
+                    submittedValue={submittedRelatedCase}
+                    suggestions={relatedCaseSuggestions}
+                    required={false}
+                    onQueryChange={(value) => {
+                      setRelatedCaseQuery(value);
+                      setRelatedCase("");
+                    }}
+                    onSelectSuggestion={(suggestion) => selectRelatedCaseSuggestion(suggestion, setRelatedCaseQuery, setRelatedCase)}
+                  />
                 </>
               )}
               {type === "correct_data" && (
                 <>
-                  <label className={styles.field}>
-                    <span className={styles.label}>Caso Faro relacionado</span>
-                    <input className={styles.input} name="relatedCase" required placeholder="ID o URL del expediente" />
-                  </label>
+                  <RelatedCaseField
+                    query={relatedCaseQuery}
+                    submittedValue={submittedRelatedCase}
+                    suggestions={relatedCaseSuggestions}
+                    required
+                    onQueryChange={(value) => {
+                      setRelatedCaseQuery(value);
+                      setRelatedCase("");
+                    }}
+                    onSelectSuggestion={(suggestion) => selectRelatedCaseSuggestion(suggestion, setRelatedCaseQuery, setRelatedCase)}
+                  />
                   <label className={styles.field}>
                     <span className={styles.label}>Fuente que respalda la corrección</span>
                     <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" required placeholder="https://..." />
@@ -291,10 +327,17 @@ export default function AportesView({ selectedCountry }: Props) {
                     <span className={styles.label}>Fecha de la foto o dato</span>
                     <input className={styles.input} name="capturedAt" type="date" />
                   </label>
-                  <label className={styles.field}>
-                    <span className={styles.label}>Caso Faro relacionado</span>
-                    <input className={styles.input} name="relatedCase" placeholder="ID o URL si lo conocés" />
-                  </label>
+                  <RelatedCaseField
+                    query={relatedCaseQuery}
+                    submittedValue={submittedRelatedCase}
+                    suggestions={relatedCaseSuggestions}
+                    required={false}
+                    onQueryChange={(value) => {
+                      setRelatedCaseQuery(value);
+                      setRelatedCase("");
+                    }}
+                    onSelectSuggestion={(suggestion) => selectRelatedCaseSuggestion(suggestion, setRelatedCaseQuery, setRelatedCase)}
+                  />
                   <label className={styles.field}>
                     <span className={styles.label}>Link público u oficial</span>
                     <input className={styles.input} name="publicSourceUrl" type="url" inputMode="url" placeholder="Opcional" />
@@ -417,6 +460,78 @@ export default function AportesView({ selectedCountry }: Props) {
       </div>
     </section>
   );
+}
+
+function RelatedCaseField({
+  query,
+  submittedValue,
+  suggestions,
+  required,
+  onQueryChange,
+  onSelectSuggestion,
+}: {
+  query: string;
+  submittedValue: string;
+  suggestions: SearchSuggestion[];
+  required: boolean;
+  onQueryChange: (value: string) => void;
+  onSelectSuggestion: (suggestion: SearchSuggestion) => void;
+}) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.relatedCaseLabel} htmlFor="aporte-related-case">
+        <span className={styles.label}>Caso Faro relacionado</span>
+        <input
+          id="aporte-related-case"
+          className={styles.input}
+          value={query}
+          required={required}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="Buscá por ID, título, número oficial o fuente"
+        />
+      </label>
+      <input type="hidden" name="relatedCase" value={submittedValue} />
+      <p className={styles.fieldHint}>
+        Ayuda a orientar la revisión; no confirma relación y no se publica automáticamente.
+      </p>
+      <SearchSuggestionGroups
+        suggestions={suggestions}
+        onSelectSuggestion={onSelectSuggestion}
+        title="Expedientes posibles"
+        description="ID Faro · número oficial · fuente"
+        compact
+      />
+    </div>
+  );
+}
+
+function selectRelatedCaseSuggestion(
+  suggestion: SearchSuggestion,
+  setRelatedCaseQuery: (value: string) => void,
+  setRelatedCase: (value: string) => void,
+) {
+  if (suggestion.caseId) {
+    setRelatedCase(suggestion.caseId);
+    setRelatedCaseQuery(`${suggestion.caseId} · ${suggestion.label}`);
+    return;
+  }
+
+  setRelatedCase("");
+  setRelatedCaseQuery(suggestion.query);
+}
+
+function resolveRelatedCaseValue(selectedCaseId: string, query: string): string {
+  if (selectedCaseId.trim()) return selectedCaseId.trim();
+  const trimmed = query.trim();
+  if (looksLikeCaseReference(trimmed)) return trimmed;
+  return "";
+}
+
+function looksLikeCaseReference(value: string): boolean {
+  if (!value) return false;
+  if (/^https?:\/\//i.test(value)) return true;
+  if (/^AR[-\s#]/i.test(value)) return true;
+  return /\d/.test(value);
 }
 
 function formatBytes(bytes: number): string {

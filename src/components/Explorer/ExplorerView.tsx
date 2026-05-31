@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, type MouseEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, type MouseEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -22,7 +22,8 @@ import {
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 import {
-  buildInvestigatorExplorer,
+  buildInvestigatorExplorerFromIndex,
+  buildInvestigatorExplorerIndex,
   type InvestigatorCaseRow,
   type InvestigatorEntityFilter,
   type InvestigatorFacet,
@@ -33,7 +34,8 @@ import {
   type InvestigationCaseRelationReason,
 } from "@/lib/data/investigationWorkspaces";
 import {
-  buildSearchSuggestions,
+  buildSearchSuggestionIndex,
+  buildSearchSuggestionsFromIndex,
   type SearchSuggestion,
   type SearchSuggestionCase,
 } from "@/lib/data/searchSuggestions";
@@ -42,6 +44,7 @@ import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
 import { shouldExposeCaseOnMap } from "@/lib/data/uiGates";
 import { ContextualCitationsPanel } from "../ContextualCitations";
 import FaroMark from "../FaroMark";
+import SearchSuggestionGroups from "../SearchSuggestionGroups";
 import styles from "./Explorer.module.css";
 
 interface Props {
@@ -97,6 +100,7 @@ export default function ExplorerView({
   const [geometryFilter, setGeometryFilter] = useState<InvestigatorGeometryFilter>("any");
   const [activeFacets, setActiveFacets] = useState<InvestigatorFacet[]>([]);
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [page, setPage] = useState(0);
   const [folderStatus, setFolderStatus] = useState<{ caseId: string; message: string } | null>(null);
   const [preset, setPreset] = useState<ExplorerPreset>(initialPreset);
@@ -175,20 +179,33 @@ export default function ExplorerView({
     [presetScopedCases, yearFrom, yearTo],
   );
 
+  const explorerIndex = useMemo(
+    () => buildInvestigatorExplorerIndex(yearScopedCases, {
+      countries,
+      entities: activeEntities,
+    }),
+    [activeEntities, countries, yearScopedCases],
+  );
+
   const explorer = useMemo(
-    () => buildInvestigatorExplorer(yearScopedCases, {
+    () => buildInvestigatorExplorerFromIndex(explorerIndex, {
       countries,
       entities: activeEntities,
       geometry: geometryFilter,
       limit: 500,
-      query,
+      query: deferredQuery,
     }),
-    [activeEntities, countries, geometryFilter, query, yearScopedCases],
+    [activeEntities, countries, deferredQuery, explorerIndex, geometryFilter],
+  );
+
+  const searchSuggestionIndex = useMemo(
+    () => buildSearchSuggestionIndex(yearScopedCases as SearchSuggestionCase[]),
+    [yearScopedCases],
   );
 
   const searchSuggestions = useMemo(
-    () => buildSearchSuggestions(yearScopedCases as SearchSuggestionCase[], query, { limit: 8 }),
-    [query, yearScopedCases],
+    () => buildSearchSuggestionsFromIndex(searchSuggestionIndex, deferredQuery, { limit: 12 }),
+    [deferredQuery, searchSuggestionIndex],
   );
 
   const facetGroups = useMemo(
@@ -460,11 +477,11 @@ export default function ExplorerView({
                   type="text"
                   value={query}
                   onChange={(event) => handleQueryChange(event.target.value)}
-                  placeholder="Buscar proveedor, organismo, fuente, receipt, señal o expediente…"
+                  placeholder="Buscar provincia, localidad, ruta, proveedor, CUIT, organismo o expediente…"
                   aria-label="Buscar"
                 />
               </label>
-              <SearchSuggestionsList
+              <SearchSuggestionGroups
                 suggestions={searchSuggestions}
                 onSelectSuggestion={handleSuggestionSelect}
               />
@@ -601,50 +618,6 @@ export default function ExplorerView({
       </main>
     </section>
   );
-}
-
-function SearchSuggestionsList({
-  suggestions,
-  onSelectSuggestion,
-}: {
-  suggestions: SearchSuggestion[];
-  onSelectSuggestion: (suggestion: SearchSuggestion) => void;
-}) {
-  if (suggestions.length === 0) return null;
-  return (
-    <section className={styles.searchSuggestions} aria-label="Sugerencias de búsqueda">
-      <div className={styles.suggestionHeader}>
-        <span>Sugerencias de búsqueda</span>
-        <small>Proveedor · CUIT · Organismo · Expediente · Señal · Alias · Fuente · Provincia</small>
-      </div>
-      <div className={styles.suggestionGrid}>
-        {suggestions.map((suggestion) => (
-          <button
-            key={suggestion.id}
-            type="button"
-            className={styles.suggestionButton}
-            onClick={() => onSelectSuggestion(suggestion)}
-          >
-            <span>{suggestionKindLabel(suggestion)}</span>
-            <strong>{suggestion.label}</strong>
-            <small>{suggestion.detail}</small>
-          </button>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function suggestionKindLabel(suggestion: SearchSuggestion): string {
-  if (suggestion.kind === "supplier") return "Proveedor";
-  if (suggestion.kind === "document") return "CUIT";
-  if (suggestion.kind === "agency") return "Organismo";
-  if (suggestion.kind === "case" || suggestion.kind === "identifier") return "Expediente";
-  if (suggestion.kind === "signal") return "Señal";
-  if (suggestion.kind === "alias") return "Alias";
-  if (suggestion.kind === "source") return "Fuente";
-  if (suggestion.kind === "location") return suggestion.detail || "Ubicación";
-  return "Búsqueda";
 }
 
 function ExplorerDetail({

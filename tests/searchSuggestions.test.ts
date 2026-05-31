@@ -2,11 +2,21 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildCaseLinkSuggestions,
   buildSearchSuggestions,
+  buildSearchSuggestionIndex,
+  buildSearchSuggestionsFromIndex,
   caseMatchesSearch,
   normalizeSearchText,
   type SearchSuggestionCase,
 } from "../src/lib/data/searchSuggestions.ts";
+import {
+  formatSuggestionCount,
+  formatSuggestionGroupCount,
+  groupSearchSuggestions,
+  suggestionCardDetail,
+  suggestionKindLabel,
+} from "../src/components/SearchSuggestionGroups.helpers.ts";
 
 const judicialCase: SearchSuggestionCase = {
   id: "AR-HIST-JUD-VIALIDAD-CFP-5048-SENTENCIA-FIRME",
@@ -60,6 +70,14 @@ const contractCase: SearchSuggestionCase = {
   },
 };
 
+const secondCatamarcaCase: SearchSuggestionCase = {
+  ...contractCase,
+  id: "AR-CONTRACT-46-0621-CON22",
+  title: "Señalización sobre Ruta Nacional 40 en Catamarca",
+  workNumber: "46-0621-CON22",
+  procedureNumber: "46-0263-LPU21",
+};
+
 test("normalizeSearchText removes accents, punctuation and case differences", () => {
   assert.equal(normalizeSearchText("Lázaro Báez - DNV Nº 40"), "lazaro baez dnv n 40");
 });
@@ -95,7 +113,7 @@ test("buildSearchSuggestions returns categorized suggestions from matched cases"
 test("buildSearchSuggestions includes CUIT, alias and location suggestions", () => {
   const cuitSuggestions = buildSearchSuggestions([contractCase], "30-71079146-1", { limit: 8 });
   const aliasSuggestions = buildSearchSuggestions([contractCase], "dnv", { limit: 8 });
-  const locationSuggestions = buildSearchSuggestions([contractCase], "catamarca", { limit: 8 });
+  const locationSuggestions = buildSearchSuggestions([contractCase, secondCatamarcaCase], "catamarca", { limit: 8 });
 
   assert.equal(
     cuitSuggestions.some((suggestion) =>
@@ -121,10 +139,47 @@ test("buildSearchSuggestions includes CUIT, alias and location suggestions", () 
     locationSuggestions.some((suggestion) =>
       suggestion.kind === "location" &&
       suggestion.label === "CATAMARCA" &&
-      suggestion.detail === "Provincia"
+      suggestion.detail === "Provincia" &&
+      suggestion.matchCount === 2
     ),
     true,
   );
+  assert.equal(locationSuggestions[0]?.kind, "location");
+  assert.equal(locationSuggestions[0]?.detail, "Provincia");
+});
+
+test("buildSearchSuggestionsFromIndex reuses a precomputed suggestion index", () => {
+  const index = buildSearchSuggestionIndex([contractCase, secondCatamarcaCase]);
+  const indexedSuggestions = buildSearchSuggestionsFromIndex(index, "catamarca", { limit: 8 });
+  const directSuggestions = buildSearchSuggestions([contractCase, secondCatamarcaCase], "catamarca", { limit: 8 });
+
+  assert.deepEqual(indexedSuggestions, directSuggestions);
+  assert.equal(index.entityCandidates.length > 0, true);
+  assert.equal(index.caseCandidates.length, 2);
+});
+
+test("groupSearchSuggestions keeps location-first presentation and count copy", () => {
+  const suggestions = buildSearchSuggestions([contractCase, secondCatamarcaCase], "catamarca", { limit: 8 });
+  const groups = groupSearchSuggestions(suggestions);
+
+  assert.equal(groups[0]?.label, "Provincia");
+  assert.equal(suggestionKindLabel(suggestions[0]!), "Ubicación");
+  assert.equal(suggestionCardDetail(suggestions[0]!), "Campo oficial del expediente");
+  assert.equal(formatSuggestionCount(2), "2 expedientes");
+  assert.equal(formatSuggestionGroupCount(1), "1 coincidencia");
+  assert.equal(formatSuggestionGroupCount(2), "2 coincidencias");
+});
+
+test("buildCaseLinkSuggestions stays narrow for private contribution linkage", () => {
+  const broadSuggestions = buildSearchSuggestions([judicialCase, contractCase], "baez", { limit: 8 });
+  const caseLinkSuggestions = buildCaseLinkSuggestions([judicialCase, contractCase], "baez", { limit: 8 });
+  const locationSuggestions = buildCaseLinkSuggestions([contractCase, secondCatamarcaCase], "catamarca", { limit: 8 });
+
+  assert.equal(broadSuggestions.some((suggestion) => suggestion.kind === "supplier"), true);
+  assert.equal(caseLinkSuggestions.some((suggestion) => suggestion.kind === "supplier"), false);
+  assert.equal(caseLinkSuggestions.some((suggestion) => suggestion.kind === "alias"), false);
+  assert.equal(caseLinkSuggestions.some((suggestion) => suggestion.kind === "signal"), false);
+  assert.equal(locationSuggestions.some((suggestion) => suggestion.kind === "location"), false);
 });
 
 test("buildSearchSuggestions includes signal and identifier suggestions", () => {

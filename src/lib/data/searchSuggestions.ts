@@ -25,11 +25,23 @@ export interface SearchSuggestion {
   label: string;
   detail: string;
   query: string;
+  matchCount?: number;
   caseId?: string;
 }
 
 export interface SearchSuggestionOptions {
   limit?: number;
+}
+
+export interface SearchSuggestionIndex {
+  staticCandidates: SearchSuggestionCandidate[];
+  entityCandidates: SearchSuggestionCandidate[];
+  caseCandidates: SearchSuggestionCandidate[];
+}
+
+interface SearchSuggestionCandidate {
+  suggestion: SearchSuggestion;
+  searchText: string;
 }
 
 interface StaticSuggestion {
@@ -149,53 +161,104 @@ export function buildSearchSuggestions(
   query: string,
   options: SearchSuggestionOptions = {},
 ): SearchSuggestion[] {
+  return buildSearchSuggestionsFromIndex(buildSearchSuggestionIndex(cases), query, options);
+}
+
+export function buildSearchSuggestionIndex(cases: SearchSuggestionCase[]): SearchSuggestionIndex {
+  return {
+    staticCandidates: buildStaticSuggestionCandidates(),
+    entityCandidates: cases.flatMap(buildEntitySuggestionCandidates),
+    caseCandidates: cases.map(buildCaseSuggestionCandidate),
+  };
+}
+
+export function buildSearchSuggestionsFromIndex(
+  index: SearchSuggestionIndex,
+  query: string,
+  options: SearchSuggestionOptions = {},
+): SearchSuggestion[] {
   const normalizedQuery = normalizeSearchText(query);
   if (normalizedQuery.length < 2) return [];
 
   const limit = clampLimit(options.limit);
   const suggestions: SearchSuggestion[] = [];
-  const seen = new Set<string>();
+  const byId = new Map<string, SearchSuggestion>();
+  const normalizedQueries = expandSearchQuery(query);
 
-  for (const suggestion of staticSuggestions) {
-    if (!matchesSuggestionText([suggestion.label, suggestion.detail, ...suggestion.keywords].join(" "), query)) {
-      continue;
+  for (const candidate of index.staticCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
+  }
+
+  for (const candidate of index.entityCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
+  }
+
+  let caseSuggestions = 0;
+  for (const candidate of index.caseCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
+    caseSuggestions += 1;
+    if (caseSuggestions >= limit * 3) break;
+  }
+
+  return suggestions
+    .sort((left, right) => compareSearchSuggestions(left, right, normalizedQuery))
+    .slice(0, limit);
+}
+
+export function buildCaseLinkSuggestions(
+  cases: SearchSuggestionCase[],
+  query: string,
+  options: SearchSuggestionOptions = {},
+): SearchSuggestion[] {
+  const normalizedQuery = normalizeSearchText(query);
+  if (normalizedQuery.length < 2) return [];
+
+  const limit = clampLimit(options.limit);
+  const suggestions: SearchSuggestion[] = [];
+  const byId = new Map<string, SearchSuggestion>();
+
+  for (const caseFile of cases) {
+    if (matchesSuggestionText(buildCaseLinkSearchText(caseFile), query)) {
+      addCaseSuggestion(suggestions, byId, caseFile);
     }
-    addSuggestion(suggestions, seen, {
-      id: `${suggestion.kind}:${normalizeSearchText(suggestion.query)}`,
-      kind: suggestion.kind,
-      label: suggestion.label,
-      detail: suggestion.detail,
-      query: suggestion.query,
+
+    [caseFile.procedureNumber, caseFile.workNumber].forEach((identifier) => {
+      addFieldSuggestion({
+        suggestions,
+        byId,
+        kind: "identifier",
+        label: identifier,
+        detail: "Identificador oficial",
+        query,
+        candidateText: identifier,
+      });
+    });
+
+    addFieldSuggestion({
+      suggestions,
+      byId,
+      kind: "source",
+      label: caseFile.receipt.sourceName,
+      detail: caseFile.receipt.sourceId,
+      query,
+      candidateText: [caseFile.receipt.sourceName, caseFile.receipt.sourceId].join(" "),
     });
   }
 
-  const initialCaseTarget = Math.min(limit, suggestions.length + 3);
-  for (const caseFile of cases) {
-    if (!caseMatchesSearch(caseFile, query)) continue;
-    addCaseSuggestion(suggestions, seen, caseFile);
-    if (suggestions.length >= initialCaseTarget) break;
-  }
-
-  for (const caseFile of cases) {
-    addEntitySuggestions(suggestions, seen, caseFile, query);
-    if (suggestions.length >= limit) break;
-  }
-
-  for (const caseFile of cases) {
-    if (!caseMatchesSearch(caseFile, query)) continue;
-    addCaseSuggestion(suggestions, seen, caseFile);
-    if (suggestions.length >= limit) break;
-  }
-
-  return suggestions.slice(0, limit);
+  return suggestions
+    .sort((left, right) => compareSearchSuggestions(left, right, normalizedQuery))
+    .slice(0, limit);
 }
 
 function addCaseSuggestion(
   suggestions: SearchSuggestion[],
-  seen: Set<string>,
+  byId: Map<string, SearchSuggestion>,
   caseFile: SearchSuggestionCase,
 ) {
-  addSuggestion(suggestions, seen, {
+  addSuggestion(suggestions, byId, {
     id: `case:${caseFile.id}`,
     kind: "case",
     label: caseFile.title,
@@ -205,15 +268,126 @@ function addCaseSuggestion(
   });
 }
 
+function buildCaseSuggestionCandidate(caseFile: SearchSuggestionCase): SearchSuggestionCandidate {
+  return {
+    suggestion: {
+      id: `case:${caseFile.id}`,
+      kind: "case",
+      label: caseFile.title,
+      detail: `${labelCaseType(caseFile.caseType)} · ${caseFile.receipt.sourceName}`,
+      query: caseFile.title,
+      caseId: caseFile.id,
+    },
+    searchText: normalizeSearchText(buildCaseSearchText(caseFile)),
+  };
+}
+
+function buildStaticSuggestionCandidates(): SearchSuggestionCandidate[] {
+  return staticSuggestions.map((suggestion) => ({
+    suggestion: {
+      id: `${suggestion.kind}:${normalizeSearchText(suggestion.query)}`,
+      kind: suggestion.kind,
+      label: suggestion.label,
+      detail: suggestion.detail,
+      query: suggestion.query,
+    },
+    searchText: normalizeSearchText([suggestion.label, suggestion.detail, ...suggestion.keywords].join(" ")),
+  }));
+}
+
+function buildEntitySuggestionCandidates(caseFile: SearchSuggestionCase): SearchSuggestionCandidate[] {
+  const candidates: SearchSuggestionCandidate[] = [];
+  addFieldCandidate(candidates, {
+    kind: "supplier",
+    label: caseFile.supplierName,
+    detail: caseFile.supplierDocument ? `Proveedor · ${caseFile.supplierDocument}` : "Proveedor",
+    candidateText: [caseFile.supplierName, caseFile.supplierDocument].join(" "),
+  });
+  addFieldCandidate(candidates, {
+    kind: "document",
+    label: caseFile.supplierDocument,
+    detail: "CUIT / documento de proveedor",
+    candidateText: [caseFile.supplierDocument, compactIdentifier(caseFile.supplierDocument)].join(" "),
+  });
+  addFieldCandidate(candidates, {
+    kind: "agency",
+    label: caseFile.agencyName,
+    detail: "Organismo",
+    candidateText: [caseFile.agencyName, caseFile.agencyCode, caseFile.contractingUnit].join(" "),
+  });
+  addFieldCandidate(candidates, {
+    kind: "source",
+    label: caseFile.receipt.sourceName,
+    detail: caseFile.receipt.sourceId,
+    candidateText: [caseFile.receipt.sourceName, caseFile.receipt.sourceId].join(" "),
+  });
+  [caseFile.procedureNumber, caseFile.workNumber].forEach((identifier) => {
+    addFieldCandidate(candidates, {
+      kind: "identifier",
+      label: identifier,
+      detail: "Identificador oficial",
+      candidateText: identifier,
+    });
+  });
+  addFieldCandidate(candidates, {
+    kind: "location",
+    label: caseFile.workProvince,
+    detail: "Provincia",
+    candidateText: caseFile.workProvince,
+  });
+  addFieldCandidate(candidates, {
+    kind: "location",
+    label: caseFile.workDepartment,
+    detail: "Departamento",
+    candidateText: caseFile.workDepartment,
+  });
+  addFieldCandidate(candidates, {
+    kind: "location",
+    label: caseFile.workLocality,
+    detail: "Localidad",
+    candidateText: caseFile.workLocality,
+  });
+  return candidates;
+}
+
+function addFieldCandidate(
+  candidates: SearchSuggestionCandidate[],
+  {
+    kind,
+    label,
+    detail,
+    candidateText,
+  }: {
+    kind: Exclude<SearchSuggestionKind, "case" | "signal" | "alias">;
+    label: string | null | undefined;
+    detail: string;
+    candidateText: string | null | undefined;
+  },
+) {
+  const cleanLabel = String(label ?? "").trim();
+  if (!cleanLabel) return;
+  candidates.push({
+    suggestion: {
+      id: `${kind}:${normalizeSearchText(cleanLabel)}`,
+      kind,
+      label: cleanLabel,
+      detail,
+      query: cleanLabel,
+      matchCount: 1,
+    },
+    searchText: normalizeSearchText(candidateText),
+  });
+}
+
 function addEntitySuggestions(
   suggestions: SearchSuggestion[],
-  seen: Set<string>,
+  byId: Map<string, SearchSuggestion>,
   caseFile: SearchSuggestionCase,
   query: string,
 ) {
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "supplier",
     label: caseFile.supplierName,
     detail: caseFile.supplierDocument ? `Proveedor · ${caseFile.supplierDocument}` : "Proveedor",
@@ -222,7 +396,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "document",
     label: caseFile.supplierDocument,
     detail: "CUIT / documento de proveedor",
@@ -231,7 +405,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "agency",
     label: caseFile.agencyName,
     detail: "Organismo",
@@ -240,7 +414,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "source",
     label: caseFile.receipt.sourceName,
     detail: caseFile.receipt.sourceId,
@@ -250,7 +424,7 @@ function addEntitySuggestions(
   [caseFile.procedureNumber, caseFile.workNumber].forEach((identifier) => {
     addFieldSuggestion({
       suggestions,
-      seen,
+      byId,
       kind: "identifier",
       label: identifier,
       detail: "Identificador oficial",
@@ -260,7 +434,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "location",
     label: caseFile.workProvince,
     detail: "Provincia",
@@ -269,7 +443,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "location",
     label: caseFile.workDepartment,
     detail: "Departamento",
@@ -278,7 +452,7 @@ function addEntitySuggestions(
   });
   addFieldSuggestion({
     suggestions,
-    seen,
+    byId,
     kind: "location",
     label: caseFile.workLocality,
     detail: "Localidad",
@@ -289,7 +463,7 @@ function addEntitySuggestions(
 
 function addFieldSuggestion({
   suggestions,
-  seen,
+  byId,
   kind,
   label,
   detail,
@@ -297,7 +471,7 @@ function addFieldSuggestion({
   candidateText,
 }: {
   suggestions: SearchSuggestion[];
-  seen: Set<string>;
+  byId: Map<string, SearchSuggestion>;
   kind: Exclude<SearchSuggestionKind, "case" | "signal" | "alias">;
   label: string | null | undefined;
   detail: string;
@@ -307,28 +481,77 @@ function addFieldSuggestion({
   const cleanLabel = String(label ?? "").trim();
   if (!cleanLabel) return;
   if (!matchesSuggestionText(candidateText, query)) return;
-  addSuggestion(suggestions, seen, {
+  addSuggestion(suggestions, byId, {
     id: `${kind}:${normalizeSearchText(cleanLabel)}`,
     kind,
     label: cleanLabel,
     detail,
     query: cleanLabel,
+    matchCount: 1,
   });
 }
 
 function addSuggestion(
   suggestions: SearchSuggestion[],
-  seen: Set<string>,
+  byId: Map<string, SearchSuggestion>,
   suggestion: SearchSuggestion,
 ) {
-  if (seen.has(suggestion.id)) return;
-  seen.add(suggestion.id);
+  const existing = byId.get(suggestion.id);
+  if (existing) {
+    if (suggestion.matchCount !== undefined) {
+      existing.matchCount = (existing.matchCount ?? 0) + suggestion.matchCount;
+    }
+    return;
+  }
+  byId.set(suggestion.id, suggestion);
   suggestions.push(suggestion);
+}
+
+function compareSearchSuggestions(
+  left: SearchSuggestion,
+  right: SearchSuggestion,
+  normalizedQuery: string,
+): number {
+  return suggestionMatchRank(left, normalizedQuery) - suggestionMatchRank(right, normalizedQuery) ||
+    suggestionPriority(left) - suggestionPriority(right) ||
+    (right.matchCount ?? 0) - (left.matchCount ?? 0) ||
+    left.label.localeCompare(right.label, "es");
+}
+
+function suggestionMatchRank(suggestion: SearchSuggestion, normalizedQuery: string): number {
+  const label = normalizeSearchText(suggestion.label);
+  if (label === normalizedQuery) return 0;
+  if (label.startsWith(normalizedQuery)) return 1;
+  if (label.includes(normalizedQuery)) return 2;
+  return 3;
+}
+
+function suggestionPriority(suggestion: SearchSuggestion): number {
+  if (suggestion.kind === "location") {
+    const detail = normalizeSearchText(suggestion.detail);
+    if (detail === "provincia") return 0;
+    if (detail === "departamento") return 1;
+    if (detail === "localidad") return 2;
+    return 3;
+  }
+  if (suggestion.kind === "alias") return 4;
+  if (suggestion.kind === "supplier") return 5;
+  if (suggestion.kind === "agency") return 6;
+  if (suggestion.kind === "document") return 7;
+  if (suggestion.kind === "identifier") return 8;
+  if (suggestion.kind === "case") return 9;
+  if (suggestion.kind === "source") return 10;
+  if (suggestion.kind === "signal") return 11;
+  return 12;
 }
 
 function matchesSuggestionText(value: string | null | undefined, query: string): boolean {
   const haystack = normalizeSearchText(value);
-  return expandSearchQuery(query).some((normalizedQuery) =>
+  return matchesNormalizedSuggestionText(haystack, expandSearchQuery(query));
+}
+
+function matchesNormalizedSuggestionText(haystack: string, normalizedQueries: string[]): boolean {
+  return normalizedQueries.some((normalizedQuery) =>
     terms(normalizedQuery).every((term) => haystack.includes(term)),
   );
 }
@@ -353,6 +576,19 @@ function buildCaseSearchText(caseFile: SearchSuggestionCase): string {
     caseFile.receipt.sourceId,
     caseFile.receipt.sourceName,
     buildDerivedSearchHints(caseFile),
+  ];
+
+  return parts.filter((value): value is string => value !== null && value !== undefined).join(" ");
+}
+
+function buildCaseLinkSearchText(caseFile: SearchSuggestionCase): string {
+  const parts = [
+    caseFile.id,
+    caseFile.title,
+    caseFile.workNumber,
+    caseFile.procedureNumber,
+    caseFile.receipt.sourceId,
+    caseFile.receipt.sourceName,
   ];
 
   return parts.filter((value): value is string => value !== null && value !== undefined).join(" ");

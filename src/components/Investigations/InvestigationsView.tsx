@@ -21,7 +21,12 @@ import {
   normalizeInvestigationWorkspaceCollection,
   type InvestigationWorkspaceCollection,
 } from "@/lib/data/investigationWorkspaceCollections";
-import { caseMatchesSearch } from "@/lib/data/searchSuggestions";
+import {
+  buildSearchSuggestions,
+  caseMatchesSearch,
+  type SearchSuggestion,
+  type SearchSuggestionCase,
+} from "@/lib/data/searchSuggestions";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildInvestigationDossier } from "@/lib/data/investigationDossiers";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
@@ -64,7 +69,7 @@ export default function InvestigationsView({
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
   const [query, setQuery] = useState("");
-  const [relationReason, setRelationReason] = useState<InvestigationCaseRelationReason>("same_judicial_context");
+  const [relationReason, setRelationReason] = useState<InvestigationCaseRelationReason>("manual_hypothesis");
   const [relationNote, setRelationNote] = useState("");
   const [noteText, setNoteText] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
@@ -162,6 +167,10 @@ export default function InvestigationsView({
     [selectedCasePacks, workspace],
   );
   const visibleAggregate = workspaceAggregate ?? aggregate;
+  const searchSuggestions = useMemo(
+    () => buildSearchSuggestions(cases as SearchSuggestionCase[], query, { limit: 10 }),
+    [cases, query],
+  );
   const results = useMemo(() => {
     const trimmed = query.trim();
     if (trimmed.length < 2) return [];
@@ -233,6 +242,10 @@ export default function InvestigationsView({
     setQuery("");
     setRelationNote("");
     setAggregate(null);
+  }
+
+  function handleSelectSearchSuggestion(suggestion: SearchSuggestion) {
+    setQuery(suggestion.caseId ?? suggestion.query);
   }
 
   function handleRemoveCase(caseId: string) {
@@ -409,7 +422,11 @@ export default function InvestigationsView({
 
             {activeTab === "resumen" && (
               <>
-                <WorkspaceOverviewPanel workspace={workspace} aggregate={visibleAggregate} />
+                <WorkspaceOverviewPanel
+                  workspace={workspace}
+                  aggregate={visibleAggregate}
+                  onStartCase={() => setActiveTab("expedientes")}
+                />
                 <DossierBuilderPanel
                   dossier={dossier}
                   caseCount={workspace.caseIds.length}
@@ -426,8 +443,11 @@ export default function InvestigationsView({
                   relationReason={relationReason}
                   relationNote={relationNote}
                   results={results}
+                  searchSuggestions={searchSuggestions}
+                  investigationQuestion={workspace.investigationQuestion}
                   relationReasonOptions={INVESTIGATION_RELATION_REASON_OPTIONS}
                   onQueryChange={setQuery}
+                  onSelectSearchSuggestion={handleSelectSearchSuggestion}
                   onRelationReasonChange={setRelationReason}
                   onRelationNoteChange={setRelationNote}
                   onAddCase={handleAddCase}
@@ -518,22 +538,41 @@ function formatNoteDate(value: string): string {
 function WorkspaceOverviewPanel({
   workspace,
   aggregate,
+  onStartCase,
 }: {
   workspace: InvestigationWorkspace;
   aggregate: InvestigationAggregate | null;
+  onStartCase: () => void;
 }) {
+  const hasCases = workspace.caseIds.length > 0;
   return (
     <section className={styles.panel}>
       <h3>Resumen de trabajo</h3>
+      {workspace.investigationQuestion ? (
+        <div className={styles.workflowQuestion}>
+          <span>Pregunta de investigación</span>
+          <strong>{workspace.investigationQuestion}</strong>
+        </div>
+      ) : null}
       <div className={styles.metrics}>
         <span>{workspace.caseIds.length} expedientes</span>
         <span>{workspace.notes.length} notas</span>
         <span>{workspace.sourceLinks.length} fuentes manuales</span>
         <span>{workspace.entities.length} entidades</span>
       </div>
-      <p className={styles.empty}>
-        Usá Expedientes para reunir material, Notas para ordenar hipótesis de trabajo y Análisis para pedir una lectura asistida del paquete.
-      </p>
+      <div className={styles.workflowStart}>
+        <div>
+          <span>{hasCases ? "Siguiente paso" : "Empezar caso"}</span>
+          <p>
+            {hasCases
+              ? "Sumá relación y nota a cada expediente, revisá la matriz de evidencia y guardá próximos pasos verificables."
+              : "Buscá el primer expediente y agregalo con un motivo de relación. Faro no confirma relaciones: ordena una pregunta de trabajo."}
+          </p>
+        </div>
+        <button type="button" className={styles.primaryAction} onClick={onStartCase}>
+          {hasCases ? "Agregar más expedientes" : "Buscar primer expediente"}
+        </button>
+      </div>
       {aggregate?.geometryGaps.count ? (
         <p className={styles.status}>
           {aggregate.geometryGaps.count} expediente{aggregate.geometryGaps.count === 1 ? "" : "s"} sin geometría oficial para revisar fuera del mapa.

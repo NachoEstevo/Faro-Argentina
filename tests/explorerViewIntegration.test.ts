@@ -4,12 +4,17 @@ import { readFile } from "node:fs/promises";
 
 const explorerViewUrl = new URL("../src/components/Explorer/ExplorerView.tsx", import.meta.url);
 const explorerStylesUrl = new URL("../src/components/Explorer/Explorer.module.css", import.meta.url);
+const searchSuggestionGroupsUrl = new URL("../src/components/SearchSuggestionGroups.tsx", import.meta.url);
+const searchSuggestionHelpersUrl = new URL("../src/components/SearchSuggestionGroups.helpers.ts", import.meta.url);
+const searchSuggestionStylesUrl = new URL("../src/components/SearchSuggestionGroups.module.css", import.meta.url);
 const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 
 test("ExplorerView consumes the tested investigator explorer view model", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 
-  assert.match(source, /buildInvestigatorExplorer/);
+  assert.match(source, /buildInvestigatorExplorerIndex/);
+  assert.match(source, /buildInvestigatorExplorerFromIndex/);
+  assert.match(source, /useDeferredValue/);
 });
 
 test("ExplorerView avoids overconfident evidence-state copy", async () => {
@@ -158,11 +163,25 @@ test("ExplorerView keeps Argentina context out of the Explorer header", async ()
 });
 
 test("ExplorerView renders concrete investigative search suggestions", async () => {
-  const source = await readFile(explorerViewUrl, "utf8");
-  const styles = await readFile(explorerStylesUrl, "utf8");
+  const source = [
+    await readFile(explorerViewUrl, "utf8"),
+    await readFile(searchSuggestionGroupsUrl, "utf8"),
+    await readFile(searchSuggestionHelpersUrl, "utf8"),
+  ].join("\n");
+  const styles = [
+    await readFile(explorerStylesUrl, "utf8"),
+    await readFile(searchSuggestionStylesUrl, "utf8"),
+  ].join("\n");
 
-  assert.match(source, /buildSearchSuggestions/);
-  assert.match(source, /Sugerencias de búsqueda/);
+  assert.match(source, /buildSearchSuggestionIndex/);
+  assert.match(source, /buildSearchSuggestionsFromIndex/);
+  assert.match(source, /SearchSuggestionGroups/);
+  assert.match(source, /Coincidencias/);
+  assert.match(source, /groupSearchSuggestions/);
+  assert.match(source, /suggestionCardDetail/);
+  assert.match(source, /formatSuggestionCount/);
+  assert.match(source, /formatSuggestionGroupCount/);
+  assert.match(source, /Buscar provincia, localidad, ruta, proveedor, CUIT, organismo o expediente/);
   assert.match(source, /suggestionKindLabel/);
   assert.match(source, /Proveedor/);
   assert.match(source, /CUIT/);
@@ -172,8 +191,13 @@ test("ExplorerView renders concrete investigative search suggestions", async () 
   assert.match(source, /Alias/);
   assert.match(source, /Fuente/);
   assert.match(source, /Provincia/);
-  assert.match(styles, /\.suggestionGrid/);
-  assert.match(styles, /\.suggestionButton/);
+  assert.match(styles, /\.groups/);
+  assert.match(styles, /\.groupHead/);
+  assert.match(styles, /\.match/);
+  assert.match(styles, /--suggest-text: var\(--cf-workspace-text, var\(--cf-text/);
+  assert.match(styles, /\.groupTitle/);
+  assert.match(styles, /\.grid/);
+  assert.match(styles, /\.button/);
 });
 
 test("ExplorerView supports a closed selected-expedientes preset", async () => {
