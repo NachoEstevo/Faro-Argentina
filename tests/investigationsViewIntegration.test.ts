@@ -50,7 +50,11 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /WorkspaceSyncPanel/);
   assert.match(source, /buildInvestigationDossier/);
   assert.match(source, /Dossier de trabajo/);
+  assert.match(source, /Resumen del dossier/);
   assert.match(source, /Matriz de evidencia/);
+  assert.match(source, /Detalle plegado por expediente/);
+  assert.match(source, /matrixSummary/);
+  assert.match(source, /summarizeDossierGap/);
   assert.match(source, /Actores comunes/);
   assert.match(source, /Base de identidad/);
   assert.match(source, /Brechas para verificar/);
@@ -130,9 +134,9 @@ test("InvestigationsView inherits platform work-view theme surfaces", async () =
   assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
   assert.match(styles, /\.form,[\s\S]*\.workspace\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
   assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
-  assert.match(styles, /\.tabs\s*\{[\s\S]*min-height: 48px;[\s\S]*border-radius: var\(--cf-radius-md\);/);
-  assert.match(styles, /\.tabButton\s*\{[\s\S]*min-height: 38px;[\s\S]*font-size: 13px;[\s\S]*font-weight: 650;/);
-  assert.match(styles, /\.tabButtonActive\s*\{[\s\S]*background: var\(--cf-accent\);[\s\S]*color: var\(--cf-on-accent\);/);
+  assert.match(styles, /\.tabs\s*\{[\s\S]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\);[\s\S]*height: 50px;[\s\S]*overflow: hidden;/);
+  assert.match(styles, /\.tabButton\s*\{[\s\S]*width: 100%;[\s\S]*height: 38px;[\s\S]*font-size: 13px;[\s\S]*white-space: nowrap;/);
+  assert.match(styles, /\.tabButtonActive,[\s\S]*\.tabButton\[aria-selected="true"\]\s*\{[\s\S]*background: var\(--cf-accent\);[\s\S]*color: var\(--cf-on-accent\);/);
 });
 
 test("country route can open investigations mode directly", async () => {

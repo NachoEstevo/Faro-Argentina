@@ -468,37 +468,56 @@ export function DossierBuilderPanel({ dossier, caseCount, onSaveNextSteps }: Dos
           <p>Ordena evidencia oficial, contexto del usuario, brechas y próximos pasos. No publica ni concluye por sí solo.</p>
         </div>
       </div>
+      <div className={styles.dossierStats} aria-label="Resumen del dossier">
+        <span>
+          <strong>{dossier.matrix.length}</strong>
+          expedientes
+        </span>
+        <span>
+          <strong>{dossier.actors.length}</strong>
+          actores comunes
+        </span>
+        <span>
+          <strong>{dossier.gaps.length}</strong>
+          brechas
+        </span>
+        <span>
+          <strong>{dossier.nextSteps.length}</strong>
+          próximos pasos
+        </span>
+      </div>
       <div className={styles.dossierGrid}>
         <div className={styles.dossierMatrix}>
-          <h4>Matriz de evidencia</h4>
+          <div className={styles.dossierSectionHead}>
+            <h4>Matriz de evidencia</h4>
+            <span>Detalle plegado por expediente</span>
+          </div>
           {dossier.matrix.length === 0 ? (
             <p className={styles.empty}>Sin expedientes seleccionados.</p>
           ) : (
-            dossier.matrix.slice(0, 5).map((row) => (
-              <div key={row.caseId} className={styles.matrixRow}>
-                <div className={styles.matrixMeta}>
-                  <strong>{row.caseId}</strong>
-                  <em>{row.title}</em>
-                  <span>{row.relation}</span>
-                </div>
+            dossier.matrix.map((row) => (
+              <details key={row.caseId} className={styles.matrixRow}>
+                <summary className={styles.matrixSummary}>
+                  <span className={styles.matrixCaseId}>{row.caseId}</span>
+                  <strong>{row.title}</strong>
+                  <span className={styles.matrixRelation}>{row.relation}</span>
+                  <span className={styles.matrixGap}>{summarizeDossierGap(row.gap)}</span>
+                </summary>
                 <div className={styles.matrixBody}>
-                  <span>
-                    <b>Oficial</b>
-                    {row.officialEvidence}
+                  <div>
+                    <b>Evidencia oficial</b>
+                    <p>{row.officialEvidence}</p>
                     <a className={styles.matrixAction} href={row.officialSourceUrl} target="_blank" rel="noreferrer">
                       Abrir fuente oficial
                     </a>
-                  </span>
-                  <span><b>Contexto del usuario</b>{row.userContext}</span>
-                  <span><b>Caveat</b>{row.caveat}</span>
-                  <span><b>Brecha</b>{row.gap}</span>
-                  <span><b>Próximo paso</b>{row.nextStep}</span>
+                  </div>
+                  <div><b>Contexto del usuario</b><p>{row.userContext}</p></div>
+                  <div><b>Caveat</b><p>{row.caveat}</p></div>
+                  <div><b>Brecha</b><p>{row.gap}</p></div>
+                  <div><b>Próximo paso</b><p>{row.nextStep}</p></div>
                 </div>
-              </div>
+              </details>
             ))
-          )}
-          {dossier.matrix.length > 5 && (
-            <p className={styles.empty}>Mostrando 5 de {dossier.matrix.length} expedientes. El ZIP exporta la matriz completa.</p>
           )}
         </div>
         <div className={styles.dossierSide}>
@@ -531,6 +550,14 @@ export function DossierBuilderPanel({ dossier, caseCount, onSaveNextSteps }: Dos
       </div>
     </section>
   );
+}
+
+function summarizeDossierGap(gap: string): string {
+  if (/sin geometr/i.test(gap)) return "Sin geometría";
+  if (/contexto documental/i.test(gap)) return "Contexto separado";
+  if (/pago|avance|recepci/i.test(gap)) return "Falta respaldo";
+  if (/pr[oó]ximos pasos/i.test(gap)) return "Falta verificación";
+  return "Revisar";
 }
 
 export function CaseSearchPanel({

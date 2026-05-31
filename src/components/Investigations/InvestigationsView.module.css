@@ -283,13 +283,14 @@
 }
 
 .tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
   gap: 6px;
-  width: fit-content;
+  width: min(100%, 640px);
   max-width: 100%;
-  min-height: 48px;
-  overflow-x: auto;
+  height: 50px;
+  overflow: hidden;
   padding: 5px;
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-md);
@@ -300,9 +301,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  height: 38px;
   min-height: 38px;
-  padding: 0 18px;
+  padding: 0 10px;
   border: 1px solid transparent;
   border-radius: var(--cf-radius-sm);
   background: transparent;
@@ -311,6 +314,8 @@
   font-family: var(--cf-font-body);
   font-size: 13px;
   font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .tabButton:hover {
@@ -319,7 +324,8 @@
   color: var(--cf-text);
 }
 
-.tabButtonActive {
+.tabButtonActive,
+.tabButton[aria-selected="true"] {
   border-color: var(--cf-accent);
   background: var(--cf-accent);
   color: var(--cf-on-accent);
@@ -622,6 +628,50 @@
   font-weight: 700;
 }
 
+.dossierStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dossierStats span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.dossierStats strong {
+  color: var(--cf-text);
+  font-family: var(--cf-font-data);
+  font-size: 18px;
+  font-weight: 720;
+}
+
+.dossierSectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dossierSectionHead h4 {
+  margin: 0;
+}
+
+.dossierSectionHead span {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+
 .summaryList p,
 .summaryList ul,
 .dossierList p,
@@ -641,7 +691,7 @@
 
 .dossierGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
   gap: 16px;
   align-items: start;
 }
@@ -655,60 +705,114 @@
 
 .matrixRow {
   display: grid;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.matrixSummary {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.32fr) minmax(220px, 1fr) minmax(120px, 0.34fr) auto auto;
   gap: 10px;
-  padding: 12px 0;
-  border-top: 1px solid var(--cf-border);
-}
-
-.matrixRow:first-of-type {
-  border-top: 0;
-}
-
-.matrixMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: baseline;
-}
-
-.matrixMeta strong {
-  color: var(--cf-text);
-  font-family: var(--cf-font-data);
-  font-size: 12px;
-}
-
-.matrixMeta em {
-  min-width: min(100%, 220px);
-  overflow: hidden;
+  align-items: center;
+  min-height: 58px;
+  padding: 10px 12px;
   color: var(--cf-text-secondary);
-  font-size: 12px;
-  font-style: normal;
+  cursor: pointer;
+  list-style: none;
+}
+
+.matrixSummary::-webkit-details-marker {
+  display: none;
+}
+
+.matrixSummary::after {
+  content: "Ver detalle";
+  color: var(--cf-accent);
+  font-size: 11px;
+  font-weight: 780;
+  white-space: nowrap;
+}
+
+.matrixRow[open] .matrixSummary {
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.matrixRow[open] .matrixSummary::after {
+  content: "Ocultar";
+}
+
+.matrixSummary strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text);
+  font-size: 13px;
+  font-weight: 720;
+  line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.matrixMeta span {
+.matrixCaseId {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cf-text-secondary);
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matrixRelation {
+  min-width: 0;
+  overflow: hidden;
   color: var(--cf-text-muted);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matrixGap {
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--cf-state-caution) 42%, transparent);
+  border-radius: 999px;
+  color: var(--cf-state-caution);
+  font-size: 10px;
+  font-weight: 780;
+  white-space: nowrap;
 }
 
 .matrixBody {
   display: grid;
-  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
 }
 
-.matrixBody span {
+.matrixBody div {
   display: grid;
-  gap: 2px;
+  align-content: start;
+  gap: 4px;
   color: var(--cf-text-secondary);
   font-size: 12px;
   line-height: 1.45;
 }
 
+.matrixBody div:first-child {
+  grid-column: 1 / -1;
+}
+
 .matrixBody b {
   color: var(--cf-text);
   font-size: 11px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.matrixBody p {
+  margin: 0;
 }
 
 .matrixAction {
@@ -724,8 +828,27 @@
 }
 
 .dossierList {
-  padding-top: 10px;
-  border-top: 1px solid var(--cf-border);
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.dossierList h4 {
+  margin: 0;
+}
+
+.dossierList ul {
+  gap: 8px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.dossierList li {
+  padding-left: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--cf-accent) 42%, transparent);
 }
 
 .analysisReport {
@@ -807,13 +930,32 @@
 }
 
 @media (max-width: 900px) {
-  .shell,
-  .grid,
-  .analysisControls,
-  .relationControls,
-  .summaryGrid {
-    grid-template-columns: 1fr;
-  }
+	  .shell,
+	  .grid,
+	  .dossierGrid,
+	  .analysisControls,
+	  .relationControls,
+	  .summaryGrid,
+	  .matrixBody {
+	    grid-template-columns: 1fr;
+	  }
+
+	  .dossierStats {
+	    grid-template-columns: repeat(2, minmax(0, 1fr));
+	  }
+
+	  .dossierSectionHead {
+	    display: grid;
+	  }
+
+	  .matrixSummary {
+	    grid-template-columns: 1fr;
+	    gap: 5px;
+	  }
+
+	  .matrixSummary::after {
+	    justify-self: start;
+	  }
 
   .workflowStart {
     display: grid;
@@ -831,16 +973,13 @@
     padding: 72px 18px 18px;
   }
 
-  .tabs {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    border-radius: var(--cf-radius-md);
-    overflow: visible;
-  }
+	  .tabs {
+	    width: 100%;
+	    border-radius: var(--cf-radius-md);
+	    overflow-x: auto;
+	  }
 
-  .tabButton {
-    justify-content: center;
-    padding: 0 8px;
-  }
+	  .tabButton {
+	    min-width: 92px;
+	  }
 }
