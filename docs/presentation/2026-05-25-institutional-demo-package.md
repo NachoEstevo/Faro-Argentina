@@ -4,6 +4,17 @@
 
 Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El producto parte del mapa, permite abrir expedientes, leer el rastro economico, distinguir fuente oficial de contexto, recibir aportes privados y armar carpetas descargables para investigacion. Faro no acusa: muestra donde mirar, por que mirar y que falta verificar.
 
+## Estado Y Currentness
+
+- Linea de datos para demo: reportes generados el 2026-05-21.
+- Corpus: 7.932 expedientes de Argentina, 9.617 receipts y 431 expedientes
+  elegibles para mapa.
+- El mapa no representa toda la base. Solo muestra casos con geometria oficial
+  validada.
+- Mapa de Inversiones es buscable y exportable, pero en el snapshot actual no
+  aporta puntos de mapa porque el CSV usado no trae latitud/longitud.
+- Faro no geocodifica ni corrige coordenadas para completar el mapa.
+
 ## Recorrido
 
 1. Abrir `/` y mostrar el mapa como entrada principal.
