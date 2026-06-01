@@ -17,6 +17,7 @@ enfocado en Argentina.
   limites de evidencia y estado actual.
 - [Onboarding tecnico](agent-onboarding.md) - orientacion para ingenieros y
   futuros agentes de codigo.
+- [Investigacion](research/faro-research-agenda.md) - agenda y paper base.
 - [Deployment](deployment.md) - forma actual de Vercel y restricciones de
   hosting.
 
