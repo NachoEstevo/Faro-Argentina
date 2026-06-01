@@ -75,24 +75,45 @@ Tocas un punto del mapa o una fila del Explorer y Faro arma un expediente con:
 
 ## Estado Actual
 
-Corpus versionado en el repo:
+Corpus versionado en el repo segun los reportes generados del 2026-05-21:
 
-- `5` datasets generados;
-- `647` expedientes de Argentina;
-- `2.332` receipts;
-- `8` snapshots oficiales en el manifest;
-- `435` expedientes elegibles para mapa despues del gate de geometria.
+- `6` datasets generados;
+- `7.932` expedientes de Argentina;
+- `9.617` receipts;
+- `11` archivos raw verificados;
+- `431` expedientes elegibles para mapa despues del gate de geometria.
+
+Para confirmar la linea base actual, ejecutar:
+
+```bash
+npm run data:geo-report
+npm run data:quality-report
+```
 
 La cobertura se concentra en:
 
 - CONTRAT.AR obras, contratos, procedimientos, ofertas, ubicacion geografica y
   actas de apertura;
 - SIPRO proveedores;
+- Mapa de Inversiones como cobertura de avance declarada, buscable y
+  exportable, pero no map-safe en el snapshot actual porque el CSV no trae
+  latitud/longitud;
 - BCRA Comunicacion A 3500 para conversiones historicas;
 - CIJ Causa Vialidad;
 - MPF Causa Vialidad;
 - MPF Cuadernos / La Camarita;
 - Contratar historico obras como fuente auxiliar.
+
+### Currentness Y Brechas
+
+El manifest de snapshots fue generado el `2026-05-18`, con Mapa de Inversiones
+agregado el `2026-05-21`. Los expedientes pueden ser buscables aunque no sean
+map-safe: los casos sin geometria oficial validada siguen en Explorer, informes
+y exports como brechas de datos.
+
+Faro no geocodifica, infiere ni corrige coordenadas. Coordenadas invalidas,
+duplicadas, placeholder, fuera de bounds o sospechosas quedan fuera del mapa y
+se conservan como datos a verificar.
 
 ## Superficies Del Producto
 
@@ -125,8 +146,12 @@ relacionadas, senales, caveats, hashes y pasos de verificacion.
 - React 19;
 - TypeScript;
 - Leaflet / React Leaflet;
-- datos generados y versionados en el repo;
-- sin base de datos runtime para la demo publica.
+- datos publicos generados y versionados en el repo;
+- Clerk para autenticacion de superficies privadas e internas;
+- Neon Postgres para estado privado estructurado cuando `DATABASE_URL` esta
+  configurado;
+- Cloudflare R2 compatible S3 para adjuntos privados de Aportes cuando el
+  storage esta configurado.
 
 ## Estructura
 
@@ -188,6 +213,7 @@ evidencia.
 - [Contexto de producto](docs/product/faro-product-context.md)
 - [Onboarding tecnico](docs/agent-onboarding.md)
 - [Deployment](docs/deployment.md)
+- [Runbook de produccion](docs/operations/production-runbook.md)
 
 ## Descripcion Corta
 

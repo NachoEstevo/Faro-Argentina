@@ -61,7 +61,28 @@ test("GET /api/admin/aportes/attachment rejects arbitrary object key access", as
   }
 });
 
-test("GET /api/admin/aportes/attachment opens an owned private attachment with no-store headers", async () => {
+test("GET /api/admin/aportes/attachment rate limits repeated private attachment reads", async () => {
+  const env = preserveEnv(authEnvKeys);
+  enableReviewerAuth();
+
+  try {
+    let response = new Response();
+    for (let index = 0; index < 61; index += 1) {
+      response = await GET_ATTACHMENT(new Request(
+        "http://localhost/api/admin/aportes/attachment?submissionId=APORTE-20260521-FILE001&attachmentId=ATT-001",
+        { headers: { "x-forwarded-for": "203.0.113.20" } },
+      ));
+    }
+    const payload = await response.json() as { error: string };
+
+    assert.equal(response.status, 429);
+    assert.equal(payload.error, "admin_attachment_rate_limited");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
+test("GET /api/admin/aportes/attachment opens an owned private attachment with safe download headers", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-attachment-"));
   const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
@@ -79,7 +100,10 @@ test("GET /api/admin/aportes/attachment opens an owned private attachment with n
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("cache-control"), "private, no-store");
     assert.equal(response.headers.get("content-type"), "image/webp");
-    assert.match(response.headers.get("content-disposition") ?? "", /filename="ATT-001.webp"/);
+    assert.match(response.headers.get("content-disposition") ?? "", /^attachment; filename="ATT-001\.webp"$/);
+    assert.equal(response.headers.get("content-security-policy"), "sandbox");
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-download-options"), "noopen");
     assert.equal(await response.text(), "fake image");
   } finally {
     restoreEnv(env);

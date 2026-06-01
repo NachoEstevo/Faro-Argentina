@@ -6,15 +6,20 @@ import { Link as LinkIcon } from "lucide-react";
 import type { InvestigationCasePack } from "@/lib/caseRepository";
 import {
   addCaseToWorkspace,
+  addVerificationTaskToWorkspace,
   buildInvestigationAggregate,
+  buildInvestigationReadiness,
+  createVerificationTasksFromNextSteps,
   createInvestigationWorkspace,
   INVESTIGATION_RELATION_REASON_OPTIONS,
   removeCaseFromWorkspace,
+  updateVerificationTaskStatus,
   type InvestigationAggregate,
   type InvestigationAnalysis,
   type InvestigationCaseRelationReason,
   type InvestigationEntity,
   type InvestigationSourceLink,
+  type InvestigationVerificationTaskStatus,
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
 import {
@@ -47,6 +52,7 @@ import {
   InvestigationSummaryPanel,
   InvestigationsSidebar,
   SelectedCasesPanel,
+  VerificationTasksPanel,
   WorkspaceExportPanel,
   WorkspaceHeader,
   WorkspaceTabs,
@@ -186,6 +192,7 @@ export default function InvestigationsView({
       .slice(0, 8);
   }, [cases, deferredQuery, selectedCountry, workspace?.countryCode]);
   const latestAnalysis = workspace?.analyses[workspace.analyses.length - 1] ?? null;
+  const readiness = useMemo(() => workspace ? buildInvestigationReadiness(workspace) : null, [workspace]);
   const showCreateForm = isCreatingWorkspace || !workspace;
 
   function persistActiveWorkspace(nextWorkspace: InvestigationWorkspace) {
@@ -270,7 +277,7 @@ export default function InvestigationsView({
     setNoteText("");
   }
 
-  function handleSaveDossierNextSteps(steps: string[]) {
+  function handleSaveDossierNextStepsAsNote(steps: string[]) {
     if (!workspace || steps.length === 0) return;
     const createdAt = new Date().toISOString();
     persistActiveWorkspace({
@@ -286,6 +293,36 @@ export default function InvestigationsView({
       updatedAt: createdAt,
     });
     setActiveTab("notas");
+  }
+
+  function handleSaveDossierNextStepsAsTasks(steps: string[]) {
+    if (!workspace || steps.length === 0) return;
+    persistActiveWorkspace(createVerificationTasksFromNextSteps(workspace, steps));
+    setStatusText("Próximos pasos guardados como tareas de verificación.");
+  }
+
+  function handleAddVerificationTask(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!workspace) return;
+    const form = new FormData(event.currentTarget);
+    const action = String(form.get("action") ?? "");
+    if (!action.trim()) return;
+    persistActiveWorkspace(addVerificationTaskToWorkspace(workspace, {
+      title: String(form.get("title") ?? ""),
+      action,
+      source: String(form.get("source") ?? ""),
+      owner: String(form.get("owner") ?? ""),
+      dueDate: String(form.get("dueDate") ?? ""),
+    }));
+    event.currentTarget.reset();
+  }
+
+  function handleUpdateVerificationTaskStatus(
+    taskId: string,
+    status: InvestigationVerificationTaskStatus,
+  ) {
+    if (!workspace) return;
+    persistActiveWorkspace(updateVerificationTaskStatus(workspace, taskId, status));
   }
 
   function handleAddSource() {
@@ -436,7 +473,14 @@ export default function InvestigationsView({
                 <DossierBuilderPanel
                   dossier={dossier}
                   caseCount={workspace.caseIds.length}
-                  onSaveNextSteps={handleSaveDossierNextSteps}
+                  onSaveNextStepsAsNote={handleSaveDossierNextStepsAsNote}
+                  onSaveNextStepsAsTasks={handleSaveDossierNextStepsAsTasks}
+                />
+                <VerificationTasksPanel
+                  workspace={workspace}
+                  readiness={readiness}
+                  onAddTask={handleAddVerificationTask}
+                  onUpdateTaskStatus={handleUpdateVerificationTaskStatus}
                 />
                 <InvestigationSummaryPanel aggregate={visibleAggregate} />
               </>
