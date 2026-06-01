@@ -21,6 +21,9 @@ test("FaroExperience preserves operational map case rendering", async () => {
 
   assert.match(source, /<CaseMap[\s\S]*cases=\{countryReviewCases\}/);
   assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
+  assert.match(source, /useDeferredValue/);
+  assert.match(source, /buildSearchSuggestionIndex/);
+  assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
 });

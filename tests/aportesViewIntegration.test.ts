@@ -29,7 +29,9 @@ test("AportesView submits private contributions with file attachments", async ()
   assert.match(source, /Fuente para revisar/);
   assert.match(source, /Corrección de dato/);
   assert.match(source, /Archivo o foto/);
-  assert.match(source, /buildCaseLinkSuggestions/);
+  assert.match(source, /useDeferredValue/);
+  assert.match(source, /buildCaseLinkSuggestionIndex/);
+  assert.match(source, /buildCaseLinkSuggestionsFromIndex/);
   assert.match(source, /RelatedCaseField/);
   assert.match(source, /SearchSuggestionGroups/);
   assert.match(source, /name="relatedCase"/);

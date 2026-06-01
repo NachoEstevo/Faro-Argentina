@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
+import { type ChangeEvent, type FormEvent, useDeferredValue, useMemo, useState } from "react";
 import {
   Camera,
   CheckCircle2,
@@ -17,7 +17,8 @@ import {
 import FaroMark from "../FaroMark";
 import SearchSuggestionGroups from "../SearchSuggestionGroups";
 import {
-  buildCaseLinkSuggestions,
+  buildCaseLinkSuggestionIndex,
+  buildCaseLinkSuggestionsFromIndex,
   type SearchSuggestion,
   type SearchSuggestionCase,
 } from "@/lib/data/searchSuggestions";
@@ -112,14 +113,19 @@ export default function AportesView({ selectedCountry, cases }: Props) {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [statusText, setStatusText] = useState("");
   const selectedCopy = formCopy[type];
+  const deferredRelatedCaseQuery = useDeferredValue(relatedCaseQuery);
 
   const fileSummary = useMemo(
     () => files.map((file) => `${file.name} · ${formatBytes(file.size)}`),
     [files],
   );
+  const relatedCaseIndex = useMemo(
+    () => buildCaseLinkSuggestionIndex(cases),
+    [cases],
+  );
   const relatedCaseSuggestions = useMemo(
-    () => buildCaseLinkSuggestions(cases, relatedCaseQuery, { limit: 6 }),
-    [cases, relatedCaseQuery],
+    () => buildCaseLinkSuggestionsFromIndex(relatedCaseIndex, deferredRelatedCaseQuery, { limit: 6 }),
+    [deferredRelatedCaseQuery, relatedCaseIndex],
   );
   const submittedRelatedCase = resolveRelatedCaseValue(relatedCase, relatedCaseQuery);
 

@@ -39,6 +39,12 @@ export interface SearchSuggestionIndex {
   caseCandidates: SearchSuggestionCandidate[];
 }
 
+export interface CaseLinkSuggestionIndex {
+  caseCandidates: SearchSuggestionCandidate[];
+  identifierCandidates: SearchSuggestionCandidate[];
+  sourceCandidates: SearchSuggestionCandidate[];
+}
+
 interface SearchSuggestionCandidate {
   suggestion: SearchSuggestion;
   searchText: string;
@@ -213,39 +219,66 @@ export function buildCaseLinkSuggestions(
   query: string,
   options: SearchSuggestionOptions = {},
 ): SearchSuggestion[] {
+  return buildCaseLinkSuggestionsFromIndex(buildCaseLinkSuggestionIndex(cases), query, options);
+}
+
+export function buildCaseLinkSuggestionIndex(cases: SearchSuggestionCase[]): CaseLinkSuggestionIndex {
+  const identifierCandidates: SearchSuggestionCandidate[] = [];
+  const sourceCandidates: SearchSuggestionCandidate[] = [];
+
+  for (const caseFile of cases) {
+    [caseFile.procedureNumber, caseFile.workNumber].forEach((identifier) => {
+      addFieldCandidate(identifierCandidates, {
+        kind: "identifier",
+        label: identifier,
+        detail: "Identificador oficial",
+        candidateText: identifier,
+      });
+    });
+    addFieldCandidate(sourceCandidates, {
+      kind: "source",
+      label: caseFile.receipt.sourceName,
+      detail: caseFile.receipt.sourceId,
+      candidateText: [caseFile.receipt.sourceName, caseFile.receipt.sourceId].join(" "),
+    });
+  }
+
+  return {
+    caseCandidates: cases.map(buildCaseLinkSuggestionCandidate),
+    identifierCandidates,
+    sourceCandidates,
+  };
+}
+
+export function buildCaseLinkSuggestionsFromIndex(
+  index: CaseLinkSuggestionIndex,
+  query: string,
+  options: SearchSuggestionOptions = {},
+): SearchSuggestion[] {
   const normalizedQuery = normalizeSearchText(query);
   if (normalizedQuery.length < 2) return [];
 
   const limit = clampLimit(options.limit);
   const suggestions: SearchSuggestion[] = [];
   const byId = new Map<string, SearchSuggestion>();
+  const normalizedQueries = expandSearchQuery(query);
 
-  for (const caseFile of cases) {
-    if (matchesSuggestionText(buildCaseLinkSearchText(caseFile), query)) {
-      addCaseSuggestion(suggestions, byId, caseFile);
-    }
+  let caseSuggestions = 0;
+  for (const candidate of index.caseCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
+    caseSuggestions += 1;
+    if (caseSuggestions >= limit * 3) break;
+  }
 
-    [caseFile.procedureNumber, caseFile.workNumber].forEach((identifier) => {
-      addFieldSuggestion({
-        suggestions,
-        byId,
-        kind: "identifier",
-        label: identifier,
-        detail: "Identificador oficial",
-        query,
-        candidateText: identifier,
-      });
-    });
+  for (const candidate of index.identifierCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
+  }
 
-    addFieldSuggestion({
-      suggestions,
-      byId,
-      kind: "source",
-      label: caseFile.receipt.sourceName,
-      detail: caseFile.receipt.sourceId,
-      query,
-      candidateText: [caseFile.receipt.sourceName, caseFile.receipt.sourceId].join(" "),
-    });
+  for (const candidate of index.sourceCandidates) {
+    if (!matchesNormalizedSuggestionText(candidate.searchText, normalizedQueries)) continue;
+    addSuggestion(suggestions, byId, { ...candidate.suggestion });
   }
 
   return suggestions
@@ -279,6 +312,20 @@ function buildCaseSuggestionCandidate(caseFile: SearchSuggestionCase): SearchSug
       caseId: caseFile.id,
     },
     searchText: normalizeSearchText(buildCaseSearchText(caseFile)),
+  };
+}
+
+function buildCaseLinkSuggestionCandidate(caseFile: SearchSuggestionCase): SearchSuggestionCandidate {
+  return {
+    suggestion: {
+      id: `case:${caseFile.id}`,
+      kind: "case",
+      label: caseFile.title,
+      detail: `${labelCaseType(caseFile.caseType)} · ${caseFile.receipt.sourceName}`,
+      query: caseFile.title,
+      caseId: caseFile.id,
+    },
+    searchText: normalizeSearchText(buildCaseLinkSearchText(caseFile)),
   };
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -25,7 +25,8 @@ import {
 import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
 import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
 import {
-  buildSearchSuggestions,
+  buildSearchSuggestionIndex,
+  buildSearchSuggestionsFromIndex,
   caseMatchesSearch,
   type SearchSuggestion,
 } from "@/lib/data/searchSuggestions";
@@ -89,6 +90,7 @@ export default function FaroExperience({
   const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId ?? "");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [yearFrom, setYearFrom] = useState<number | null>(null);
   const [yearTo, setYearTo] = useState<number | null>(null);
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
@@ -243,9 +245,13 @@ export default function FaroExperience({
     [countryReviewCases, debouncedQuery],
   );
 
+  const searchSuggestionIndex = useMemo(
+    () => buildSearchSuggestionIndex(countryReviewContextCases),
+    [countryReviewContextCases],
+  );
   const searchSuggestions = useMemo(
-    () => buildSearchSuggestions(countryReviewContextCases, query, { limit: 8 }),
-    [countryReviewContextCases, query],
+    () => buildSearchSuggestionsFromIndex(searchSuggestionIndex, deferredQuery, { limit: 8 }),
+    [deferredQuery, searchSuggestionIndex],
   );
 
   const handleSelectSearchSuggestion = useCallback((suggestion: SearchSuggestion) => {

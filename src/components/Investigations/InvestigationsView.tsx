@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Link as LinkIcon } from "lucide-react";
 
 import type { InvestigationCasePack } from "@/lib/caseRepository";
@@ -22,7 +22,8 @@ import {
   type InvestigationWorkspaceCollection,
 } from "@/lib/data/investigationWorkspaceCollections";
 import {
-  buildSearchSuggestions,
+  buildSearchSuggestionIndex,
+  buildSearchSuggestionsFromIndex,
   caseMatchesSearch,
   type SearchSuggestion,
   type SearchSuggestionCase,
@@ -82,6 +83,7 @@ export default function InvestigationsView({
   const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("resumen");
   const [statusText, setStatusText] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const workspace = useMemo(
     () => workspaces.find((item) => item.id === activeWorkspaceId) ?? workspaces[0] ?? null,
     [activeWorkspaceId, workspaces],
@@ -167,18 +169,22 @@ export default function InvestigationsView({
     [selectedCasePacks, workspace],
   );
   const visibleAggregate = workspaceAggregate ?? aggregate;
+  const searchSuggestionIndex = useMemo(
+    () => buildSearchSuggestionIndex(cases as SearchSuggestionCase[]),
+    [cases],
+  );
   const searchSuggestions = useMemo(
-    () => buildSearchSuggestions(cases as SearchSuggestionCase[], query, { limit: 10 }),
-    [cases, query],
+    () => buildSearchSuggestionsFromIndex(searchSuggestionIndex, deferredQuery, { limit: 10 }),
+    [deferredQuery, searchSuggestionIndex],
   );
   const results = useMemo(() => {
-    const trimmed = query.trim();
+    const trimmed = deferredQuery.trim();
     if (trimmed.length < 2) return [];
     return cases
       .filter((caseFile) => caseFile.countryCode === selectedCountry || !workspace?.countryCode)
       .filter((caseFile) => caseMatchesSearch(caseFile, trimmed))
       .slice(0, 8);
-  }, [cases, query, selectedCountry, workspace?.countryCode]);
+  }, [cases, deferredQuery, selectedCountry, workspace?.countryCode]);
   const latestAnalysis = workspace?.analyses[workspace.analyses.length - 1] ?? null;
   const showCreateForm = isCreatingWorkspace || !workspace;
 

@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildCaseLinkSuggestionIndex,
   buildCaseLinkSuggestions,
+  buildCaseLinkSuggestionsFromIndex,
   buildSearchSuggestions,
   buildSearchSuggestionIndex,
   buildSearchSuggestionsFromIndex,
@@ -180,6 +182,17 @@ test("buildCaseLinkSuggestions stays narrow for private contribution linkage", (
   assert.equal(caseLinkSuggestions.some((suggestion) => suggestion.kind === "alias"), false);
   assert.equal(caseLinkSuggestions.some((suggestion) => suggestion.kind === "signal"), false);
   assert.equal(locationSuggestions.some((suggestion) => suggestion.kind === "location"), false);
+});
+
+test("buildCaseLinkSuggestionsFromIndex reuses a narrow precomputed case-link index", () => {
+  const index = buildCaseLinkSuggestionIndex([judicialCase, contractCase]);
+  const indexedSuggestions = buildCaseLinkSuggestionsFromIndex(index, "46-0262", { limit: 8 });
+  const directSuggestions = buildCaseLinkSuggestions([judicialCase, contractCase], "46-0262", { limit: 8 });
+
+  assert.deepEqual(indexedSuggestions, directSuggestions);
+  assert.equal(index.caseCandidates.length, 2);
+  assert.equal(index.identifierCandidates.length > 0, true);
+  assert.equal(index.sourceCandidates.length, 2);
 });
 
 test("buildSearchSuggestions includes signal and identifier suggestions", () => {

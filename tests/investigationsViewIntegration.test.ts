@@ -28,6 +28,9 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /readStoredInvestigationWorkspaceCollection/);
   assert.match(source, /writeStoredInvestigationWorkspaceCollection/);
   assert.match(source, /buildInvestigationZip/);
+  assert.match(source, /useDeferredValue/);
+  assert.match(source, /buildSearchSuggestionIndex/);
+  assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /Exportar carpeta ZIP/);
   assert.match(source, /Generar análisis de trabajo/);
   assert.match(source, /INVESTIGATION_RELATION_REASON_OPTIONS/);
