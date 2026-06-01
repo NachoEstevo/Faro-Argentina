@@ -120,6 +120,25 @@ no esta usando R2 para esa ejecucion. Si se ejecuto contra storage compartido
 con produccion, borrar los objetos `APORTE-R2-SMOKE-*` o marcarlos como prueba
 interna antes de revisar aportes reales.
 
+## Abuse Controls Para Aportes
+
+Los limites incluidos en la app son process-local. Sirven como friccion y
+defensa secundaria, pero no son un control distribuido: pueden reiniciarse con
+cold starts y no coordinan entre instancias serverless.
+
+Antes de promocionar Aportes como superficie publica, dejar registrado un
+control de edge o distribuido para:
+
+- `POST /api/aportes`;
+- lectura privada de adjuntos en `/api/admin/aportes/attachment`;
+- mutaciones admin de revision, vinculacion, promocion y retiro;
+- escrituras privadas de carpetas en `/api/investigations/workspaces`.
+
+La decision debe indicar proveedor, regla o politica aplicada, umbrales,
+responsable y criterio de revision. Si se acepta operar temporalmente solo con
+los limites in-process, registrarlo como riesgo explicito y no como postura
+final de seguridad.
+
 ## Release Verification
 
 Para cambios de documentacion solamente:

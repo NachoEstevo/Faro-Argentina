@@ -92,6 +92,24 @@ against the same bucket/prefix as production. Do not run it against the live
 review queue unless the smoke objects are immediately removed or clearly
 filtered from review.
 
+## Public Upload Abuse Controls
+
+The application includes in-process rate limits for public Aportes submissions
+and private attachment reads. Treat those guards as defense in depth only: they
+reset on cold starts and do not coordinate across Vercel/serverless instances.
+
+Before promoting Aportes as a public upload surface, configure an edge or
+distributed control for at least:
+
+- `POST /api/aportes`;
+- `GET /api/admin/aportes/attachment`;
+- admin mutation routes under `/api/admin/aportes/*`;
+- private workspace writes under `/api/investigations/workspaces`.
+
+Record whether the production control lives in Vercel, Cloudflare or another
+durable layer. Do not describe the repo-local limiter as the only abuse
+protection for production.
+
 ## Vercel Function Limits
 
 Do not return full data collections from Vercel Functions. Vercel Functions have a hard response payload limit, so collection endpoints must stay paginated or redirect to static artifacts.
