@@ -15,6 +15,8 @@ import { verifyDataSpine } from "../src/lib/data/dataSpineVerifier.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
 import type { SourceCatalogEntry } from "../src/lib/data/sourceCatalog.ts";
 
+type VerifyDatasetInput = Parameters<typeof verifyDataSpine>[0]["datasets"][number];
+
 test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts together", async () => {
   const report = await verifyDataSpine({
     rootDir: new URL("../", import.meta.url),
@@ -32,6 +34,14 @@ test("verifyDataSpine validates catalog, raw hashes, snapshots and receipts toge
   assert.equal(report.checkedCases, 7932);
   assert.equal(report.checkedReceipts, 9617);
   assert.equal(report.checkedRawFiles, 11);
+  assert.deepEqual(report.rowReceipts, {
+    checked: 8759,
+    exact: 8759,
+    unsupported: 858,
+    missing: 0,
+    duplicate: 0,
+    hashMismatch: 0,
+  });
 });
 
 test("verifyDataSpine reports a receipt hash mismatch", async () => {
@@ -173,4 +183,30 @@ test("verifyDataSpine reports duplicate exact raw row matches", async () => {
   });
 
   assert.match(report.errors.join("\n"), /duplicate row/);
+});
+
+test("verifyDataSpine keeps aggregate contextual receipts unsupported without row errors", async () => {
+  const dataset = structuredClone(historicalJudicialDataset.datasets[0]) as VerifyDatasetInput;
+  const sourceCase = dataset.cases[0];
+  assert.ok(sourceCase?.relatedReceipts);
+  const aggregateReceipt = sourceCase.relatedReceipts.find((receipt) => receipt.recordId.includes(":"));
+  assert.ok(aggregateReceipt);
+  const aggregateDataset: VerifyDatasetInput = {
+    ...dataset,
+    cases: [{ ...sourceCase, relatedReceipts: [aggregateReceipt] }],
+  };
+
+  const report = await verifyDataSpine({
+    rootDir: new URL("../", import.meta.url),
+    sources: catalog as SourceCatalogEntry[],
+    datasets: [aggregateDataset],
+  });
+  assert.ok(report.rowReceipts);
+
+  assert.deepEqual(report.errors, []);
+  assert.equal(report.rowReceipts.exact, 1);
+  assert.equal(report.rowReceipts.unsupported, 1);
+  assert.equal(report.rowReceipts.missing, 0);
+  assert.equal(report.rowReceipts.duplicate, 0);
+  assert.equal(report.rowReceipts.hashMismatch, 0);
 });
