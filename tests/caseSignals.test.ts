@@ -294,6 +294,20 @@ test("buildCaseSignals uses collection context to surface recurring low-competit
   assert.equal(signals.some((signal) => signal.code === "supplier_concentration"), true);
   assert.equal(signals.find((signal) => signal.code === "repeat_single_bid_winner")?.family, "supplier");
   assert.equal(signals.find((signal) => signal.code === "repeat_single_bid_winner")?.confidence, "medium");
+  assert.deepEqual(signals.find((signal) => signal.code === "repeat_single_bid_winner")?.relationProvenance, [
+    {
+      kind: "exact_cuit",
+      label: "CUIT exacto",
+      confidence: "high",
+      caveat: "Coincidencia por identificador fiscal declarado; no prueba por si sola una relacion fuera de los registros comparados.",
+    },
+    {
+      kind: "same_agency",
+      label: "Mismo organismo",
+      confidence: "medium",
+      caveat: "Compartir organismo ayuda a priorizar revision; no confirma coordinacion ni una relacion sustantiva entre expedientes.",
+    },
+  ]);
   assert.doesNotMatch(JSON.stringify(signals), /corrup|fraude|delito|culpable|estafa|abuso|favorit|incumpl|irregular/i);
 });
 
@@ -348,6 +362,8 @@ test("buildCaseSignals lowers recurrence confidence when supplier identity is na
 
   assert.equal(recurrence?.confidence, "low");
   assert.match(recurrence?.caveat ?? "", /nombre normalizado/);
+  assert.equal(recurrence?.relationProvenance?.[0]?.label, "Nombre normalizado");
+  assert.equal(recurrence?.relationProvenance?.[0]?.confidence, "low");
 });
 
 function buildSignalFixture(overrides: {
