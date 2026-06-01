@@ -146,3 +146,44 @@
     position: static;
   }
 }
+
+@media (max-width: 760px) {
+  .frame {
+    width: min(100% - 20px, 1120px);
+    gap: 14px;
+    padding: 10px 0 28px;
+  }
+
+  .sidebar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .brandLink {
+    font-size: 18px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .navLink {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border: 1px solid #e0e8f0;
+    border-radius: 999px;
+    background: #f7f9fc;
+    font-size: 13px;
+  }
+
+  .notice {
+    display: none;
+  }
+}

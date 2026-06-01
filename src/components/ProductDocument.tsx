@@ -8,21 +8,37 @@ interface ProductSection {
   body: ReactNode;
 }
 
+interface SummaryItem {
+  title: string;
+  text: string;
+}
+
+interface DocumentAction {
+  href: string;
+  label: string;
+  variant?: "primary" | "secondary";
+}
+
 interface Props {
   eyebrow: string;
   title: string;
   intro: string;
+  summaryItems?: SummaryItem[];
+  actions?: DocumentAction[];
   sections: ProductSection[];
+  closing?: ReactNode;
 }
 
 const navItems = [
   { href: "/metodologia", label: "Metodología" },
   { href: "/datos", label: "Datos" },
   { href: "/privacidad", label: "Privacidad" },
+  { href: "/terminos", label: "Términos" },
+  { href: "/seguridad", label: "Seguridad" },
   { href: "/pais/AR?mode=aportes", label: "Aportes" },
 ] as const;
 
-export default function ProductDocument({ eyebrow, title, intro, sections }: Props) {
+export default function ProductDocument({ eyebrow, title, intro, summaryItems, actions, sections, closing }: Props) {
   return (
     <main className={styles.shell}>
       <div className={styles.frame}>
@@ -43,9 +59,36 @@ export default function ProductDocument({ eyebrow, title, intro, sections }: Pro
           </p>
         </aside>
         <article className={styles.document}>
-          <p className={styles.eyebrow}>{eyebrow}</p>
-          <h1>{title}</h1>
-          <p className={styles.intro}>{intro}</p>
+          <header className={styles.hero}>
+            <div className={styles.heroCopy}>
+              <p className={styles.eyebrow}>{eyebrow}</p>
+              <h1>{title}</h1>
+              <p className={styles.intro}>{intro}</p>
+              {actions && actions.length > 0 && (
+                <div className={styles.actions} aria-label="Acciones principales">
+                  {actions.map((action) => (
+                    <Link
+                      key={action.href}
+                      href={action.href}
+                      className={action.variant === "secondary" ? styles.secondaryAction : styles.primaryAction}
+                    >
+                      {action.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            {summaryItems && summaryItems.length > 0 && (
+              <div className={styles.summaryGrid} aria-label="Resumen metodológico">
+                {summaryItems.map((item) => (
+                  <div key={item.title} className={styles.summaryItem}>
+                    <strong>{item.title}</strong>
+                    <span>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </header>
           <div className={styles.sections}>
             {sections.map((section) => (
               <section key={section.title} className={styles.section}>
@@ -54,6 +97,7 @@ export default function ProductDocument({ eyebrow, title, intro, sections }: Pro
               </section>
             ))}
           </div>
+          {closing && <footer className={styles.closing}>{closing}</footer>}
         </article>
       </div>
     </main>

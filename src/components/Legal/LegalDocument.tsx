@@ -17,10 +17,12 @@ interface Props {
 }
 
 const navItems = [
+  { href: "/metodologia", label: "Metodología" },
+  { href: "/datos", label: "Datos" },
   { href: "/privacidad", label: "Privacidad" },
-  { href: "/terminos", label: "Terminos" },
+  { href: "/terminos", label: "Términos" },
   { href: "/seguridad", label: "Seguridad" },
-  { href: "/aportes/politica", label: "Politica de aportes" },
+  { href: "/aportes/politica", label: "Política de aportes" },
 ] as const;
 
 export default function LegalDocument({ eyebrow, title, intro, updatedAt, sections }: Props) {
