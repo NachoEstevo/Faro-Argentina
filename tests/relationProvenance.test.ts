@@ -101,3 +101,26 @@ test("inferCaseRelationProvenance prefers exact CUIT before normalized supplier 
   assert.equal(normalizedName[0]?.label, "Nombre normalizado");
   assert.equal(normalizedName[0]?.confidence, "low");
 });
+
+test("inferCaseRelationProvenance does not create a relation only from judicial context", () => {
+  const provenances = inferCaseRelationProvenance(
+    {
+      countryCode: "AR",
+      supplierName: "Proveedor Norte",
+      supplierDocument: "30-11111111-1",
+      agencyName: "Organismo A",
+      workNumber: "OBRA-1",
+      caseType: "judicial_context",
+    },
+    {
+      countryCode: "AR",
+      supplierName: "Proveedor Sur",
+      supplierDocument: "30-22222222-2",
+      agencyName: "Organismo B",
+      workNumber: "OBRA-2",
+      caseType: "contract",
+    },
+  );
+
+  assert.deepEqual(provenances, []);
+});

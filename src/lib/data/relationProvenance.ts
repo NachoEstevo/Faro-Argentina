@@ -106,7 +106,7 @@ export function inferCaseRelationProvenance(
     provenances.push(buildRelationProvenance("same_agency"));
   }
 
-  if (isJudicialContext(left.caseType) || isJudicialContext(right.caseType)) {
+  if (provenances.length > 0 && (isJudicialContext(left.caseType) || isJudicialContext(right.caseType))) {
     provenances.push(buildRelationProvenance("judicial_context"));
   }
 
