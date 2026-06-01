@@ -7,6 +7,7 @@ import {
   type InvestigationCaseRelation,
   type InvestigationWorkspace,
 } from "./investigationWorkspaces.ts";
+import type { RelationProvenance } from "./relationProvenance.ts";
 
 export interface InvestigationDossierMatrixRow {
   caseId: string;
@@ -24,6 +25,7 @@ export interface InvestigationDossierActor {
   label: string;
   kind: "Proveedor" | "Organismo" | "Entidad manual";
   basis: "CUIT/documento" | "Nombre normalizado" | "Entidad cargada por usuario";
+  provenance?: RelationProvenance;
   count: number;
   caseIds: string[];
 }
@@ -108,6 +110,7 @@ function buildActors(aggregate: ReturnType<typeof buildInvestigationAggregate>):
       label: supplier.label,
       kind: "Proveedor" as const,
       basis: supplier.document ? "CUIT/documento" as const : "Nombre normalizado" as const,
+      provenance: supplier.provenance,
       count: supplier.count,
       caseIds: supplier.caseIds,
     })),
@@ -115,6 +118,7 @@ function buildActors(aggregate: ReturnType<typeof buildInvestigationAggregate>):
       label: agency.label,
       kind: "Organismo" as const,
       basis: "Nombre normalizado" as const,
+      provenance: agency.provenance,
       count: agency.count,
       caseIds: agency.caseIds,
     })),

@@ -1,10 +1,28 @@
 import { storeContribution, type ContributionFileUpload } from "../../../lib/server/contributionStorage.ts";
+import { assertRequestRateLimit } from "../../../lib/server/requestGuards.ts";
 import {
   validateContributionDraft,
   type UserContributionDraft,
 } from "../../../lib/data/userContributions.ts";
 
+const PUBLIC_APORTES_SUBMISSION_WINDOW_MS = 60_000;
+const PUBLIC_APORTES_SUBMISSION_LIMIT = 10;
+
 export async function POST(request: Request) {
+  const rateLimit = assertRequestRateLimit(request, {
+    namespace: "public_aportes_submission",
+    windowMs: PUBLIC_APORTES_SUBMISSION_WINDOW_MS,
+    limit: PUBLIC_APORTES_SUBMISSION_LIMIT,
+    error: "submission_rate_limited",
+    message: "Recibimos demasiados aportes desde este cliente en poco tiempo. Esperá un momento y volvé a intentar.",
+  });
+  if (!rateLimit.ok) {
+    return Response.json(
+      { error: rateLimit.error, message: rateLimit.message },
+      { status: rateLimit.status },
+    );
+  }
+
   const form = await request.formData();
   const files = getFiles(form);
   const draft: Omit<UserContributionDraft, "attachments"> = {

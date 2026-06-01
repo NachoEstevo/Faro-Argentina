@@ -5,6 +5,7 @@ import {
   buildCaseSignalContextsByCountry,
   type CaseSignalContext,
 } from "./investigationSignalContext.ts";
+import { buildRelationProvenance, type RelationProvenance } from "./relationProvenance.ts";
 
 export type CaseSignalKind = "watch" | "ready" | "gap" | "context";
 export type CaseSignalFamily =
@@ -36,6 +37,7 @@ export interface CaseSignal {
   caveat: string;
   action: string;
   relatedCaseIds?: string[];
+  relationProvenance?: RelationProvenance[];
   sourceIds?: string[];
 }
 
@@ -198,6 +200,7 @@ function addJudicialContextSignals(signals: CaseSignal[], caseFile: SignalCaseFi
     caveat: "El contexto judicial no prueba por si solo nada sobre otros contratos Faro; requiere lectura documental y match exacto.",
     action: "Abrir la fuente judicial y los receipts relacionados antes de citar el caso.",
     relatedCaseIds: caseFile.relatedCaseIds,
+    relationProvenance: [buildRelationProvenance("judicial_context")],
     sourceIds: uniqueStrings([
       caseFile.receipt.sourceId,
       ...(caseFile.relatedReceipts ?? []).map((receipt) => receipt.sourceId),
@@ -421,6 +424,13 @@ function addAggregateSupplierSignals(
   const identityCaveat = isLowConfidenceSupplierIdentity
     ? " Faro agrupo este proveedor por nombre normalizado porque falta documento fiscal confiable."
     : "";
+  const supplierProvenance = buildRelationProvenance(
+    supplierProfile.identityMethod === "document" ? "exact_cuit" : "normalized_name",
+  );
+  const supplierAgencyProvenance = [
+    supplierProvenance,
+    buildRelationProvenance("same_agency"),
+  ];
 
   if (supplierAgencyProfile.singleBidCaseCount >= 2) {
     signals.push({
@@ -436,6 +446,7 @@ function addAggregateSupplierSignals(
       caveat: `La recurrencia depende del alcance del dataset cargado y no prueba direccionamiento.${identityCaveat}`,
       action: "Comparar pliegos, oferentes, fechas y justificacion del organismo en los contratos relacionados.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
+      relationProvenance: supplierAgencyProvenance,
     });
   }
 
@@ -453,6 +464,7 @@ function addAggregateSupplierSignals(
       caveat: `Un proveedor recurrente puede reflejar especializacion o mercado chico; requiere comparar rubro, pliegos y competencia.${identityCaveat}`,
       action: "Abrir los contratos relacionados y revisar si se repiten rubro, unidad compradora, requisitos y oferentes.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
+      relationProvenance: supplierAgencyProvenance,
     });
   }
 
@@ -473,6 +485,7 @@ function addAggregateSupplierSignals(
       caveat: `La concentracion depende del alcance del dataset cargado; debe validarse con mas fuentes y periodo completo.${identityCaveat}`,
       action: "Ampliar periodo/fuentes y comparar contra otros proveedores del mismo rubro.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
+      relationProvenance: supplierAgencyProvenance,
     });
   }
 
@@ -490,6 +503,7 @@ function addAggregateSupplierSignals(
       caveat: "La similitud de nombre no confirma identidad; debe verificarse con CUIT/RUC/RUT, domicilio o registro societario.",
       action: "Comparar identificador fiscal, domicilio, representantes y registros oficiales del proveedor.",
       relatedCaseIds: aliasGroup.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
+      relationProvenance: [buildRelationProvenance("normalized_name")],
     });
   }
 }

@@ -4,10 +4,14 @@ import assert from "node:assert/strict";
 import type { EvidencePack } from "../src/lib/caseRepository.ts";
 import {
   addCaseToWorkspace,
+  addVerificationTaskToWorkspace,
   buildInvestigationAggregate,
+  buildInvestigationReadiness,
+  createVerificationTasksFromNextSteps,
   createInvestigationWorkspace,
   ensureInvestigationWorkspaceWithCase,
   removeCaseFromWorkspace,
+  updateVerificationTaskStatus,
 } from "../src/lib/data/investigationWorkspaces.ts";
 
 test("createInvestigationWorkspace builds a neutral local workspace", () => {
@@ -31,8 +35,64 @@ test("createInvestigationWorkspace builds a neutral local workspace", () => {
   assert.deepEqual(workspace.sourceLinks, []);
   assert.deepEqual(workspace.notes, []);
   assert.deepEqual(workspace.entities, []);
+  assert.deepEqual(workspace.verificationTasks, []);
   assert.equal(workspace.createdAt, "2026-05-17T12:00:00.000Z");
   assert.equal(workspace.updatedAt, "2026-05-17T12:00:00.000Z");
+});
+
+test("verification tasks track source, action, owner, status and readiness gate", () => {
+  const workspace = addCaseToWorkspace(
+    createInvestigationWorkspace(
+      { title: "Carpeta", countryCode: "AR" },
+      new Date("2026-05-17T12:00:00.000Z"),
+    ),
+    "AR-CASE-1",
+    {
+      reason: "manual_hypothesis",
+      note: "Verificar relación con la pregunta de trabajo.",
+      now: new Date("2026-05-17T12:01:00.000Z"),
+    },
+  );
+
+  const withTask = addVerificationTaskToWorkspace(workspace, {
+    title: "Pedir certificado de avance",
+    action: "Solicitar certificado de avance o recepción.",
+    source: "Dossier de trabajo",
+    status: "in_progress",
+    owner: "Ana",
+    dueDate: "2026-06-15",
+  }, new Date("2026-05-17T12:05:00.000Z"));
+  const withNextSteps = createVerificationTasksFromNextSteps(withTask, [
+    "Abrir fuente oficial y confirmar registro.",
+    "Abrir fuente oficial y confirmar registro.",
+  ], new Date("2026-05-17T12:06:00.000Z"));
+  const completed = updateVerificationTaskStatus(
+    updateVerificationTaskStatus(withNextSteps, "TASK-1", "done", new Date("2026-05-17T12:07:00.000Z")),
+    "TASK-2",
+    "done",
+    new Date("2026-05-17T12:08:00.000Z"),
+  );
+
+  assert.deepEqual(withTask.verificationTasks[0], {
+    id: "TASK-1",
+    title: "Pedir certificado de avance",
+    action: "Solicitar certificado de avance o recepción.",
+    source: "Dossier de trabajo",
+    status: "in_progress",
+    owner: "Ana",
+    dueDate: "2026-06-15",
+    createdAt: "2026-05-17T12:05:00.000Z",
+    updatedAt: "2026-05-17T12:05:00.000Z",
+  });
+  assert.equal(withNextSteps.verificationTasks.length, 2);
+  assert.equal(withNextSteps.verificationTasks[1]?.source, "Próximos pasos del dossier");
+  assert.equal(buildInvestigationReadiness(withNextSteps).ready, false);
+  assert.deepEqual(buildInvestigationReadiness(completed), {
+    ready: true,
+    label: "Lista para handoff interno",
+    blockers: [],
+  });
+  assert.doesNotMatch(JSON.stringify(completed), /fraude|culpable|publicar caso/i);
 });
 
 test("addCaseToWorkspace dedupes case ids and removeCaseToWorkspace updates timestamps", () => {
@@ -227,11 +287,23 @@ test("buildInvestigationAggregate summarizes repeated entities, amounts, signals
   assert.deepEqual(aggregate.repeatedSuppliers[0], {
     label: "Austral Construcciones S.A.",
     document: "30-71111111-1",
+    provenance: {
+      kind: "exact_cuit",
+      label: "CUIT exacto",
+      confidence: "high",
+      caveat: "Coincidencia por identificador fiscal declarado; no prueba por si sola una relacion fuera de los registros comparados.",
+    },
     count: 2,
     caseIds: ["AR-CASE-1", "AR-CASE-2"],
   });
   assert.deepEqual(aggregate.repeatedAgencies[0], {
     label: "Dirección Nacional de Vialidad",
+    provenance: {
+      kind: "same_agency",
+      label: "Mismo organismo",
+      confidence: "medium",
+      caveat: "Compartir organismo ayuda a priorizar revision; no confirma coordinacion ni una relacion sustantiva entre expedientes.",
+    },
     count: 3,
     caseIds: ["AR-CASE-1", "AR-CASE-2", "AR-CASE-3"],
   });

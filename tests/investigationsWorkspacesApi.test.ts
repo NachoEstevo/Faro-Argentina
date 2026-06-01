@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
+import { PUT } from "../src/app/api/investigations/workspaces/route.ts";
 import { createInvestigationWorkspace } from "../src/lib/data/investigationWorkspaces.ts";
+import { InvalidInvestigationWorkspaceCollectionError } from "../src/lib/data/investigationWorkspaceCollections.ts";
 import {
   readUserInvestigationWorkspaceCollection,
   replaceUserInvestigationWorkspaceCollection,
@@ -11,16 +13,51 @@ import type { FaroAuthenticatedUser } from "../src/lib/server/faroAuth.ts";
 import type { ProductSql } from "../src/lib/server/productDb.ts";
 
 const workspacesRouteUrl = new URL("../src/app/api/investigations/workspaces/route.ts", import.meta.url);
+const workspaceDbUrl = new URL("../src/lib/server/investigationWorkspaceDb.ts", import.meta.url);
+const authEnvKeys = [
+  "FARO_ENABLE_TEST_AUTH",
+  "FARO_TEST_CLERK_USER_ID",
+  "FARO_TEST_CLERK_USER_ROLE",
+  "FARO_TEST_CLERK_USER_EMAIL",
+  "FARO_TEST_CLERK_USER_NAME",
+];
 
 test("GET /api/investigations/workspaces is account-backed, not code-backed", async () => {
-  const source = await readFile(workspacesRouteUrl, "utf8");
+  const source = [
+    await readFile(workspacesRouteUrl, "utf8"),
+    await readFile(workspaceDbUrl, "utf8"),
+  ].join("\n");
 
   assert.match(source, /requireFaroUser/);
   assert.match(source, /readUserInvestigationWorkspaceCollection/);
   assert.match(source, /replaceUserInvestigationWorkspaceCollection/);
   assert.match(source, /storageMode:\s*"neon"/);
+  assert.match(source, /verification_tasks/);
+  assert.match(source, /invalid_workspace_collection/);
   assert.doesNotMatch(source, /x-faro-workspace-code/);
   assert.doesNotMatch(source, /verifyInvestigationWorkspaceAccess/);
+});
+
+test("PUT /api/investigations/workspaces rejects cross-origin private workspace writes", async () => {
+  const env = preserveEnv(authEnvKeys);
+  enableInvestigatorAuth();
+
+  try {
+    const response = await PUT(new Request("http://localhost/api/investigations/workspaces", {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://example.org",
+      },
+      body: JSON.stringify({ collection: { version: "faro_investigation_workspace_collection_v1" } }),
+    }));
+    const payload = await response.json() as { error: string };
+
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "origin_rejected");
+  } finally {
+    restoreEnv(env);
+  }
 });
 
 test("Neon workspace repository persists one user's private collection", async () => {
@@ -35,17 +72,66 @@ test("Neon workspace repository persists one user's private collection", async (
     { title: "Carpeta persistente", countryCode: "AR" },
     new Date("2026-05-23T12:00:00.000Z"),
   );
+  const workspaceWithTask = {
+    ...workspace,
+    verificationTasks: [{
+      id: "TASK-1",
+      title: "Abrir fuente oficial",
+      action: "Confirmar registro en fuente oficial.",
+      source: "Dossier de trabajo",
+      status: "pending" as const,
+      owner: null,
+      dueDate: null,
+      createdAt: "2026-05-23T12:05:00.000Z",
+      updatedAt: "2026-05-23T12:05:00.000Z",
+    }],
+  };
 
   const saved = await replaceUserInvestigationWorkspaceCollection(user, {
+    version: "faro_investigation_workspace_collection_v1",
+    activeWorkspaceId: workspaceWithTask.id,
+    workspaces: [workspaceWithTask],
+  }, sql);
+  const loaded = await readUserInvestigationWorkspaceCollection(user, sql);
+
+  assert.equal(saved.activeWorkspaceId, workspaceWithTask.id);
+  assert.equal(loaded.activeWorkspaceId, workspaceWithTask.id);
+  assert.equal(loaded.workspaces[0]?.title, "Carpeta persistente");
+  assert.equal(loaded.workspaces[0]?.verificationTasks[0]?.title, "Abrir fuente oficial");
+});
+
+test("Neon workspace repository rejects malformed collections before deleting existing rows", async () => {
+  const sql = createFakeProductSql();
+  const user: FaroAuthenticatedUser = {
+    clerkUserId: "user_faro_malformed",
+    email: "malformed@example.com",
+    displayName: "Investigadora Faro",
+    role: "investigator",
+  };
+  const workspace = createInvestigationWorkspace(
+    { title: "Carpeta a preservar", countryCode: "AR" },
+    new Date("2026-05-23T12:00:00.000Z"),
+  );
+
+  await replaceUserInvestigationWorkspaceCollection(user, {
     version: "faro_investigation_workspace_collection_v1",
     activeWorkspaceId: workspace.id,
     workspaces: [workspace],
   }, sql);
-  const loaded = await readUserInvestigationWorkspaceCollection(user, sql);
 
-  assert.equal(saved.activeWorkspaceId, workspace.id);
+  await assert.rejects(
+    () => replaceUserInvestigationWorkspaceCollection(user, {
+      version: "faro_investigation_workspace_collection_v1",
+      activeWorkspaceId: "bad",
+      workspaces: [{ id: "bad" }],
+    } as never, sql),
+    InvalidInvestigationWorkspaceCollectionError,
+  );
+
+  const loaded = await readUserInvestigationWorkspaceCollection(user, sql);
   assert.equal(loaded.activeWorkspaceId, workspace.id);
-  assert.equal(loaded.workspaces[0]?.title, "Carpeta persistente");
+  assert.equal(loaded.workspaces.length, 1);
+  assert.equal(loaded.workspaces[0]?.title, "Carpeta a preservar");
 });
 
 function createFakeProductSql(): ProductSql {
@@ -55,7 +141,14 @@ function createFakeProductSql(): ProductSql {
     query: async (text: string, params: unknown[] = []) => {
       const normalized = text.replace(/\s+/g, " ").trim().toLowerCase();
       if (normalized.startsWith("insert into faro_users")) {
-        users.set(String(params[0]), { active_workspace_id: params[4] as string | null });
+        const userId = String(params[0]);
+        const existing = users.get(userId);
+        const shouldUpdateActiveWorkspace = Boolean(params[5]);
+        users.set(userId, {
+          active_workspace_id: shouldUpdateActiveWorkspace
+            ? params[4] as string | null
+            : existing?.active_workspace_id ?? null,
+        });
         return [];
       }
       if (normalized.startsWith("select active_workspace_id")) {
@@ -85,8 +178,9 @@ function createFakeProductSql(): ProductSql {
           entities: JSON.parse(String(params[11])),
           files: JSON.parse(String(params[12])),
           analyses: JSON.parse(String(params[13])),
-          created_at: String(params[14]),
-          updated_at: String(params[15]),
+          verification_tasks: JSON.parse(String(params[14])),
+          created_at: String(params[15]),
+          updated_at: String(params[16]),
         };
         workspaces.set(row.id, row);
         return [];
@@ -99,6 +193,25 @@ function createFakeProductSql(): ProductSql {
       throw new Error(`Unhandled fake SQL: ${text}`);
     },
   } as unknown as ProductSql;
+}
+
+function enableInvestigatorAuth(): void {
+  process.env.FARO_ENABLE_TEST_AUTH = "1";
+  process.env.FARO_TEST_CLERK_USER_ID = "user_investigator";
+  process.env.FARO_TEST_CLERK_USER_ROLE = "investigator";
+  process.env.FARO_TEST_CLERK_USER_EMAIL = "investigator@example.com";
+  process.env.FARO_TEST_CLERK_USER_NAME = "Investigadora Faro";
+}
+
+function preserveEnv(keys: string[]): Map<string, string | undefined> {
+  return new Map(keys.map((key) => [key, process.env[key]]));
+}
+
+function restoreEnv(env: Map<string, string | undefined>): void {
+  for (const [key, value] of env) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
 }
 
 interface FakeWorkspaceRow {
@@ -116,6 +229,7 @@ interface FakeWorkspaceRow {
   entities: unknown[];
   files: unknown[];
   analyses: unknown[];
+  verification_tasks: unknown[];
   created_at: string;
   updated_at: string;
 }
