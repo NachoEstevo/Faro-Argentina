@@ -100,8 +100,8 @@ interface SelectedCasesPanelProps {
 export type WorkspaceTab = "resumen" | "expedientes" | "notas" | "analisis" | "exportar";
 
 const WORKSPACE_TABS: Array<{ id: WorkspaceTab; label: string }> = [
-  { id: "resumen", label: "Resumen" },
-  { id: "expedientes", label: "Expedientes" },
+  { id: "resumen", label: "Plan" },
+  { id: "expedientes", label: "Evidencia" },
   { id: "notas", label: "Notas" },
   { id: "analisis", label: "Análisis" },
   { id: "exportar", label: "Exportar" },
@@ -127,14 +127,16 @@ export function InvestigationsSidebar({
           <span className={styles.sidebarBrandName}>Faro</span>
         </div>
       </header>
-      <p className={styles.eyebrow}>Carpeta privada</p>
-      <h1 className={styles.title}>Carpeta de investigación</h1>
-      <p className={styles.intro}>
-        Armá una carpeta local con expedientes, fuentes, notas y entidades. Nada se publica automáticamente.
-      </p>
+      <div className={styles.sidebarIntro}>
+        <p className={styles.eyebrow}>Carpetas privadas</p>
+        <h1 className={styles.title}>Mesa de investigación</h1>
+        <p className={styles.intro}>
+          Reuní expedientes, fuentes, notas y tareas verificables sin publicar hipótesis.
+        </p>
+      </div>
       <div className={styles.rules}>
-        <span>El trabajo se guarda en este navegador.</span>
-        <span>Minimax solo ordena el paquete que vos armaste.</span>
+        <span>Local por defecto</span>
+        <span>Sin publicación automática</span>
       </div>
       <WorkspaceSwitcher
         workspaces={workspaces}
@@ -218,14 +220,14 @@ export function WorkspaceSyncPanel({
   const isBusy = loading || saving || !isLoaded;
   const accountLabel = user?.primaryEmailAddress?.emailAddress ?? user?.fullName ?? "Cuenta activa";
   return (
-    <section className={styles.syncPanel} aria-label="Cuenta privada">
-      <div className={styles.syncHeader}>
+    <details className={styles.syncPanel} aria-label="Cuenta privada">
+      <summary className={styles.syncHeader}>
         <span>
           <UserRound size={13} aria-hidden />
           Cuenta privada
         </span>
         <small>{workspaceCount} carpeta{workspaceCount === 1 ? "" : "s"}</small>
-      </div>
+      </summary>
       {!user && (
         <p className={styles.syncCopy}>
           Podés trabajar localmente. Iniciá sesión para guardar y recuperar carpetas entre dispositivos.
@@ -263,7 +265,7 @@ export function WorkspaceSyncPanel({
         </div>
       )}
       {statusText && <p className={isError ? styles.error : styles.status}>{statusText}</p>}
-    </section>
+    </details>
   );
 }
 
@@ -314,7 +316,12 @@ export function InvestigationAnalysisPanel({
 }: AnalysisPanelProps) {
   return (
     <section className={styles.panel}>
-      <h3>Análisis con Minimax</h3>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Análisis de trabajo</h3>
+          <p>Genera una lectura auxiliar del paquete. No reemplaza fuentes, caveats ni revisión humana.</p>
+        </div>
+      </div>
       <div className={styles.analysisControls}>
         <input
           className={styles.input}
@@ -394,9 +401,19 @@ export function WorkspaceHeader({ workspace }: WorkspaceHeaderProps) {
   return (
     <header className={styles.header}>
       <div>
-        <p className={styles.eyebrow}>Carpetas</p>
+        <p className={styles.eyebrow}>Carpeta activa</p>
         <h2>{workspace.title}</h2>
         <p>{workspace.description || "Carpeta local de trabajo."}</p>
+      </div>
+      <div className={styles.headerMeta} aria-label="Resumen de carpeta">
+        <span>
+          <strong>{workspace.caseIds.length}</strong>
+          expedientes
+        </span>
+        <span>
+          <strong>{workspace.verificationTasks.length}</strong>
+          tareas
+        </span>
       </div>
     </header>
   );
@@ -437,11 +454,19 @@ export function WorkspaceExportPanel({
   onExport: () => void;
 }) {
   return (
-    <section className={styles.panel}>
-      <h3>Exportar carpeta</h3>
-      <p className={styles.empty}>
-        Descargá un ZIP con la carpeta local, expedientes, fuentes, notas y el último análisis disponible.
-      </p>
+    <section className={`${styles.panel} ${styles.exportPanel}`}>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Paquete descargable</h3>
+          <p>ZIP privado con dossier, matriz de evidencia, fuentes, notas, tareas y análisis disponible.</p>
+        </div>
+      </div>
+      <div className={styles.exportManifest}>
+        <span>Dossier de trabajo</span>
+        <span>Matriz CSV</span>
+        <span>Notas y fuentes</span>
+        <span>Plan de verificación</span>
+      </div>
       <div className={styles.metrics}>
         <span>{workspace.caseIds.length} expedientes</span>
         <span>{workspace.notes.length} notas</span>
@@ -465,12 +490,14 @@ export function DossierBuilderPanel({
   if (!dossier) {
     return (
       <section className={styles.panel}>
-        <h3>Dossier de trabajo</h3>
-        <p className={styles.empty}>
-          {caseCount > 0
-            ? "Cargando matriz de evidencia con los expedientes guardados."
-            : "Agregá expedientes para construir una matriz de evidencia."}
-        </p>
+        <div className={styles.emptyState}>
+          <h3>Dossier de trabajo</h3>
+          <p>
+            {caseCount > 0
+              ? "Cargando matriz de evidencia con los expedientes guardados."
+              : "Agregá expedientes para construir una matriz de evidencia."}
+          </p>
+        </div>
       </section>
     );
   }
@@ -480,7 +507,7 @@ export function DossierBuilderPanel({
       <div className={styles.panelHeading}>
         <div>
           <h3>Dossier de trabajo</h3>
-          <p>Ordena evidencia oficial, contexto del usuario, brechas y próximos pasos. No publica ni concluye por sí solo.</p>
+          <p>Ordena evidencia oficial, relación declarada, brechas y próximos pasos. No publica ni concluye por sí solo.</p>
         </div>
       </div>
       <div className={styles.dossierStats} aria-label="Resumen del dossier">
@@ -505,7 +532,7 @@ export function DossierBuilderPanel({
         <div className={styles.dossierMatrix}>
           <div className={styles.dossierSectionHead}>
             <h4>Matriz de evidencia</h4>
-            <span>Detalle plegado por expediente</span>
+            <span>{dossier.matrix.length} expediente{dossier.matrix.length === 1 ? "" : "s"}</span>
           </div>
           {dossier.matrix.length === 0 ? (
             <p className={styles.empty}>Sin expedientes seleccionados.</p>
@@ -586,7 +613,7 @@ export function VerificationTasksPanel({
     <section className={styles.panel}>
       <div className={styles.panelHeading}>
         <div>
-          <h3>Checklist de verificación</h3>
+          <h3>Verificación</h3>
           <p>Acciones privadas para ordenar handoff interno. Publicación pública requiere curación manual.</p>
         </div>
         <span className={readiness?.ready ? styles.readyBadge : styles.notReadyBadge}>
@@ -605,7 +632,10 @@ export function VerificationTasksPanel({
       )}
       <div className={styles.taskList}>
         {tasks.length === 0 ? (
-          <p className={styles.empty}>Sin tareas. Guardá próximos pasos del dossier o agregá una acción manual.</p>
+          <div className={styles.emptyState}>
+            <strong>Sin tareas todavía</strong>
+            <p>Guardá próximos pasos del dossier o agregá una acción manual.</p>
+          </div>
         ) : tasks.map((task) => (
           <article key={task.id} className={styles.taskRow}>
             <div>
@@ -674,12 +704,16 @@ export function CaseSearchPanel({
 }: CaseSearchPanelProps) {
   return (
     <section className={styles.panel}>
-      <h3>Agregar expedientes Faro</h3>
-      <p className={styles.panelHint}>
-        {investigationQuestion
-          ? `Buscá qué expediente ayuda a verificar: ${investigationQuestion}`
-          : "Buscá por provincia, proveedor, organismo, CUIT, señal, fuente o expediente."}
-      </p>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Agregar evidencia</h3>
+          <p>
+            {investigationQuestion
+              ? `Buscá qué expediente ayuda a verificar: ${investigationQuestion}`
+              : "Buscá por provincia, proveedor, organismo, CUIT, señal, fuente o expediente."}
+          </p>
+        </div>
+      </div>
       <input
         className={styles.input}
         value={query}
@@ -758,21 +792,33 @@ function describeCaseEvidenceMarker(caseFile: ExplorerCase): string {
 export function SelectedCasesPanel({ selectedCases, workspace, onRemoveCase }: SelectedCasesPanelProps) {
   return (
     <section className={styles.panel}>
-      <h3>Expedientes seleccionados</h3>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Expedientes seleccionados</h3>
+          <p>Cada fila debe explicar por qué entra en la carpeta y qué falta verificar.</p>
+        </div>
+      </div>
       <div className={styles.caseList}>
         {selectedCases.length === 0 ? (
-          <p className={styles.empty}>Todavía no agregaste expedientes.</p>
+          <div className={styles.emptyState}>
+            <strong>Sin expedientes</strong>
+            <p>Buscá un expediente y declará el motivo de relación antes de sumarlo.</p>
+          </div>
         ) : selectedCases.map((caseFile) => {
           const relation = (workspace.caseRelations ?? []).find((item) => item.caseId === caseFile.id);
           return (
             <div key={caseFile.id} className={styles.caseRow}>
               <div>
                 <strong>{caseFile.title}</strong>
-                <small>{caseFile.id}</small>
-                <small>
+                <div className={styles.caseMetaLine}>
+                  <span>{caseFile.id}</span>
+                  <span>{caseFile.receipt.sourceName}</span>
+                  <span>{describeCaseEvidenceMarker(caseFile)}</span>
+                </div>
+                <p className={styles.caseRelationNote}>
                   {getInvestigationRelationReasonLabel(relation?.reason ?? "manual_hypothesis")}
                   {relation?.note ? ` · ${relation.note}` : ""}
-                </small>
+                </p>
               </div>
               <button type="button" onClick={() => onRemoveCase(caseFile.id)} aria-label="Quitar expediente">
                 <Trash2 size={14} aria-hidden />
@@ -789,11 +835,11 @@ export function InvestigationSummaryPanel({ aggregate }: { aggregate: Investigat
   if (!aggregate) return null;
   return (
     <section className={styles.panel}>
-      <h3>Resumen de carpeta</h3>
-      <div className={styles.metrics}>
-        <span>{aggregate.caseCount} expedientes</span>
-        <span>{aggregate.sourceIds.length} fuentes</span>
-        <span>{aggregate.geometryGaps.count} sin geometría oficial</span>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Lectura agregada</h3>
+          <p>Patrones útiles para orientar revisión, no para cerrar conclusiones.</p>
+        </div>
       </div>
       <div className={styles.summaryGrid}>
         <SummaryList

@@ -38,7 +38,7 @@ export default function MethodologyPage() {
       ]}
       sections={[
         {
-          title: "Por qué existe",
+          title: "Qué es Faro",
           body: (
             <>
               <p>
@@ -64,7 +64,7 @@ export default function MethodologyPage() {
           ),
         },
         {
-          title: "Cómo se construye",
+          title: "Cómo se arma un expediente",
           body: (
             <ol>
               <li>Tomamos un registro de una fuente oficial o documental identificada.</li>
@@ -143,7 +143,7 @@ export default function MethodologyPage() {
           ),
         },
         {
-          title: "Qué no afirma",
+          title: "Qué no afirma Faro",
           body: (
             <ul>
               <li>No afirma corrupción, fraude, delito ni responsabilidad personal.</li>

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Link as LinkIcon } from "lucide-react";
 
 import type { InvestigationCasePack } from "@/lib/caseRepository";
@@ -89,6 +89,7 @@ export default function InvestigationsView({
   const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("resumen");
   const [statusText, setStatusText] = useState("");
+  const contentRef = useRef<HTMLDivElement>(null);
   const deferredQuery = useDeferredValue(query);
   const workspace = useMemo(
     () => workspaces.find((item) => item.id === activeWorkspaceId) ?? workspaces[0] ?? null,
@@ -129,6 +130,10 @@ export default function InvestigationsView({
       workspaces,
     });
   }, [activeWorkspaceId, workspaces]);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [activeTab, activeWorkspaceId]);
 
   useEffect(() => {
     if (!workspace || workspace.caseIds.length === 0) {
@@ -455,7 +460,7 @@ export default function InvestigationsView({
         syncIsError={syncState === "error"}
       />
 
-      <div className={styles.content}>
+      <div ref={contentRef} className={styles.content}>
         {showCreateForm ? (
           <CreateWorkspaceForm onSubmit={handleCreate} />
         ) : workspace ? (
@@ -511,10 +516,23 @@ export default function InvestigationsView({
             )}
 
             {activeTab === "notas" && (
-              <section className={styles.grid}>
-                <div className={styles.panel}>
-                  <h3>Notas</h3>
-                  <textarea className={styles.textarea} value={noteText} onChange={(event) => setNoteText(event.target.value)} />
+              <section className={styles.notesLayout}>
+                <div className={`${styles.panel} ${styles.notePanel}`}>
+                  <div className={styles.panelHeading}>
+                    <div>
+                      <h3>Cuaderno privado</h3>
+                      <p>Notas de trabajo, hipótesis y pendientes. No se publican ni reemplazan fuentes oficiales.</p>
+                    </div>
+                  </div>
+                  <label className={styles.fieldWide}>
+                    <span>Nueva nota</span>
+                    <textarea
+                      className={styles.textarea}
+                      value={noteText}
+                      onChange={(event) => setNoteText(event.target.value)}
+                      placeholder="Qué observaste, qué falta pedir o por qué esta carpeta sigue abierta"
+                    />
+                  </label>
                   <button className={styles.secondary} type="button" onClick={handleAddNote}>Agregar nota</button>
                   {workspace.notes.length > 0 && (
                     <ul className={styles.noteList}>
@@ -527,11 +545,35 @@ export default function InvestigationsView({
                     </ul>
                   )}
                 </div>
-                <div className={styles.panel}>
-                  <h3>Fuentes y entidades</h3>
-                  <input className={styles.input} value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} placeholder="Link público u oficial" />
-                  <button className={styles.secondary} type="button" onClick={handleAddSource}><LinkIcon size={14} aria-hidden />Agregar fuente</button>
-                  <input className={styles.input} value={entityLabel} onChange={(event) => setEntityLabel(event.target.value)} placeholder="Proveedor, organismo, persona o expediente" />
+                <div className={`${styles.panel} ${styles.sourcePanel}`}>
+                  <div className={styles.panelHeading}>
+                    <div>
+                      <h3>Fuentes y entidades</h3>
+                      <p>Links externos y nombres que todavía necesitan revisión manual.</p>
+                    </div>
+                  </div>
+                  <label className={styles.fieldWide}>
+                    <span>Fuente manual</span>
+                    <input
+                      className={styles.input}
+                      value={sourceUrl}
+                      onChange={(event) => setSourceUrl(event.target.value)}
+                      placeholder="Link público u oficial"
+                    />
+                  </label>
+                  <button className={styles.secondary} type="button" onClick={handleAddSource}>
+                    <LinkIcon size={14} aria-hidden />
+                    Agregar fuente
+                  </button>
+                  <label className={styles.fieldWide}>
+                    <span>Entidad relevante</span>
+                    <input
+                      className={styles.input}
+                      value={entityLabel}
+                      onChange={(event) => setEntityLabel(event.target.value)}
+                      placeholder="Proveedor, organismo, persona o expediente"
+                    />
+                  </label>
                   <button className={styles.secondary} type="button" onClick={handleAddEntity}>Agregar entidad</button>
                 </div>
               </section>
@@ -595,20 +637,32 @@ function WorkspaceOverviewPanel({
   onStartCase: () => void;
 }) {
   const hasCases = workspace.caseIds.length > 0;
+  const sourceCount = aggregate?.sourceIds.length ?? workspace.sourceLinks.length;
+  const gapCount = aggregate?.geometryGaps.count ?? 0;
   return (
-    <section className={styles.panel}>
-      <h3>Resumen de trabajo</h3>
-      {workspace.investigationQuestion ? (
+    <section className={`${styles.panel} ${styles.planPanel}`}>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Plan de trabajo</h3>
+          <p>La carpeta debe explicar qué se busca verificar, qué evidencia existe y qué falta pedir.</p>
+        </div>
+      </div>
+      <div className={styles.planGrid}>
         <div className={styles.workflowQuestion}>
           <span>Pregunta de investigación</span>
-          <strong>{workspace.investigationQuestion}</strong>
+          <strong>{workspace.investigationQuestion || "Sin pregunta definida todavía."}</strong>
+          {!workspace.investigationQuestion && (
+            <p>Conviene escribirla antes de exportar o compartir el paquete internamente.</p>
+          )}
         </div>
-      ) : null}
-      <div className={styles.metrics}>
-        <span>{workspace.caseIds.length} expedientes</span>
-        <span>{workspace.notes.length} notas</span>
-        <span>{workspace.sourceLinks.length} fuentes manuales</span>
-        <span>{workspace.entities.length} entidades</span>
+        <div className={styles.metrics} aria-label="Estado de la carpeta">
+          <span>{workspace.caseIds.length} expedientes</span>
+          <span>{workspace.notes.length} notas</span>
+          <span>{sourceCount} fuentes</span>
+          <span>{workspace.entities.length} entidades</span>
+          <span>{workspace.verificationTasks.length} tareas</span>
+          <span>{gapCount} brechas de geometría</span>
+        </div>
       </div>
       <div className={styles.workflowStart}>
         <div>

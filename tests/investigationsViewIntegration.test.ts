@@ -18,7 +18,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
     await readFile(investigationsChromeUrl, "utf8"),
   ].join("\n");
 
-  assert.match(source, /Carpeta de investigación/);
+  assert.match(source, /Mesa de investigación/);
   assert.match(source, /FaroMark compact/);
   assert.match(source, /sidebarBrandName}>Faro/);
   assert.match(source, /\/api\/investigations\/case-pack/);
@@ -37,12 +37,12 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Motivo de relación/);
   assert.match(source, /Nota de relación/);
   assert.match(source, /useState<InvestigationCaseRelationReason>\("manual_hypothesis"\)/);
-  assert.match(source, /Resumen de carpeta/);
+  assert.match(source, /Lectura agregada/);
   assert.match(source, /Motivos declarados/);
   assert.match(source, /WorkspaceTabs/);
   assert.match(source, /"resumen" \| "expedientes" \| "notas" \| "analisis" \| "exportar"/);
-  assert.match(source, /Resumen/);
-  assert.match(source, /Expedientes/);
+  assert.match(source, /Plan/);
+  assert.match(source, /Evidencia/);
   assert.match(source, /Notas/);
   assert.match(source, /Análisis/);
   assert.match(source, /Exportar/);
@@ -55,7 +55,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Dossier de trabajo/);
   assert.match(source, /Resumen del dossier/);
   assert.match(source, /Matriz de evidencia/);
-  assert.match(source, /Detalle plegado por expediente/);
+  assert.match(source, /dossier\.matrix\.length === 1/);
   assert.match(source, /matrixSummary/);
   assert.match(source, /summarizeDossierGap/);
   assert.match(source, /Actores comunes/);
@@ -67,7 +67,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Abrir fuente oficial/);
   assert.match(source, /Guardar próximos pasos como nota/);
   assert.match(source, /VerificationTasksPanel/);
-  assert.match(source, /Checklist de verificación/);
+  assert.match(source, /Verificación/);
   assert.match(source, /Estado para handoff/);
   assert.match(source, /No lista para handoff/);
   assert.match(source, /Lista para handoff interno/);
@@ -144,11 +144,11 @@ test("InvestigationsView inherits platform work-view theme surfaces", async () =
   assert.match(styles, /background:\s*var\(--cf-workspace-analysis-bg/);
   assert.match(styles, /\.sidebarBrandIdentity\s*\{[\s\S]*gap: 12px;/);
   assert.match(styles, /\.sidebarBrandName\s*\{[\s\S]*font-size: 22px;/);
-  assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
-  assert.match(styles, /\.form,[\s\S]*\.workspace\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
-  assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
-  assert.match(styles, /\.tabs\s*\{[\s\S]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\);[\s\S]*height: 50px;[\s\S]*overflow: hidden;/);
-  assert.match(styles, /\.tabButton\s*\{[\s\S]*width: 100%;[\s\S]*height: 38px;[\s\S]*font-size: 13px;[\s\S]*white-space: nowrap;/);
+  assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(74px, 8vh, 92px\)/);
+  assert.match(styles, /\.form,[\s\S]*\.workspace\s*\{[\s\S]*align-content: start;[\s\S]*max-width: 1120px;/);
+  assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(28px, 2\.8vw, 38px\);/);
+  assert.match(styles, /\.tabs\s*\{[\s\S]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\);[\s\S]*min-height: 54px;[\s\S]*overflow: hidden;/);
+  assert.match(styles, /\.tabButton\s*\{[\s\S]*width: 100%;[\s\S]*height: 42px;[\s\S]*font-size: 14px;[\s\S]*white-space: nowrap;/);
   assert.match(styles, /\.tabButtonActive,[\s\S]*\.tabButton\[aria-selected="true"\]\s*\{[\s\S]*background: var\(--cf-accent\);[\s\S]*color: var\(--cf-on-accent\);/);
 });
 
