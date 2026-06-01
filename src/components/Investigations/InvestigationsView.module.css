@@ -502,7 +502,8 @@
 }
 
 .primary,
-.secondary {
+.secondary,
+.ghostButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -527,8 +528,15 @@
   color: var(--cf-text);
 }
 
+.ghostButton {
+  border: 0;
+  background: transparent;
+  color: var(--cf-text-secondary);
+}
+
 .primary:disabled,
-.secondary:disabled {
+.secondary:disabled,
+.ghostButton:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
@@ -851,6 +859,116 @@
   border-left: 2px solid color-mix(in srgb, var(--cf-accent) 42%, transparent);
 }
 
+.readyBadge,
+.notReadyBadge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 780;
+  white-space: nowrap;
+}
+
+.readyBadge {
+  border: 1px solid color-mix(in srgb, var(--cf-state-ok) 42%, transparent);
+  color: var(--cf-state-ok);
+}
+
+.notReadyBadge {
+  border: 1px solid color-mix(in srgb, var(--cf-state-caution) 42%, transparent);
+  color: var(--cf-state-caution);
+}
+
+.readinessBox {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.readinessBox strong {
+  color: var(--cf-text);
+  font-size: 12px;
+}
+
+.readinessBox ul,
+.taskList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.readinessBox ul {
+  padding-left: 18px;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.taskRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 190px);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.taskRow strong,
+.taskRow p,
+.taskRow small {
+  overflow-wrap: anywhere;
+}
+
+.taskRow strong {
+  color: var(--cf-text);
+  font-size: 13px;
+}
+
+.taskRow p {
+  margin: 4px 0;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.taskRow small,
+.taskStatus span {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.taskStatus {
+  display: grid;
+  gap: 6px;
+}
+
+.inlineDisclosure {
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-soft-bg, rgba(255, 255, 255, 0.04));
+}
+
+.inlineDisclosure summary {
+  padding: 10px 12px;
+  color: var(--cf-text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.taskForm {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.8fr) minmax(220px, 1.2fr) minmax(160px, 0.8fr);
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
 .analysisReport {
   display: grid;
   gap: 10px;
@@ -936,7 +1054,9 @@
 	  .analysisControls,
 	  .relationControls,
 	  .summaryGrid,
-	  .matrixBody {
+	  .matrixBody,
+	  .taskRow,
+	  .taskForm {
 	    grid-template-columns: 1fr;
 	  }
 

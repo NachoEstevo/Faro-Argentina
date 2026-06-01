@@ -22,6 +22,8 @@ import {
   getInvestigationRelationReasonLabel,
   type InvestigationAggregate,
   type InvestigationCaseRelationReason,
+  type InvestigationReadinessGate,
+  type InvestigationVerificationTaskStatus,
   type InvestigationWorkspace,
 } from "@/lib/data/investigationWorkspaces";
 import { parseInvestigationAnalysisBlocks } from "@/lib/data/investigationAnalysisText";
@@ -63,7 +65,15 @@ interface WorkspaceHeaderProps {
 interface DossierBuilderPanelProps {
   dossier: InvestigationDossier | null;
   caseCount: number;
-  onSaveNextSteps: (steps: string[]) => void;
+  onSaveNextStepsAsNote: (steps: string[]) => void;
+  onSaveNextStepsAsTasks: (steps: string[]) => void;
+}
+
+interface VerificationTasksPanelProps {
+  workspace: InvestigationWorkspace;
+  readiness: InvestigationReadinessGate | null;
+  onAddTask: (event: FormEvent<HTMLFormElement>) => void;
+  onUpdateTaskStatus: (taskId: string, status: InvestigationVerificationTaskStatus) => void;
 }
 
 interface CaseSearchPanelProps {
@@ -446,7 +456,12 @@ export function WorkspaceExportPanel({
   );
 }
 
-export function DossierBuilderPanel({ dossier, caseCount, onSaveNextSteps }: DossierBuilderPanelProps) {
+export function DossierBuilderPanel({
+  dossier,
+  caseCount,
+  onSaveNextStepsAsNote,
+  onSaveNextStepsAsTasks,
+}: DossierBuilderPanelProps) {
   if (!dossier) {
     return (
       <section className={styles.panel}>
@@ -541,13 +556,96 @@ export function DossierBuilderPanel({ dossier, caseCount, onSaveNextSteps }: Dos
           <button
             className={styles.secondary}
             type="button"
-            onClick={() => onSaveNextSteps(dossier.nextSteps)}
+            onClick={() => onSaveNextStepsAsTasks(dossier.nextSteps)}
+            disabled={dossier.nextSteps.length === 0}
+          >
+            Guardar próximos pasos como tareas
+          </button>
+          <button
+            className={styles.ghostButton}
+            type="button"
+            onClick={() => onSaveNextStepsAsNote(dossier.nextSteps)}
             disabled={dossier.nextSteps.length === 0}
           >
             Guardar próximos pasos como nota
           </button>
         </div>
       </div>
+    </section>
+  );
+}
+
+export function VerificationTasksPanel({
+  workspace,
+  readiness,
+  onAddTask,
+  onUpdateTaskStatus,
+}: VerificationTasksPanelProps) {
+  const tasks = workspace.verificationTasks ?? [];
+  return (
+    <section className={styles.panel}>
+      <div className={styles.panelHeading}>
+        <div>
+          <h3>Checklist de verificación</h3>
+          <p>Acciones privadas para ordenar handoff interno. Publicación pública requiere curación manual.</p>
+        </div>
+        <span className={readiness?.ready ? styles.readyBadge : styles.notReadyBadge}>
+          {readiness?.label ?? "No lista para handoff"}
+        </span>
+      </div>
+      {readiness?.blockers.length ? (
+        <div className={styles.readinessBox}>
+          <strong>Estado para handoff</strong>
+          <ul>
+            {readiness.blockers.map((blocker) => <li key={blocker}>{blocker}</li>)}
+          </ul>
+        </div>
+      ) : (
+        <p className={styles.status}>Estado para handoff: Lista para handoff interno.</p>
+      )}
+      <div className={styles.taskList}>
+        {tasks.length === 0 ? (
+          <p className={styles.empty}>Sin tareas. Guardá próximos pasos del dossier o agregá una acción manual.</p>
+        ) : tasks.map((task) => (
+          <article key={task.id} className={styles.taskRow}>
+            <div>
+              <strong>{task.title}</strong>
+              <p>{task.action}</p>
+              <small>
+                {task.source}
+                {task.owner ? ` · Responsable: ${task.owner}` : " · Sin responsable"}
+                {task.dueDate ? ` · Vence: ${task.dueDate}` : ""}
+              </small>
+            </div>
+            <label className={styles.taskStatus}>
+              <span>Estado</span>
+              <select
+                className={styles.select}
+                value={task.status}
+                onChange={(event) =>
+                  onUpdateTaskStatus(task.id, event.target.value as InvestigationVerificationTaskStatus)
+                }
+              >
+                <option value="pending">Pendiente</option>
+                <option value="in_progress">En curso</option>
+                <option value="done">Hecha</option>
+                <option value="blocked">Bloqueada</option>
+              </select>
+            </label>
+          </article>
+        ))}
+      </div>
+      <details className={styles.inlineDisclosure}>
+        <summary>Agregar tarea manual</summary>
+        <form className={styles.taskForm} onSubmit={onAddTask}>
+          <input className={styles.input} name="title" placeholder="Título breve" />
+          <input className={styles.input} name="action" placeholder="Acción a verificar" required />
+          <input className={styles.input} name="source" placeholder="Fuente o origen de la tarea" />
+          <input className={styles.input} name="owner" placeholder="Responsable opcional" />
+          <input className={styles.input} name="dueDate" type="date" aria-label="Fecha límite opcional" />
+          <button className={styles.secondary} type="submit">Agregar tarea</button>
+        </form>
+      </details>
     </section>
   );
 }

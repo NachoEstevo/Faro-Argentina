@@ -1,6 +1,7 @@
 import {
   emptyInvestigationWorkspaceCollection,
   normalizeInvestigationWorkspaceCollection,
+  parsePersistableInvestigationWorkspaceCollection,
   type InvestigationWorkspaceCollection,
 } from "../data/investigationWorkspaceCollections.ts";
 import type {
@@ -25,6 +26,7 @@ interface WorkspaceRow {
   entities: unknown;
   files: unknown;
   analyses: unknown;
+  verification_tasks: unknown;
   created_at: string | Date;
   updated_at: string | Date;
 }
@@ -45,7 +47,7 @@ export async function readUserInvestigationWorkspaceCollection(
   const [userRow] = userRows as UserRow[];
   const rows = await sql.query(
     `select id, title, country_code, description, investigation_question, tags, case_ids,
-      case_relations, source_links, notes, entities, files, analyses, created_at, updated_at
+      case_relations, source_links, notes, entities, files, analyses, verification_tasks, created_at, updated_at
      from investigation_workspaces
      where owner_clerk_user_id = $1
      order by updated_at desc`,
@@ -63,9 +65,13 @@ export async function replaceUserInvestigationWorkspaceCollection(
   collection: InvestigationWorkspaceCollection,
   sql: ProductSql = getProductSql(),
 ): Promise<InvestigationWorkspaceCollection> {
-  const normalized = normalizeInvestigationWorkspaceCollection(collection);
-  await upsertFaroUser(user, normalized.activeWorkspaceId, sql);
+  const normalized = parsePersistableInvestigationWorkspaceCollection(collection);
+  await upsertFaroUser(user, undefined, sql);
   const workspaceIds = normalized.workspaces.map((workspace) => workspace.id);
+  for (const workspace of normalized.workspaces) {
+    await upsertWorkspace(user.clerkUserId, workspace, sql);
+  }
+
   if (workspaceIds.length === 0) {
     await sql.query("delete from investigation_workspaces where owner_clerk_user_id = $1", [user.clerkUserId]);
   } else {
@@ -76,9 +82,7 @@ export async function replaceUserInvestigationWorkspaceCollection(
     );
   }
 
-  for (const workspace of normalized.workspaces) {
-    await upsertWorkspace(user.clerkUserId, workspace, sql);
-  }
+  await upsertFaroUser(user, normalized.activeWorkspaceId, sql);
   return readUserInvestigationWorkspaceCollection(user, sql);
 }
 
@@ -86,12 +90,12 @@ async function upsertWorkspace(ownerClerkUserId: string, workspace: Investigatio
   await sql.query(
     `insert into investigation_workspaces (
        id, owner_clerk_user_id, title, country_code, description, investigation_question,
-       tags, case_ids, case_relations, source_links, notes, entities, files, analyses,
+       tags, case_ids, case_relations, source_links, notes, entities, files, analyses, verification_tasks,
        created_at, updated_at
      ) values (
        $1, $2, $3, $4, $5, $6,
-       $7::jsonb, $8::jsonb, $9::jsonb, $10::jsonb, $11::jsonb, $12::jsonb, $13::jsonb, $14::jsonb,
-       $15::timestamptz, $16::timestamptz
+       $7::jsonb, $8::jsonb, $9::jsonb, $10::jsonb, $11::jsonb, $12::jsonb, $13::jsonb, $14::jsonb, $15::jsonb,
+       $16::timestamptz, $17::timestamptz
      )
      on conflict (id) do update set
        title = excluded.title,
@@ -106,6 +110,7 @@ async function upsertWorkspace(ownerClerkUserId: string, workspace: Investigatio
        entities = excluded.entities,
        files = excluded.files,
        analyses = excluded.analyses,
+       verification_tasks = excluded.verification_tasks,
        updated_at = excluded.updated_at
      where investigation_workspaces.owner_clerk_user_id = excluded.owner_clerk_user_id`,
     [
@@ -123,6 +128,7 @@ async function upsertWorkspace(ownerClerkUserId: string, workspace: Investigatio
       JSON.stringify(workspace.entities),
       JSON.stringify(workspace.files),
       JSON.stringify(workspace.analyses),
+      JSON.stringify(workspace.verificationTasks ?? []),
       workspace.createdAt,
       workspace.updatedAt,
     ],
@@ -147,6 +153,7 @@ function rowToWorkspace(row: WorkspaceRow): InvestigationWorkspace {
     entities: readArray(row.entities),
     files: readArray(row.files),
     analyses: readArray(row.analyses),
+    verificationTasks: readArray(row.verification_tasks),
   };
 }
 

@@ -28,6 +28,21 @@ test("normalizeInvestigationWorkspaceCollection dedupes workspaces and selects a
   assert.deepEqual(collection.workspaces.map((workspace) => workspace.id), [first.id, second.id]);
 });
 
+test("normalizeInvestigationWorkspaceCollection backfills verification tasks for saved folders", () => {
+  const workspace = createInvestigationWorkspace(
+    { title: "Legacy", countryCode: "AR" },
+    new Date("2026-05-23T12:00:00.000Z"),
+  );
+  const { verificationTasks: _verificationTasks, ...legacyWorkspace } = workspace;
+
+  const collection = normalizeInvestigationWorkspaceCollection({
+    activeWorkspaceId: workspace.id,
+    workspaces: [legacyWorkspace],
+  });
+
+  assert.deepEqual(collection.workspaces[0]?.verificationTasks, []);
+});
+
 test("emptyInvestigationWorkspaceCollection is the stable empty payload", () => {
   assert.deepEqual(emptyInvestigationWorkspaceCollection(), {
     version: "faro_investigation_workspace_collection_v1",
