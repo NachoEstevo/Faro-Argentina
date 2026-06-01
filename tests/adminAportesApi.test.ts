@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 import { GET, PATCH, POST } from "../src/app/api/admin/aportes/route.ts";
+import { requireFaroUser } from "../src/lib/server/faroAuth.ts";
 import { storeContribution } from "../src/lib/server/contributionStorage.ts";
 
 const r2EnvKeys = [
@@ -173,6 +174,76 @@ test("PATCH /api/admin/aportes rejects unknown review states", async () => {
   }
 });
 
+test("PATCH /api/admin/aportes rejects cross-origin admin mutations", async () => {
+  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE", ...authEnvKeys]);
+  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  enableReviewerAuth();
+
+  try {
+    const response = await PATCH(new Request("http://localhost/api/admin/aportes", {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://example.org",
+      },
+      body: JSON.stringify({
+        submissionId: "APORTE-20260521-TEST0001",
+        status: "accepted_for_review",
+      }),
+    }));
+    const payload = await response.json() as { error: string };
+
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "admin_origin_rejected");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
+test("POST /api/admin/aportes rejects cross-origin admin mutations", async () => {
+  const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE", ...authEnvKeys]);
+  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  enableReviewerAuth();
+
+  try {
+    const response = await POST(new Request("http://localhost/api/admin/aportes", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://example.org",
+      },
+      body: JSON.stringify({
+        submissionId: "APORTE-20260521-TEST0001",
+        targetType: "case",
+        targetId: "AR-CONTRACT-46-0453-CON22",
+        note: "Revisar si corresponde al expediente.",
+      }),
+    }));
+    const payload = await response.json() as { error: string };
+
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "admin_origin_rejected");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
+test("test auth is disabled when NODE_ENV is production", async () => {
+  const env = preserveEnv(["NODE_ENV", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", ...authEnvKeys]);
+  (process.env as Record<string, string | undefined>).NODE_ENV = "production";
+  enableReviewerAuth();
+  delete process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  delete process.env.CLERK_SECRET_KEY;
+
+  try {
+    const result = await requireFaroUser();
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.equal(result.error, "auth_not_configured");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
 test("POST /api/admin/aportes links an approved contribution to an existing expediente", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
   const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
@@ -215,7 +286,7 @@ test("POST /api/admin/aportes links an approved contribution to an existing expe
     };
 
     assert.equal(response.status, 200);
-    assert.equal(payload.contribution.status, "approved");
+    assert.equal(payload.contribution.status, "approved_for_investigation");
     assert.deepEqual(payload.contribution.reviewLinks.at(-1), {
       id: "LINK-001",
       targetType: "case",
@@ -297,6 +368,7 @@ test("POST /api/admin/aportes only links approved private contributions", async 
         submissionId: stored.contribution.id,
         targetType: "case",
         targetId: "AR-CONTRACT-46-0453-CON22",
+        note: "Revisar si corresponde al expediente.",
       }),
     }));
     const payload = await response.json() as { error: string };
@@ -329,6 +401,7 @@ test("POST /api/admin/aportes rejects unknown expediente targets", async () => {
         submissionId: stored.contribution.id,
         targetType: "case",
         targetId: "AR-NO-EXISTE",
+        note: "Revisar si corresponde al expediente.",
       }),
     }));
     const payload = await response.json() as { error: string };
@@ -373,8 +446,8 @@ async function approveContribution(submissionId: string): Promise<void> {
     },
     body: JSON.stringify({
       submissionId,
-      status: "approved",
-      note: "Revisado para carga privada.",
+      status: "approved_for_investigation",
+      note: "Revisado para investigación privada.",
     }),
   }));
   assert.equal(response.status, 200);

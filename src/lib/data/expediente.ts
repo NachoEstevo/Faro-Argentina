@@ -13,6 +13,11 @@ import { getPublicOfficialSourceHref } from "./receiptOfficialSource.ts";
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
 import type { ArticleCitation } from "./articleCitations.ts";
 import type { GeoEvidenceItem } from "./geoEvidence.ts";
+import {
+  toPublicCuratedContributionEvidence,
+  type CuratedContributionEvidence,
+  type PublicCuratedContributionEvidence,
+} from "./userContributions.ts";
 
 export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceipts"> & {
   receipt: EvidenceReceipt;
@@ -52,6 +57,7 @@ export interface ExpedienteView {
     geoEvidence: GeoEvidenceItem[];
     contextualCitations: ArticleCitation[];
   };
+  curatedEvidence: PublicCuratedContributionEvidence[];
   actions: {
     officialSourceHref: string;
     reportHref: string;
@@ -71,6 +77,7 @@ export function buildExpediente(
   caseFile: ExpedienteCaseFile,
   signalContext?: CaseSignalContext,
   contextualCitations: ArticleCitation[] = [],
+  curatedEvidence: CuratedContributionEvidence[] = [],
 ): ExpedienteView {
   const signals = buildCaseSignals(caseFile, signalContext);
   const primaryReceipt = toExpedienteReceipt(caseFile.receipt);
@@ -116,6 +123,9 @@ export function buildExpediente(
       geoEvidence: caseFile.geoEvidence ?? [],
       contextualCitations,
     },
+    curatedEvidence: curatedEvidence
+      .filter((item) => item.status === "published_curated")
+      .map(toPublicCuratedContributionEvidence),
     actions: {
       officialSourceHref: primaryReceipt.publicSourceUrl,
       reportHref: `/expediente/${encodedCaseId}/informe`,

@@ -1,4 +1,5 @@
 import { CONTRIBUTION_REVIEW_STATUSES, type ContributionReviewStatus } from "../../../../lib/data/userContributions.ts";
+import { assertAdminMutationAllowed } from "../../../../lib/server/adminRequestGuards.ts";
 import { requireFaroReviewer } from "../../../../lib/server/faroAuth.ts";
 import {
   ContributionReviewOperationError,
@@ -31,6 +32,13 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const guard = assertAdminMutationAllowed(request);
+  if (!guard.ok) {
+    return Response.json(
+      { error: guard.error, message: guard.message },
+      { status: guard.status },
+    );
+  }
   const auth = await requireFaroReviewer();
   if (!auth.ok) {
     return Response.json(
@@ -88,6 +96,13 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const guard = assertAdminMutationAllowed(request);
+  if (!guard.ok) {
+    return Response.json(
+      { error: guard.error, message: guard.message },
+      { status: guard.status },
+    );
+  }
   const auth = await requireFaroReviewer();
   if (!auth.ok) {
     return Response.json(

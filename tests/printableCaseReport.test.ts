@@ -22,6 +22,8 @@ test("PrintableCaseReport renders simple report sections and keeps JSON secondar
   assert.match(source, /Por qué aparece en Faro/);
   assert.match(source, /Rastro oficial/);
   assert.match(source, /Contexto periodístico/);
+  assert.match(source, /Aportes curados/);
+  assert.match(source, /No reemplaza la fuente oficial/);
   assert.match(source, /Anexo técnico/);
   assert.match(source, /JSON técnico/);
   assert.doesNotMatch(source, /fraude|culpable|corrup|robo/i);

@@ -1,4 +1,9 @@
-import type { ContributionReviewStatus } from "../data/userContributions.ts";
+import {
+  normalizeContributionPublicationStatus,
+  normalizeContributionReviewStatus,
+  type LegacyContributionReviewStatus,
+  type ContributionReviewStatus,
+} from "../data/userContributions.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
 import { upsertFaroUser } from "./faroUserDb.ts";
 import { getProductSql, type ProductSql } from "./productDb.ts";
@@ -12,7 +17,7 @@ import type {
 interface ContributionReviewEventRow {
   id: number | string;
   submission_id: string;
-  status: ContributionReviewStatus;
+  status: ContributionReviewStatus | LegacyContributionReviewStatus;
   note: string | null;
   reviewer_name: string | null;
   created_at: string | Date;
@@ -81,7 +86,8 @@ export async function hydrateContributionsWithReviewState(
       .map(rowToReviewLink);
     return {
       ...contribution,
-      status: dbReviewTrail.at(-1)?.status ?? contribution.status,
+      status: normalizeContributionReviewStatus(dbReviewTrail.at(-1)?.status ?? contribution.status),
+      publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
       reviewTrail: dbReviewTrail.length > 0 ? dbReviewTrail : contribution.reviewTrail,
       reviewLinks: dbReviewLinks.length > 0 ? dbReviewLinks : contribution.reviewLinks,
     };
@@ -145,7 +151,7 @@ export async function appendContributionReviewLink(
 function rowToReviewEntry(row: ContributionReviewEventRow, index: number): ContributionReviewEntry {
   return {
     id: `REV-${String(index + 1).padStart(3, "0")}`,
-    status: row.status,
+    status: normalizeContributionReviewStatus(row.status),
     note: row.note ?? "",
     reviewerName: row.reviewer_name ?? "Equipo Faro",
     createdAt: toIsoString(row.created_at),

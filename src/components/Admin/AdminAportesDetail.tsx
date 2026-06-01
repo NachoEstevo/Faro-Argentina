@@ -3,10 +3,13 @@ import { CheckCircle2, FileText, Link2 } from "lucide-react";
 import {
   formatBytes,
   formatDate,
+  normalizeReviewStatus,
+  publicationLabel,
   statusLabel,
   statusWorkflow,
   type Attachment,
   type Contribution,
+  type PublicationStatus,
   type ReviewLinkTarget,
   type ReviewStatus,
 } from "./AdminAportesTypes";
@@ -19,15 +22,32 @@ interface Props {
   linkTargetId: string;
   linkTargetLabel: string;
   linkNote: string;
+  publicationTargetId: string;
+  publicationCaseLinks: NonNullable<Contribution["reviewLinks"]>;
+  curationStatus: Extract<PublicationStatus, "candidate" | "published_curated">;
+  curationTitle: string;
+  curationCaption: string;
+  curationCaveat: string;
+  curationSourceLabel: string;
+  curationPermissionNote: string;
   loading: boolean;
   onNoteChange: (value: string) => void;
   onLinkTargetTypeChange: (value: ReviewLinkTarget) => void;
   onLinkTargetIdChange: (value: string) => void;
   onLinkTargetLabelChange: (value: string) => void;
   onLinkNoteChange: (value: string) => void;
+  onPublicationTargetIdChange: (value: string) => void;
+  onCurationStatusChange: (value: Extract<PublicationStatus, "candidate" | "published_curated">) => void;
+  onCurationTitleChange: (value: string) => void;
+  onCurationCaptionChange: (value: string) => void;
+  onCurationCaveatChange: (value: string) => void;
+  onCurationSourceLabelChange: (value: string) => void;
+  onCurationPermissionNoteChange: (value: string) => void;
   onOpenAttachment: (attachment: Attachment) => void;
   onUpdateStatus: (status: ReviewStatus) => void;
   onLinkContribution: () => void;
+  onPromoteContribution: () => void;
+  onWithdrawCuratedEvidence: () => void;
 }
 
 export default function AdminAportesDetail({
@@ -37,15 +57,32 @@ export default function AdminAportesDetail({
   linkTargetId,
   linkTargetLabel,
   linkNote,
+  publicationTargetId,
+  publicationCaseLinks,
+  curationStatus,
+  curationTitle,
+  curationCaption,
+  curationCaveat,
+  curationSourceLabel,
+  curationPermissionNote,
   loading,
   onNoteChange,
   onLinkTargetTypeChange,
   onLinkTargetIdChange,
   onLinkTargetLabelChange,
   onLinkNoteChange,
+  onPublicationTargetIdChange,
+  onCurationStatusChange,
+  onCurationTitleChange,
+  onCurationCaptionChange,
+  onCurationCaveatChange,
+  onCurationSourceLabelChange,
+  onCurationPermissionNoteChange,
   onOpenAttachment,
   onUpdateStatus,
   onLinkContribution,
+  onPromoteContribution,
+  onWithdrawCuratedEvidence,
 }: Props) {
   if (!contribution) {
     return <article className={styles.detail}><p className={styles.empty}>Seleccioná un aporte.</p></article>;
@@ -53,6 +90,13 @@ export default function AdminAportesDetail({
   const lastReview = contribution.reviewTrail?.at(-1) ?? null;
   const trail = contribution.reviewTrail ?? [];
   const links = contribution.reviewLinks ?? [];
+  const canLink = normalizeReviewStatus(contribution.status) === "approved_for_investigation";
+  const hasCaseLink = publicationCaseLinks.length > 0;
+  const selectedPublicationTarget = publicationCaseLinks.find((link) => link.targetId === publicationTargetId) ??
+    publicationCaseLinks[0] ??
+    null;
+  const canPromote = canLink && hasCaseLink;
+  const canWithdraw = contribution.publicationStatus === "published_curated" || contribution.publicationStatus === "candidate";
   return (
     <article className={styles.detail}>
       <div className={styles.detailHead}>
@@ -94,7 +138,7 @@ export default function AdminAportesDetail({
         <div className={styles.actionGrid}>
           {statusWorkflow.filter((option) => option.value !== "submitted").map((option) => (
             <button key={option.value} type="button" onClick={() => onUpdateStatus(option.value)} disabled={loading}>
-              {option.value === "approved" && <CheckCircle2 size={14} aria-hidden />}
+              {option.value === "approved_for_investigation" && <CheckCircle2 size={14} aria-hidden />}
               {option.actionLabel}
             </button>
           ))}
@@ -156,7 +200,7 @@ export default function AdminAportesDetail({
           type="button"
           className={styles.linkButton}
           onClick={onLinkContribution}
-          disabled={loading || contribution.status !== "approved" || !linkTargetId.trim()}
+          disabled={loading || !canLink || !linkTargetId.trim() || !linkNote.trim()}
         >
           <Link2 size={14} aria-hidden />
           Guardar vínculo
@@ -173,6 +217,77 @@ export default function AdminAportesDetail({
             ))}
           </div>
         )}
+      </section>
+      <section className={styles.publicationBox}>
+        <div className={styles.linkIntro}>
+          <h4>Publicación curada</h4>
+          <p>Admin-only. Aprobar y vincular no publica: esta decisión crea una pieza separada de la evidencia oficial.</p>
+        </div>
+        <div className={styles.publicationStatusGrid}>
+          <div>
+            <span>Estado actual</span>
+            <strong>{publicationLabel(contribution.publicationStatus)}</strong>
+          </div>
+          <div>
+            <span>Expediente público</span>
+            <strong>{selectedPublicationTarget?.targetLabel || selectedPublicationTarget?.targetId || "Falta vínculo a expediente"}</strong>
+          </div>
+        </div>
+        <div className={styles.linkGrid}>
+          {publicationCaseLinks.length > 0 && (
+            <label className={styles.linkNote}>
+              <span>Destino público</span>
+              <select
+                value={selectedPublicationTarget?.targetId ?? ""}
+                onChange={(event) => onPublicationTargetIdChange(event.target.value)}
+              >
+                {publicationCaseLinks.map((link) => (
+                  <option key={`${link.id}-${link.targetId}`} value={link.targetId}>
+                    {link.targetLabel || link.targetId}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <label>
+            <span>Decisión</span>
+            <select
+              value={curationStatus}
+              onChange={(event) => onCurationStatusChange(event.target.value as Extract<PublicationStatus, "candidate" | "published_curated">)}
+            >
+              <option value="candidate">Marcar como candidato a publicación</option>
+              <option value="published_curated">Publicar aporte curado</option>
+            </select>
+          </label>
+          <label>
+            <span>Título neutral</span>
+            <input value={curationTitle} onChange={(event) => onCurationTitleChange(event.target.value)} />
+          </label>
+          <label className={styles.linkNote}>
+            <span>Bajada pública</span>
+            <textarea value={curationCaption} onChange={(event) => onCurationCaptionChange(event.target.value)} />
+          </label>
+          <label className={styles.linkNote}>
+            <span>Caveat público</span>
+            <textarea value={curationCaveat} onChange={(event) => onCurationCaveatChange(event.target.value)} />
+          </label>
+          <label>
+            <span>Fuente o etiqueta</span>
+            <input value={curationSourceLabel} onChange={(event) => onCurationSourceLabelChange(event.target.value)} />
+          </label>
+          <label>
+            <span>Permiso o uso</span>
+            <input value={curationPermissionNote} onChange={(event) => onCurationPermissionNoteChange(event.target.value)} />
+          </label>
+        </div>
+        <div className={styles.publicationActions}>
+          <button type="button" className={styles.linkButton} onClick={onPromoteContribution} disabled={loading || !canPromote}>
+            Guardar curaduría
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={onWithdrawCuratedEvidence} disabled={loading || !canWithdraw}>
+            Retirar de público
+          </button>
+        </div>
       </section>
     </article>
   );

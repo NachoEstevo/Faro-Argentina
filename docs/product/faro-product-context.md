@@ -163,6 +163,22 @@ Reglas:
 - si un aporte se usa publicamente despues, debe tener fuente/caveat/redaccion
   explicita.
 
+#### Aportes operativos
+
+Aportes es una bandeja privada de revision. Recibir, aprobar para investigacion,
+vincular y publicar son decisiones distintas:
+
+```text
+recibido -> en revision -> necesita mas info -> aprobado para investigar -> descartado
+                           \
+                            -> candidato publico -> aporte curado publicado -> retirado
+```
+
+Solo una cuenta admin puede convertir un aporte aprobado y vinculado a un
+expediente en evidencia curada publica. Esa pieza debe tener titulo neutral,
+caption, caveat, fuente o permiso, responsable de revision y fecha. Se muestra
+separada del rastro oficial y no modifica mapa, receipts, exports ni geometria.
+
 ### Receipt
 
 El receipt es la capa de confianza. Le dice al usuario de donde salio el registro

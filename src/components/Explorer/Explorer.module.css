@@ -1498,6 +1498,51 @@
   margin-bottom: 0;
 }
 
+.curatedEvidenceCard {
+  margin-top: 8px;
+  padding: 14px 18px;
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-border);
+  border-left: 3px solid var(--cf-accent);
+  border-radius: 12px;
+}
+
+.curatedEvidenceList {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.curatedEvidenceItem {
+  display: grid;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--cf-border);
+}
+
+.curatedEvidenceItem span {
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-data);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.curatedEvidenceItem strong {
+  color: var(--cf-text-primary);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.curatedEvidenceItem p,
+.curatedEvidenceItem small {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
 .receiptCard {
   display: flex;
   flex-direction: column;

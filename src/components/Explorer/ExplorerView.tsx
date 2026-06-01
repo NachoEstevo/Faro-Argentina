@@ -73,6 +73,17 @@ const FACET_TYPE_OPTIONS: Array<{ type: InvestigatorFacet["type"]; label: string
 type ExplorerDetailTab = "resumen" | "dinero" | "actores" | "evidencia" | "mapa" | "relacionados";
 type ExplorerPreset = "selected" | null;
 
+interface PublicCuratedEvidence {
+  id: string;
+  title: string;
+  caption: string;
+  caveat: string;
+  sourceLabel: string;
+  permissionNote: string;
+  reviewedByName: string;
+  promotedAt: string;
+}
+
 const DETAIL_TABS: Array<{ id: ExplorerDetailTab; label: string }> = [
   { id: "resumen", label: "Resumen" },
   { id: "dinero", label: "Dinero" },
@@ -634,6 +645,7 @@ function ExplorerDetail({
   onSwitchToInvestigations: () => void;
 }) {
   const [activeDetailTab, setActiveDetailTab] = useState<ExplorerDetailTab>("resumen");
+  const [curatedEvidence, setCuratedEvidence] = useState<PublicCuratedEvidence[]>([]);
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
   const primarySignal = selectPrimaryDetailSignal(signals);
   const nextAction = getDetailNextAction(primarySignal);
@@ -666,6 +678,21 @@ function ExplorerDetail({
     : null;
   useEffect(() => {
     setActiveDetailTab("resumen");
+  }, [caseFile.id]);
+  useEffect(() => {
+    let cancelled = false;
+    setCuratedEvidence([]);
+    fetch(`/api/cases/${encodeURIComponent(caseFile.id)}/curated-evidence`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload: { evidence?: PublicCuratedEvidence[] } | null) => {
+        if (!cancelled) setCuratedEvidence(payload?.evidence ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setCuratedEvidence([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [caseFile.id]);
 
   return (
@@ -752,6 +779,7 @@ function ExplorerDetail({
         fallback={relatedContract}
         receiptLocator={receiptLocator}
         similar={similar}
+        curatedEvidence={curatedEvidence}
         onSelectCase={onSelectCase}
         onSwitchToInvestigations={onSwitchToInvestigations}
       />
@@ -861,6 +889,7 @@ function DetailTabPanel({
   fallback,
   receiptLocator,
   similar,
+  curatedEvidence,
   onSelectCase,
   onSwitchToInvestigations,
 }: {
@@ -869,6 +898,7 @@ function DetailTabPanel({
   fallback?: ExplorerCase | null;
   receiptLocator: ReturnType<typeof describeReceiptLocator> | null;
   similar: ExplorerCase[];
+  curatedEvidence: PublicCuratedEvidence[];
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onSwitchToInvestigations: () => void;
 }) {
@@ -901,6 +931,7 @@ function DetailTabPanel({
       {activeTab === "evidencia" && (
         <>
           <CaveatsCard caseFile={caseFile} />
+          <CuratedEvidencePanel evidence={curatedEvidence} />
           <ReceiptCard caseFile={caseFile} receiptLocator={receiptLocator} />
           <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
         </>
@@ -916,6 +947,28 @@ function DetailTabPanel({
         <SimilarCasesPanel similar={similar} onSelectCase={onSelectCase} />
       )}
     </div>
+  );
+}
+
+function CuratedEvidencePanel({ evidence }: { evidence: PublicCuratedEvidence[] }) {
+  if (evidence.length === 0) return null;
+  return (
+    <article className={styles.curatedEvidenceCard}>
+      <p className={styles.detailCardHead}>Aportes curados</p>
+      <p className={styles.detailInlineText}>
+        Material aportado y revisado por el equipo. No reemplaza la fuente oficial ni confirma por sí solo la relación investigada.
+      </p>
+      <div className={styles.curatedEvidenceList}>
+        {evidence.map((item) => (
+          <div key={item.id} className={styles.curatedEvidenceItem}>
+            <span>{item.sourceLabel} · {item.promotedAt.slice(0, 10)}</span>
+            <strong>{item.title}</strong>
+            <p>{item.caption}</p>
+            <small>{item.caveat}</small>
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
 

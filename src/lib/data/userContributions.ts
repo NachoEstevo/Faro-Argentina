@@ -8,13 +8,23 @@ export type ContributionType = (typeof CONTRIBUTION_TYPES)[number];
 
 export const CONTRIBUTION_REVIEW_STATUSES = [
   "submitted",
-  "needs_more_info",
   "accepted_for_review",
-  "approved",
+  "needs_more_info",
+  "approved_for_investigation",
   "rejected",
 ] as const;
 
 export type ContributionReviewStatus = (typeof CONTRIBUTION_REVIEW_STATUSES)[number];
+export type LegacyContributionReviewStatus = "approved";
+
+export const CONTRIBUTION_PUBLICATION_STATUSES = [
+  "private",
+  "candidate",
+  "published_curated",
+  "withdrawn",
+] as const;
+
+export type ContributionPublicationStatus = (typeof CONTRIBUTION_PUBLICATION_STATUSES)[number];
 
 export const CONTRIBUTION_PRIVACY_MODES = ["anonymous", "contact"] as const;
 
@@ -90,9 +100,39 @@ export interface UserContribution {
   contactEmail: string | null;
   sourcePermissionConfirmed: true;
   reviewConfirmed: true;
-  status: ContributionReviewStatus;
+  status: ContributionReviewStatus | LegacyContributionReviewStatus;
+  publicationStatus: ContributionPublicationStatus;
   createdAt: string;
   attachments: UserContributionAttachment[];
+}
+
+export interface CuratedContributionEvidence {
+  id: string;
+  submissionId: string;
+  expedienteId: string;
+  status: Extract<ContributionPublicationStatus, "candidate" | "published_curated" | "withdrawn">;
+  title: string;
+  caption: string;
+  caveat: string;
+  sourceLabel: string;
+  permissionNote: string;
+  reviewedByName: string;
+  promotedByName: string;
+  promotedAt: string;
+  withdrawnAt: string | null;
+  withdrawnByName: string | null;
+  internalNote: string;
+}
+
+export interface PublicCuratedContributionEvidence {
+  id: string;
+  title: string;
+  caption: string;
+  caveat: string;
+  sourceLabel: string;
+  permissionNote: string;
+  reviewedByName: string;
+  promotedAt: string;
 }
 
 export interface BuildContributionOptions {
@@ -252,6 +292,7 @@ export function buildUserContribution(
     sourcePermissionConfirmed: true,
     reviewConfirmed: true,
     status: "submitted",
+    publicationStatus: "private",
     createdAt: options.createdAt,
     attachments: attachments.map((attachment, index) => ({
       id: `ATT-${String(index + 1).padStart(3, "0")}`,
@@ -274,6 +315,38 @@ export function isContributionType(value: string): value is ContributionType {
 
 export function isContributionPrivacyMode(value: string): value is ContributionPrivacyMode {
   return CONTRIBUTION_PRIVACY_MODES.includes(value as ContributionPrivacyMode);
+}
+
+export function isContributionReviewStatus(value: unknown): value is ContributionReviewStatus {
+  return CONTRIBUTION_REVIEW_STATUSES.includes(value as ContributionReviewStatus);
+}
+
+export function isContributionPublicationStatus(value: unknown): value is ContributionPublicationStatus {
+  return CONTRIBUTION_PUBLICATION_STATUSES.includes(value as ContributionPublicationStatus);
+}
+
+export function normalizeContributionReviewStatus(value: unknown): ContributionReviewStatus {
+  if (value === "approved") return "approved_for_investigation";
+  return isContributionReviewStatus(value) ? value : "submitted";
+}
+
+export function normalizeContributionPublicationStatus(value: unknown): ContributionPublicationStatus {
+  return isContributionPublicationStatus(value) ? value : "private";
+}
+
+export function toPublicCuratedContributionEvidence(
+  evidence: CuratedContributionEvidence,
+): PublicCuratedContributionEvidence {
+  return {
+    id: evidence.id,
+    title: evidence.title,
+    caption: evidence.caption,
+    caveat: evidence.caveat,
+    sourceLabel: evidence.sourceLabel,
+    permissionNote: evidence.permissionNote,
+    reviewedByName: evidence.reviewedByName,
+    promotedAt: evidence.promotedAt,
+  };
 }
 
 export function extensionForAttachment(filename: string, mimeType: string): string {

@@ -1,6 +1,7 @@
 import type { CaseSignal, CaseSignalContext } from "./caseSignals.ts";
 import { buildExpediente, type ExpedienteCaseFile, type ExpedienteReceipt } from "./expediente.ts";
 import type { ArticleCitation } from "./articleCitations.ts";
+import type { CuratedContributionEvidence, PublicCuratedContributionEvidence } from "./userContributions.ts";
 
 export interface CaseReportFact {
   label: string;
@@ -63,6 +64,7 @@ export interface CaseReportView {
     description: string;
   };
   journalismContext: CaseReportCitation[];
+  curatedEvidence: PublicCuratedContributionEvidence[];
   caveats: string[];
   nextVerification: string[];
   technicalAppendix: {
@@ -80,8 +82,9 @@ export function buildCaseReportView(
   caseFile: ExpedienteCaseFile,
   signalContext?: CaseSignalContext,
   contextualCitations: ArticleCitation[] = [],
+  curatedEvidence: CuratedContributionEvidence[] = [],
 ): CaseReportView {
-  const expediente = buildExpediente(caseFile, signalContext, contextualCitations);
+  const expediente = buildExpediente(caseFile, signalContext, contextualCitations, curatedEvidence);
   const reportSignals = pickReportSignals(expediente.whyItAppeared);
   const receipts = [
     expediente.officialTrail.primary,
@@ -120,6 +123,7 @@ export function buildCaseReportView(
       description: buildOfficialTrailDescription(expediente.investigationContext.sourceCount),
     },
     journalismContext: contextualCitations.map(toReportCitation),
+    curatedEvidence: expediente.curatedEvidence,
     caveats: expediente.caveats,
     nextVerification: expediente.nextVerification,
     technicalAppendix: {

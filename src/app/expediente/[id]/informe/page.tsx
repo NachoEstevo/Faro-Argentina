@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import PrintableCaseReport from "@/components/PrintableCaseReport";
 import { getCaseReportById } from "@/lib/caseRepository";
+import { getCaseReportByIdWithCuratedEvidence } from "@/lib/server/curatedCaseReport";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function CaseReportPage({ params }: PageProps) {
   const { id } = await params;
-  const report = getCaseReportById(decodeURIComponent(id));
+  const report = await getCaseReportByIdWithCuratedEvidence(decodeURIComponent(id));
   if (!report) notFound();
 
   return <PrintableCaseReport report={report} />;

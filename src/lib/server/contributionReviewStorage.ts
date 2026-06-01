@@ -1,13 +1,26 @@
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join, normalize, sep } from "node:path";
 
 import {
   CONTRIBUTION_REVIEW_STATUSES,
+  type CuratedContributionEvidence,
+  type LegacyContributionReviewStatus,
   type ContributionReviewStatus,
+  normalizeContributionPublicationStatus,
+  normalizeContributionReviewStatus,
   type UserContribution,
 } from "../data/userContributions.ts";
 import { getCaseById } from "../caseRepository.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
+import { appendContributionAuditEvent } from "./contributionAuditDb.ts";
+import {
+  listCuratedEvidenceForSubmissions,
+  listPublishedCuratedEvidenceForExpediente,
+  resolveContributionPublicationStatus,
+  upsertCuratedContributionEvidence,
+  withdrawCuratedContributionEvidence,
+  type CuratedEvidenceStatus,
+} from "./curatedContributionEvidenceDb.ts";
 import {
   appendContributionReviewEvent,
   appendContributionReviewLink,
@@ -29,7 +42,7 @@ export type ContributionReviewLinkTarget = (typeof CONTRIBUTION_REVIEW_LINK_TARG
 
 export interface ContributionReviewEntry {
   id: string;
-  status: ContributionReviewStatus;
+  status: ContributionReviewStatus | LegacyContributionReviewStatus;
   note: string;
   reviewerName: string;
   createdAt: string;
@@ -97,13 +110,54 @@ export interface LinkedContributionReviewInbox {
   contributions: LinkedContributionReview[];
 }
 
+export interface PromoteContributionEvidenceInput {
+  submissionId: string;
+  expedienteId: string;
+  status: Exclude<CuratedEvidenceStatus, "withdrawn">;
+  title: string;
+  caption: string;
+  caveat: string;
+  sourceLabel: string;
+  permissionNote: string;
+  reviewedByName?: string;
+  internalNote?: string;
+  reviewer?: FaroAuthenticatedUser;
+  now?: Date;
+}
+
+export interface WithdrawContributionEvidenceInput {
+  evidenceId: string;
+  reviewer?: FaroAuthenticatedUser;
+  now?: Date;
+}
+
 export class ContributionReviewOperationError extends Error {
   status: 400 | 404 | 409;
-  error: "invalid_review_link_target" | "missing_review_target" | "review_target_not_found" | "contribution_not_approved";
+  error:
+    | "invalid_review_link_target"
+    | "missing_review_target"
+    | "missing_review_note"
+    | "review_target_not_found"
+    | "contribution_not_approved"
+    | "invalid_curated_evidence"
+    | "curated_case_link_required"
+    | "curated_evidence_not_found"
+    | "missing_attachment_target"
+    | "attachment_not_found";
 
   constructor(
     status: 400 | 404 | 409,
-    error: "invalid_review_link_target" | "missing_review_target" | "review_target_not_found" | "contribution_not_approved",
+    error:
+      | "invalid_review_link_target"
+      | "missing_review_target"
+      | "missing_review_note"
+      | "review_target_not_found"
+      | "contribution_not_approved"
+      | "invalid_curated_evidence"
+      | "curated_case_link_required"
+      | "curated_evidence_not_found"
+      | "missing_attachment_target"
+      | "attachment_not_found",
     message: string,
   ) {
     super(message);
@@ -117,15 +171,148 @@ export async function listContributionReviews(): Promise<ContributionReviewInbox
   const submissions = r2Config
     ? await listR2Contributions(r2Config)
     : await listLocalContributions();
-  const hydrated = isProductDatabaseConfigured()
+  const hydratedWithReview = isProductDatabaseConfigured()
     ? await hydrateContributionsWithReviewState(submissions)
     : submissions;
+  const hydrated = isProductDatabaseConfigured()
+    ? await hydrateContributionsWithPublicationState(hydratedWithReview)
+    : hydratedWithReview.map(normalizeContributionEnvelope);
   const sorted = hydrated.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return {
     storageMode: isProductDatabaseConfigured() ? "neon" : r2Config ? "r2" : "local",
     submissions: sorted,
     stats: buildStats(sorted),
   };
+}
+
+export async function promoteContributionEvidence(
+  input: PromoteContributionEvidenceInput,
+): Promise<{
+  storageMode: ContributionReviewStorageMode;
+  contribution: ReviewedUserContribution;
+  evidence: CuratedContributionEvidence;
+}> {
+  const status = normalizeCuratedEvidenceStatus(input.status);
+  const title = normalizeText(input.title);
+  const caption = normalizeText(input.caption);
+  const caveat = normalizeText(input.caveat);
+  const sourceLabel = normalizeText(input.sourceLabel);
+  const permissionNote = normalizeText(input.permissionNote);
+  const expedienteId = normalizeText(input.expedienteId);
+  if (!title || !caption || !caveat || !sourceLabel || !permissionNote || !expedienteId) {
+    throw new ContributionReviewOperationError(
+      400,
+      "invalid_curated_evidence",
+      "Completá título, bajada, caveat, fuente o permiso y expediente antes de publicar material curado.",
+    );
+  }
+  const r2Config = getR2Config();
+  const r2Submission = r2Config
+    ? await readR2ContributionForUpdate(r2Config, input.submissionId)
+    : null;
+  const rawContribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
+  const [reviewedContribution] = isProductDatabaseConfigured()
+    ? await hydrateContributionsWithReviewState([rawContribution])
+    : [rawContribution];
+  const contribution = normalizeContributionEnvelope(reviewedContribution);
+  if (normalizeContributionReviewStatus(contribution.status) !== "approved_for_investigation") {
+    throw new ContributionReviewOperationError(
+      409,
+      "contribution_not_approved",
+      "Aprobá el aporte para investigación antes de convertirlo en evidencia curada.",
+    );
+  }
+  const hasCaseLink = (contribution.reviewLinks ?? []).some((link) =>
+    link.targetType === "case" && link.targetId === expedienteId
+  );
+  if (!hasCaseLink) {
+    throw new ContributionReviewOperationError(
+      409,
+      "curated_case_link_required",
+      "Vinculá primero el aporte al expediente que querés mostrar públicamente.",
+    );
+  }
+  const evidenceInput = {
+    id: curatedEvidenceId(contribution.id, expedienteId),
+    submissionId: contribution.id,
+    expedienteId,
+    status,
+    title,
+    caption,
+    caveat,
+    sourceLabel,
+    permissionNote,
+    reviewedByName: normalizeText(input.reviewedByName) || reviewerDisplayName(input.reviewer, null),
+    promotedBy: input.reviewer,
+    promotedByName: reviewerDisplayName(input.reviewer, null),
+    promotedAt: input.now,
+    internalNote: input.internalNote,
+  };
+  const evidence = isProductDatabaseConfigured()
+    ? await upsertCuratedContributionEvidence(evidenceInput)
+    : await upsertLocalCuratedEvidence(evidenceInput);
+  await appendCuratedAuditIfConfigured({
+    contribution,
+    evidence,
+    reviewer: input.reviewer,
+    action: status === "published_curated" ? "curated_evidence_published" : "curated_candidate_created",
+    now: input.now,
+  });
+  const updatedContribution: ReviewedUserContribution = {
+    ...contribution,
+    publicationStatus: status,
+  };
+  if (!isProductDatabaseConfigured()) {
+    await writeContributionAfterLocalMutation(updatedContribution, r2Config, r2Submission?.key);
+  }
+  return {
+    storageMode: isProductDatabaseConfigured() ? "neon" : r2Config ? "r2" : "local",
+    contribution: updatedContribution,
+    evidence,
+  };
+}
+
+export async function withdrawContributionEvidence(
+  input: WithdrawContributionEvidenceInput,
+): Promise<{
+  storageMode: ContributionReviewStorageMode;
+  evidence: CuratedContributionEvidence;
+}> {
+  const evidence = isProductDatabaseConfigured()
+    ? await withdrawCuratedContributionEvidence({
+      id: normalizeText(input.evidenceId),
+      withdrawnBy: input.reviewer,
+      withdrawnAt: input.now,
+    })
+    : await withdrawLocalCuratedEvidence({
+      id: normalizeText(input.evidenceId),
+      withdrawnBy: input.reviewer,
+      withdrawnAt: input.now,
+    });
+  await appendContributionAuditIfConfigured({
+    submissionId: evidence.submissionId,
+    action: "curated_evidence_withdrawn",
+    actor: input.reviewer,
+    targetType: "curated_evidence",
+    targetId: evidence.id,
+    metadata: { expedienteId: evidence.expedienteId, title: evidence.title },
+    now: input.now,
+  });
+  return {
+    storageMode: isProductDatabaseConfigured() ? "neon" : getR2Config() ? "r2" : "local",
+    evidence,
+  };
+}
+
+export async function listPublishedCuratedContributionEvidence(
+  expedienteId: string,
+): Promise<CuratedContributionEvidence[]> {
+  if (isProductDatabaseConfigured()) {
+    return listPublishedCuratedEvidenceForExpediente(expedienteId);
+  }
+  return (await listLocalCuratedEvidence())
+    .filter((item) => item.expedienteId === expedienteId && item.status === "published_curated")
+    .sort((left, right) => right.promotedAt.localeCompare(left.promotedAt));
 }
 
 export async function listLinkedContributionReviews(
@@ -145,7 +332,7 @@ export async function listLinkedContributionReviews(
   const contributions = inbox.submissions.flatMap((contribution) =>
     (contribution.reviewLinks ?? [])
       .filter((link) =>
-        contribution.status === "approved" &&
+        normalizeContributionReviewStatus(contribution.status) === "approved_for_investigation" &&
         link.targetType === targetType &&
         link.targetId === targetId
       )
@@ -169,11 +356,19 @@ export async function linkContributionToReviewTarget(
   const r2Config = getR2Config();
   const targetType = normalizeReviewLinkTarget(input.targetType);
   const targetId = normalizeText(input.targetId);
+  const note = normalizeText(input.note);
   if (!targetId) {
     throw new ContributionReviewOperationError(
       400,
       "missing_review_target",
       "Indicá el expediente o carpeta que querés vincular.",
+    );
+  }
+  if (!note) {
+    throw new ContributionReviewOperationError(
+      400,
+      "missing_review_note",
+      "Agregá una nota interna que explique por qué este aporte entra en el expediente o carpeta.",
     );
   }
   const targetLabel = resolveTargetLabel(targetType, targetId, input.targetLabel);
@@ -183,7 +378,7 @@ export async function linkContributionToReviewTarget(
   const contribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
   if (isProductDatabaseConfigured()) {
     const [hydrated] = await hydrateContributionsWithReviewState([contribution]);
-    if (hydrated.status !== "approved") {
+    if (normalizeContributionReviewStatus(hydrated.status) !== "approved_for_investigation") {
       throw new ContributionReviewOperationError(
         409,
         "contribution_not_approved",
@@ -195,16 +390,25 @@ export async function linkContributionToReviewTarget(
       targetType,
       targetId,
       targetLabel,
-      note: input.note,
+      note,
       reviewerName: input.reviewerName,
       reviewer: input.reviewer,
+      now: input.now,
+    });
+    await appendContributionAuditEvent({
+      submissionId: input.submissionId,
+      action: "review_link_created",
+      actor: input.reviewer,
+      targetType,
+      targetId,
+      metadata: { targetLabel, note },
       now: input.now,
     });
     const [updated] = await hydrateContributionsWithReviewState([contribution]);
     return { storageMode: "neon", contribution: updated, link };
   }
 
-  if (contribution.status !== "approved") {
+  if (normalizeContributionReviewStatus(contribution.status) !== "approved_for_investigation") {
     throw new ContributionReviewOperationError(
       409,
       "contribution_not_approved",
@@ -218,7 +422,7 @@ export async function linkContributionToReviewTarget(
     targetType,
     targetId,
     targetLabel,
-    note: normalizeText(input.note),
+    note,
     linkedBy: reviewerDisplayName(input.reviewer, input.reviewerName),
     createdAt: (input.now ?? new Date()).toISOString(),
   };
@@ -259,6 +463,15 @@ export async function updateContributionReview(
       reviewer: input.reviewer,
       now: input.now,
     });
+    await appendContributionAuditEvent({
+      submissionId: input.submissionId,
+      action: "review_status_changed",
+      actor: input.reviewer,
+      targetType: "review_status",
+      targetId: status,
+      metadata: { note: normalizeText(input.note) },
+      now: input.now,
+    });
     const [updated] = await hydrateContributionsWithReviewState([contribution]);
     return { storageMode: "neon", contribution: updated };
   }
@@ -266,6 +479,7 @@ export async function updateContributionReview(
   const updated: ReviewedUserContribution = {
     ...contribution,
     status,
+    publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
     reviewTrail: [
       ...reviewTrail,
       {
@@ -292,7 +506,49 @@ export async function updateContributionReview(
   return { storageMode: "local", contribution: updated };
 }
 
-export async function readContributionAttachment(
+export async function readContributionAttachmentForReview(input: {
+  submissionId: string;
+  attachmentId: string;
+  reviewer?: FaroAuthenticatedUser;
+  now?: Date;
+}): Promise<{ storageMode: ContributionReviewStorageMode; body: Uint8Array; contentType: string; filename: string }> {
+  const submissionId = normalizeText(input.submissionId);
+  const attachmentId = normalizeText(input.attachmentId);
+  if (!submissionId || !attachmentId) {
+    throw new ContributionReviewOperationError(
+      400,
+      "missing_attachment_target",
+      "Indicá el aporte y el archivo que querés revisar.",
+    );
+  }
+  const contribution = await readContributionForReview(submissionId);
+  const attachment = contribution.attachments.find((item) => item.id === attachmentId);
+  if (!attachment || !attachment.objectKey.startsWith(`submissions/${contribution.id}/`)) {
+    throw new ContributionReviewOperationError(
+      404,
+      "attachment_not_found",
+      "No encontramos ese archivo dentro del aporte indicado.",
+    );
+  }
+  if (isProductDatabaseConfigured()) {
+    await appendContributionAuditEvent({
+      submissionId: contribution.id,
+      action: "attachment_opened",
+      actor: input.reviewer,
+      targetType: "attachment",
+      targetId: attachment.id,
+      metadata: {
+        filename: attachment.originalFilename,
+        mimeType: attachment.mimeType,
+        sizeBytes: attachment.sizeBytes,
+      },
+      now: input.now,
+    });
+  }
+  return readContributionAttachmentObject(attachment.objectKey);
+}
+
+async function readContributionAttachmentObject(
   objectKey: string,
 ): Promise<{ storageMode: ContributionReviewStorageMode; body: Uint8Array; contentType: string; filename: string }> {
   const r2Config = getR2Config();
@@ -314,8 +570,20 @@ export async function readContributionAttachment(
   };
 }
 
+async function readContributionForReview(submissionId: string): Promise<ReviewedUserContribution> {
+  const r2Config = getR2Config();
+  const contribution = r2Config
+    ? (await readR2ContributionForUpdate(r2Config, submissionId)).contribution
+    : await readLocalContribution(submissionId);
+  return {
+    ...contribution,
+    status: normalizeContributionReviewStatus(contribution.status),
+    publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
+  };
+}
+
 export function isContributionReviewStatus(value: string): value is ContributionReviewStatus {
-  return CONTRIBUTION_REVIEW_STATUSES.includes(value as ContributionReviewStatus);
+  return value === "approved" || CONTRIBUTION_REVIEW_STATUSES.includes(value as ContributionReviewStatus);
 }
 
 export function isContributionReviewLinkTarget(value: string): value is ContributionReviewLinkTarget {
@@ -326,7 +594,7 @@ function normalizeReviewStatus(value: string): ContributionReviewStatus {
   if (!isContributionReviewStatus(value)) {
     throw new Error(`Invalid contribution review status: ${value}`);
   }
-  return value;
+  return normalizeContributionReviewStatus(value);
 }
 
 function normalizeReviewLinkTarget(value: string): ContributionReviewLinkTarget {
@@ -380,6 +648,23 @@ async function writeLocalContribution(contribution: ReviewedUserContribution): P
   await writeFile(path, JSON.stringify(contribution, null, 2), "utf8");
 }
 
+async function writeContributionAfterLocalMutation(
+  contribution: ReviewedUserContribution,
+  r2Config: R2Config | null,
+  r2Key?: string,
+): Promise<void> {
+  if (r2Config) {
+    await putR2Object({
+      config: r2Config,
+      key: r2Key ?? r2ManifestKey(contribution.id),
+      body: new TextEncoder().encode(JSON.stringify(contribution, null, 2)),
+      contentType: "application/json; charset=utf-8",
+    });
+    return;
+  }
+  await writeLocalContribution(contribution);
+}
+
 async function listR2Contributions(config: R2Config): Promise<ReviewedUserContribution[]> {
   const keys = (await listR2ObjectKeys(config, "submissions/"))
     .filter((key) => key.endsWith("/submission.json") || /^submissions\/APORTE-[^/]+\.json$/.test(key));
@@ -418,9 +703,152 @@ function buildStats(submissions: ReviewedUserContribution[]): Record<Contributio
     Record<ContributionReviewStatus | "total", number>;
   stats.total = submissions.length;
   for (const contribution of submissions) {
-    stats[contribution.status] = (stats[contribution.status] ?? 0) + 1;
+    const status = normalizeContributionReviewStatus(contribution.status);
+    stats[status] = (stats[status] ?? 0) + 1;
   }
   return stats;
+}
+
+async function hydrateContributionsWithPublicationState(
+  contributions: ReviewedUserContribution[],
+): Promise<ReviewedUserContribution[]> {
+  const evidence = await listCuratedEvidenceForSubmissions(contributions.map((contribution) => contribution.id));
+  return contributions.map((contribution) => {
+    const contributionEvidence = evidence.filter((item) => item.submissionId === contribution.id);
+    return {
+      ...normalizeContributionEnvelope(contribution),
+      publicationStatus: resolveContributionPublicationStatus(contributionEvidence),
+    };
+  });
+}
+
+function normalizeContributionEnvelope(contribution: ReviewedUserContribution): ReviewedUserContribution {
+  return {
+    ...contribution,
+    status: normalizeContributionReviewStatus(contribution.status),
+    publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
+  };
+}
+
+function normalizeCuratedEvidenceStatus(status: unknown): Exclude<CuratedEvidenceStatus, "withdrawn"> {
+  return status === "published_curated" ? "published_curated" : "candidate";
+}
+
+function curatedEvidenceId(submissionId: string, expedienteId: string): string {
+  const normalizedSubmission = normalizeText(submissionId).replace(/[^A-Z0-9-]+/gi, "-").toUpperCase();
+  const normalizedCase = normalizeText(expedienteId).replace(/[^A-Z0-9-]+/gi, "-").toUpperCase();
+  return `CURATED-${normalizedSubmission}-${normalizedCase}`;
+}
+
+async function upsertLocalCuratedEvidence(
+  input: Parameters<typeof upsertCuratedContributionEvidence>[0],
+): Promise<CuratedContributionEvidence> {
+  const current = await listLocalCuratedEvidence();
+  const now = (input.promotedAt ?? new Date()).toISOString();
+  const evidence: CuratedContributionEvidence = {
+    id: input.id,
+    submissionId: input.submissionId,
+    expedienteId: input.expedienteId,
+    status: input.status,
+    title: input.title,
+    caption: input.caption,
+    caveat: input.caveat,
+    sourceLabel: input.sourceLabel,
+    permissionNote: input.permissionNote,
+    reviewedByName: input.reviewedByName,
+    promotedByName: input.promotedByName ?? reviewerDisplayName(input.promotedBy, null),
+    promotedAt: now,
+    withdrawnAt: null,
+    withdrawnByName: null,
+    internalNote: normalizeText(input.internalNote),
+  };
+  await writeLocalCuratedEvidence([
+    ...current.filter((item) => item.id !== evidence.id),
+    evidence,
+  ]);
+  return evidence;
+}
+
+async function withdrawLocalCuratedEvidence(input: {
+  id: string;
+  withdrawnBy?: FaroAuthenticatedUser;
+  withdrawnAt?: Date;
+}): Promise<CuratedContributionEvidence> {
+  const current = await listLocalCuratedEvidence();
+  const evidence = current.find((item) => item.id === input.id);
+  if (!evidence) {
+    throw new ContributionReviewOperationError(
+      404,
+      "curated_evidence_not_found",
+      "No encontramos esa evidencia curada.",
+    );
+  }
+  const withdrawn: CuratedContributionEvidence = {
+    ...evidence,
+    status: "withdrawn",
+    withdrawnAt: (input.withdrawnAt ?? new Date()).toISOString(),
+    withdrawnByName: reviewerDisplayName(input.withdrawnBy, null),
+  };
+  await writeLocalCuratedEvidence([
+    ...current.filter((item) => item.id !== input.id),
+    withdrawn,
+  ]);
+  return withdrawn;
+}
+
+async function listLocalCuratedEvidence(): Promise<CuratedContributionEvidence[]> {
+  try {
+    const raw = await readFile(localCuratedEvidencePath(), "utf8");
+    const parsed = JSON.parse(raw) as { evidence?: CuratedContributionEvidence[] } | CuratedContributionEvidence[];
+    return Array.isArray(parsed) ? parsed : parsed.evidence ?? [];
+  } catch {
+    return [];
+  }
+}
+
+async function writeLocalCuratedEvidence(evidence: CuratedContributionEvidence[]): Promise<void> {
+  const path = localCuratedEvidencePath();
+  await mkdir(getContributionStorageRoot(), { recursive: true });
+  await writeFile(path, JSON.stringify({ evidence }, null, 2), "utf8");
+}
+
+function localCuratedEvidencePath(): string {
+  return join(getContributionStorageRoot(), "curated-evidence.json");
+}
+
+async function appendCuratedAuditIfConfigured({
+  contribution,
+  evidence,
+  reviewer,
+  action,
+  now,
+}: {
+  contribution: ReviewedUserContribution;
+  evidence: CuratedContributionEvidence;
+  reviewer?: FaroAuthenticatedUser;
+  action: "curated_candidate_created" | "curated_evidence_published";
+  now?: Date;
+}): Promise<void> {
+  await appendContributionAuditIfConfigured({
+    submissionId: contribution.id,
+    action,
+    actor: reviewer,
+    targetType: "curated_evidence",
+    targetId: evidence.id,
+    metadata: {
+      expedienteId: evidence.expedienteId,
+      status: evidence.status,
+      title: evidence.title,
+    },
+    now,
+  });
+}
+
+async function appendContributionAuditIfConfigured(
+  input: Parameters<typeof appendContributionAuditEvent>[0],
+): Promise<void> {
+  if (!isProductDatabaseConfigured()) return;
+  await appendContributionAuditEvent(input);
 }
 
 function safeSubmissionId(value: string): string {

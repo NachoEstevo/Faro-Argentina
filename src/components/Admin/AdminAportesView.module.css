@@ -318,6 +318,21 @@
   gap: 8px;
 }
 
+.publicationRail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.publicationRail span {
+  width: fit-content;
+  padding: 4px 8px;
+  border: 1px solid var(--cf-border);
+  border-radius: 999px;
+  color: var(--cf-text-secondary);
+  font-size: 11px;
+}
+
 .workflowStep {
   display: grid;
   gap: 5px;
@@ -499,7 +514,8 @@
 .files,
 .reviewBox,
 .timeline,
-.linkBox {
+.linkBox,
+.publicationBox {
   display: grid;
   gap: 10px;
   padding-top: 14px;
@@ -625,6 +641,37 @@
   border-color: transparent;
   background: var(--cf-accent);
   color: var(--cf-on-accent);
+}
+
+.publicationStatusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.publicationStatusGrid div {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.publicationStatusGrid span {
+  color: var(--cf-text-muted);
+  font-size: 11px;
+}
+
+.publicationStatusGrid strong {
+  color: var(--cf-text);
+  font-size: 13px;
+}
+
+.publicationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .linkList {

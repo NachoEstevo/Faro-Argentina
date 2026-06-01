@@ -23,6 +23,7 @@ test("getCaseReportById builds a plain-language report for non-technical users",
   assert.equal(report.keyFacts.some((fact) => fact.label === "Fuente oficial"), true);
   assert.equal(report.actions.printHref, `/expediente/${encodeURIComponent(vialidadCaseId)}/informe`);
   assert.equal(report.actions.evidenceJsonHref, `/api/export/${encodeURIComponent(vialidadCaseId)}`);
+  assert.deepEqual(report.curatedEvidence, []);
 });
 
 test("getCaseReportById separates journalism context from official proof", () => {
@@ -123,4 +124,63 @@ test("case report shows the official catalog page instead of direct dataset down
   assert.equal(report.officialTrail.primary.sourceUrl.includes("/download/"), false);
   assert.equal(report.actions.officialSourceHref, report.officialTrail.primary.sourceUrl);
   assert.equal(report.technicalAppendix.receipts[0]?.sourceUrl, undefined);
+});
+
+test("case report keeps curated user evidence separate from official trail", () => {
+  const receipt = createEvidenceReceipt({
+    sourceId: "AR-CONTRATAR-CONTRATOS",
+    sourceName: "CONTRAT.AR contratos",
+    sourceUrl: "https://datos.gob.ar/dataset/jgm-procesos-contratacion-obra-publica-gestionados-plataforma-contratar",
+    rawPath: "data/official/ar/onc-contratar-contratos.csv",
+    snapshotHash: "sha256-snapshot",
+    recordId: "46-0453-CON22",
+    locatorType: "official_dataset",
+    extractedAt: "2026-05-16T00:00:00.000Z",
+    parserVersion: "case-report-test@1",
+    row: { contrato_numero: "46-0453-CON22" },
+  });
+  const caseFile: ExpedienteCaseFile = {
+    id: "AR-CONTRACT-46-0453-CON22",
+    countryCode: "AR",
+    caseType: "procurement_contract",
+    title: "Obra vial con contrato",
+    workNumber: "46-0453-CON22",
+    year: 2022,
+    procedureNumber: "46-0012-LPU22",
+    agencyName: "Dirección Nacional de Vialidad",
+    agencyCode: "604",
+    contractingUnit: "DNV",
+    executionTerm: null,
+    executionTermType: null,
+    coordinates: { lat: -34.6, lon: -58.4 },
+    evidenceLevel: "official_dataset",
+    amount: { value: 120, currency: "ARS", label: "ARS 120" },
+    supplierName: "Proveedor de prueba",
+    supplierDocument: "30-70043585-3",
+    receipt,
+    caveats: ["Contrato oficial; no prueba pagos por si solo."],
+  };
+
+  const report = buildCaseReportView(caseFile, undefined, [], [{
+    id: "CURATED-1",
+    submissionId: "APORTE-20260521-CURATED01",
+    expedienteId: caseFile.id,
+    status: "published_curated",
+    title: "Foto revisada",
+    caption: "Material aportado para orientar la revisión documental.",
+    caveat: "No reemplaza la fuente oficial.",
+    sourceLabel: "Aporte privado revisado por Faro",
+    permissionNote: "Material propio autorizado para revisión.",
+    reviewedByName: "Equipo Faro",
+    promotedByName: "Admin Faro",
+    promotedAt: "2026-05-21T12:00:00.000Z",
+    withdrawnAt: null,
+    withdrawnByName: null,
+    internalNote: "No publicar archivo original.",
+  }]);
+
+  assert.equal(report.curatedEvidence.length, 1);
+  assert.equal(report.curatedEvidence[0]?.title, "Foto revisada");
+  assert.equal(report.officialTrail.relatedReceipts.some((receipt) => /CURATED|APORTE/i.test(receipt.receiptId)), false);
+  assert.equal(JSON.stringify(report.technicalAppendix).includes("APORTE-20260521-CURATED01"), false);
 });

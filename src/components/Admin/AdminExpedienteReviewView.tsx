@@ -58,10 +58,14 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
     }
   }
 
-  async function openAttachment(attachment: Attachment) {
+  async function openAttachment(contributionId: string, attachment: Attachment) {
     setStatusText("Abriendo archivo privado...");
     try {
-      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`);
+      const params = new URLSearchParams({
+        submissionId: contributionId,
+        attachmentId: attachment.id,
+      });
+      const response = await fetch(`/api/admin/aportes/attachment?${params.toString()}`);
       if (!response.ok) {
         const data = await response.json().catch(() => null) as { message?: string } | null;
         throw new Error(data?.message ?? "No se pudo abrir el archivo privado.");
@@ -137,7 +141,7 @@ export default function AdminExpedienteReviewView({ caseId }: { caseId: string }
                     {contribution.attachments.length === 0 ? (
                       <p className={styles.empty}>Sin archivos privados.</p>
                     ) : contribution.attachments.map((attachment) => (
-                      <button key={attachment.id} type="button" onClick={() => openAttachment(attachment)}>
+                      <button key={attachment.id} type="button" onClick={() => openAttachment(contribution.id, attachment)}>
                         <FileText size={14} aria-hidden />
                         Abrir archivo privado · {attachment.originalFilename} · {formatBytes(attachment.sizeBytes)}
                       </button>

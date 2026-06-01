@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Inbox,
   LockKeyhole,
@@ -12,6 +12,8 @@ import AdminAportesDetail from "./AdminAportesDetail";
 import {
   buildClientStats,
   formatDate,
+  normalizeReviewStatus,
+  publicationWorkflow,
   sortContributionsForReview,
   statusLabel,
   statusOptions,
@@ -19,6 +21,7 @@ import {
   type Attachment,
   type Contribution,
   type InboxPayload,
+  type PublicationStatus,
   type ReviewLinkTarget,
   type ReviewStatus,
 } from "./AdminAportesTypes";
@@ -33,16 +36,38 @@ export default function AdminAportesView() {
   const [linkTargetId, setLinkTargetId] = useState("");
   const [linkTargetLabel, setLinkTargetLabel] = useState("");
   const [linkNote, setLinkNote] = useState("");
+  const [publicationTargetId, setPublicationTargetId] = useState("");
+  const [curationStatus, setCurationStatus] = useState<Extract<PublicationStatus, "candidate" | "published_curated">>("candidate");
+  const [curationTitle, setCurationTitle] = useState("");
+  const [curationCaption, setCurationCaption] = useState("");
+  const [curationCaveat, setCurationCaveat] = useState("No reemplaza la fuente oficial ni confirma por sí solo la relación investigada.");
+  const [curationSourceLabel, setCurationSourceLabel] = useState("Aporte privado revisado por Faro");
+  const [curationPermissionNote, setCurationPermissionNote] = useState("La persona confirmó que era material propio o autorizado para revisión.");
   const [statusText, setStatusText] = useState("");
   const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => {
     const submissions = sortContributionsForReview(inbox?.submissions ?? []);
-    return filter === "all" ? submissions : submissions.filter((item) => item.status === filter);
+    return filter === "all" ? submissions : submissions.filter((item) => normalizeReviewStatus(item.status) === filter);
   }, [filter, inbox?.submissions]);
   const selected = filtered.find((submission) => submission.id === selectedId) ??
     filtered[0] ??
     null;
+  const selectedCaseLinks = selected?.reviewLinks?.filter((link) => link.targetType === "case") ?? [];
+  const selectedCaseLink = selectedCaseLinks.find((link) => link.targetId === publicationTargetId) ??
+    selectedCaseLinks[0] ??
+    null;
+
+  useEffect(() => {
+    if (!selected) return;
+    setCurationTitle(selected.title);
+    setCurationCaption(selected.explanation.slice(0, 220));
+  }, [selected?.id]);
+
+  useEffect(() => {
+    const firstCaseLink = selected?.reviewLinks?.find((link) => link.targetType === "case");
+    setPublicationTargetId(firstCaseLink?.targetId ?? "");
+  }, [selected?.id, selected?.reviewLinks?.length]);
 
   async function loadInbox() {
     setLoading(true);
@@ -101,9 +126,14 @@ export default function AdminAportesView() {
   }
 
   async function openAttachment(attachment: Attachment) {
+    if (!selected) return;
     setStatusText("Abriendo archivo privado...");
     try {
-      const response = await fetch(`/api/admin/aportes/attachment?key=${encodeURIComponent(attachment.objectKey)}`);
+      const params = new URLSearchParams({
+        submissionId: selected.id,
+        attachmentId: attachment.id,
+      });
+      const response = await fetch(`/api/admin/aportes/attachment?${params.toString()}`);
       if (!response.ok) {
         const payload = await response.json().catch(() => null) as { message?: string } | null;
         throw new Error(payload?.message ?? "No se pudo abrir el archivo.");
@@ -159,6 +189,81 @@ export default function AdminAportesView() {
     }
   }
 
+  async function promoteSelectedContribution() {
+    if (!selected) return;
+    const expedienteId = selectedCaseLink?.targetId ?? "";
+    setLoading(true);
+    setStatusText("Guardando curaduría...");
+    try {
+      const response = await fetch("/api/admin/aportes/promote", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          submissionId: selected.id,
+          expedienteId,
+          status: curationStatus,
+          title: curationTitle,
+          caption: curationCaption,
+          caveat: curationCaveat,
+          sourceLabel: curationSourceLabel,
+          permissionNote: curationPermissionNote,
+          reviewedByName: "Equipo Faro",
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.message ?? "No se pudo guardar la evidencia curada.");
+      const updatedContribution = payload.contribution as Contribution;
+      setInbox((current) => {
+        if (!current) return current;
+        const submissions = current.submissions.map((item) =>
+          item.id === selected.id ? updatedContribution : item
+        );
+        const sorted = sortContributionsForReview(submissions);
+        return { ...current, submissions: sorted, stats: buildClientStats(sorted) };
+      });
+      setSelectedId(updatedContribution.id);
+      setStatusText(curationStatus === "published_curated" ? "Evidencia curada publicada." : "Candidatura a publicación guardada.");
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : "No se pudo guardar la evidencia curada.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function withdrawSelectedContributionEvidence() {
+    if (!selected || !selectedCaseLink) return;
+    setLoading(true);
+    setStatusText("Retirando evidencia curada...");
+    try {
+      const response = await fetch("/api/admin/aportes/withdraw", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          evidenceId: curatedEvidenceClientId(selected.id, selectedCaseLink.targetId),
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.message ?? "No se pudo retirar la evidencia curada.");
+      setInbox((current) => {
+        if (!current) return current;
+        const submissions = current.submissions.map((item) =>
+          item.id === selected.id ? { ...item, publicationStatus: "withdrawn" as const } : item
+        );
+        const sorted = sortContributionsForReview(submissions);
+        return { ...current, submissions: sorted, stats: buildClientStats(sorted) };
+      });
+      setStatusText("Evidencia curada retirada de la vista pública.");
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : "No se pudo retirar la evidencia curada.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className={styles.shell}>
       <aside className={styles.sidebar}>
@@ -178,7 +283,7 @@ export default function AdminAportesView() {
         </div>
         <div className={styles.ruleBox}>
           <ShieldAlert size={17} aria-hidden />
-          <span>Un aporte aprobado queda listo para cargar o vincular, no se convierte solo en expediente.</span>
+          <span>Un aporte aprobado queda listo para investigar o vincular, no se convierte solo en expediente.</span>
         </div>
       </aside>
 
@@ -207,8 +312,13 @@ export default function AdminAportesView() {
             <section className={styles.workflowPanel} aria-label="Flujo operativo">
               <div>
                 <p className={styles.eyebrow}>Flujo operativo</p>
-                <h3>recibido → en revisión → necesita más info → aprobado para cargar → descartado</h3>
-                <p>Los aportes siguen siendo privados hasta que el equipo los cargue manualmente.</p>
+                <h3>recibido → en revisión → necesita más info → aprobado para investigar → descartado</h3>
+                <p>Los aportes siguen siendo privados. Publicar exige una curaduría admin separada.</p>
+              </div>
+              <div className={styles.publicationRail} aria-label="Estado de publicación">
+                {publicationWorkflow.map((step) => (
+                  <span key={step.value}>{step.label}</span>
+                ))}
               </div>
               <div className={styles.workflowSteps}>
                 {statusWorkflow.map((step) => (
@@ -263,14 +373,31 @@ export default function AdminAportesView() {
                 linkTargetId={linkTargetId}
                 linkTargetLabel={linkTargetLabel}
                 linkNote={linkNote}
+                publicationTargetId={publicationTargetId}
+                publicationCaseLinks={selectedCaseLinks}
                 onNoteChange={setNote}
                 onLinkTargetTypeChange={setLinkTargetType}
                 onLinkTargetIdChange={setLinkTargetId}
                 onLinkTargetLabelChange={setLinkTargetLabel}
                 onLinkNoteChange={setLinkNote}
+                onPublicationTargetIdChange={setPublicationTargetId}
+                curationStatus={curationStatus}
+                curationTitle={curationTitle}
+                curationCaption={curationCaption}
+                curationCaveat={curationCaveat}
+                curationSourceLabel={curationSourceLabel}
+                curationPermissionNote={curationPermissionNote}
+                onCurationStatusChange={setCurationStatus}
+                onCurationTitleChange={setCurationTitle}
+                onCurationCaptionChange={setCurationCaption}
+                onCurationCaveatChange={setCurationCaveat}
+                onCurationSourceLabelChange={setCurationSourceLabel}
+                onCurationPermissionNoteChange={setCurationPermissionNote}
                 onOpenAttachment={openAttachment}
                 onUpdateStatus={updateStatus}
                 onLinkContribution={linkSelectedContribution}
+                onPromoteContribution={promoteSelectedContribution}
+                onWithdrawCuratedEvidence={withdrawSelectedContributionEvidence}
                 loading={loading}
               />
             </div>
@@ -288,4 +415,9 @@ export default function AdminAportesView() {
 
 function Metric({ label, value }: { label: string; value: number }) {
   return <div className={styles.metric}><span>{label}</span><strong>{value}</strong></div>;
+}
+
+function curatedEvidenceClientId(submissionId: string, expedienteId: string): string {
+  const normalize = (value: string) => value.trim().replace(/[^A-Z0-9-]+/gi, "-").toUpperCase();
+  return `CURATED-${normalize(submissionId)}-${normalize(expedienteId)}`;
 }

@@ -194,6 +194,7 @@ function optionalEnv(key: string): string | null {
 
 function getTestUser(): FaroAuthenticatedUser | null {
   if (process.env.FARO_ENABLE_TEST_AUTH !== "1") return null;
+  if (process.env.NODE_ENV === "production") return null;
   const clerkUserId = optionalEnv("FARO_TEST_CLERK_USER_ID");
   if (!clerkUserId) return null;
   const role = readRoleValue({ role: process.env.FARO_TEST_CLERK_USER_ROLE }) ?? "investigator";

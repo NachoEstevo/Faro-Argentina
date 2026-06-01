@@ -18,6 +18,8 @@ wrongdoing score.
 - Aportes remain private review material. A user-suggested related case is not a
   reviewed relationship, and approved private material is still not public
   evidence until manually curated, redacted and caveated.
+- Public use of user contributions requires manual curation, explicit caveat,
+  and admin publication. Never treat private aportes as official evidence.
 
 ## Engineering Rules
 

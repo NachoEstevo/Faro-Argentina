@@ -2,7 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  CONTRIBUTION_PUBLICATION_STATUSES,
+  CONTRIBUTION_REVIEW_STATUSES,
   buildUserContribution,
+  normalizeContributionPublicationStatus,
+  normalizeContributionReviewStatus,
   validateContributionDraft,
 } from "../src/lib/data/userContributions.ts";
 
@@ -182,11 +186,32 @@ test("buildUserContribution creates a private submitted contribution without pub
 
   assert.equal(contribution.id, "APORTE-TEST-001");
   assert.equal(contribution.status, "submitted");
+  assert.equal(contribution.publicationStatus, "private");
   assert.equal(contribution.privacyMode, "anonymous");
   assert.equal(contribution.contactEmail, null);
   assert.equal(contribution.attachments[0].originalFilename, "archivo-001.webp");
   assert.equal(contribution.attachments[0].objectKey, "submissions/APORTE-TEST-001/ATT-001.webp");
   assert.equal("publicUrl" in contribution.attachments[0], false);
+});
+
+test("contribution review and publication statuses keep private review separate from publication", () => {
+  assert.deepEqual([...CONTRIBUTION_REVIEW_STATUSES], [
+    "submitted",
+    "accepted_for_review",
+    "needs_more_info",
+    "approved_for_investigation",
+    "rejected",
+  ]);
+  assert.deepEqual([...CONTRIBUTION_PUBLICATION_STATUSES], [
+    "private",
+    "candidate",
+    "published_curated",
+    "withdrawn",
+  ]);
+  assert.equal(normalizeContributionReviewStatus("approved"), "approved_for_investigation");
+  assert.equal(normalizeContributionReviewStatus("published"), "submitted");
+  assert.equal(normalizeContributionPublicationStatus(undefined), "private");
+  assert.equal(normalizeContributionPublicationStatus("published_curated"), "published_curated");
 });
 
 test("buildUserContribution preserves contact fields only in contact mode", () => {

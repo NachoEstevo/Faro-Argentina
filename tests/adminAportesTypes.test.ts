@@ -15,17 +15,18 @@ test("statusWorkflow exposes the approved operational review order", () => {
       ["submitted", "Recibido", "Marcar recibido"],
       ["accepted_for_review", "En revisión", "Tomar en revisión"],
       ["needs_more_info", "Necesita más info", "Pedir más info"],
-      ["approved", "Aprobado para cargar", "Aprobar para cargar"],
+      ["approved_for_investigation", "Aprobado para investigar", "Aprobar para investigar"],
       ["rejected", "Descartado", "Descartar aporte"],
     ],
   );
   assert.equal(statusLabel("submitted"), "Recibido");
+  assert.equal(statusLabel("approved"), "Aprobado para investigar");
 });
 
 test("sortContributionsForReview prioritizes active review work before completed items", () => {
   const sorted = sortContributionsForReview([
     contribution("APORTE-20260521-REJECTED", "rejected", "2026-05-21T10:00:00.000Z"),
-    contribution("APORTE-20260521-APPROVED", "approved", "2026-05-21T11:00:00.000Z"),
+    contribution("APORTE-20260521-APPROVED", "approved_for_investigation", "2026-05-21T11:00:00.000Z"),
     contribution("APORTE-20260521-INFO", "needs_more_info", "2026-05-20T10:00:00.000Z"),
     contribution("APORTE-20260521-NEW", "submitted", "2026-05-19T10:00:00.000Z"),
     contribution("APORTE-20260521-REVIEW", "accepted_for_review", "2026-05-22T10:00:00.000Z"),
@@ -59,6 +60,7 @@ function contribution(id: string, status: Contribution["status"], createdAt: str
     contactName: null,
     contactEmail: null,
     status,
+    publicationStatus: "private",
     createdAt,
     attachments: [],
   };

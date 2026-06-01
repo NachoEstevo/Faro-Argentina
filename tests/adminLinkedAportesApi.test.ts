@@ -84,7 +84,7 @@ test("GET /api/admin/aportes/linked lists private material associated with an ex
     assert.ok(payload.target.label.length > 0);
     assert.equal(payload.contributions.length, 1);
     assert.equal(payload.contributions[0]?.id, linked.contribution.id);
-    assert.equal(payload.contributions[0]?.status, "approved");
+    assert.equal(payload.contributions[0]?.status, "approved_for_investigation");
     assert.equal(payload.contributions[0]?.contactEmail, "periodista@example.com");
     assert.equal(payload.contributions[0]?.link.targetId, "AR-CONTRACT-46-0453-CON22");
     assert.equal(payload.contributions[0]?.link.note, "Material privado asociado al expediente.");
@@ -145,7 +145,7 @@ async function approveAndLink(submissionId: string, targetId: string): Promise<v
     },
     body: JSON.stringify({
       submissionId,
-      status: "approved",
+      status: "approved_for_investigation",
       note: "Revisado para carga privada.",
     }),
   }));

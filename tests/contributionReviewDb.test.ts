@@ -25,7 +25,7 @@ test("hydrateContributionsWithReviewState overlays Neon review trail and links",
   }, sql.asProductSql());
   await appendContributionReviewEvent({
     submissionId: contribution.id,
-    status: "approved",
+    status: "approved_for_investigation",
     note: "Listo para vincular como material privado.",
     reviewer,
     now: new Date("2026-05-21T11:00:00.000Z"),
@@ -42,7 +42,7 @@ test("hydrateContributionsWithReviewState overlays Neon review trail and links",
 
   const [hydrated] = await hydrateContributionsWithReviewState([contribution], sql.asProductSql());
 
-  assert.equal(hydrated.status, "approved");
+  assert.equal(hydrated.status, "approved_for_investigation");
   assert.deepEqual(hydrated.reviewTrail?.map((entry) => entry.id), ["REV-001", "REV-002"]);
   assert.equal(hydrated.reviewTrail?.at(-1)?.reviewerName, "Reviewer Faro");
   assert.equal(hydrated.reviewLinks?.[0]?.id, "LINK-001");
@@ -134,7 +134,7 @@ test("hydrateContributionsWithReviewState preserves manifest review state until 
 
   const [hydrated] = await hydrateContributionsWithReviewState([contribution], sql.asProductSql());
 
-  assert.equal(hydrated.status, "approved");
+  assert.equal(hydrated.status, "approved_for_investigation");
   assert.equal(hydrated.reviewTrail?.[0]?.id, "REV-999");
   assert.equal(hydrated.reviewLinks?.[0]?.id, "LINK-999");
 });
@@ -241,6 +241,7 @@ function contributionFixture(id: string): ReviewedUserContribution {
     sourcePermissionConfirmed: true,
     reviewConfirmed: true,
     status: "submitted",
+    publicationStatus: "private",
     createdAt: "2026-05-21T09:00:00.000Z",
     attachments: [],
   };

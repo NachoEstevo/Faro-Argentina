@@ -1,4 +1,11 @@
-export type ReviewStatus = "submitted" | "needs_more_info" | "accepted_for_review" | "approved" | "rejected";
+export type ReviewStatus =
+  | "submitted"
+  | "accepted_for_review"
+  | "needs_more_info"
+  | "approved_for_investigation"
+  | "rejected";
+export type LegacyReviewStatus = "approved";
+export type PublicationStatus = "private" | "candidate" | "published_curated" | "withdrawn";
 export type ReviewLinkTarget = "case" | "workspace";
 export type ContributionPrivacyMode = "anonymous" | "contact";
 
@@ -38,10 +45,17 @@ export interface Contribution {
   privacyMode?: ContributionPrivacyMode;
   contactName: string | null;
   contactEmail: string | null;
-  status: ReviewStatus;
+  status: ReviewStatus | LegacyReviewStatus;
+  publicationStatus?: PublicationStatus;
   createdAt: string;
   attachments: Attachment[];
-  reviewTrail?: Array<{ id: string; status: ReviewStatus; note: string; reviewerName: string; createdAt: string }>;
+  reviewTrail?: Array<{
+    id: string;
+    status: ReviewStatus | LegacyReviewStatus;
+    note: string;
+    reviewerName: string;
+    createdAt: string;
+  }>;
   reviewLinks?: ReviewLink[];
 }
 
@@ -76,10 +90,10 @@ export const statusWorkflow: Array<{
     description: "Falta contexto, fuente o precisión antes de avanzar.",
   },
   {
-    value: "approved",
-    label: "Aprobado para cargar",
-    actionLabel: "Aprobar para cargar",
-    description: "Listo para vincular o cargar manualmente, sin publicación automática.",
+    value: "approved_for_investigation",
+    label: "Aprobado para investigar",
+    actionLabel: "Aprobar para investigar",
+    description: "Útil como material privado de trabajo; no se publica automáticamente.",
   },
   {
     value: "rejected",
@@ -91,13 +105,50 @@ export const statusWorkflow: Array<{
 
 export const statusOptions = statusWorkflow.map(({ value, label }) => ({ value, label }));
 
-export function statusLabel(status: ReviewStatus): string {
-  return statusWorkflow.find((option) => option.value === status)?.label ?? "Recibido";
+export const publicationWorkflow: Array<{
+  value: PublicationStatus;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "private",
+    label: "Privado",
+    description: "Disponible solo para revisión interna.",
+  },
+  {
+    value: "candidate",
+    label: "Candidato a publicación",
+    description: "Puede convertirse en evidencia curada si completa checklist; todavía no se muestra públicamente.",
+  },
+  {
+    value: "published_curated",
+    label: "Curado publicado",
+    description: "Visible públicamente como aporte curado, separado de evidencia oficial.",
+  },
+  {
+    value: "withdrawn",
+    label: "Retirado",
+    description: "Ya no se muestra públicamente; conserva trazabilidad interna.",
+  },
+];
+
+export function normalizeReviewStatus(status: ReviewStatus | LegacyReviewStatus): ReviewStatus {
+  return status === "approved" ? "approved_for_investigation" : status;
+}
+
+export function statusLabel(status: ReviewStatus | LegacyReviewStatus): string {
+  const normalized = normalizeReviewStatus(status);
+  return statusWorkflow.find((option) => option.value === normalized)?.label ?? "Recibido";
+}
+
+export function publicationLabel(status: PublicationStatus | undefined): string {
+  return publicationWorkflow.find((option) => option.value === (status ?? "private"))?.label ?? "Privado";
 }
 
 export function sortContributionsForReview(submissions: Contribution[]): Contribution[] {
   return [...submissions].sort((left, right) => {
-    const statusDelta = statusPriority(left.status) - statusPriority(right.status);
+    const statusDelta = statusPriority(normalizeReviewStatus(left.status)) -
+      statusPriority(normalizeReviewStatus(right.status));
     if (statusDelta !== 0) return statusDelta;
     return right.createdAt.localeCompare(left.createdAt);
   });
@@ -106,11 +157,13 @@ export function sortContributionsForReview(submissions: Contribution[]): Contrib
 export function buildClientStats(submissions: Contribution[]): Record<ReviewStatus | "total", number> {
   return {
     total: submissions.length,
-    submitted: submissions.filter((item) => item.status === "submitted").length,
-    needs_more_info: submissions.filter((item) => item.status === "needs_more_info").length,
-    accepted_for_review: submissions.filter((item) => item.status === "accepted_for_review").length,
-    approved: submissions.filter((item) => item.status === "approved").length,
-    rejected: submissions.filter((item) => item.status === "rejected").length,
+    submitted: submissions.filter((item) => normalizeReviewStatus(item.status) === "submitted").length,
+    accepted_for_review: submissions.filter((item) => normalizeReviewStatus(item.status) === "accepted_for_review").length,
+    needs_more_info: submissions.filter((item) => normalizeReviewStatus(item.status) === "needs_more_info").length,
+    approved_for_investigation: submissions.filter((item) =>
+      normalizeReviewStatus(item.status) === "approved_for_investigation"
+    ).length,
+    rejected: submissions.filter((item) => normalizeReviewStatus(item.status) === "rejected").length,
   };
 }
 

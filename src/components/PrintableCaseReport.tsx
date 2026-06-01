@@ -114,6 +114,38 @@ export default function PrintableCaseReport({ report }: { report: CaseReportView
           </section>
         )}
 
+        {report.curatedEvidence.length > 0 && (
+          <section className={styles.section}>
+            <h2>Aportes curados</h2>
+            <p className={styles.sectionNote}>
+              Material aportado y revisado por el equipo. No reemplaza la fuente oficial ni confirma por sí solo la relación investigada.
+            </p>
+            <div className={styles.curatedList}>
+              {report.curatedEvidence.map((evidence) => (
+                <article key={evidence.id} className={styles.curatedItem}>
+                  <span>{evidence.sourceLabel} · {evidence.promotedAt.slice(0, 10)}</span>
+                  <h3>{evidence.title}</h3>
+                  <p>{evidence.caption}</p>
+                  <dl>
+                    <div>
+                      <dt>Límite</dt>
+                      <dd>{evidence.caveat}</dd>
+                    </div>
+                    <div>
+                      <dt>Permiso o fuente</dt>
+                      <dd>{evidence.permissionNote}</dd>
+                    </div>
+                    <div>
+                      <dt>Revisión</dt>
+                      <dd>{evidence.reviewedByName}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className={styles.section}>
           <h2>Qué verificar después</h2>
           <ol className={styles.nextList}>
