@@ -66,6 +66,16 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Definí una pregunta de trabajo/);
   assert.match(source, /Abrir fuente oficial/);
   assert.match(source, /Guardar próximos pasos como nota/);
+  assert.match(source, /VerificationTasksPanel/);
+  assert.match(source, /Checklist de verificación/);
+  assert.match(source, /Estado para handoff/);
+  assert.match(source, /No lista para handoff/);
+  assert.match(source, /Lista para handoff interno/);
+  assert.match(source, /Publicación pública requiere curación manual/);
+  assert.match(source, /Guardar próximos pasos como tareas/);
+  assert.match(source, /addVerificationTaskToWorkspace/);
+  assert.match(source, /createVerificationTasksFromNextSteps/);
+  assert.match(source, /updateVerificationTaskStatus/);
   assert.match(source, /buildSearchSuggestions/);
   assert.match(source, /SearchSuggestionGroups/);
   assert.match(source, /Buscar provincia, proveedor, CUIT, organismo, fuente o expediente/);

@@ -51,6 +51,20 @@ export interface InvestigationAnalysis {
   markdown: string;
 }
 
+export type InvestigationVerificationTaskStatus = "pending" | "in_progress" | "done" | "blocked";
+
+export interface InvestigationVerificationTask {
+  id: string;
+  title: string;
+  action: string;
+  source: string;
+  status: InvestigationVerificationTaskStatus;
+  owner: string | null;
+  dueDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type InvestigationCaseRelationReason =
   | "same_supplier"
   | "same_agency"
@@ -85,6 +99,7 @@ export interface InvestigationWorkspace {
   entities: InvestigationEntity[];
   files: InvestigationFile[];
   analyses: InvestigationAnalysis[];
+  verificationTasks: InvestigationVerificationTask[];
 }
 
 export interface CreateInvestigationWorkspaceInput {
@@ -123,6 +138,21 @@ export interface AddCaseToWorkspaceOptions {
   reason?: InvestigationCaseRelationReason;
   note?: string;
   now?: Date;
+}
+
+export interface AddVerificationTaskInput {
+  title?: string;
+  action: string;
+  source: string;
+  status?: InvestigationVerificationTaskStatus;
+  owner?: string | null;
+  dueDate?: string | null;
+}
+
+export interface InvestigationReadinessGate {
+  ready: boolean;
+  label: string;
+  blockers: string[];
 }
 
 export type EnsureInvestigationWorkspaceStatus =
@@ -182,6 +212,7 @@ export function createInvestigationWorkspace(
     entities: [],
     files: [],
     analyses: [],
+    verificationTasks: [],
   };
 }
 
@@ -219,6 +250,93 @@ export function removeCaseFromWorkspace(
     caseIds: workspace.caseIds.filter((id) => id !== caseId),
     caseRelations: (workspace.caseRelations ?? []).filter((relation) => relation.caseId !== caseId),
     updatedAt: now.toISOString(),
+  };
+}
+
+export function addVerificationTaskToWorkspace(
+  workspace: InvestigationWorkspace,
+  input: AddVerificationTaskInput,
+  now = new Date(),
+): InvestigationWorkspace {
+  const action = normalizeInvestigationText(input.action);
+  const title = normalizeInvestigationText(input.title) || action || "Verificación pendiente";
+  const source = normalizeInvestigationText(input.source) || "Carpeta";
+  const createdAt = now.toISOString();
+  const task: InvestigationVerificationTask = {
+    id: nextVerificationTaskId(workspace),
+    title,
+    action,
+    source,
+    status: normalizeTaskStatus(input.status),
+    owner: optionalText(input.owner),
+    dueDate: normalizeDueDate(input.dueDate),
+    createdAt,
+    updatedAt: createdAt,
+  };
+  return {
+    ...workspace,
+    verificationTasks: [...readVerificationTasks(workspace), task],
+    updatedAt: createdAt,
+  };
+}
+
+export function createVerificationTasksFromNextSteps(
+  workspace: InvestigationWorkspace,
+  steps: string[],
+  now = new Date(),
+): InvestigationWorkspace {
+  const existingActions = new Set(readVerificationTasks(workspace).map((task) => normalizeKey(task.action)));
+  let nextWorkspace = workspace;
+  for (const step of steps) {
+    const action = normalizeInvestigationText(step);
+    const key = normalizeKey(action);
+    if (!action || existingActions.has(key)) continue;
+    nextWorkspace = addVerificationTaskToWorkspace(nextWorkspace, {
+      title: action.length > 80 ? `${action.slice(0, 77)}...` : action,
+      action,
+      source: "Próximos pasos del dossier",
+      status: "pending",
+    }, now);
+    existingActions.add(key);
+  }
+  return nextWorkspace;
+}
+
+export function updateVerificationTaskStatus(
+  workspace: InvestigationWorkspace,
+  taskId: string,
+  status: InvestigationVerificationTaskStatus,
+  now = new Date(),
+): InvestigationWorkspace {
+  const normalizedTaskId = normalizeInvestigationText(taskId);
+  const updatedAt = now.toISOString();
+  return {
+    ...workspace,
+    verificationTasks: readVerificationTasks(workspace).map((task) =>
+      task.id === normalizedTaskId
+        ? { ...task, status: normalizeTaskStatus(status), updatedAt }
+        : task
+    ),
+    updatedAt,
+  };
+}
+
+export function buildInvestigationReadiness(workspace: InvestigationWorkspace): InvestigationReadinessGate {
+  const blockers: string[] = [];
+  const tasks = readVerificationTasks(workspace);
+  if (workspace.caseIds.length === 0) blockers.push("Agregar al menos un expediente oficial.");
+  if (tasks.length === 0) blockers.push("Crear tareas de verificación antes del handoff.");
+  const openTasks = tasks.filter((task) => task.status !== "done");
+  if (openTasks.length > 0) blockers.push(`${formatTaskCount(openTasks.length)} sin cerrar.`);
+  const missingRelationNotes = workspace.caseIds.filter((caseId) => {
+    const relation = (workspace.caseRelations ?? []).find((item) => item.caseId === caseId);
+    return !normalizeInvestigationText(relation?.note);
+  }).length;
+  if (missingRelationNotes > 0) blockers.push(`${missingRelationNotes} expediente${missingRelationNotes === 1 ? "" : "s"} sin nota de relación.`);
+  return {
+    ready: blockers.length === 0,
+    label: blockers.length === 0 ? "Lista para handoff interno" : "No lista para handoff",
+    blockers,
   };
 }
 
@@ -375,6 +493,36 @@ function optionalText(value: string | null | undefined): string | null {
 
 function uniqueStrings(values: string[]): string[] {
   return [...new Set(values)];
+}
+
+function readVerificationTasks(workspace: InvestigationWorkspace): InvestigationVerificationTask[] {
+  return Array.isArray(workspace.verificationTasks) ? workspace.verificationTasks : [];
+}
+
+function nextVerificationTaskId(workspace: InvestigationWorkspace): string {
+  const nextNumber = readVerificationTasks(workspace).reduce((max, task) => {
+    const match = /^TASK-(\d+)$/.exec(task.id);
+    return match ? Math.max(max, Number(match[1])) : max;
+  }, 0) + 1;
+  return `TASK-${nextNumber}`;
+}
+
+function normalizeTaskStatus(
+  status: InvestigationVerificationTaskStatus | null | undefined,
+): InvestigationVerificationTaskStatus {
+  if (status === "in_progress" || status === "done" || status === "blocked") return status;
+  return "pending";
+}
+
+function normalizeDueDate(value: string | null | undefined): string | null {
+  const normalized = normalizeInvestigationText(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) return null;
+  const date = new Date(`${normalized}T00:00:00.000Z`);
+  return Number.isNaN(date.getTime()) ? null : normalized;
+}
+
+function formatTaskCount(count: number): string {
+  return `${count} tarea${count === 1 ? "" : "s"} de verificación`;
 }
 
 function resolveAddCaseOptions(input: Date | AddCaseToWorkspaceOptions): Required<AddCaseToWorkspaceOptions> {

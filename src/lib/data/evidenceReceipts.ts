@@ -48,7 +48,7 @@ export function createEvidenceReceipt(input: EvidenceReceiptInput): EvidenceRece
     rawPath: input.rawPath,
     snapshotHash: input.snapshotHash,
     fileHash: input.snapshotHash,
-    rowHash: `sha256-${hashStableJson(input.row)}`,
+    rowHash: hashEvidenceReceiptRow(input.row),
     recordId: input.recordId,
     locatorType: input.locatorType,
     extractedAt: input.extractedAt,
@@ -95,6 +95,10 @@ export function describeReceiptLocator(
   locatorType: LocatorType,
 ): ReceiptLocatorPresentation {
   return receiptLocatorPresentations[locatorType];
+}
+
+export function hashEvidenceReceiptRow(value: Record<string, unknown>): string {
+  return `sha256-${hashStableJson(value)}`;
 }
 
 function hashStableJson(value: Record<string, unknown>): string {

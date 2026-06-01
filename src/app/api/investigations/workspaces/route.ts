@@ -1,9 +1,13 @@
-import { normalizeInvestigationWorkspaceCollection } from "../../../../lib/data/investigationWorkspaceCollections.ts";
+import {
+  InvalidInvestigationWorkspaceCollectionError,
+  parsePersistableInvestigationWorkspaceCollection,
+} from "../../../../lib/data/investigationWorkspaceCollections.ts";
 import { requireFaroUser } from "../../../../lib/server/faroAuth.ts";
 import {
   readUserInvestigationWorkspaceCollection,
   replaceUserInvestigationWorkspaceCollection,
 } from "../../../../lib/server/investigationWorkspaceDb.ts";
+import { assertSameOriginRequest } from "../../../../lib/server/requestGuards.ts";
 
 export async function GET(request: Request) {
   void request;
@@ -35,6 +39,13 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const origin = assertSameOriginRequest(request);
+  if (!origin.ok) {
+    return Response.json(
+      { error: origin.error, message: origin.message },
+      { status: origin.status },
+    );
+  }
   const auth = await requireFaroUser();
   if (!auth.ok) {
     return Response.json(
@@ -45,7 +56,7 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const collection = normalizeInvestigationWorkspaceCollection(
+    const collection = parsePersistableInvestigationWorkspaceCollection(
       typeof body === "object" && body !== null && "collection" in body
         ? (body as { collection?: unknown }).collection
         : body,
@@ -57,6 +68,15 @@ export async function PUT(request: Request) {
       collection: savedCollection,
     });
   } catch (error) {
+    if (error instanceof InvalidInvestigationWorkspaceCollectionError) {
+      return Response.json(
+        {
+          error: "invalid_workspace_collection",
+          message: "No pudimos guardar la carpeta porque el payload esta incompleto.",
+        },
+        { status: 400 },
+      );
+    }
     console.error("[api/investigations/workspaces] write failed", error);
     return Response.json(
       {
