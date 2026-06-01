@@ -1,6 +1,6 @@
 # Contexto De Producto: Faro Argentina
 
-Fecha: 2026-05-21
+Fecha: 2026-06-01
 Audiencia: producto, UI/UX, datos, satelite, ingenieria
 Estado: contexto vigente para fork privado enfocado en Argentina
 
@@ -243,8 +243,12 @@ Implementado:
 - readiness endpoint;
 - catalogo de fuentes;
 - scripts locales de fetch, build y verify.
+- autenticacion Clerk para superficies privadas e internas;
+- persistencia Neon opcional para estado privado estructurado;
+- storage R2 compatible para adjuntos privados de Aportes cuando esta
+  configurado.
 
-Datos actuales:
+Datos actuales segun reportes generados el 2026-05-21:
 
 - `7.932` expedientes de Argentina;
 - `389` contratos CONTRAT.AR canonicos;
@@ -254,6 +258,17 @@ Datos actuales:
 - `12` expedientes historico-judiciales;
 - `431` expedientes elegibles para mapa despues del gate;
 - `9.617` receipts.
+
+Currentness:
+
+- El manifest principal de snapshots fue generado el
+  `2026-05-18T00:19:46.421Z`.
+- Mapa de Inversiones fue agregado en la linea de datos del `2026-05-21`.
+- Las metricas publicas deben verificarse con `npm run data:geo-report` y
+  `npm run data:quality-report` antes de una presentacion o release.
+- "Map-safe" no significa "todos los casos"; significa que el expediente tiene
+  geometria oficial validada. Los demas casos siguen siendo buscables,
+  exportables y revisables como brechas.
 
 Bloqueos antes de llamarlo producto terminado:
 
