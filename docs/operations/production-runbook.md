@@ -77,6 +77,11 @@ Antes de aplicar:
 - Revisar el diff SQL que se va a ejecutar.
 - Hacer backup o snapshot de Neon si el cambio no es trivial.
 - Ejecutar primero contra Preview/Staging cuando exista.
+- Para migraciones que agregan columnas leidas por el runtime, como
+  `003_investigation_verification_tasks.sql`, aplicar la migracion antes de
+  promover el deploy de codigo que depende de esa columna. Si se despliega el
+  codigo primero, las superficies privadas pueden responder `503` hasta que la
+  base tenga el schema esperado.
 
 Despues de aplicar:
 
@@ -100,6 +105,9 @@ Checklist:
   prefijo usado por Faro.
 - Configurar `STORAGE_ENDPOINT`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY` y
   `STORAGE_SECRET_KEY`.
+- Usar primero un bucket de Preview/staging o un prefijo descartable. El smoke
+  test crea un aporte tecnico real; si se corre contra el mismo bucket/prefijo
+  que produccion, puede aparecer en la bandeja privada de `/admin/aportes`.
 - Ejecutar:
 
 ```bash
@@ -108,7 +116,9 @@ npm run verify:aportes-storage
 
 El smoke test sube un aporte tecnico y verifica por `HEAD` que existen el
 adjunto y el manifest en R2. Si devuelve `storageMode` distinto de `r2`, la app
-no esta usando R2 para esa ejecucion.
+no esta usando R2 para esa ejecucion. Si se ejecuto contra storage compartido
+con produccion, borrar los objetos `APORTE-R2-SMOKE-*` o marcarlos como prueba
+interna antes de revisar aportes reales.
 
 ## Release Verification
 
@@ -134,10 +144,13 @@ Para cambios de produccion privada:
 
 ```bash
 npm run db:migrate
-npm run verify:aportes-storage
 npm run typecheck
 npm run build
 ```
+
+Ejecutar `npm run verify:aportes-storage` solo contra Preview/staging o contra
+un prefijo/bucket descartable, salvo que haya un paso explicito de limpieza del
+aporte tecnico creado por el smoke test.
 
 No usar `npm run data:fetch:all` como reparacion rutinaria: refresca fuentes
 externas y puede cambiar la linea base de evidencia.
