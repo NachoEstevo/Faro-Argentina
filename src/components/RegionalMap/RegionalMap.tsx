@@ -22,16 +22,8 @@ interface Props {
   syncLabel: string;
 }
 
-const WELCOME_STORAGE_KEY = "faro-welcome-dismissed";
-
 export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
-  const [overlayDismissed, setOverlayDismissed] = useState(true);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = window.sessionStorage.getItem(WELCOME_STORAGE_KEY);
-    setOverlayDismissed(stored === "1");
-  }, []);
+  const [overlayDismissed, setOverlayDismissed] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
@@ -53,9 +45,6 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
 
   const handleCTA = useCallback(() => {
     setOverlayDismissed(true);
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(WELCOME_STORAGE_KEY, "1");
-    }
   }, []);
 
   const handleSidebarToggle = useCallback(() => {

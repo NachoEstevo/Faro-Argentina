@@ -12,8 +12,9 @@ export default function WelcomeOverlay({ dismissed, onCTA }: Props) {
   if (dismissed) return null;
   return (
     <div className={styles.welcomeOverlay} aria-hidden="false">
+      <p className={styles.welcomeKicker}>Faro</p>
       <h1 className={styles.welcomeHeadline}>
-        Un flujo de investigación de obras públicas en Argentina.
+        Evidencia pública para investigar obra pública en Argentina.
       </h1>
       <button type="button" className={styles.welcomeCTA} onClick={onCTA}>
         <span className={styles.welcomeCTASource} aria-hidden>
