@@ -1,7 +1,9 @@
 import type { InvestigationCasePack } from "../caseRepository.ts";
 import {
   buildInvestigationAggregate,
+  buildInvestigationReadiness,
   type InvestigationAggregate,
+  type InvestigationVerificationTaskStatus,
   type InvestigationWorkspace,
 } from "../data/investigationWorkspaces.ts";
 import {
@@ -74,6 +76,10 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
       content: buildEvidenceMatrixCsv(dossier),
     },
     {
+      name: "verification-tasks.md",
+      content: buildVerificationTasks(input.workspace),
+    },
+    {
       name: "timeline.md",
       content: buildTimeline(aggregate),
     },
@@ -125,6 +131,7 @@ function buildReadme(workspace: InvestigationWorkspace): string {
     "- summary.md: resumen determinístico de expedientes, vínculos y brechas.",
     "- dossier.md: matriz de evidencia, actores, brechas y próximos pasos.",
     "- evidence-matrix.csv: matriz portable por expediente.",
+    "- verification-tasks.md: checklist privado y estado para handoff interno.",
     "- timeline.md: línea temporal de expedientes seleccionados.",
     "- entities.md: entidades cargadas y coincidencias detectadas.",
     "- notes.md: notas del usuario.",
@@ -193,6 +200,38 @@ function buildEvidenceMatrixCsv(dossier: InvestigationDossier): string {
     ]),
   ];
   return rows.map((row) => row.map(escapeCsvCell).join(",")).join("\n");
+}
+
+function buildVerificationTasks(workspace: InvestigationWorkspace): string {
+  const readiness = buildInvestigationReadiness(workspace);
+  const tasks = workspace.verificationTasks ?? [];
+  return [
+    "# Checklist de verificación",
+    "",
+    "Este checklist es material privado de trabajo. No habilita publicación pública sin curación manual, caveats y revisión de fuentes.",
+    "",
+    "## Estado para handoff",
+    "",
+    `Estado: ${readiness.label}`,
+    "",
+    ...formatEmptyableList(readiness.blockers, (blocker) => `- ${blocker}`, "- Sin bloqueos abiertos."),
+    "",
+    "## Tareas",
+    "",
+    ...formatEmptyableList(
+      tasks,
+      (task) => [
+        `### ${task.id}: ${task.title}`,
+        "",
+        `- Estado: ${formatTaskStatus(task.status)}`,
+        `- Acción: ${task.action}`,
+        `- Fuente: ${task.source}`,
+        `- Responsable: ${task.owner ?? "Sin asignar"}`,
+        task.dueDate ? `- Fecha límite: ${task.dueDate}` : "- Fecha límite: Sin fecha",
+      ].join("\n"),
+      "Sin tareas de verificación.",
+    ),
+  ].join("\n");
 }
 
 function buildSummary(workspace: InvestigationWorkspace, aggregate: InvestigationAggregate): string {
@@ -447,4 +486,11 @@ function escapeCsvCell(value: string): string {
 
 function formatCaseIds(caseIds: string[]): string {
   return caseIds.join(", ");
+}
+
+function formatTaskStatus(status: InvestigationVerificationTaskStatus): string {
+  if (status === "in_progress") return "En curso";
+  if (status === "done") return "Hecha";
+  if (status === "blocked") return "Bloqueada";
+  return "Pendiente";
 }
