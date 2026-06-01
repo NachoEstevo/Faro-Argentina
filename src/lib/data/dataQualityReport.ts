@@ -58,6 +58,7 @@ export interface DataQualityReport {
     checkedCases: number;
     checkedReceipts: number;
     checkedRawFiles: number;
+    rowReceipts?: DataSpineVerificationReport["rowReceipts"];
     errors: number;
   };
   byCountry: Record<string, DataQualityCountry>;
@@ -156,6 +157,7 @@ export function buildDataQualityReport({
       checkedCases: verification.checkedCases,
       checkedReceipts: verification.checkedReceipts,
       checkedRawFiles: verification.checkedRawFiles,
+      rowReceipts: verification.rowReceipts,
       errors: verification.errors.length,
     },
     byCountry,
