@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
+import { verifyRawRowReceipt, type RawRowReceiptStatus } from "./rawRowLocators.ts";
 import type { SourceCatalogEntry } from "./sourceCatalog.ts";
 
 interface VerifyDataset {
@@ -36,8 +37,18 @@ interface VerifyReceipt {
   snapshotHash: string;
   fileHash: string;
   rowHash: string;
+  recordId: string;
   locatorType: string;
   parserVersion: string;
+}
+
+export interface RowReceiptVerificationStats {
+  checked: number;
+  exact: number;
+  unsupported: number;
+  missing: number;
+  duplicate: number;
+  hashMismatch: number;
 }
 
 export interface DataSpineVerificationReport {
@@ -45,6 +56,7 @@ export interface DataSpineVerificationReport {
   checkedCases: number;
   checkedReceipts: number;
   checkedRawFiles: number;
+  rowReceipts?: RowReceiptVerificationStats;
   errors: string[];
 }
 
@@ -61,6 +73,8 @@ export async function verifyDataSpine({
   const sourceById = new Map(sources.map((source) => [source.sourceId, source]));
   const sourceIds = new Set(sourceById.keys());
   const rawFileHashes = new Map<string, string>();
+  const rawRowsByPath = new Map<string, Array<Record<string, unknown>> | null>();
+  const rowReceipts = emptyRowReceiptStats();
   let checkedCases = 0;
   let checkedReceipts = 0;
 
@@ -103,6 +117,16 @@ export async function verifyDataSpine({
         expectedRawPath: dataset.source.filePath,
         expectedHash: dataset.source.fileHash,
       });
+      await validateReceiptRawRow({
+        rootDir,
+        caseId: caseFile.id,
+        receipt: caseFile.receipt,
+        label: "receipt",
+        source: sourceById.get(caseFile.receipt.sourceId),
+        rawRowsByPath,
+        rowReceipts,
+        errors,
+      });
 
       checkFxConversion(errors, caseFile.id, "amount", caseFile.amount ?? null);
       checkFxConversion(errors, caseFile.id, "officialBudget", caseFile.officialBudget ?? null);
@@ -123,6 +147,16 @@ export async function verifyDataSpine({
           errors,
           expectedHash: relatedRawHash ?? undefined,
         });
+        await validateReceiptRawRow({
+          rootDir,
+          caseId: caseFile.id,
+          receipt: relatedReceipt,
+          label: "related receipt",
+          source: sourceById.get(relatedReceipt.sourceId),
+          rawRowsByPath,
+          rowReceipts,
+          errors,
+        });
       }
     }
   }
@@ -132,8 +166,66 @@ export async function verifyDataSpine({
     checkedCases,
     checkedReceipts,
     checkedRawFiles: rawFileHashes.size,
+    rowReceipts,
     errors,
   };
+}
+
+async function validateReceiptRawRow({
+  rootDir,
+  caseId,
+  receipt,
+  label,
+  source,
+  rawRowsByPath,
+  rowReceipts,
+  errors,
+}: {
+  rootDir: URL;
+  caseId: string;
+  receipt: VerifyReceipt;
+  label: string;
+  source: SourceCatalogEntry | undefined;
+  rawRowsByPath: Map<string, Array<Record<string, unknown>> | null>;
+  rowReceipts: RowReceiptVerificationStats;
+  errors: string[];
+}): Promise<void> {
+  const result = await verifyRawRowReceipt({
+    rootDir,
+    receipt,
+    source,
+    rawRowsByPath,
+  });
+  addRowReceiptStatus(rowReceipts, result.status);
+  if (result.message) {
+    errors.push(`${caseId}: ${label} ${result.message}`);
+  }
+}
+
+function emptyRowReceiptStats(): RowReceiptVerificationStats {
+  return {
+    checked: 0,
+    exact: 0,
+    unsupported: 0,
+    missing: 0,
+    duplicate: 0,
+    hashMismatch: 0,
+  };
+}
+
+function addRowReceiptStatus(
+  stats: RowReceiptVerificationStats,
+  status: RawRowReceiptStatus,
+): void {
+  if (status === "unsupported") {
+    stats.unsupported += 1;
+    return;
+  }
+  stats.checked += 1;
+  if (status === "exact") stats.exact += 1;
+  if (status === "missing") stats.missing += 1;
+  if (status === "duplicate") stats.duplicate += 1;
+  if (status === "hash_mismatch") stats.hashMismatch += 1;
 }
 
 function checkFxConversion(
