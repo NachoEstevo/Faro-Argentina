@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 import { createInvestigationWorkspace } from "../src/lib/data/investigationWorkspaces.ts";
+import { InvalidInvestigationWorkspaceCollectionError } from "../src/lib/data/investigationWorkspaceCollections.ts";
 import {
   readUserInvestigationWorkspaceCollection,
   replaceUserInvestigationWorkspaceCollection,
@@ -24,6 +25,7 @@ test("GET /api/investigations/workspaces is account-backed, not code-backed", as
   assert.match(source, /replaceUserInvestigationWorkspaceCollection/);
   assert.match(source, /storageMode:\s*"neon"/);
   assert.match(source, /verification_tasks/);
+  assert.match(source, /invalid_workspace_collection/);
   assert.doesNotMatch(source, /x-faro-workspace-code/);
   assert.doesNotMatch(source, /verifyInvestigationWorkspaceAccess/);
 });
@@ -68,6 +70,40 @@ test("Neon workspace repository persists one user's private collection", async (
   assert.equal(loaded.workspaces[0]?.verificationTasks[0]?.title, "Abrir fuente oficial");
 });
 
+test("Neon workspace repository rejects malformed collections before deleting existing rows", async () => {
+  const sql = createFakeProductSql();
+  const user: FaroAuthenticatedUser = {
+    clerkUserId: "user_faro_malformed",
+    email: "malformed@example.com",
+    displayName: "Investigadora Faro",
+    role: "investigator",
+  };
+  const workspace = createInvestigationWorkspace(
+    { title: "Carpeta a preservar", countryCode: "AR" },
+    new Date("2026-05-23T12:00:00.000Z"),
+  );
+
+  await replaceUserInvestigationWorkspaceCollection(user, {
+    version: "faro_investigation_workspace_collection_v1",
+    activeWorkspaceId: workspace.id,
+    workspaces: [workspace],
+  }, sql);
+
+  await assert.rejects(
+    () => replaceUserInvestigationWorkspaceCollection(user, {
+      version: "faro_investigation_workspace_collection_v1",
+      activeWorkspaceId: "bad",
+      workspaces: [{ id: "bad" }],
+    } as never, sql),
+    InvalidInvestigationWorkspaceCollectionError,
+  );
+
+  const loaded = await readUserInvestigationWorkspaceCollection(user, sql);
+  assert.equal(loaded.activeWorkspaceId, workspace.id);
+  assert.equal(loaded.workspaces.length, 1);
+  assert.equal(loaded.workspaces[0]?.title, "Carpeta a preservar");
+});
+
 function createFakeProductSql(): ProductSql {
   const users = new Map<string, { active_workspace_id: string | null }>();
   const workspaces = new Map<string, FakeWorkspaceRow>();
@@ -75,7 +111,14 @@ function createFakeProductSql(): ProductSql {
     query: async (text: string, params: unknown[] = []) => {
       const normalized = text.replace(/\s+/g, " ").trim().toLowerCase();
       if (normalized.startsWith("insert into faro_users")) {
-        users.set(String(params[0]), { active_workspace_id: params[4] as string | null });
+        const userId = String(params[0]);
+        const existing = users.get(userId);
+        const shouldUpdateActiveWorkspace = Boolean(params[5]);
+        users.set(userId, {
+          active_workspace_id: shouldUpdateActiveWorkspace
+            ? params[4] as string | null
+            : existing?.active_workspace_id ?? null,
+        });
         return [];
       }
       if (normalized.startsWith("select active_workspace_id")) {

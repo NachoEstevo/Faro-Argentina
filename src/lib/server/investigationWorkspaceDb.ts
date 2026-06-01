@@ -1,6 +1,7 @@
 import {
   emptyInvestigationWorkspaceCollection,
   normalizeInvestigationWorkspaceCollection,
+  parsePersistableInvestigationWorkspaceCollection,
   type InvestigationWorkspaceCollection,
 } from "../data/investigationWorkspaceCollections.ts";
 import type {
@@ -64,9 +65,13 @@ export async function replaceUserInvestigationWorkspaceCollection(
   collection: InvestigationWorkspaceCollection,
   sql: ProductSql = getProductSql(),
 ): Promise<InvestigationWorkspaceCollection> {
-  const normalized = normalizeInvestigationWorkspaceCollection(collection);
-  await upsertFaroUser(user, normalized.activeWorkspaceId, sql);
+  const normalized = parsePersistableInvestigationWorkspaceCollection(collection);
+  await upsertFaroUser(user, undefined, sql);
   const workspaceIds = normalized.workspaces.map((workspace) => workspace.id);
+  for (const workspace of normalized.workspaces) {
+    await upsertWorkspace(user.clerkUserId, workspace, sql);
+  }
+
   if (workspaceIds.length === 0) {
     await sql.query("delete from investigation_workspaces where owner_clerk_user_id = $1", [user.clerkUserId]);
   } else {
@@ -77,9 +82,7 @@ export async function replaceUserInvestigationWorkspaceCollection(
     );
   }
 
-  for (const workspace of normalized.workspaces) {
-    await upsertWorkspace(user.clerkUserId, workspace, sql);
-  }
+  await upsertFaroUser(user, normalized.activeWorkspaceId, sql);
   return readUserInvestigationWorkspaceCollection(user, sql);
 }
 
