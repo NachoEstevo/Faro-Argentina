@@ -1,4 +1,10 @@
 import type { EvidencePack } from "../caseRepository.ts";
+import { resolveSupplierIdentity } from "./entityResolution.ts";
+import {
+  buildRelationProvenance,
+  buildSupplierRelationProvenance,
+  type RelationProvenance,
+} from "./relationProvenance.ts";
 
 export type InvestigationCountryCode = "AR";
 
@@ -119,8 +125,8 @@ export interface InvestigationAggregate {
     label: string;
     note: string;
   }>;
-  repeatedSuppliers: Array<{ label: string; document: string | null; count: number; caseIds: string[] }>;
-  repeatedAgencies: Array<{ label: string; count: number; caseIds: string[] }>;
+  repeatedSuppliers: Array<{ label: string; document: string | null; provenance: RelationProvenance; count: number; caseIds: string[] }>;
+  repeatedAgencies: Array<{ label: string; provenance: RelationProvenance; count: number; caseIds: string[] }>;
   amountsByCurrency: Array<{ currency: string; total: number; count: number }>;
   timeline: Array<{ year: number; count: number; caseIds: string[] }>;
   signals: Array<{ code: string; label: string; count: number; caseIds: string[] }>;
@@ -371,8 +377,8 @@ export function buildInvestigationAggregate(
   packs: EvidencePack[],
 ): InvestigationAggregate {
   const sourceIds = new Set<string>();
-  const suppliers = new Map<string, { label: string; document: string | null; caseIds: string[] }>();
-  const agencies = new Map<string, { label: string; caseIds: string[] }>();
+  const suppliers = new Map<string, { label: string; document: string | null; provenance: RelationProvenance; caseIds: string[] }>();
+  const agencies = new Map<string, { label: string; provenance: RelationProvenance; caseIds: string[] }>();
   const amounts = new Map<string, { currency: string; total: number; count: number }>();
   const timeline = new Map<number, { year: number; caseIds: string[] }>();
   const signals = new Map<string, { code: string; label: string; caseIds: string[] }>();
@@ -440,11 +446,13 @@ export function buildInvestigationAggregate(
     repeatedSuppliers: repeatedFromMap(suppliers).map((item) => ({
       label: item.label,
       document: item.document,
+      provenance: item.provenance,
       count: item.caseIds.length,
       caseIds: item.caseIds,
     })),
     repeatedAgencies: repeatedFromMap(agencies).map((item) => ({
       label: item.label,
+      provenance: item.provenance,
       count: item.caseIds.length,
       caseIds: item.caseIds,
     })),
@@ -538,26 +546,39 @@ function normalizeRelationReason(
 }
 
 function addSupplier(
-  suppliers: Map<string, { label: string; document: string | null; caseIds: string[] }>,
+  suppliers: Map<string, { label: string; document: string | null; provenance: RelationProvenance; caseIds: string[] }>,
   caseFile: EvidencePack["caseFile"],
 ) {
-  const label = normalizeInvestigationText(readStringField(caseFile, "supplierName"));
-  if (!label) return;
+  const identity = resolveSupplierIdentity({
+    countryCode: caseFile.countryCode,
+    supplierName: readStringField(caseFile, "supplierName"),
+    supplierDocument: readStringField(caseFile, "supplierDocument"),
+  });
+  if (!identity) return;
+  const label = normalizeInvestigationText(readStringField(caseFile, "supplierName")) || identity.label;
   const document = optionalText(readStringField(caseFile, "supplierDocument"));
-  const key = document ? `document:${document}` : `name:${normalizeKey(label)}`;
-  const current = suppliers.get(key) ?? { label, document, caseIds: [] };
+  const current = suppliers.get(identity.key) ?? {
+    label,
+    document,
+    provenance: buildSupplierRelationProvenance(identity),
+    caseIds: [],
+  };
   current.caseIds.push(caseFile.id);
-  suppliers.set(key, current);
+  suppliers.set(identity.key, current);
 }
 
 function addAgency(
-  agencies: Map<string, { label: string; caseIds: string[] }>,
+  agencies: Map<string, { label: string; provenance: RelationProvenance; caseIds: string[] }>,
   caseFile: EvidencePack["caseFile"],
 ) {
   const label = normalizeInvestigationText(caseFile.agencyName ?? caseFile.contractingUnit);
   if (!label) return;
   const key = normalizeKey(label);
-  const current = agencies.get(key) ?? { label, caseIds: [] };
+  const current = agencies.get(key) ?? {
+    label,
+    provenance: buildRelationProvenance("same_agency"),
+    caseIds: [],
+  };
   current.caseIds.push(caseFile.id);
   agencies.set(key, current);
 }

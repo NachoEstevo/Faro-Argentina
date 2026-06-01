@@ -287,11 +287,23 @@ test("buildInvestigationAggregate summarizes repeated entities, amounts, signals
   assert.deepEqual(aggregate.repeatedSuppliers[0], {
     label: "Austral Construcciones S.A.",
     document: "30-71111111-1",
+    provenance: {
+      kind: "exact_cuit",
+      label: "CUIT exacto",
+      confidence: "high",
+      caveat: "Coincidencia por identificador fiscal declarado; no prueba por si sola una relacion fuera de los registros comparados.",
+    },
     count: 2,
     caseIds: ["AR-CASE-1", "AR-CASE-2"],
   });
   assert.deepEqual(aggregate.repeatedAgencies[0], {
     label: "Dirección Nacional de Vialidad",
+    provenance: {
+      kind: "same_agency",
+      label: "Mismo organismo",
+      confidence: "medium",
+      caveat: "Compartir organismo ayuda a priorizar revision; no confirma coordinacion ni una relacion sustantiva entre expedientes.",
+    },
     count: 3,
     caseIds: ["AR-CASE-1", "AR-CASE-2", "AR-CASE-3"],
   });
