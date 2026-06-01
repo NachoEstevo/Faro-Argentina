@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
+import { PUT } from "../src/app/api/investigations/workspaces/route.ts";
 import { createInvestigationWorkspace } from "../src/lib/data/investigationWorkspaces.ts";
 import {
   readUserInvestigationWorkspaceCollection,
@@ -11,6 +12,13 @@ import type { FaroAuthenticatedUser } from "../src/lib/server/faroAuth.ts";
 import type { ProductSql } from "../src/lib/server/productDb.ts";
 
 const workspacesRouteUrl = new URL("../src/app/api/investigations/workspaces/route.ts", import.meta.url);
+const authEnvKeys = [
+  "FARO_ENABLE_TEST_AUTH",
+  "FARO_TEST_CLERK_USER_ID",
+  "FARO_TEST_CLERK_USER_ROLE",
+  "FARO_TEST_CLERK_USER_EMAIL",
+  "FARO_TEST_CLERK_USER_NAME",
+];
 
 test("GET /api/investigations/workspaces is account-backed, not code-backed", async () => {
   const source = await readFile(workspacesRouteUrl, "utf8");
@@ -21,6 +29,28 @@ test("GET /api/investigations/workspaces is account-backed, not code-backed", as
   assert.match(source, /storageMode:\s*"neon"/);
   assert.doesNotMatch(source, /x-faro-workspace-code/);
   assert.doesNotMatch(source, /verifyInvestigationWorkspaceAccess/);
+});
+
+test("PUT /api/investigations/workspaces rejects cross-origin private workspace writes", async () => {
+  const env = preserveEnv(authEnvKeys);
+  enableInvestigatorAuth();
+
+  try {
+    const response = await PUT(new Request("http://localhost/api/investigations/workspaces", {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        origin: "https://example.org",
+      },
+      body: JSON.stringify({ collection: { version: "faro_investigation_workspace_collection_v1" } }),
+    }));
+    const payload = await response.json() as { error: string };
+
+    assert.equal(response.status, 403);
+    assert.equal(payload.error, "origin_rejected");
+  } finally {
+    restoreEnv(env);
+  }
 });
 
 test("Neon workspace repository persists one user's private collection", async () => {
@@ -99,6 +129,25 @@ function createFakeProductSql(): ProductSql {
       throw new Error(`Unhandled fake SQL: ${text}`);
     },
   } as unknown as ProductSql;
+}
+
+function enableInvestigatorAuth(): void {
+  process.env.FARO_ENABLE_TEST_AUTH = "1";
+  process.env.FARO_TEST_CLERK_USER_ID = "user_investigator";
+  process.env.FARO_TEST_CLERK_USER_ROLE = "investigator";
+  process.env.FARO_TEST_CLERK_USER_EMAIL = "investigator@example.com";
+  process.env.FARO_TEST_CLERK_USER_NAME = "Investigadora Faro";
+}
+
+function preserveEnv(keys: string[]): Map<string, string | undefined> {
+  return new Map(keys.map((key) => [key, process.env[key]]));
+}
+
+function restoreEnv(env: Map<string, string | undefined>): void {
+  for (const [key, value] of env) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
 }
 
 interface FakeWorkspaceRow {

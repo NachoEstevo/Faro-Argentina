@@ -4,6 +4,7 @@ import {
   readUserInvestigationWorkspaceCollection,
   replaceUserInvestigationWorkspaceCollection,
 } from "../../../../lib/server/investigationWorkspaceDb.ts";
+import { assertSameOriginRequest } from "../../../../lib/server/requestGuards.ts";
 
 export async function GET(request: Request) {
   void request;
@@ -35,6 +36,13 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const origin = assertSameOriginRequest(request);
+  if (!origin.ok) {
+    return Response.json(
+      { error: origin.error, message: origin.message },
+      { status: origin.status },
+    );
+  }
   const auth = await requireFaroUser();
   if (!auth.ok) {
     return Response.json(

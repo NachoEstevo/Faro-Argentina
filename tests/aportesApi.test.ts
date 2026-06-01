@@ -75,6 +75,27 @@ test("POST /api/aportes rejects invalid contribution payloads", async () => {
   ]);
 });
 
+test("POST /api/aportes rate limits repeated public submissions by client", async () => {
+  const headers = { "x-forwarded-for": "203.0.113.10" };
+
+  let response = new Response();
+  for (let index = 0; index < 11; index += 1) {
+    const form = new FormData();
+    form.set("type", "add_photo");
+    form.set("title", "Fuente publica para revisar");
+    form.set("jurisdiction", "AR");
+    response = await POST(new Request("http://localhost/api/aportes", {
+      method: "POST",
+      headers,
+      body: form,
+    }));
+  }
+  const payload = await response.json() as { error: string };
+
+  assert.equal(response.status, 429);
+  assert.equal(payload.error, "submission_rate_limited");
+});
+
 test("POST /api/aportes hides internal storage failures from public responses", async () => {
   const previousEnv = {
     STORAGE_ENDPOINT: process.env.STORAGE_ENDPOINT,
