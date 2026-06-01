@@ -82,7 +82,7 @@ test("GET /api/admin/aportes/attachment rate limits repeated private attachment 
   }
 });
 
-test("GET /api/admin/aportes/attachment opens an owned private attachment with no-store headers", async () => {
+test("GET /api/admin/aportes/attachment opens an owned private attachment with safe download headers", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-attachment-"));
   const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
   process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
@@ -100,7 +100,10 @@ test("GET /api/admin/aportes/attachment opens an owned private attachment with n
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("cache-control"), "private, no-store");
     assert.equal(response.headers.get("content-type"), "image/webp");
-    assert.match(response.headers.get("content-disposition") ?? "", /filename="ATT-001.webp"/);
+    assert.match(response.headers.get("content-disposition") ?? "", /^attachment; filename="ATT-001\.webp"$/);
+    assert.equal(response.headers.get("content-security-policy"), "sandbox");
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-download-options"), "noopen");
     assert.equal(await response.text(), "fake image");
   } finally {
     restoreEnv(env);

@@ -45,8 +45,11 @@ export async function GET(request: Request) {
     return new Response(Buffer.from(attachment.body), {
       headers: {
         "content-type": attachment.contentType,
-        "content-disposition": `inline; filename="${attachment.filename}"`,
+        "content-disposition": `attachment; filename="${safeHeaderFilename(attachment.filename)}"`,
         "cache-control": "private, no-store",
+        "content-security-policy": "sandbox",
+        "x-content-type-options": "nosniff",
+        "x-download-options": "noopen",
       },
     });
   } catch (error) {
@@ -68,4 +71,12 @@ function clientIdentifier(request: Request): string {
     request.headers.get("cf-connecting-ip") ||
     request.headers.get("x-real-ip") ||
     new URL(request.url).host;
+}
+
+function safeHeaderFilename(filename: string): string {
+  const safeFilename = filename
+    .replace(/[\r\n"]/g, "_")
+    .replace(/[^\w.\- ]+/g, "_")
+    .trim();
+  return safeFilename || "aporte-adjunto";
 }
