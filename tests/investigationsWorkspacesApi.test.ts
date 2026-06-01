@@ -11,14 +11,19 @@ import type { FaroAuthenticatedUser } from "../src/lib/server/faroAuth.ts";
 import type { ProductSql } from "../src/lib/server/productDb.ts";
 
 const workspacesRouteUrl = new URL("../src/app/api/investigations/workspaces/route.ts", import.meta.url);
+const workspaceDbUrl = new URL("../src/lib/server/investigationWorkspaceDb.ts", import.meta.url);
 
 test("GET /api/investigations/workspaces is account-backed, not code-backed", async () => {
-  const source = await readFile(workspacesRouteUrl, "utf8");
+  const source = [
+    await readFile(workspacesRouteUrl, "utf8"),
+    await readFile(workspaceDbUrl, "utf8"),
+  ].join("\n");
 
   assert.match(source, /requireFaroUser/);
   assert.match(source, /readUserInvestigationWorkspaceCollection/);
   assert.match(source, /replaceUserInvestigationWorkspaceCollection/);
   assert.match(source, /storageMode:\s*"neon"/);
+  assert.match(source, /verification_tasks/);
   assert.doesNotMatch(source, /x-faro-workspace-code/);
   assert.doesNotMatch(source, /verifyInvestigationWorkspaceAccess/);
 });
@@ -35,17 +40,32 @@ test("Neon workspace repository persists one user's private collection", async (
     { title: "Carpeta persistente", countryCode: "AR" },
     new Date("2026-05-23T12:00:00.000Z"),
   );
+  const workspaceWithTask = {
+    ...workspace,
+    verificationTasks: [{
+      id: "TASK-1",
+      title: "Abrir fuente oficial",
+      action: "Confirmar registro en fuente oficial.",
+      source: "Dossier de trabajo",
+      status: "pending" as const,
+      owner: null,
+      dueDate: null,
+      createdAt: "2026-05-23T12:05:00.000Z",
+      updatedAt: "2026-05-23T12:05:00.000Z",
+    }],
+  };
 
   const saved = await replaceUserInvestigationWorkspaceCollection(user, {
     version: "faro_investigation_workspace_collection_v1",
-    activeWorkspaceId: workspace.id,
-    workspaces: [workspace],
+    activeWorkspaceId: workspaceWithTask.id,
+    workspaces: [workspaceWithTask],
   }, sql);
   const loaded = await readUserInvestigationWorkspaceCollection(user, sql);
 
-  assert.equal(saved.activeWorkspaceId, workspace.id);
-  assert.equal(loaded.activeWorkspaceId, workspace.id);
+  assert.equal(saved.activeWorkspaceId, workspaceWithTask.id);
+  assert.equal(loaded.activeWorkspaceId, workspaceWithTask.id);
   assert.equal(loaded.workspaces[0]?.title, "Carpeta persistente");
+  assert.equal(loaded.workspaces[0]?.verificationTasks[0]?.title, "Abrir fuente oficial");
 });
 
 function createFakeProductSql(): ProductSql {
@@ -85,8 +105,9 @@ function createFakeProductSql(): ProductSql {
           entities: JSON.parse(String(params[11])),
           files: JSON.parse(String(params[12])),
           analyses: JSON.parse(String(params[13])),
-          created_at: String(params[14]),
-          updated_at: String(params[15]),
+          verification_tasks: JSON.parse(String(params[14])),
+          created_at: String(params[15]),
+          updated_at: String(params[16]),
         };
         workspaces.set(row.id, row);
         return [];
@@ -116,6 +137,7 @@ interface FakeWorkspaceRow {
   entities: unknown[];
   files: unknown[];
   analyses: unknown[];
+  verification_tasks: unknown[];
   created_at: string;
   updated_at: string;
 }

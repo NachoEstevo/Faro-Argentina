@@ -49,7 +49,14 @@ function uniqueWorkspaces(workspaces: InvestigationWorkspace[]): InvestigationWo
   for (const workspace of workspaces) {
     if (!workspace?.id || seen.has(workspace.id)) continue;
     seen.add(workspace.id);
-    unique.push(workspace);
+    unique.push(normalizeWorkspace(workspace));
   }
   return unique;
+}
+
+function normalizeWorkspace(workspace: InvestigationWorkspace): InvestigationWorkspace {
+  return {
+    ...workspace,
+    verificationTasks: Array.isArray(workspace.verificationTasks) ? workspace.verificationTasks : [],
+  };
 }

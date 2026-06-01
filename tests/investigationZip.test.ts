@@ -33,6 +33,17 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
       summary: "Resumen",
       markdown: "# Análisis\n\nResumen de trabajo.",
     }],
+    verificationTasks: [{
+      id: "TASK-1",
+      title: "Abrir fuente oficial",
+      action: "Confirmar registro antes del handoff.",
+      source: "Dossier de trabajo",
+      status: "pending" as const,
+      owner: null,
+      dueDate: null,
+      createdAt: "2026-05-17T12:12:00.000Z",
+      updatedAt: "2026-05-17T12:12:00.000Z",
+    }],
   };
   const zip = buildInvestigationZip({
     workspace,
@@ -50,6 +61,7 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /summary\.md/);
   assert.match(text, /dossier\.md/);
   assert.match(text, /evidence-matrix\.csv/);
+  assert.match(text, /verification-tasks\.md/);
   assert.match(text, /timeline\.md/);
   assert.match(text, /entities\.md/);
   assert.match(text, /notes\.md/);
@@ -63,6 +75,10 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /Matriz de evidencia/);
   assert.match(text, /Brechas para verificar/);
   assert.match(text, /Próximos pasos/);
+  assert.match(text, /Checklist de verificación/);
+  assert.match(text, /Estado para handoff/);
+  assert.match(text, /No lista para handoff/);
+  assert.match(text, /Confirmar registro antes del handoff/);
   assert.match(text, /officialSourceUrl/);
   assert.match(text, /Contexto del usuario/);
   assert.match(text, /Sin geometría oficial: 1 expediente/);
