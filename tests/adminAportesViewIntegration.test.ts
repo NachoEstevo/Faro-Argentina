@@ -21,6 +21,10 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Abrir bandeja/);
   assert.match(source, /Bandeja de aportes/);
   assert.match(source, /Flujo operativo/);
+  assert.match(source, /Bandejas de aportes/);
+  assert.match(source, /Activos/);
+  assert.match(source, /Archivados/);
+  assert.match(source, /Removidos/);
   assert.match(source, /Recibido/);
   assert.match(source, /En revisión/);
   assert.match(source, /Necesita más info/);
@@ -33,6 +37,11 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Trazabilidad interna/);
   assert.match(source, /timeline/);
   assert.match(source, /Nota interna/);
+  assert.match(source, /Orden de bandeja/);
+  assert.match(source, /Nota de bandeja/);
+  assert.match(source, /Archivar/);
+  assert.match(source, /Quitar de bandeja/);
+  assert.match(source, /Restaurar a activos/);
   assert.match(source, /Modo de contacto/);
   assert.match(source, /Sin contacto/);
   assert.match(source, /Permite contacto/);
@@ -52,6 +61,9 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Candidato a publicación/);
   assert.match(source, /Destino público/);
   assert.match(source, /Expediente público/);
+  assert.match(source, /Imagen pública curada/);
+  assert.match(source, /Texto alternativo público/);
+  assert.match(source, /copia pública separada/);
   assert.match(source, /Curado publicado/);
   assert.doesNotMatch(source, /Código privado/);
   assert.doesNotMatch(source, /x-faro-admin-code/);

@@ -7,6 +7,7 @@ import {
   isContributionReviewLinkTarget,
   linkContributionToReviewTarget,
   listContributionReviews,
+  updateContributionInboxState,
   updateContributionReview,
 } from "../../../../lib/server/contributionReviewStorage.ts";
 
@@ -50,8 +51,57 @@ export async function PATCH(request: Request) {
   const payload = await request.json().catch(() => null) as {
     submissionId?: string;
     status?: string;
+    inboxState?: string;
     note?: string;
   } | null;
+  if (payload?.inboxState) {
+    if (payload.inboxState !== "active" && payload.inboxState !== "archived" && payload.inboxState !== "removed") {
+      return Response.json(
+        {
+          error: "invalid_inbox_state",
+          message: "Elegí una acción de bandeja válida.",
+        },
+        { status: 400 },
+      );
+    }
+    if (!payload?.submissionId) {
+      return Response.json(
+        {
+          error: "missing_submission_id",
+          message: "Falta el identificador del aporte.",
+        },
+        { status: 400 },
+      );
+    }
+    try {
+      const result = await updateContributionInboxState({
+        submissionId: payload.submissionId,
+        inboxState: payload.inboxState,
+        note: payload.note,
+        reviewer: auth.user,
+      });
+      return Response.json({
+        ok: true,
+        changed: result.changed,
+        storageMode: result.storageMode,
+        contribution: result.contribution,
+      });
+    } catch (error) {
+      if (error instanceof ContributionReviewOperationError) {
+        return Response.json(
+          { error: error.error, message: error.message },
+          { status: error.status },
+        );
+      }
+      return Response.json(
+        {
+          error: "submission_not_found",
+          message: "No encontramos ese aporte en la bandeja privada.",
+        },
+        { status: 404 },
+      );
+    }
+  }
   const status = payload?.status ?? "";
   if (!isContributionReviewStatus(status)) {
     return Response.json(
@@ -81,6 +131,7 @@ export async function PATCH(request: Request) {
     });
     return Response.json({
       ok: true,
+      changed: result.changed,
       storageMode: result.storageMode,
       contribution: result.contribution,
     });

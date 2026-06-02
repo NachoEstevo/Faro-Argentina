@@ -3,12 +3,14 @@ import { CheckCircle2, FileText, Link2 } from "lucide-react";
 import {
   formatBytes,
   formatDate,
+  getAvailableReviewActions,
+  normalizeInboxState,
   normalizeReviewStatus,
   publicationLabel,
   statusLabel,
-  statusWorkflow,
   type Attachment,
   type Contribution,
+  type InboxState,
   type PublicationStatus,
   type ReviewLinkTarget,
   type ReviewStatus,
@@ -18,6 +20,7 @@ import styles from "./AdminAportesView.module.css";
 interface Props {
   contribution: Contribution | null;
   note: string;
+  inboxNote: string;
   linkTargetType: ReviewLinkTarget;
   linkTargetId: string;
   linkTargetLabel: string;
@@ -30,8 +33,11 @@ interface Props {
   curationCaveat: string;
   curationSourceLabel: string;
   curationPermissionNote: string;
+  curationAttachmentId: string;
+  curationMediaAltText: string;
   loading: boolean;
   onNoteChange: (value: string) => void;
+  onInboxNoteChange: (value: string) => void;
   onLinkTargetTypeChange: (value: ReviewLinkTarget) => void;
   onLinkTargetIdChange: (value: string) => void;
   onLinkTargetLabelChange: (value: string) => void;
@@ -43,8 +49,11 @@ interface Props {
   onCurationCaveatChange: (value: string) => void;
   onCurationSourceLabelChange: (value: string) => void;
   onCurationPermissionNoteChange: (value: string) => void;
+  onCurationAttachmentIdChange: (value: string) => void;
+  onCurationMediaAltTextChange: (value: string) => void;
   onOpenAttachment: (attachment: Attachment) => void;
   onUpdateStatus: (status: ReviewStatus) => void;
+  onUpdateInboxState: (state: InboxState) => void;
   onLinkContribution: () => void;
   onPromoteContribution: () => void;
   onWithdrawCuratedEvidence: () => void;
@@ -53,6 +62,7 @@ interface Props {
 export default function AdminAportesDetail({
   contribution,
   note,
+  inboxNote,
   linkTargetType,
   linkTargetId,
   linkTargetLabel,
@@ -65,8 +75,11 @@ export default function AdminAportesDetail({
   curationCaveat,
   curationSourceLabel,
   curationPermissionNote,
+  curationAttachmentId,
+  curationMediaAltText,
   loading,
   onNoteChange,
+  onInboxNoteChange,
   onLinkTargetTypeChange,
   onLinkTargetIdChange,
   onLinkTargetLabelChange,
@@ -78,8 +91,11 @@ export default function AdminAportesDetail({
   onCurationCaveatChange,
   onCurationSourceLabelChange,
   onCurationPermissionNoteChange,
+  onCurationAttachmentIdChange,
+  onCurationMediaAltTextChange,
   onOpenAttachment,
   onUpdateStatus,
+  onUpdateInboxState,
   onLinkContribution,
   onPromoteContribution,
   onWithdrawCuratedEvidence,
@@ -90,6 +106,10 @@ export default function AdminAportesDetail({
   const lastReview = contribution.reviewTrail?.at(-1) ?? null;
   const trail = contribution.reviewTrail ?? [];
   const links = contribution.reviewLinks ?? [];
+  const inboxTrail = contribution.inboxTrail ?? [];
+  const inboxState = normalizeInboxState(contribution.inboxState);
+  const reviewActions = getAvailableReviewActions(contribution);
+  const imageAttachments = contribution.attachments.filter(isImageAttachment);
   const canLink = normalizeReviewStatus(contribution.status) === "approved_for_investigation";
   const hasCaseLink = publicationCaseLinks.length > 0;
   const selectedPublicationTarget = publicationCaseLinks.find((link) => link.targetId === publicationTargetId) ??
@@ -97,6 +117,7 @@ export default function AdminAportesDetail({
     null;
   const canPromote = canLink && hasCaseLink;
   const canWithdraw = contribution.publicationStatus === "published_curated" || contribution.publicationStatus === "candidate";
+  const canMoveInbox = Boolean(inboxNote.trim());
   return (
     <article className={styles.detail}>
       <div className={styles.detailHead}>
@@ -136,14 +157,52 @@ export default function AdminAportesDetail({
           <textarea value={note} onChange={(event) => onNoteChange(event.target.value)} />
         </label>
         <div className={styles.actionGrid}>
-          {statusWorkflow.filter((option) => option.value !== "submitted").map((option) => (
-            <button key={option.value} type="button" onClick={() => onUpdateStatus(option.value)} disabled={loading}>
+          {reviewActions.map((option) => (
+            <button key={option.value} type="button" onClick={() => onUpdateStatus(option.value)} disabled={loading || option.disabled}>
               {option.value === "approved_for_investigation" && <CheckCircle2 size={14} aria-hidden />}
-              {option.actionLabel}
+              {option.label}
+              {option.reason && <small>{option.reason}</small>}
             </button>
           ))}
         </div>
         {lastReview && <p className={styles.lastReview}>Última nota: {lastReview.note || "sin nota"} · {lastReview.reviewerName}</p>}
+      </section>
+      <section className={styles.housekeepingBox}>
+        <div className={styles.linkIntro}>
+          <h4>Orden de bandeja</h4>
+          <p>Archivar o quitar de bandeja no borra el aporte ni cambia la decisión de revisión. Conserva trazabilidad interna.</p>
+        </div>
+        <div className={styles.publicationStatusGrid}>
+          <div>
+            <span>Bandeja actual</span>
+            <strong>{inboxStateLabel(inboxState)}</strong>
+          </div>
+          <div>
+            <span>Último movimiento</span>
+            <strong>{inboxTrail.at(-1)?.note || "Sin movimiento de bandeja"}</strong>
+          </div>
+        </div>
+        <label>
+          <span>Nota de bandeja</span>
+          <textarea value={inboxNote} onChange={(event) => onInboxNoteChange(event.target.value)} />
+        </label>
+        <div className={styles.publicationActions}>
+          {inboxState !== "active" && (
+            <button type="button" className={styles.linkButton} onClick={() => onUpdateInboxState("active")} disabled={loading || !canMoveInbox}>
+              Restaurar a activos
+            </button>
+          )}
+          {inboxState !== "archived" && (
+            <button type="button" className={styles.secondaryButton} onClick={() => onUpdateInboxState("archived")} disabled={loading || !canMoveInbox}>
+              Archivar
+            </button>
+          )}
+          {inboxState !== "removed" && (
+            <button type="button" className={styles.secondaryButton} onClick={() => onUpdateInboxState("removed")} disabled={loading || !canMoveInbox}>
+              Quitar de bandeja
+            </button>
+          )}
+        </div>
       </section>
       <section className={styles.timeline} aria-label="Trazabilidad interna">
         <h4>Trazabilidad interna</h4>
@@ -275,10 +334,39 @@ export default function AdminAportesDetail({
             <span>Fuente o etiqueta</span>
             <input value={curationSourceLabel} onChange={(event) => onCurationSourceLabelChange(event.target.value)} />
           </label>
-          <label>
+          <label className={styles.linkNote}>
             <span>Permiso o uso</span>
             <input value={curationPermissionNote} onChange={(event) => onCurationPermissionNoteChange(event.target.value)} />
           </label>
+          <div className={styles.mediaBox}>
+            <div className={styles.linkIntro}>
+              <h4>Imagen pública curada</h4>
+              <p>Opcional. Faro crea una copia pública separada y no expone la ruta privada del archivo original.</p>
+            </div>
+            {imageAttachments.length > 0 ? (
+              <>
+                <label>
+                  <span>Archivo</span>
+                  <select value={curationAttachmentId} onChange={(event) => onCurationAttachmentIdChange(event.target.value)}>
+                    <option value="">Sin imagen pública</option>
+                    {imageAttachments.map((attachment) => (
+                      <option key={attachment.id} value={attachment.id}>
+                        {attachment.originalFilename} · {formatBytes(attachment.sizeBytes)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {curationAttachmentId && (
+                  <label className={styles.linkNote}>
+                    <span>Texto alternativo público</span>
+                    <input value={curationMediaAltText} onChange={(event) => onCurationMediaAltTextChange(event.target.value)} />
+                  </label>
+                )}
+              </>
+            ) : (
+              <p className={styles.emptyInline}>Este aporte no tiene imagen compatible para curaduría pública.</p>
+            )}
+          </div>
         </div>
         <div className={styles.publicationActions}>
           <button type="button" className={styles.linkButton} onClick={onPromoteContribution} disabled={loading || !canPromote}>
@@ -302,4 +390,14 @@ function privacyModeLabel(contribution: Contribution): string {
   if (contribution.privacyMode === "contact") return "Permite contacto";
   if (contribution.privacyMode === "anonymous") return "Sin contacto";
   return contribution.contactEmail ? "Permite contacto" : "Sin contacto";
+}
+
+function inboxStateLabel(state: InboxState): string {
+  if (state === "archived") return "Archivado";
+  if (state === "removed") return "Removido";
+  return "Activo";
+}
+
+function isImageAttachment(attachment: Attachment): boolean {
+  return attachment.mimeType.toLowerCase().startsWith("image/");
 }

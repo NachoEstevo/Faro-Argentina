@@ -1,5 +1,6 @@
 import {
   type CuratedContributionEvidence,
+  type CuratedContributionMedia,
   type ContributionPublicationStatus,
 } from "../data/userContributions.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
@@ -26,6 +27,7 @@ export interface UpsertCuratedContributionEvidenceInput {
   promotedByName?: string;
   promotedAt?: Date;
   internalNote?: string;
+  media?: CuratedContributionMedia | null;
 }
 
 export interface WithdrawCuratedContributionEvidenceInput {
@@ -51,6 +53,11 @@ interface CuratedContributionEvidenceRow {
   withdrawn_at: string | Date | null;
   withdrawn_by_name: string | null;
   internal_note: string | null;
+  media_type: "image" | null;
+  media_object_key: string | null;
+  media_mime_type: string | null;
+  media_size_bytes: number | string | null;
+  media_alt_text: string | null;
 }
 
 export async function upsertCuratedContributionEvidence(
@@ -62,11 +69,15 @@ export async function upsertCuratedContributionEvidence(
     `insert into curated_contribution_evidence (
        id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name,
-       promoted_by_clerk_user_id, promoted_by_name, promoted_at, internal_note, updated_at
+       promoted_by_clerk_user_id, promoted_by_name, promoted_at, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text,
+       updated_at
      ) values (
        $1, $2, $3, $4, $5, $6, $7,
        $8, $9, $10,
-       $11, $12, $13::timestamptz, $14, now()
+       $11, $12, $13::timestamptz, $14,
+       $15, $16, $17, $18, $19,
+       now()
      )
      on conflict (id) do update set
        submission_id = excluded.submission_id,
@@ -85,10 +96,16 @@ export async function upsertCuratedContributionEvidence(
        withdrawn_by_clerk_user_id = null,
        withdrawn_by_name = null,
        internal_note = excluded.internal_note,
+       media_type = excluded.media_type,
+       media_object_key = excluded.media_object_key,
+       media_mime_type = excluded.media_mime_type,
+       media_size_bytes = excluded.media_size_bytes,
+       media_alt_text = excluded.media_alt_text,
        updated_at = now()
      returning id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name, promoted_by_name,
-       promoted_at, withdrawn_at, withdrawn_by_name, internal_note`,
+       promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text`,
     [
       input.id,
       input.submissionId,
@@ -104,6 +121,11 @@ export async function upsertCuratedContributionEvidence(
       reviewerDisplayName(input.promotedBy, input.promotedByName),
       (input.promotedAt ?? new Date()).toISOString(),
       normalizeText(input.internalNote),
+      input.media?.type ?? null,
+      input.media?.objectKey ?? null,
+      input.media?.mimeType ?? null,
+      input.media?.sizeBytes ?? null,
+      input.media?.altText ?? null,
     ],
   );
   return rowToCuratedEvidence((rows as CuratedContributionEvidenceRow[])[0]);
@@ -124,7 +146,8 @@ export async function withdrawCuratedContributionEvidence(
      where id = $1
      returning id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name, promoted_by_name,
-       promoted_at, withdrawn_at, withdrawn_by_name, internal_note`,
+       promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text`,
     [
       input.id,
       (input.withdrawnAt ?? new Date()).toISOString(),
@@ -144,7 +167,8 @@ export async function listPublishedCuratedEvidenceForExpediente(
   const rows = await sql.query(
     `select id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name, promoted_by_name,
-       promoted_at, withdrawn_at, withdrawn_by_name, internal_note
+       promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text
      from curated_contribution_evidence
      where expediente_id = $1 and status = 'published_curated'
      order by promoted_at desc, id desc`,
@@ -161,7 +185,8 @@ export async function listCuratedEvidenceForSubmissions(
   const rows = await sql.query(
     `select id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name, promoted_by_name,
-       promoted_at, withdrawn_at, withdrawn_by_name, internal_note
+       promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text
      from curated_contribution_evidence
      where submission_id = any($1::text[])
      order by promoted_at desc, id desc`,
@@ -196,6 +221,17 @@ function rowToCuratedEvidence(row: CuratedContributionEvidenceRow): CuratedContr
     withdrawnAt: row.withdrawn_at ? toIsoString(row.withdrawn_at) : null,
     withdrawnByName: row.withdrawn_by_name,
     internalNote: row.internal_note ?? "",
+    ...(row.media_type === "image" && row.media_object_key && row.media_mime_type && row.media_alt_text
+      ? {
+        media: {
+          type: "image",
+          objectKey: row.media_object_key,
+          mimeType: row.media_mime_type,
+          sizeBytes: Number(row.media_size_bytes ?? 0),
+          altText: row.media_alt_text,
+        },
+      }
+      : {}),
   };
 }
 

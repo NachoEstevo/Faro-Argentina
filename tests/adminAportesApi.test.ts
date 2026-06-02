@@ -152,6 +152,107 @@ test("PATCH /api/admin/aportes updates review status and internal note", async (
   }
 });
 
+test("PATCH /api/admin/aportes does not duplicate review trail for the current status", async () => {
+  const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
+  process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
+  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
+
+  try {
+    const stored = await seedContribution();
+    await approveContribution(stored.contribution.id);
+
+    const response = await PATCH(new Request("http://localhost/api/admin/aportes", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        submissionId: stored.contribution.id,
+        status: "approved_for_investigation",
+        note: "No deberia duplicar la decision actual.",
+      }),
+    }));
+    const payload = await response.json() as {
+      changed: boolean;
+      contribution: {
+        status: string;
+        reviewTrail: Array<{ status: string; note: string }>;
+      };
+    };
+
+    assert.equal(response.status, 200);
+    assert.equal(payload.changed, false);
+    assert.equal(payload.contribution.status, "approved_for_investigation");
+    assert.equal(payload.contribution.reviewTrail.length, 1);
+    assert.equal(payload.contribution.reviewTrail[0]?.note, "Revisado para investigación privada.");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
+test("PATCH /api/admin/aportes archives and removes contributions from the working tray without changing review status", async () => {
+  const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
+  process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
+  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
+
+  try {
+    const stored = await seedContribution();
+    await approveContribution(stored.contribution.id);
+
+    const archiveResponse = await PATCH(new Request("http://localhost/api/admin/aportes", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        submissionId: stored.contribution.id,
+        inboxState: "archived",
+        note: "Ya fue tratado y no requiere accion inmediata.",
+      }),
+    }));
+    const archived = await archiveResponse.json() as {
+      changed: boolean;
+      contribution: { status: string; inboxState: string; inboxTrail: Array<{ state: string; note: string }> };
+    };
+
+    assert.equal(archiveResponse.status, 200);
+    assert.equal(archived.changed, true);
+    assert.equal(archived.contribution.status, "approved_for_investigation");
+    assert.equal(archived.contribution.inboxState, "archived");
+    assert.equal(archived.contribution.inboxTrail.at(-1)?.state, "archived");
+
+    const removeResponse = await PATCH(new Request("http://localhost/api/admin/aportes", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        submissionId: stored.contribution.id,
+        inboxState: "removed",
+        note: "Spam o error operativo, ocultar de la bandeja principal.",
+      }),
+    }));
+    const removed = await removeResponse.json() as {
+      contribution: { status: string; inboxState: string; inboxTrail: Array<{ state: string; note: string }> };
+    };
+
+    assert.equal(removeResponse.status, 200);
+    assert.equal(removed.contribution.status, "approved_for_investigation");
+    assert.equal(removed.contribution.inboxState, "removed");
+    assert.equal(removed.contribution.inboxTrail.at(-1)?.note, "Spam o error operativo, ocultar de la bandeja principal.");
+
+    const storedJson = JSON.parse(
+      await readFile(join(storageDir, "submissions", `${stored.contribution.id}.json`), "utf8"),
+    );
+    assert.equal(storedJson.inboxState, "removed");
+    assert.equal(storedJson.status, "approved_for_investigation");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
 test("PATCH /api/admin/aportes rejects unknown review states", async () => {
   const env = preserveEnv(["FARO_ADMIN_ACCESS_CODE", ...authEnvKeys]);
   process.env.FARO_ADMIN_ACCESS_CODE = "review-code";

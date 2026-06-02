@@ -1,6 +1,8 @@
 import {
+  normalizeContributionInboxState,
   normalizeContributionPublicationStatus,
   normalizeContributionReviewStatus,
+  type ContributionInboxState,
   type LegacyContributionReviewStatus,
   type ContributionReviewStatus,
 } from "../data/userContributions.ts";
@@ -9,6 +11,7 @@ import { upsertFaroUser } from "./faroUserDb.ts";
 import { getProductSql, type ProductSql } from "./productDb.ts";
 import type {
   ContributionReviewEntry,
+  ContributionInboxEntry,
   ContributionReviewLink,
   ContributionReviewLinkTarget,
   ReviewedUserContribution,
@@ -34,9 +37,26 @@ interface ContributionReviewLinkRow {
   created_at: string | Date;
 }
 
+interface ContributionInboxDispositionRow {
+  submission_id: string;
+  state: ContributionInboxState;
+  note: string | null;
+  reviewer_name: string | null;
+  updated_at: string | Date;
+}
+
 export interface AppendContributionReviewEventInput {
   submissionId: string;
   status: ContributionReviewStatus;
+  note?: string;
+  reviewerName?: string;
+  reviewer?: FaroAuthenticatedUser;
+  now?: Date;
+}
+
+export interface UpsertContributionInboxDispositionInput {
+  submissionId: string;
+  state: ContributionInboxState;
   note?: string;
   reviewerName?: string;
   reviewer?: FaroAuthenticatedUser;
@@ -60,7 +80,7 @@ export async function hydrateContributionsWithReviewState(
 ): Promise<ReviewedUserContribution[]> {
   if (contributions.length === 0) return [];
   const submissionIds = contributions.map((contribution) => contribution.id);
-  const [eventRows, linkRows] = await Promise.all([
+  const [eventRows, linkRows, dispositionRows] = await Promise.all([
     sql.query(
       `select id, submission_id, status, note, reviewer_name, created_at
        from contribution_review_events
@@ -75,21 +95,34 @@ export async function hydrateContributionsWithReviewState(
        order by submission_id asc, created_at asc, id asc`,
       [submissionIds],
     ),
+    sql.query(
+      `select submission_id, state, note, reviewer_name, updated_at
+       from contribution_inbox_dispositions
+       where submission_id = any($1::text[])`,
+      [submissionIds],
+    ).catch(() => []),
   ]);
   const eventsBySubmission = groupRows(eventRows as ContributionReviewEventRow[]);
   const linksBySubmission = groupRows(linkRows as ContributionReviewLinkRow[]);
+  const dispositionsBySubmission = new Map(
+    (dispositionRows as ContributionInboxDispositionRow[]).map((row) => [row.submission_id, row]),
+  );
 
   return contributions.map((contribution) => {
     const dbReviewTrail = (eventsBySubmission.get(contribution.id) ?? [])
       .map((row, index) => rowToReviewEntry(row, index));
     const dbReviewLinks = (linksBySubmission.get(contribution.id) ?? [])
       .map(rowToReviewLink);
+    const disposition = dispositionsBySubmission.get(contribution.id);
+    const inboxTrail = disposition ? [rowToInboxEntry(disposition)] : contribution.inboxTrail;
     return {
       ...contribution,
       status: normalizeContributionReviewStatus(dbReviewTrail.at(-1)?.status ?? contribution.status),
       publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
+      inboxState: normalizeContributionInboxState(disposition?.state ?? contribution.inboxState),
       reviewTrail: dbReviewTrail.length > 0 ? dbReviewTrail : contribution.reviewTrail,
       reviewLinks: dbReviewLinks.length > 0 ? dbReviewLinks : contribution.reviewLinks,
+      inboxTrail,
     };
   });
 }
@@ -148,6 +181,34 @@ export async function appendContributionReviewLink(
   return rowToReviewLink((rows as ContributionReviewLinkRow[])[0]);
 }
 
+export async function upsertContributionInboxDisposition(
+  input: UpsertContributionInboxDispositionInput,
+  sql: ProductSql = getProductSql(),
+): Promise<ContributionInboxEntry> {
+  if (input.reviewer) await upsertFaroUser(input.reviewer, undefined, sql);
+  const rows = await sql.query(
+    `insert into contribution_inbox_dispositions (
+       submission_id, state, note, reviewer_clerk_user_id, reviewer_name, updated_at
+     ) values ($1, $2, $3, $4, $5, $6::timestamptz)
+     on conflict (submission_id) do update set
+       state = excluded.state,
+       note = excluded.note,
+       reviewer_clerk_user_id = excluded.reviewer_clerk_user_id,
+       reviewer_name = excluded.reviewer_name,
+       updated_at = excluded.updated_at
+     returning submission_id, state, note, reviewer_name, updated_at`,
+    [
+      input.submissionId,
+      input.state,
+      normalizeText(input.note),
+      input.reviewer?.clerkUserId ?? null,
+      reviewerDisplayName(input.reviewer, input.reviewerName),
+      (input.now ?? new Date()).toISOString(),
+    ],
+  );
+  return rowToInboxEntry((rows as ContributionInboxDispositionRow[])[0]);
+}
+
 function rowToReviewEntry(row: ContributionReviewEventRow, index: number): ContributionReviewEntry {
   return {
     id: `REV-${String(index + 1).padStart(3, "0")}`,
@@ -167,6 +228,16 @@ function rowToReviewLink(row: ContributionReviewLinkRow): ContributionReviewLink
     note: row.note ?? "",
     linkedBy: row.linked_by_name ?? "Equipo Faro",
     createdAt: toIsoString(row.created_at),
+  };
+}
+
+function rowToInboxEntry(row: ContributionInboxDispositionRow): ContributionInboxEntry {
+  return {
+    id: "INBOX-001",
+    state: normalizeContributionInboxState(row.state),
+    note: row.note ?? "",
+    reviewerName: row.reviewer_name ?? "Equipo Faro",
+    createdAt: toIsoString(row.updated_at),
   };
 }
 

@@ -179,6 +179,16 @@ expediente en evidencia curada publica. Esa pieza debe tener titulo neutral,
 caption, caveat, fuente o permiso, responsable de revision y fecha. Se muestra
 separada del rastro oficial y no modifica mapa, receipts, exports ni geometria.
 
+La bandeja interna tiene un estado propio de orden operativo: `active`,
+`archived` o `removed`. Ese estado no borra el aporte ni cambia la decision de
+revision; solo limpia la cola de trabajo y conserva trazabilidad interna. Quitar
+un aporte de la bandeja es una remocion blanda, no una eliminacion fisica.
+
+Si un aporte con imagen se publica como evidencia curada, Faro debe crear una
+copia publica separada del adjunto privado, exigir texto alternativo publico y
+exponer solo la URL publica redaccionada. La ruta interna del objeto privado
+nunca debe salir en APIs publicas ni en el expediente.
+
 ### Receipt
 
 El receipt es la capa de confianza. Le dice al usuario de donde salio el registro

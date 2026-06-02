@@ -6,6 +6,16 @@ export type ReviewStatus =
   | "rejected";
 export type LegacyReviewStatus = "approved";
 export type PublicationStatus = "private" | "candidate" | "published_curated" | "withdrawn";
+export type InboxState = "active" | "archived" | "removed";
+export type InboxTab =
+  | "active"
+  | "accepted_for_review"
+  | "needs_more_info"
+  | "approved_for_investigation"
+  | "rejected"
+  | "published_curated"
+  | "archived"
+  | "removed";
 export type ReviewLinkTarget = "case" | "workspace";
 export type ContributionPrivacyMode = "anonymous" | "contact";
 
@@ -13,6 +23,14 @@ export interface Attachment {
   id: string;
   originalFilename: string;
   objectKey: string;
+  mimeType: string;
+  sizeBytes: number;
+}
+
+export interface CuratedMedia {
+  type: "image";
+  url: string;
+  altText: string;
   mimeType: string;
   sizeBytes: number;
 }
@@ -47,6 +65,7 @@ export interface Contribution {
   contactEmail: string | null;
   status: ReviewStatus | LegacyReviewStatus;
   publicationStatus?: PublicationStatus;
+  inboxState?: InboxState;
   createdAt: string;
   attachments: Attachment[];
   reviewTrail?: Array<{
@@ -57,6 +76,14 @@ export interface Contribution {
     createdAt: string;
   }>;
   reviewLinks?: ReviewLink[];
+  inboxTrail?: Array<{
+    id: string;
+    state: InboxState;
+    note: string;
+    reviewerName: string;
+    createdAt: string;
+  }>;
+  media?: CuratedMedia;
 }
 
 export interface InboxPayload {
@@ -145,13 +172,106 @@ export function publicationLabel(status: PublicationStatus | undefined): string 
   return publicationWorkflow.find((option) => option.value === (status ?? "private"))?.label ?? "Privado";
 }
 
+export function normalizeInboxState(state: InboxState | undefined): InboxState {
+  return state === "archived" || state === "removed" ? state : "active";
+}
+
+export function buildAdminInboxTabs(submissions: Contribution[]): Array<{ value: InboxTab; label: string; count: number }> {
+  const active = submissions.filter((item) => normalizeInboxState(item.inboxState) === "active");
+  const activePrivate = active.filter((item) => (item.publicationStatus ?? "private") !== "published_curated");
+  return [
+    {
+      value: "active",
+      label: "Activos",
+      count: activePrivate.filter((item) =>
+        !["rejected"].includes(normalizeReviewStatus(item.status))
+      ).length,
+    },
+    {
+      value: "accepted_for_review",
+      label: "En revisión",
+      count: activePrivate.filter((item) => normalizeReviewStatus(item.status) === "accepted_for_review").length,
+    },
+    {
+      value: "needs_more_info",
+      label: "Necesita info",
+      count: activePrivate.filter((item) => normalizeReviewStatus(item.status) === "needs_more_info").length,
+    },
+    {
+      value: "approved_for_investigation",
+      label: "Aprobados",
+      count: activePrivate.filter((item) => normalizeReviewStatus(item.status) === "approved_for_investigation").length,
+    },
+    {
+      value: "rejected",
+      label: "Descartados",
+      count: activePrivate.filter((item) => normalizeReviewStatus(item.status) === "rejected").length,
+    },
+    {
+      value: "published_curated",
+      label: "Publicados",
+      count: active.filter((item) => (item.publicationStatus ?? "private") === "published_curated").length,
+    },
+    {
+      value: "archived",
+      label: "Archivados",
+      count: submissions.filter((item) => normalizeInboxState(item.inboxState) === "archived").length,
+    },
+    {
+      value: "removed",
+      label: "Removidos",
+      count: submissions.filter((item) => normalizeInboxState(item.inboxState) === "removed").length,
+    },
+  ];
+}
+
+export function filterContributionsByInboxTab(submissions: Contribution[], tab: InboxTab): Contribution[] {
+  return submissions.filter((item) => {
+    const inboxState = normalizeInboxState(item.inboxState);
+    const status = normalizeReviewStatus(item.status);
+    const publicationStatus = item.publicationStatus ?? "private";
+    if (tab === "archived" || tab === "removed") return inboxState === tab;
+    if (inboxState !== "active") return false;
+    if (tab === "published_curated") return publicationStatus === "published_curated";
+    if (publicationStatus === "published_curated") return false;
+    if (tab === "active") return status !== "rejected";
+    return status === tab;
+  });
+}
+
+export function getAvailableReviewActions(contribution: Contribution): Array<{
+  value: ReviewStatus;
+  label: string;
+  disabled: boolean;
+  reason?: string;
+}> {
+  const current = normalizeReviewStatus(contribution.status);
+  return statusWorkflow
+    .filter((option) => option.value !== "submitted")
+    .map((option) => ({
+      value: option.value,
+      label: option.actionLabel,
+      disabled: option.value === current,
+      reason: option.value === current ? "Estado actual" : undefined,
+    }));
+}
+
 export function sortContributionsForReview(submissions: Contribution[]): Contribution[] {
   return [...submissions].sort((left, right) => {
+    const inboxDelta = inboxPriority(normalizeInboxState(left.inboxState)) -
+      inboxPriority(normalizeInboxState(right.inboxState));
+    if (inboxDelta !== 0) return inboxDelta;
     const statusDelta = statusPriority(normalizeReviewStatus(left.status)) -
       statusPriority(normalizeReviewStatus(right.status));
     if (statusDelta !== 0) return statusDelta;
     return right.createdAt.localeCompare(left.createdAt);
   });
+}
+
+function inboxPriority(state: InboxState): number {
+  if (state === "active") return 0;
+  if (state === "archived") return 1;
+  return 2;
 }
 
 export function buildClientStats(submissions: Contribution[]): Record<ReviewStatus | "total", number> {

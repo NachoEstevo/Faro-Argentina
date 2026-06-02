@@ -1,4 +1,5 @@
 import { assertAdminMutationAllowed } from "../../../../../lib/server/adminRequestGuards.ts";
+import { toPublicCuratedContributionEvidence } from "../../../../../lib/data/userContributions.ts";
 import { requireFaroAdmin } from "../../../../../lib/server/faroAuth.ts";
 import {
   ContributionReviewOperationError,
@@ -32,6 +33,8 @@ export async function POST(request: Request) {
     permissionNote?: string;
     reviewedByName?: string;
     internalNote?: string;
+    attachmentId?: string;
+    mediaAltText?: string;
   } | null;
 
   try {
@@ -46,13 +49,18 @@ export async function POST(request: Request) {
       permissionNote: payload?.permissionNote ?? "",
       reviewedByName: payload?.reviewedByName,
       internalNote: payload?.internalNote,
+      attachmentId: payload?.attachmentId,
+      mediaAltText: payload?.mediaAltText,
       reviewer: auth.user,
     });
     return Response.json({
       ok: true,
       storageMode: result.storageMode,
       contribution: result.contribution,
-      evidence: result.evidence,
+      evidence: {
+        ...result.evidence,
+        media: toPublicCuratedContributionEvidence(result.evidence).media,
+      },
     });
   } catch (error) {
     if (error instanceof ContributionReviewOperationError) {

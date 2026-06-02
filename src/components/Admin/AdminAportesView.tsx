@@ -10,17 +10,19 @@ import {
 
 import AdminAportesDetail from "./AdminAportesDetail";
 import {
+  buildAdminInboxTabs,
   buildClientStats,
+  filterContributionsByInboxTab,
   formatDate,
-  normalizeReviewStatus,
   publicationWorkflow,
   sortContributionsForReview,
   statusLabel,
-  statusOptions,
   statusWorkflow,
   type Attachment,
   type Contribution,
+  type InboxState,
   type InboxPayload,
+  type InboxTab,
   type PublicationStatus,
   type ReviewLinkTarget,
   type ReviewStatus,
@@ -30,8 +32,9 @@ import styles from "./AdminAportesView.module.css";
 export default function AdminAportesView() {
   const [inbox, setInbox] = useState<InboxPayload | null>(null);
   const [selectedId, setSelectedId] = useState("");
-  const [filter, setFilter] = useState<ReviewStatus | "all">("all");
+  const [activeTab, setActiveTab] = useState<InboxTab>("active");
   const [note, setNote] = useState("");
+  const [inboxNote, setInboxNote] = useState("");
   const [linkTargetType, setLinkTargetType] = useState<ReviewLinkTarget>("case");
   const [linkTargetId, setLinkTargetId] = useState("");
   const [linkTargetLabel, setLinkTargetLabel] = useState("");
@@ -43,13 +46,17 @@ export default function AdminAportesView() {
   const [curationCaveat, setCurationCaveat] = useState("No reemplaza la fuente oficial ni confirma por sí solo la relación investigada.");
   const [curationSourceLabel, setCurationSourceLabel] = useState("Aporte privado revisado por Faro");
   const [curationPermissionNote, setCurationPermissionNote] = useState("La persona confirmó que era material propio o autorizado para revisión.");
+  const [curationAttachmentId, setCurationAttachmentId] = useState("");
+  const [curationMediaAltText, setCurationMediaAltText] = useState("");
   const [statusText, setStatusText] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const inboxTabs = useMemo(() => buildAdminInboxTabs(inbox?.submissions ?? []), [inbox?.submissions]);
+
   const filtered = useMemo(() => {
     const submissions = sortContributionsForReview(inbox?.submissions ?? []);
-    return filter === "all" ? submissions : submissions.filter((item) => normalizeReviewStatus(item.status) === filter);
-  }, [filter, inbox?.submissions]);
+    return filterContributionsByInboxTab(submissions, activeTab);
+  }, [activeTab, inbox?.submissions]);
   const selected = filtered.find((submission) => submission.id === selectedId) ??
     filtered[0] ??
     null;
@@ -62,12 +69,25 @@ export default function AdminAportesView() {
     if (!selected) return;
     setCurationTitle(selected.title);
     setCurationCaption(selected.explanation.slice(0, 220));
+    const imageAttachment = selected.attachments.find(isImageAttachment);
+    setCurationAttachmentId(imageAttachment?.id ?? "");
+    setCurationMediaAltText(imageAttachment ? `Imagen aportada para revisar ${selected.title}.` : "");
   }, [selected?.id]);
 
   useEffect(() => {
     const firstCaseLink = selected?.reviewLinks?.find((link) => link.targetType === "case");
     setPublicationTargetId(firstCaseLink?.targetId ?? "");
   }, [selected?.id, selected?.reviewLinks?.length]);
+
+  useEffect(() => {
+    if (filtered.length === 0) {
+      if (selectedId) setSelectedId("");
+      return;
+    }
+    if (!filtered.some((submission) => submission.id === selectedId)) {
+      setSelectedId(filtered[0].id);
+    }
+  }, [filtered, selectedId]);
 
   async function loadInbox() {
     setLoading(true);
@@ -79,7 +99,8 @@ export default function AdminAportesView() {
       const normalizedPayload = payload as InboxPayload;
       const submissions = sortContributionsForReview(normalizedPayload.submissions);
       setInbox({ ...normalizedPayload, submissions, stats: buildClientStats(submissions) });
-      setSelectedId(submissions[0]?.id ?? "");
+      const visible = filterContributionsByInboxTab(submissions, activeTab);
+      setSelectedId(visible[0]?.id ?? submissions[0]?.id ?? "");
       setStatusText("Bandeja actualizada.");
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : "No se pudo abrir la bandeja.");
@@ -120,6 +141,44 @@ export default function AdminAportesView() {
       setStatusText("Revisión guardada.");
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : "No se pudo actualizar el aporte.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateInboxState(inboxState: InboxState) {
+    if (!selected) return;
+    setLoading(true);
+    setStatusText("Actualizando orden de bandeja...");
+    try {
+      const response = await fetch("/api/admin/aportes", {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          submissionId: selected.id,
+          inboxState,
+          note: inboxNote,
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.message ?? "No se pudo actualizar la bandeja.");
+      const updatedContribution = payload.contribution as Contribution;
+      setInbox((current) => {
+        if (!current) return current;
+        const submissions = current.submissions.map((item) =>
+          item.id === selected.id ? updatedContribution : item
+        );
+        const sorted = sortContributionsForReview(submissions);
+        return { ...current, submissions: sorted, stats: buildClientStats(sorted) };
+      });
+      setActiveTab(inboxState === "active" ? "active" : inboxState);
+      setSelectedId(updatedContribution.id);
+      setInboxNote("");
+      setStatusText(inboxState === "active" ? "Aporte restaurado a activos." : "Bandeja actualizada.");
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : "No se pudo actualizar la bandeja.");
     } finally {
       setLoading(false);
     }
@@ -209,6 +268,8 @@ export default function AdminAportesView() {
           caveat: curationCaveat,
           sourceLabel: curationSourceLabel,
           permissionNote: curationPermissionNote,
+          attachmentId: curationAttachmentId || undefined,
+          mediaAltText: curationAttachmentId ? curationMediaAltText : undefined,
           reviewedByName: "Equipo Faro",
         }),
       });
@@ -322,37 +383,35 @@ export default function AdminAportesView() {
               </div>
               <div className={styles.workflowSteps}>
                 {statusWorkflow.map((step) => (
-                  <button
+                  <div
                     key={step.value}
-                    type="button"
-                    className={`${styles.workflowStep} ${filter === step.value ? styles.workflowStepActive : ""}`}
-                    onClick={() => setFilter(step.value)}
-                    aria-pressed={filter === step.value}
+                    className={styles.workflowStep}
                   >
                     <span>{step.label}</span>
                     <strong>{inbox.stats[step.value]}</strong>
                     <small>{step.description}</small>
-                  </button>
+                  </div>
                 ))}
               </div>
             </section>
-            <div className={styles.filterRow}>
-              <button className={filter === "all" ? styles.activeFilter : ""} type="button" onClick={() => setFilter("all")}>Todos</button>
-              {statusOptions.map((option) => (
+            <nav className={styles.inboxTabs} aria-label="Bandejas de aportes">
+              {inboxTabs.map((option) => (
                 <button
                   key={option.value}
-                  className={filter === option.value ? styles.activeFilter : ""}
+                  className={activeTab === option.value ? styles.activeFilter : ""}
                   type="button"
-                  onClick={() => setFilter(option.value)}
+                  onClick={() => setActiveTab(option.value)}
+                  aria-pressed={activeTab === option.value}
                 >
                   {option.label}
+                  <span>{option.count}</span>
                 </button>
               ))}
-            </div>
+            </nav>
             <div className={styles.grid}>
               <div className={styles.list} aria-label="Aportes">
                 {filtered.length === 0 ? (
-                  <p className={styles.empty}>No hay aportes en este estado.</p>
+                  <p className={styles.empty}>No hay aportes en esta bandeja.</p>
                 ) : filtered.map((submission) => (
                   <button
                     key={submission.id}
@@ -369,6 +428,7 @@ export default function AdminAportesView() {
               <AdminAportesDetail
                 contribution={selected}
                 note={note}
+                inboxNote={inboxNote}
                 linkTargetType={linkTargetType}
                 linkTargetId={linkTargetId}
                 linkTargetLabel={linkTargetLabel}
@@ -387,14 +447,20 @@ export default function AdminAportesView() {
                 curationCaveat={curationCaveat}
                 curationSourceLabel={curationSourceLabel}
                 curationPermissionNote={curationPermissionNote}
+                curationAttachmentId={curationAttachmentId}
+                curationMediaAltText={curationMediaAltText}
                 onCurationStatusChange={setCurationStatus}
                 onCurationTitleChange={setCurationTitle}
                 onCurationCaptionChange={setCurationCaption}
                 onCurationCaveatChange={setCurationCaveat}
                 onCurationSourceLabelChange={setCurationSourceLabel}
                 onCurationPermissionNoteChange={setCurationPermissionNote}
+                onCurationAttachmentIdChange={setCurationAttachmentId}
+                onCurationMediaAltTextChange={setCurationMediaAltText}
                 onOpenAttachment={openAttachment}
                 onUpdateStatus={updateStatus}
+                onInboxNoteChange={setInboxNote}
+                onUpdateInboxState={updateInboxState}
                 onLinkContribution={linkSelectedContribution}
                 onPromoteContribution={promoteSelectedContribution}
                 onWithdrawCuratedEvidence={withdrawSelectedContributionEvidence}
@@ -420,4 +486,8 @@ function Metric({ label, value }: { label: string; value: number }) {
 function curatedEvidenceClientId(submissionId: string, expedienteId: string): string {
   const normalize = (value: string) => value.trim().replace(/[^A-Z0-9-]+/gi, "-").toUpperCase();
   return `CURATED-${normalize(submissionId)}-${normalize(expedienteId)}`;
+}
+
+function isImageAttachment(attachment: Attachment): boolean {
+  return attachment.mimeType.toLowerCase().startsWith("image/");
 }

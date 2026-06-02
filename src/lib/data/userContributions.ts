@@ -26,6 +26,14 @@ export const CONTRIBUTION_PUBLICATION_STATUSES = [
 
 export type ContributionPublicationStatus = (typeof CONTRIBUTION_PUBLICATION_STATUSES)[number];
 
+export const CONTRIBUTION_INBOX_STATES = [
+  "active",
+  "archived",
+  "removed",
+] as const;
+
+export type ContributionInboxState = (typeof CONTRIBUTION_INBOX_STATES)[number];
+
 export const CONTRIBUTION_PRIVACY_MODES = ["anonymous", "contact"] as const;
 
 export type ContributionPrivacyMode = (typeof CONTRIBUTION_PRIVACY_MODES)[number];
@@ -102,8 +110,25 @@ export interface UserContribution {
   reviewConfirmed: true;
   status: ContributionReviewStatus | LegacyContributionReviewStatus;
   publicationStatus: ContributionPublicationStatus;
+  inboxState?: ContributionInboxState;
   createdAt: string;
   attachments: UserContributionAttachment[];
+}
+
+export interface CuratedContributionMedia {
+  type: "image";
+  objectKey: string;
+  mimeType: string;
+  sizeBytes: number;
+  altText: string;
+}
+
+export interface PublicCuratedContributionMedia {
+  type: "image";
+  url: string;
+  altText: string;
+  mimeType: string;
+  sizeBytes: number;
 }
 
 export interface CuratedContributionEvidence {
@@ -122,6 +147,7 @@ export interface CuratedContributionEvidence {
   withdrawnAt: string | null;
   withdrawnByName: string | null;
   internalNote: string;
+  media?: CuratedContributionMedia | null;
 }
 
 export interface PublicCuratedContributionEvidence {
@@ -133,6 +159,7 @@ export interface PublicCuratedContributionEvidence {
   permissionNote: string;
   reviewedByName: string;
   promotedAt: string;
+  media?: PublicCuratedContributionMedia;
 }
 
 export interface BuildContributionOptions {
@@ -293,6 +320,7 @@ export function buildUserContribution(
     reviewConfirmed: true,
     status: "submitted",
     publicationStatus: "private",
+    inboxState: "active",
     createdAt: options.createdAt,
     attachments: attachments.map((attachment, index) => ({
       id: `ATT-${String(index + 1).padStart(3, "0")}`,
@@ -325,6 +353,10 @@ export function isContributionPublicationStatus(value: unknown): value is Contri
   return CONTRIBUTION_PUBLICATION_STATUSES.includes(value as ContributionPublicationStatus);
 }
 
+export function isContributionInboxState(value: unknown): value is ContributionInboxState {
+  return CONTRIBUTION_INBOX_STATES.includes(value as ContributionInboxState);
+}
+
 export function normalizeContributionReviewStatus(value: unknown): ContributionReviewStatus {
   if (value === "approved") return "approved_for_investigation";
   return isContributionReviewStatus(value) ? value : "submitted";
@@ -334,9 +366,20 @@ export function normalizeContributionPublicationStatus(value: unknown): Contribu
   return isContributionPublicationStatus(value) ? value : "private";
 }
 
+export function normalizeContributionInboxState(value: unknown): ContributionInboxState {
+  return isContributionInboxState(value) ? value : "active";
+}
+
 export function toPublicCuratedContributionEvidence(
   evidence: CuratedContributionEvidence,
 ): PublicCuratedContributionEvidence {
+  const media = evidence.media ? {
+    type: evidence.media.type,
+    url: `/api/cases/${encodeURIComponent(evidence.expedienteId)}/curated-evidence/${encodeURIComponent(evidence.id)}/media`,
+    altText: evidence.media.altText,
+    mimeType: evidence.media.mimeType,
+    sizeBytes: evidence.media.sizeBytes,
+  } satisfies PublicCuratedContributionMedia : undefined;
   return {
     id: evidence.id,
     title: evidence.title,
@@ -346,6 +389,7 @@ export function toPublicCuratedContributionEvidence(
     permissionNote: evidence.permissionNote,
     reviewedByName: evidence.reviewedByName,
     promotedAt: evidence.promotedAt,
+    ...(media ? { media } : {}),
   };
 }
 

@@ -6,6 +6,9 @@ export type ContributionAuditAction =
   | "review_status_changed"
   | "review_link_created"
   | "attachment_opened"
+  | "contribution_archived"
+  | "contribution_removed_from_inbox"
+  | "contribution_restored_to_inbox"
   | "curated_candidate_created"
   | "curated_evidence_published"
   | "curated_evidence_withdrawn";

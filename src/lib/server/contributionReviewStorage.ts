@@ -1,18 +1,22 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { basename, join, normalize, sep } from "node:path";
+import { basename, dirname, join, normalize, sep } from "node:path";
 
 import {
   CONTRIBUTION_REVIEW_STATUSES,
   type CuratedContributionEvidence,
+  type CuratedContributionMedia,
+  type ContributionInboxState,
   type LegacyContributionReviewStatus,
   type ContributionReviewStatus,
+  normalizeContributionInboxState,
   normalizeContributionPublicationStatus,
   normalizeContributionReviewStatus,
+  extensionForAttachment,
   type UserContribution,
 } from "../data/userContributions.ts";
 import { getCaseById } from "../caseRepository.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
-import { appendContributionAuditEvent } from "./contributionAuditDb.ts";
+import { appendContributionAuditEvent, type ContributionAuditAction } from "./contributionAuditDb.ts";
 import {
   listCuratedEvidenceForSubmissions,
   listPublishedCuratedEvidenceForExpediente,
@@ -25,6 +29,7 @@ import {
   appendContributionReviewEvent,
   appendContributionReviewLink,
   hydrateContributionsWithReviewState,
+  upsertContributionInboxDisposition,
 } from "./contributionReviewDb.ts";
 import { getContributionStorageRoot } from "./contributionStorage.ts";
 import { isProductDatabaseConfigured } from "./productDb.ts";
@@ -58,9 +63,18 @@ export interface ContributionReviewLink {
   createdAt: string;
 }
 
+export interface ContributionInboxEntry {
+  id: string;
+  state: ContributionInboxState;
+  note: string;
+  reviewerName: string;
+  createdAt: string;
+}
+
 export type ReviewedUserContribution = UserContribution & {
   reviewTrail?: ContributionReviewEntry[];
   reviewLinks?: ContributionReviewLink[];
+  inboxTrail?: ContributionInboxEntry[];
 };
 
 export interface ContributionReviewInbox {
@@ -72,6 +86,15 @@ export interface ContributionReviewInbox {
 export interface UpdateContributionReviewInput {
   submissionId: string;
   status: ContributionReviewStatus;
+  note?: string;
+  reviewerName?: string;
+  reviewer?: FaroAuthenticatedUser;
+  now?: Date;
+}
+
+export interface UpdateContributionInboxStateInput {
+  submissionId: string;
+  inboxState: ContributionInboxState;
   note?: string;
   reviewerName?: string;
   reviewer?: FaroAuthenticatedUser;
@@ -121,6 +144,8 @@ export interface PromoteContributionEvidenceInput {
   permissionNote: string;
   reviewedByName?: string;
   internalNote?: string;
+  attachmentId?: string;
+  mediaAltText?: string;
   reviewer?: FaroAuthenticatedUser;
   now?: Date;
 }
@@ -129,6 +154,11 @@ export interface WithdrawContributionEvidenceInput {
   evidenceId: string;
   reviewer?: FaroAuthenticatedUser;
   now?: Date;
+}
+
+export interface ReadCuratedContributionMediaInput {
+  expedienteId: string;
+  evidenceId: string;
 }
 
 export class ContributionReviewOperationError extends Error {
@@ -142,6 +172,9 @@ export class ContributionReviewOperationError extends Error {
     | "invalid_curated_evidence"
     | "curated_case_link_required"
     | "curated_evidence_not_found"
+    | "invalid_inbox_state"
+    | "missing_inbox_note"
+    | "invalid_curated_media"
     | "missing_attachment_target"
     | "attachment_not_found";
 
@@ -156,6 +189,9 @@ export class ContributionReviewOperationError extends Error {
       | "invalid_curated_evidence"
       | "curated_case_link_required"
       | "curated_evidence_not_found"
+      | "invalid_inbox_state"
+      | "missing_inbox_note"
+      | "invalid_curated_media"
       | "missing_attachment_target"
       | "attachment_not_found",
     message: string,
@@ -232,8 +268,17 @@ export async function promoteContributionEvidence(
       "Vinculá primero el aporte al expediente que querés mostrar públicamente.",
     );
   }
+  const evidenceId = curatedEvidenceId(contribution.id, expedienteId);
+  const media = input.attachmentId
+    ? await createCuratedMediaCopy({
+      contribution,
+      evidenceId,
+      attachmentId: input.attachmentId,
+      altText: input.mediaAltText,
+    })
+    : null;
   const evidenceInput = {
-    id: curatedEvidenceId(contribution.id, expedienteId),
+    id: evidenceId,
     submissionId: contribution.id,
     expedienteId,
     status,
@@ -247,6 +292,7 @@ export async function promoteContributionEvidence(
     promotedByName: reviewerDisplayName(input.reviewer, null),
     promotedAt: input.now,
     internalNote: input.internalNote,
+    media,
   };
   const evidence = isProductDatabaseConfigured()
     ? await upsertCuratedContributionEvidence(evidenceInput)
@@ -270,6 +316,26 @@ export async function promoteContributionEvidence(
     contribution: updatedContribution,
     evidence,
   };
+}
+
+export async function readCuratedContributionMedia(
+  input: ReadCuratedContributionMediaInput,
+): Promise<{ storageMode: ContributionReviewStorageMode; body: Uint8Array; contentType: string; filename: string }> {
+  const expedienteId = normalizeText(input.expedienteId);
+  const evidenceId = normalizeText(input.evidenceId);
+  const evidence = isProductDatabaseConfigured()
+    ? (await listPublishedCuratedEvidenceForExpediente(expedienteId)).find((item) => item.id === evidenceId)
+    : (await listLocalCuratedEvidence()).find((item) =>
+      item.id === evidenceId && item.expedienteId === expedienteId && item.status === "published_curated"
+    );
+  if (!evidence?.media) {
+    throw new ContributionReviewOperationError(
+      404,
+      "curated_evidence_not_found",
+      "No encontramos esa imagen curada publicada.",
+    );
+  }
+  return readContributionAttachmentObject(evidence.media.objectKey);
 }
 
 export async function withdrawContributionEvidence(
@@ -447,13 +513,23 @@ export async function linkContributionToReviewTarget(
 
 export async function updateContributionReview(
   input: UpdateContributionReviewInput,
-): Promise<{ storageMode: ContributionReviewStorageMode; contribution: ReviewedUserContribution }> {
+): Promise<{ storageMode: ContributionReviewStorageMode; contribution: ReviewedUserContribution; changed: boolean }> {
   const r2Config = getR2Config();
   const status = normalizeReviewStatus(input.status);
   const r2Submission = r2Config
     ? await readR2ContributionForUpdate(r2Config, input.submissionId)
     : null;
   const contribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
+  const [currentContribution] = isProductDatabaseConfigured()
+    ? await hydrateContributionsWithReviewState([contribution])
+    : [normalizeContributionEnvelope(contribution)];
+  if (normalizeContributionReviewStatus(currentContribution.status) === status) {
+    return {
+      storageMode: isProductDatabaseConfigured() ? "neon" : r2Config ? "r2" : "local",
+      contribution: currentContribution,
+      changed: false,
+    };
+  }
   if (isProductDatabaseConfigured()) {
     await appendContributionReviewEvent({
       submissionId: input.submissionId,
@@ -473,11 +549,11 @@ export async function updateContributionReview(
       now: input.now,
     });
     const [updated] = await hydrateContributionsWithReviewState([contribution]);
-    return { storageMode: "neon", contribution: updated };
+    return { storageMode: "neon", contribution: updated, changed: true };
   }
   const reviewTrail = contribution.reviewTrail ?? [];
   const updated: ReviewedUserContribution = {
-    ...contribution,
+    ...normalizeContributionEnvelope(contribution),
     status,
     publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
     reviewTrail: [
@@ -499,11 +575,78 @@ export async function updateContributionReview(
       body: new TextEncoder().encode(JSON.stringify(updated, null, 2)),
       contentType: "application/json; charset=utf-8",
     });
-    return { storageMode: "r2", contribution: updated };
+    return { storageMode: "r2", contribution: updated, changed: true };
   }
 
   await writeLocalContribution(updated);
-  return { storageMode: "local", contribution: updated };
+  return { storageMode: "local", contribution: updated, changed: true };
+}
+
+export async function updateContributionInboxState(
+  input: UpdateContributionInboxStateInput,
+): Promise<{ storageMode: ContributionReviewStorageMode; contribution: ReviewedUserContribution; changed: boolean }> {
+  const r2Config = getR2Config();
+  const inboxState = normalizeInboxState(input.inboxState);
+  const note = normalizeText(input.note);
+  if (!note) {
+    throw new ContributionReviewOperationError(
+      400,
+      "missing_inbox_note",
+      "Agregá una nota interna para archivar o quitar un aporte de la bandeja.",
+    );
+  }
+  const r2Submission = r2Config
+    ? await readR2ContributionForUpdate(r2Config, input.submissionId)
+    : null;
+  const contribution = r2Submission?.contribution ?? await readLocalContribution(input.submissionId);
+  const [currentContribution] = isProductDatabaseConfigured()
+    ? await hydrateContributionsWithReviewState([contribution])
+    : [normalizeContributionEnvelope(contribution)];
+  if (normalizeContributionInboxState(currentContribution.inboxState) === inboxState) {
+    return {
+      storageMode: isProductDatabaseConfigured() ? "neon" : r2Config ? "r2" : "local",
+      contribution: currentContribution,
+      changed: false,
+    };
+  }
+  if (isProductDatabaseConfigured()) {
+    await upsertContributionInboxDisposition({
+      submissionId: input.submissionId,
+      state: inboxState,
+      note,
+      reviewerName: input.reviewerName,
+      reviewer: input.reviewer,
+      now: input.now,
+    });
+    await appendContributionAuditEvent({
+      submissionId: input.submissionId,
+      action: inboxAuditAction(inboxState),
+      actor: input.reviewer,
+      targetType: "inbox_state",
+      targetId: inboxState,
+      metadata: { note },
+      now: input.now,
+    });
+    const [updated] = await hydrateContributionsWithReviewState([contribution]);
+    return { storageMode: "neon", contribution: updated, changed: true };
+  }
+  const inboxTrail = currentContribution.inboxTrail ?? [];
+  const updated: ReviewedUserContribution = {
+    ...currentContribution,
+    inboxState,
+    inboxTrail: [
+      ...inboxTrail,
+      {
+        id: `INBOX-${String(inboxTrail.length + 1).padStart(3, "0")}`,
+        state: inboxState,
+        note,
+        reviewerName: reviewerDisplayName(input.reviewer, input.reviewerName),
+        createdAt: (input.now ?? new Date()).toISOString(),
+      },
+    ],
+  };
+  await writeContributionAfterLocalMutation(updated, r2Config, r2Submission?.key);
+  return { storageMode: r2Config ? "r2" : "local", contribution: updated, changed: true };
 }
 
 export async function readContributionAttachmentForReview(input: {
@@ -727,7 +870,26 @@ function normalizeContributionEnvelope(contribution: ReviewedUserContribution): 
     ...contribution,
     status: normalizeContributionReviewStatus(contribution.status),
     publicationStatus: normalizeContributionPublicationStatus(contribution.publicationStatus),
+    inboxState: normalizeContributionInboxState(contribution.inboxState),
   };
+}
+
+function normalizeInboxState(value: string): ContributionInboxState {
+  const normalized = normalizeContributionInboxState(value);
+  if (normalized !== value) {
+    throw new ContributionReviewOperationError(
+      400,
+      "invalid_inbox_state",
+      "Elegí una acción de bandeja válida.",
+    );
+  }
+  return normalized;
+}
+
+function inboxAuditAction(state: ContributionInboxState): ContributionAuditAction {
+  if (state === "removed") return "contribution_removed_from_inbox";
+  if (state === "archived") return "contribution_archived";
+  return "contribution_restored_to_inbox";
 }
 
 function normalizeCuratedEvidenceStatus(status: unknown): Exclude<CuratedEvidenceStatus, "withdrawn"> {
@@ -761,6 +923,7 @@ async function upsertLocalCuratedEvidence(
     withdrawnAt: null,
     withdrawnByName: null,
     internalNote: normalizeText(input.internalNote),
+    ...(input.media ? { media: input.media } : {}),
   };
   await writeLocalCuratedEvidence([
     ...current.filter((item) => item.id !== evidence.id),
@@ -794,6 +957,52 @@ async function withdrawLocalCuratedEvidence(input: {
     withdrawn,
   ]);
   return withdrawn;
+}
+
+async function createCuratedMediaCopy({
+  contribution,
+  evidenceId,
+  attachmentId,
+  altText,
+}: {
+  contribution: ReviewedUserContribution;
+  evidenceId: string;
+  attachmentId: string;
+  altText?: string;
+}): Promise<CuratedContributionMedia> {
+  const normalizedAttachmentId = normalizeText(attachmentId);
+  const attachment = contribution.attachments.find((item) => item.id === normalizedAttachmentId);
+  const normalizedAltText = normalizeText(altText);
+  if (!attachment || !attachment.mimeType.startsWith("image/") || !normalizedAltText) {
+    throw new ContributionReviewOperationError(
+      400,
+      "invalid_curated_media",
+      "Elegí una imagen del aporte y escribí un texto alternativo público antes de publicarla.",
+    );
+  }
+  const object = await readContributionAttachmentObject(attachment.objectKey);
+  const extension = extensionForAttachment(attachment.originalFilename, attachment.mimeType);
+  const publicObjectKey = `curated-evidence/${evidenceId}/media.${extension}`;
+  const r2Config = getR2Config();
+  if (r2Config) {
+    await putR2Object({
+      config: r2Config,
+      key: publicObjectKey,
+      body: object.body,
+      contentType: attachment.mimeType,
+    });
+  } else {
+    const path = resolveLocalObjectPath(publicObjectKey);
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, object.body);
+  }
+  return {
+    type: "image",
+    objectKey: publicObjectKey,
+    mimeType: attachment.mimeType,
+    sizeBytes: attachment.sizeBytes,
+    altText: normalizedAltText,
+  };
 }
 
 async function listLocalCuratedEvidence(): Promise<CuratedContributionEvidence[]> {

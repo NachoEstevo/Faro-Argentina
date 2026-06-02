@@ -8,6 +8,7 @@ import { POST as POST_PROMOTE } from "../src/app/api/admin/aportes/promote/route
 import { POST as POST_WITHDRAW } from "../src/app/api/admin/aportes/withdraw/route.ts";
 import { PATCH, POST as POST_LINK } from "../src/app/api/admin/aportes/route.ts";
 import { GET as GET_PUBLIC_CURATED_EVIDENCE } from "../src/app/api/cases/[id]/curated-evidence/route.ts";
+import { GET as GET_PUBLIC_CURATED_MEDIA } from "../src/app/api/cases/[id]/curated-evidence/[evidenceId]/media/route.ts";
 import { storeContribution } from "../src/lib/server/contributionStorage.ts";
 
 const r2EnvKeys = [
@@ -144,6 +145,75 @@ test("POST /api/admin/aportes/promote creates candidate and published curated ev
   }
 });
 
+test("POST /api/admin/aportes/promote can expose a curated public image copy", async () => {
+  const storageDir = await mkdtemp(join(tmpdir(), "faro-promote-aportes-"));
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
+  process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
+  clearR2Env();
+  clearProductDbEnv();
+  enableAdminAuth();
+
+  try {
+    const stored = await seedApprovedLinkedContribution("APORTE-20260521-PROMO06");
+    const publishResponse = await POST_PROMOTE(promoteRequest({
+      submissionId: stored.contribution.id,
+      expedienteId: "AR-CONTRACT-46-0453-CON22",
+      status: "published_curated",
+      attachmentId: "ATT-001",
+      mediaAltText: "Foto aportada de avance visible revisada por Faro.",
+    }));
+    const published = await publishResponse.json() as {
+      evidence: {
+        media?: {
+          type: string;
+          url: string;
+          altText: string;
+          mimeType: string;
+          sizeBytes: number;
+          objectKey?: string;
+        };
+      };
+    };
+
+    assert.equal(publishResponse.status, 200);
+    assert.deepEqual(published.evidence.media, {
+      type: "image",
+      url: "/api/cases/AR-CONTRACT-46-0453-CON22/curated-evidence/CURATED-APORTE-20260521-PROMO06-AR-CONTRACT-46-0453-CON22/media",
+      altText: "Foto aportada de avance visible revisada por Faro.",
+      mimeType: "image/webp",
+      sizeBytes: 12,
+    });
+
+    const response = await GET_PUBLIC_CURATED_EVIDENCE(
+      new Request("http://localhost/api/cases/AR-CONTRACT-46-0453-CON22/curated-evidence"),
+      { params: Promise.resolve({ id: "AR-CONTRACT-46-0453-CON22" }) },
+    );
+    const payload = await response.json() as { evidence: Array<{ media?: Record<string, unknown> }> };
+
+    assert.equal(response.status, 200);
+    assert.equal(payload.evidence[0]?.media?.url, published.evidence.media?.url);
+    assert.equal("objectKey" in (payload.evidence[0]?.media ?? {}), false);
+
+    const mediaResponse = await GET_PUBLIC_CURATED_MEDIA(
+      new Request("http://localhost/api/cases/AR-CONTRACT-46-0453-CON22/curated-evidence/CURATED-APORTE-20260521-PROMO06-AR-CONTRACT-46-0453-CON22/media"),
+      {
+        params: Promise.resolve({
+          id: "AR-CONTRACT-46-0453-CON22",
+          evidenceId: "CURATED-APORTE-20260521-PROMO06-AR-CONTRACT-46-0453-CON22",
+        }),
+      },
+    );
+    const bytes = new TextDecoder().decode(await mediaResponse.arrayBuffer());
+
+    assert.equal(mediaResponse.status, 200);
+    assert.equal(mediaResponse.headers.get("content-type"), "image/webp");
+    assert.match(mediaResponse.headers.get("content-disposition") ?? "", /inline/);
+    assert.equal(bytes, "fake image");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
 test("POST /api/admin/aportes/withdraw removes curated evidence from public status", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-promote-aportes-"));
   const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
@@ -274,6 +344,8 @@ function promoteRequest(input: {
   submissionId: string;
   expedienteId: string;
   status?: "candidate" | "published_curated";
+  attachmentId?: string;
+  mediaAltText?: string;
 }) {
   return new Request("http://localhost/api/admin/aportes/promote", {
     method: "POST",
@@ -289,6 +361,8 @@ function promoteRequest(input: {
       permissionNote: "La persona confirmó que era material propio o autorizado para revisión.",
       reviewedByName: "Equipo Faro",
       internalNote: "Publicar sólo como evidencia complementaria.",
+      attachmentId: input.attachmentId,
+      mediaAltText: input.mediaAltText,
     }),
   });
 }

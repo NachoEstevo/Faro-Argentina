@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildAdminInboxTabs,
+  getAvailableReviewActions,
   sortContributionsForReview,
   statusLabel,
   statusWorkflow,
@@ -41,7 +43,52 @@ test("sortContributionsForReview prioritizes active review work before completed
   ]);
 });
 
-function contribution(id: string, status: Contribution["status"], createdAt: string): Contribution {
+test("buildAdminInboxTabs separates active work from closed housekeeping states", () => {
+  const tabs = buildAdminInboxTabs([
+    contribution("APORTE-20260521-NEW", "submitted", "2026-05-19T10:00:00.000Z"),
+    contribution("APORTE-20260521-REVIEW", "accepted_for_review", "2026-05-20T10:00:00.000Z"),
+    contribution("APORTE-20260521-REJECTED", "rejected", "2026-05-21T10:00:00.000Z"),
+    contribution("APORTE-20260521-PUBLISHED", "approved_for_investigation", "2026-05-22T10:00:00.000Z", {
+      publicationStatus: "published_curated",
+    }),
+    contribution("APORTE-20260521-ARCHIVED", "approved_for_investigation", "2026-05-23T10:00:00.000Z", {
+      inboxState: "archived",
+    }),
+    contribution("APORTE-20260521-REMOVED", "rejected", "2026-05-24T10:00:00.000Z", {
+      inboxState: "removed",
+    }),
+  ]);
+
+  assert.deepEqual(
+    tabs.map((tab) => [tab.value, tab.label, tab.count]),
+    [
+      ["active", "Activos", 2],
+      ["accepted_for_review", "En revisión", 1],
+      ["needs_more_info", "Necesita info", 0],
+      ["approved_for_investigation", "Aprobados", 0],
+      ["rejected", "Descartados", 1],
+      ["published_curated", "Publicados", 1],
+      ["archived", "Archivados", 1],
+      ["removed", "Removidos", 1],
+    ],
+  );
+});
+
+test("getAvailableReviewActions disables the current review decision", () => {
+  const rejected = contribution("APORTE-20260521-REJECTED", "rejected", "2026-05-21T10:00:00.000Z");
+  const actions = getAvailableReviewActions(rejected);
+
+  assert.equal(actions.find((action) => action.value === "rejected")?.disabled, true);
+  assert.equal(actions.find((action) => action.value === "accepted_for_review")?.disabled, false);
+  assert.equal(actions.find((action) => action.value === "rejected")?.reason, "Estado actual");
+});
+
+function contribution(
+  id: string,
+  status: Contribution["status"],
+  createdAt: string,
+  overrides: Partial<Contribution> = {},
+): Contribution {
   return {
     id,
     type: "add_photo",
@@ -61,7 +108,9 @@ function contribution(id: string, status: Contribution["status"], createdAt: str
     contactEmail: null,
     status,
     publicationStatus: "private",
+    inboxState: "active",
     createdAt,
     attachments: [],
+    ...overrides,
   };
 }

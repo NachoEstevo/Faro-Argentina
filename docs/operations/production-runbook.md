@@ -90,13 +90,18 @@ Despues de aplicar:
 - Probar lectura de bandeja `/admin/aportes`.
 - Revisar que las tablas esperadas existan: `faro_users`,
   `investigation_workspaces`, `contribution_review_events`,
-  `contribution_review_links`, `contribution_audit_events` y
-  `curated_contribution_evidence`.
+  `contribution_review_links`, `contribution_inbox_dispositions`,
+  `contribution_audit_events` y `curated_contribution_evidence`.
 
 ## R2 Storage Smoke Check
 
 R2 debe ser privado. Los adjuntos de Aportes no son evidencia publica ni deben
 ser browsables por URL publica.
+
+Cuando un admin publica una imagen como evidencia curada, Faro crea una copia
+separada bajo el prefijo de evidencia curada. Esa copia se sirve solo desde la
+ruta publica del expediente y no debe exponer el `objectKey` privado del aporte
+original.
 
 Checklist:
 

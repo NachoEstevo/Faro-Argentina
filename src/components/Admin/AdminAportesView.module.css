@@ -22,7 +22,9 @@
 .detail h3,
 .files h4,
 .timeline h4,
-.linkIntro h4 {
+.linkIntro h4,
+.housekeepingBox h4,
+.mediaBox h4 {
   margin: 0;
   font-family: var(--cf-font-heading);
   font-weight: 500;
@@ -56,6 +58,7 @@
 
 .accessForm,
 .reviewBox label,
+.housekeepingBox label,
 .linkGrid label {
   display: grid;
   gap: 9px;
@@ -102,6 +105,7 @@
 
 .accessForm span,
 .reviewBox span,
+.housekeepingBox span,
 .linkGrid span {
   color: var(--cf-text-secondary);
   font-size: 12px;
@@ -109,6 +113,7 @@
 
 .accessForm input,
 .reviewBox textarea,
+.housekeepingBox textarea,
 .linkGrid input,
 .linkGrid select,
 .linkGrid textarea {
@@ -126,6 +131,7 @@
 }
 
 .reviewBox textarea,
+.housekeepingBox textarea,
 .linkGrid textarea {
   min-height: 92px;
   resize: vertical;
@@ -140,6 +146,7 @@
 
 .accessForm input:focus,
 .reviewBox textarea:focus,
+.housekeepingBox textarea:focus,
 .linkGrid input:focus,
 .linkGrid select:focus,
 .linkGrid textarea:focus {
@@ -150,6 +157,7 @@
 .accessForm button,
 .accountNotice button,
 .secondaryButton,
+.inboxTabs button,
 .filterRow button,
 .actionGrid button,
 .linkButton {
@@ -196,6 +204,7 @@
 }
 
 .secondaryButton:hover,
+.inboxTabs button:hover,
 .filterRow button:hover {
   border-color: var(--cf-accent-dim);
   color: var(--cf-text);
@@ -343,14 +352,6 @@
   background: rgba(13, 15, 19, 0.44);
   color: var(--cf-text-secondary);
   text-align: left;
-  cursor: pointer;
-}
-
-.workflowStep:hover,
-.workflowStepActive {
-  border-color: var(--cf-accent-dim);
-  background: var(--cf-accent-faint);
-  color: var(--cf-text);
 }
 
 .workflowStep span {
@@ -371,17 +372,38 @@
   line-height: 1.35;
 }
 
+.inboxTabs,
 .filterRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
+.inboxTabs {
+  padding: 6px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.inboxTabs button,
 .filterRow button {
   padding: 0 11px;
   color: var(--cf-text-secondary);
 }
 
+.inboxTabs button {
+  min-height: 34px;
+  justify-content: space-between;
+  min-width: 118px;
+}
+
+.inboxTabs button span {
+  font-family: var(--cf-font-data);
+  color: inherit;
+}
+
+.inboxTabs .activeFilter,
 .filterRow .activeFilter {
   border-color: transparent;
   background: var(--cf-accent);
@@ -513,6 +535,7 @@
 
 .files,
 .reviewBox,
+.housekeepingBox,
 .timeline,
 .linkBox,
 .publicationBox {
@@ -601,6 +624,19 @@
   padding: 0 11px;
 }
 
+.actionGrid button small {
+  color: inherit;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.actionGrid button:disabled {
+  border-color: var(--cf-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cf-text-muted);
+  opacity: 1;
+}
+
 .lastReview {
   font-size: 12px;
 }
@@ -672,6 +708,23 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.mediaBox {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.emptyInline {
+  margin: 0;
+  color: var(--cf-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .linkList {
