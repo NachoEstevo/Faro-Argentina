@@ -56,6 +56,10 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Guardar vínculo/);
   assert.match(source, /Publicación curada/);
   assert.match(source, /Admin-only/);
+  assert.match(source, /Auditoría interna/);
+  assert.match(source, /\/api\/admin\/audit/);
+  assert.match(source, /metadata redaccionada/);
+  assert.match(source, /No expone object keys/);
   assert.match(source, /Guardar curaduría/);
   assert.match(source, /Retirar de público/);
   assert.match(source, /Candidato a publicación/);

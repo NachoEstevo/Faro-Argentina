@@ -146,6 +146,28 @@ El motivo por defecto debe ser neutral, por ejemplo "Hipotesis de trabajo". No
 usar "Mismo contexto judicial" como default porque puede sobreafirmar una
 relacion.
 
+#### Preparacion Del Dossier
+
+La carpeta debe mostrar una lectura de preparacion para handoff interno. Esa
+lectura no aprueba un caso, no habilita publicacion y no afirma que la hipotesis
+sea correcta. Ordena:
+
+- evidencia oficial cargada;
+- notas de relacion;
+- cobertura de fuentes;
+- brechas de datos;
+- tareas de verificacion;
+- material manual pendiente;
+- limite entre trabajo privado y evidencia publica.
+
+Los estados correctos son "Inicial", "En armado" y "Lista para handoff interno"
+o "Lista para handoff interno con caveats". Evitar "caso probado", "caso
+fuerte", "publicable" o cualquier lenguaje que convierta una carpeta privada en
+conclusion publica.
+
+El export de carpeta debe conservar esta preparacion para que el ZIP viaje con
+blockers, caveats y proximas acciones.
+
 ### Aportes
 
 Los aportes de usuarios son material privado de revision. Aunque apunten a un
@@ -189,6 +211,11 @@ copia publica separada del adjunto privado, exigir texto alternativo publico y
 exponer solo la URL publica redaccionada. La ruta interna del objeto privado
 nunca debe salir en APIs publicas ni en el expediente.
 
+La vista admin debe permitir leer auditoria interna con metadata redaccionada:
+actor, rol, accion, destino, fecha y resumen seguro. No debe mostrar object keys,
+rutas `submissions/...`, contacto, nombres originales de archivos ni metadata
+cruda. La apertura de bandeja se audita cuando hay base productiva configurada.
+
 ### Receipt
 
 El receipt es la capa de confianza. Le dice al usuario de donde salio el registro
@@ -211,6 +238,41 @@ Campos importantes:
 Cuando un receipt conserva un link descargable a CSV/API, la UI publica debe
 abrir la pagina oficial del catalogo o portal cuando exista. El link crudo queda
 para export tecnico y reproducibilidad.
+
+### Matriz De Datos
+
+La pagina de datos y la documentacion deben explicar fuente, etapa del ciclo,
+campos utiles, cantidad de expedientes, raw rows, map-ready y caveats. El valor
+no es comunicar solo volumen, sino mostrar que afirmaciones permite cada fuente:
+procedimiento, contrato, proveedor, ejecucion declarada, contexto documental o
+conversion.
+
+No presentar una fuente como cobertura completa del gasto publico si solo cubre
+una etapa del ciclo. No convertir falta de pago, avance o geometria en
+acusacion; mantenerlo como brecha verificable.
+
+#### Fuentes Candidatas
+
+Una fuente candidata no es parte del corpus productivo hasta pasar una matriz de
+ingreso: URL oficial, campos utiles, llave de cruce documentada, receipt,
+snapshot/hash, caveat y afirmacion permitida. Presupuesto Abierto puede ser un
+prototipo recomendado para ejecucion presupuestaria declarada por BAPIN, pero no
+debe llamarse pago verificado a proveedor. SIGEN/AGN son contexto documental
+manual hasta que exista un flujo editorial de citas.
+
+### Perfiles Investigativos Del Explorer
+
+Explorer puede agrupar resultados en perfiles por proveedor, organismo,
+provincia, fuente y senal. Esos perfiles son accesos de trabajo: muestran
+expedientes, fuentes, brechas, monto comparable y caveat. No son rankings de
+sospecha, no comparan instituciones y no publican aportes privados.
+
+La regla de accion es simple:
+
+- proveedor, organismo, fuente y senal pueden convertirse en pivots;
+- provincia se trata como busqueda por ubicacion oficial declarada;
+- cada perfil debe explicar su base y su limite antes de sugerir un proximo
+  paso.
 
 ### Punto En El Mapa
 

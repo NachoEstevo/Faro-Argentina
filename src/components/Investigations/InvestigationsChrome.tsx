@@ -18,6 +18,7 @@ import SearchSuggestionGroups from "../SearchSuggestionGroups";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { SearchSuggestion } from "@/lib/data/searchSuggestions";
 import type { InvestigationDossier } from "@/lib/data/investigationDossiers";
+import type { InvestigationDossierReadiness } from "@/lib/data/investigationReadiness";
 import {
   getInvestigationRelationReasonLabel,
   type InvestigationAggregate,
@@ -447,10 +448,12 @@ export function WorkspaceTabs({
 export function WorkspaceExportPanel({
   workspace,
   aggregate,
+  dossierReadiness,
   onExport,
 }: {
   workspace: InvestigationWorkspace;
   aggregate: InvestigationAggregate | null;
+  dossierReadiness: InvestigationDossierReadiness | null;
   onExport: () => void;
 }) {
   return (
@@ -473,6 +476,18 @@ export function WorkspaceExportPanel({
         <span>{workspace.sourceLinks.length} fuentes manuales</span>
         {aggregate && <span>{aggregate.sourceIds.length} fuentes en expedientes</span>}
       </div>
+      {dossierReadiness && (
+        <div className={styles.exportReadiness}>
+          <span>Preparación</span>
+          <strong>{dossierReadiness.label}</strong>
+          <p>{dossierReadiness.summary}</p>
+          {dossierReadiness.blockers.length > 0 && (
+            <ul>
+              {dossierReadiness.blockers.slice(0, 3).map((blocker) => <li key={blocker}>{blocker}</li>)}
+            </ul>
+          )}
+        </div>
+      )}
       <button className={styles.primary} type="button" onClick={onExport}>
         <Download size={15} aria-hidden />
         Exportar carpeta ZIP

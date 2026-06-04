@@ -1,6 +1,7 @@
 import { CONTRIBUTION_REVIEW_STATUSES, type ContributionReviewStatus } from "../../../../lib/data/userContributions.ts";
 import { assertAdminMutationAllowed } from "../../../../lib/server/adminRequestGuards.ts";
 import { requireFaroReviewer } from "../../../../lib/server/faroAuth.ts";
+import { appendContributionAuditEvent } from "../../../../lib/server/contributionAuditDb.ts";
 import {
   ContributionReviewOperationError,
   isContributionReviewStatus,
@@ -10,9 +11,9 @@ import {
   updateContributionInboxState,
   updateContributionReview,
 } from "../../../../lib/server/contributionReviewStorage.ts";
+import { isProductDatabaseConfigured } from "../../../../lib/server/productDb.ts";
 
 export async function GET(request: Request) {
-  void request;
   const auth = await requireFaroReviewer();
   if (!auth.ok) {
     return Response.json(
@@ -22,6 +23,19 @@ export async function GET(request: Request) {
   }
 
   const inbox = await listContributionReviews();
+  if (isProductDatabaseConfigured()) {
+    await appendContributionAuditEvent({
+      action: "admin_inbox_opened",
+      actor: auth.user,
+      targetType: "admin_inbox",
+      targetId: "aportes",
+      metadata: {
+        storageMode: inbox.storageMode,
+        submissionCount: inbox.submissions.length,
+        userAgent: request.headers.get("user-agent") ?? undefined,
+      },
+    }).catch(() => null);
+  }
   return Response.json({
     inboxType: "faro_admin_aportes_inbox_v1",
     generatedAt: new Date().toISOString(),

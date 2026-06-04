@@ -35,6 +35,10 @@ import {
 } from "@/lib/data/searchSuggestions";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildInvestigationDossier } from "@/lib/data/investigationDossiers";
+import {
+  buildInvestigationDossierReadiness,
+  type InvestigationDossierReadiness,
+} from "@/lib/data/investigationReadiness";
 import { buildInvestigationZip } from "@/lib/client/investigationZip";
 import {
   INVESTIGATION_WORKSPACE_UPDATED_EVENT,
@@ -198,6 +202,17 @@ export default function InvestigationsView({
   }, [cases, deferredQuery, selectedCountry, workspace?.countryCode]);
   const latestAnalysis = workspace?.analyses[workspace.analyses.length - 1] ?? null;
   const readiness = useMemo(() => workspace ? buildInvestigationReadiness(workspace) : null, [workspace]);
+  const dossierReadiness = useMemo(
+    () => {
+      if (!workspace) return null;
+      if (workspace.caseIds.length > 0 && selectedCasePacks.length === 0) return null;
+      return buildInvestigationDossierReadiness(
+        workspace,
+        selectedCasePacks.map((pack) => pack.evidencePack),
+      );
+    },
+    [selectedCasePacks, workspace],
+  );
   const showCreateForm = isCreatingWorkspace || !workspace;
 
   function persistActiveWorkspace(nextWorkspace: InvestigationWorkspace) {
@@ -473,6 +488,7 @@ export default function InvestigationsView({
                 <WorkspaceOverviewPanel
                   workspace={workspace}
                   aggregate={visibleAggregate}
+                  dossierReadiness={dossierReadiness}
                   onStartCase={() => setActiveTab("expedientes")}
                 />
                 <DossierBuilderPanel
@@ -594,7 +610,12 @@ export default function InvestigationsView({
             )}
 
             {activeTab === "exportar" && (
-              <WorkspaceExportPanel workspace={workspace} aggregate={visibleAggregate} onExport={handleExport} />
+              <WorkspaceExportPanel
+                workspace={workspace}
+                aggregate={visibleAggregate}
+                dossierReadiness={dossierReadiness}
+                onExport={handleExport}
+              />
             )}
           </div>
         ) : null}
@@ -630,10 +651,12 @@ function formatNoteDate(value: string): string {
 function WorkspaceOverviewPanel({
   workspace,
   aggregate,
+  dossierReadiness,
   onStartCase,
 }: {
   workspace: InvestigationWorkspace;
   aggregate: InvestigationAggregate | null;
+  dossierReadiness: InvestigationDossierReadiness | null;
   onStartCase: () => void;
 }) {
   const hasCases = workspace.caseIds.length > 0;
@@ -664,6 +687,7 @@ function WorkspaceOverviewPanel({
           <span>{gapCount} brechas de geometría</span>
         </div>
       </div>
+      {dossierReadiness && <DossierReadinessPanel readiness={dossierReadiness} />}
       <div className={styles.workflowStart}>
         <div>
           <span>{hasCases ? "Siguiente paso" : "Empezar caso"}</span>
@@ -682,6 +706,46 @@ function WorkspaceOverviewPanel({
           {aggregate.geometryGaps.count} expediente{aggregate.geometryGaps.count === 1 ? "" : "s"} sin geometría oficial para revisar fuera del mapa.
         </p>
       ) : null}
+    </section>
+  );
+}
+
+function DossierReadinessPanel({ readiness }: { readiness: InvestigationDossierReadiness }) {
+  const visibleChecks = readiness.checks.filter((check) => check.status !== "ready").slice(0, 4);
+  return (
+    <section className={styles.readinessPanel} aria-label="Preparación del dossier">
+      <div className={styles.readinessHeader}>
+        <div>
+          <span>Preparación del dossier</span>
+          <strong>{readiness.label}</strong>
+          <p>{readiness.summary}</p>
+        </div>
+        <div className={styles.readinessScore} aria-label="Estado de checks">
+          <span>{readiness.score.ready} OK</span>
+          <span>{readiness.score.review} revisar</span>
+          <span>{readiness.score.blocked} bloqueos</span>
+        </div>
+      </div>
+      {visibleChecks.length > 0 ? (
+        <div className={styles.readinessChecks}>
+          {visibleChecks.map((check) => (
+            <article key={check.id} className={`${styles.readinessCheck} ${styles[`readiness_${check.status}`]}`}>
+              <span>{check.label}</span>
+              <p>{check.summary}</p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p className={styles.status}>Sin pendientes automáticos para handoff interno.</p>
+      )}
+      {readiness.nextActions.length > 0 && (
+        <div className={styles.readinessActions}>
+          <span>Próximas acciones</span>
+          <ul>
+            {readiness.nextActions.slice(0, 3).map((action) => <li key={action}>{action}</li>)}
+          </ul>
+        </div>
+      )}
     </section>
   );
 }

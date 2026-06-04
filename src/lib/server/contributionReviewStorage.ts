@@ -18,6 +18,7 @@ import { getCaseById } from "../caseRepository.ts";
 import type { FaroAuthenticatedUser } from "./faroAuth.ts";
 import { appendContributionAuditEvent, type ContributionAuditAction } from "./contributionAuditDb.ts";
 import {
+  getCuratedContributionEvidenceById,
   listCuratedEvidenceForSubmissions,
   listPublishedCuratedEvidenceForExpediente,
   resolveContributionPublicationStatus,
@@ -344,14 +345,19 @@ export async function withdrawContributionEvidence(
   storageMode: ContributionReviewStorageMode;
   evidence: CuratedContributionEvidence;
 }> {
+  const evidenceId = normalizeText(input.evidenceId);
+  if (isProductDatabaseConfigured()) {
+    const current = await getCuratedContributionEvidenceById(evidenceId);
+    if (current?.status === "withdrawn") return { storageMode: "neon", evidence: current };
+  }
   const evidence = isProductDatabaseConfigured()
     ? await withdrawCuratedContributionEvidence({
-      id: normalizeText(input.evidenceId),
+      id: evidenceId,
       withdrawnBy: input.reviewer,
       withdrawnAt: input.now,
     })
     : await withdrawLocalCuratedEvidence({
-      id: normalizeText(input.evidenceId),
+      id: evidenceId,
       withdrawnBy: input.reviewer,
       withdrawnAt: input.now,
     });
@@ -451,6 +457,12 @@ export async function linkContributionToReviewTarget(
         "Aprobá el aporte antes de vincularlo a un expediente o carpeta.",
       );
     }
+    const existingLink = (hydrated.reviewLinks ?? []).find((link) =>
+      link.targetType === targetType && link.targetId === targetId
+    );
+    if (existingLink) {
+      return { storageMode: "neon", contribution: hydrated, link: existingLink };
+    }
     const link = await appendContributionReviewLink({
       submissionId: input.submissionId,
       targetType,
@@ -483,6 +495,16 @@ export async function linkContributionToReviewTarget(
   }
 
   const reviewLinks = contribution.reviewLinks ?? [];
+  const existingLink = reviewLinks.find((link) =>
+    link.targetType === targetType && link.targetId === targetId
+  );
+  if (existingLink) {
+    return {
+      storageMode: r2Config ? "r2" : "local",
+      contribution: normalizeContributionEnvelope(contribution),
+      link: existingLink,
+    };
+  }
   const link: ContributionReviewLink = {
     id: `LINK-${String(reviewLinks.length + 1).padStart(3, "0")}`,
     targetType,
@@ -946,6 +968,7 @@ async function withdrawLocalCuratedEvidence(input: {
       "No encontramos esa evidencia curada.",
     );
   }
+  if (evidence.status === "withdrawn") return evidence;
   const withdrawn: CuratedContributionEvidence = {
     ...evidence,
     status: "withdrawn",

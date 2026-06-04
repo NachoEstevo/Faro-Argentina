@@ -143,7 +143,7 @@ export async function withdrawCuratedContributionEvidence(
        withdrawn_by_clerk_user_id = $3,
        withdrawn_by_name = $4,
        updated_at = now()
-     where id = $1
+     where id = $1 and status <> 'withdrawn'
      returning id, submission_id, expediente_id, status, title, caption, caveat,
        source_label, permission_note, reviewed_by_name, promoted_by_name,
        promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
@@ -156,8 +156,38 @@ export async function withdrawCuratedContributionEvidence(
     ],
   );
   const row = (rows as CuratedContributionEvidenceRow[])[0];
-  if (!row) throw new Error("Curated evidence not found");
+  if (!row) {
+    const existingRows = await sql.query(
+      `select id, submission_id, expediente_id, status, title, caption, caveat,
+         source_label, permission_note, reviewed_by_name, promoted_by_name,
+         promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+         media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text
+       from curated_contribution_evidence
+       where id = $1`,
+      [input.id],
+    );
+    const existingRow = (existingRows as CuratedContributionEvidenceRow[])[0];
+    if (existingRow?.status === "withdrawn") return rowToCuratedEvidence(existingRow);
+    throw new Error("Curated evidence not found");
+  }
   return rowToCuratedEvidence(row);
+}
+
+export async function getCuratedContributionEvidenceById(
+  id: string,
+  sql: ProductSql = getProductSql(),
+): Promise<CuratedContributionEvidence | null> {
+  const rows = await sql.query(
+    `select id, submission_id, expediente_id, status, title, caption, caveat,
+       source_label, permission_note, reviewed_by_name, promoted_by_name,
+       promoted_at, withdrawn_at, withdrawn_by_name, internal_note,
+       media_type, media_object_key, media_mime_type, media_size_bytes, media_alt_text
+     from curated_contribution_evidence
+     where id = $1`,
+    [id],
+  );
+  const row = (rows as CuratedContributionEvidenceRow[])[0];
+  return row ? rowToCuratedEvidence(row) : null;
 }
 
 export async function listPublishedCuratedEvidenceForExpediente(

@@ -410,6 +410,54 @@ test("POST /api/admin/aportes links an approved contribution to an existing expe
   }
 });
 
+test("POST /api/admin/aportes does not duplicate an existing private link", async () => {
+  const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
+  const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);
+  process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
+  process.env.FARO_ADMIN_ACCESS_CODE = "review-code";
+  clearR2Env();
+  clearProductDbEnv();
+  enableReviewerAuth();
+
+  try {
+    const stored = await seedContribution();
+    await approveContribution(stored.contribution.id);
+    const body = {
+      submissionId: stored.contribution.id,
+      targetType: "case",
+      targetId: "AR-CONTRACT-46-0453-CON22",
+      note: "Usar como material privado para revisar avance visible.",
+    };
+    const firstResponse = await POST(new Request("http://localhost/api/admin/aportes", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    }));
+    const secondResponse = await POST(new Request("http://localhost/api/admin/aportes", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    }));
+    const first = await firstResponse.json() as {
+      link: { id: string };
+      contribution: { reviewLinks: Array<{ id: string; targetId: string }> };
+    };
+    const second = await secondResponse.json() as {
+      link: { id: string };
+      contribution: { reviewLinks: Array<{ id: string; targetId: string }> };
+    };
+
+    assert.equal(firstResponse.status, 200);
+    assert.equal(secondResponse.status, 200);
+    assert.equal(first.link.id, "LINK-001");
+    assert.equal(second.link.id, "LINK-001");
+    assert.equal(second.contribution.reviewLinks.length, 1);
+    assert.equal(second.contribution.reviewLinks[0]?.targetId, "AR-CONTRACT-46-0453-CON22");
+  } finally {
+    restoreEnv(env);
+  }
+});
+
 test("POST /api/admin/aportes links an approved contribution to an internal folder", async () => {
   const storageDir = await mkdtemp(join(tmpdir(), "faro-admin-aportes-"));
   const env = preserveEnv(["FARO_CONTRIBUTIONS_STORAGE_DIR", "FARO_ADMIN_ACCESS_CODE", ...authEnvKeys, ...r2EnvKeys, ...productDbEnvKeys]);

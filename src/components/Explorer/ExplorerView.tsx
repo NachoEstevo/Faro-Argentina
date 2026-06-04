@@ -26,6 +26,7 @@ import {
   buildInvestigatorExplorerIndex,
   type InvestigatorCaseRow,
   type InvestigatorEntityFilter,
+  type InvestigatorEntityProfile,
   type InvestigatorFacet,
   type InvestigatorGeometryFilter,
 } from "@/lib/data/investigatorExplorer";
@@ -295,6 +296,22 @@ export default function ExplorerView({
     if (suggestion.caseId) onSelectCase(suggestion.caseId, countryScope);
   };
 
+  const handleProfileSelect = (profile: InvestigatorEntityProfile) => {
+    clearPreset();
+    if (!profile.filter) {
+      setQuery(profile.label);
+      return;
+    }
+    toggleFacet({
+      type: profile.filter.type,
+      key: profile.filter.key,
+      label: profile.label,
+      count: profile.caseCount,
+      watchCount: profile.watchCount,
+      sampleCaseId: profile.sampleCaseIds[0] ?? "",
+    });
+  };
+
   const saveRowToFolder = (event: MouseEvent<HTMLButtonElement>, row: InvestigatorCaseRow) => {
     event.stopPropagation();
     const result = addCaseToStoredInvestigationWorkspace({
@@ -503,6 +520,10 @@ export default function ExplorerView({
               <StatCard label="Sin geometría de mapa" value={explorer.stats.filteredCasesWithoutMapGeometry.toLocaleString("es-AR")} />
               <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
             </div>
+            <InvestigatorProfilesPanel
+              profiles={explorer.profiles}
+              onSelectProfile={handleProfileSelect}
+            />
             <div className={styles.tableWrap}>
               {(() => {
                 const totalPages = Math.max(1, Math.ceil(explorer.rows.length / PAGE_SIZE));
@@ -720,14 +741,6 @@ function ExplorerDetail({
               {receiptLocator?.actionLabel ?? "Abrir fuente"}
             </a>
           )}
-          <a
-            className={styles.detailSecondaryAction}
-            href={`/api/export/${encodeURIComponent(caseFile.id)}`}
-            download
-          >
-            <Download size={13} aria-hidden />
-            JSON técnico
-          </a>
           <button
             type="button"
             className={styles.detailSecondaryAction}
@@ -1591,6 +1604,46 @@ function compactNumber(value: number): string {
   if (abs >= 1_000_000) return `${(abs / 1_000_000).toFixed(1).replace(".", ",")} M`;
   if (abs >= 1_000) return `${(abs / 1_000).toFixed(1).replace(".", ",")} K`;
   return abs.toLocaleString("es-AR");
+}
+
+function InvestigatorProfilesPanel({
+  profiles,
+  onSelectProfile,
+}: {
+  profiles: InvestigatorEntityProfile[];
+  onSelectProfile: (profile: InvestigatorEntityProfile) => void;
+}) {
+  if (profiles.length === 0) return null;
+  return (
+    <section className={styles.profilePanel} aria-label="Perfiles investigativos">
+      <div className={styles.profilePanelHead}>
+        <div>
+          <p className={styles.profileEyebrow}>Perfiles investigativos</p>
+          <h2>Actores, fuentes y zonas para abrir</h2>
+        </div>
+        <p>Lectura agrupada del resultado actual. Sirve para orientar la revisión, no para concluir.</p>
+      </div>
+      <div className={styles.profileGrid}>
+        {profiles.map((profile) => (
+          <button
+            key={`${profile.type}:${profile.key}`}
+            type="button"
+            className={styles.profileCard}
+            onClick={() => onSelectProfile(profile)}
+            aria-label={`${profile.categoryLabel}: ${profile.label}. ${profile.basis} ${profile.caveat}`}
+          >
+            <span className={styles.profileKind}>{profile.categoryLabel}</span>
+            <strong>{profile.label}</strong>
+            <span className={styles.profileMeta}>
+              {profile.caseCount.toLocaleString("es-AR")} expedientes · {profile.sourceCount} fuentes
+            </span>
+            <span className={styles.profileAmount}>{profile.amountLabel}</span>
+            <span className={styles.profileCaveat}>{profile.caveat}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function StatCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string }) {

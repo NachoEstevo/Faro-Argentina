@@ -3,6 +3,7 @@ import { upsertFaroUser } from "./faroUserDb.ts";
 import { getProductSql, type ProductSql } from "./productDb.ts";
 
 export type ContributionAuditAction =
+  | "admin_inbox_opened"
   | "review_status_changed"
   | "review_link_created"
   | "attachment_opened"

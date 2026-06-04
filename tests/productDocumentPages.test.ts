@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 const productDocumentUrl = new URL("../src/components/ProductDocument.tsx", import.meta.url);
 const methodologyPageUrl = new URL("../src/app/metodologia/page.tsx", import.meta.url);
 const dataPageUrl = new URL("../src/app/datos/page.tsx", import.meta.url);
+const sourceCandidatePipelineUrl = new URL("../src/lib/data/sourceCandidatePipeline.ts", import.meta.url);
 
 test("product document navigation keeps public resources inside Faro", async () => {
   const source = await readFile(productDocumentUrl, "utf8");
@@ -29,11 +30,19 @@ test("methodology page explains Faro without depending on GitHub", async () => {
 });
 
 test("data page documents sources, caveats and export path", async () => {
-  const source = await readFile(dataPageUrl, "utf8");
+  const source = [
+    await readFile(dataPageUrl, "utf8"),
+    await readFile(sourceCandidatePipelineUrl, "utf8"),
+  ].join("\n");
 
   assert.match(source, /Datos \| Faro/);
-  assert.match(source, /CONTRAT\.AR contratos y obras/);
-  assert.match(source, /Mapa de Inversiones Argentina/);
+  assert.match(source, /Cómo leer la cobertura/);
+  assert.match(source, /Matriz fuente-campo-afirmación/);
+  assert.match(source, /Próximas fuentes candidatas/);
+  assert.match(source, /Presupuesto Abierto - crédito por BAPIN/);
+  assert.match(source, /La llave de cruce debe estar declarada por la fuente/);
+  assert.match(source, /Contratos permiten revisar adjudicación/);
+  assert.match(source, /Mapa de Inversiones/);
   assert.match(source, /geometría oficial validada/);
   assert.match(source, /\/api\/export\?country=AR/);
   assert.match(source, /Una señal de revisión no es una conclusión automática/);

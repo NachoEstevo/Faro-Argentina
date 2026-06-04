@@ -93,6 +93,42 @@ test("buildInvestigatorExplorer searches by official location fields used by sug
   assert.deepEqual(byLocality.rows.map((row) => row.caseId), ["AR-CONTRACT-381-1001-CON21"]);
 });
 
+test("buildInvestigatorExplorer exposes non-accusatory investigation profiles", () => {
+  const cases = [
+    buildExplorerFixture("AR-CONTRACT-381-1001-CON21", 1, {
+      workProvince: "BUENOS AIRES",
+      supplierName: "Proveedor A",
+    }),
+    buildExplorerFixture("AR-CONTRACT-381-1002-CON21", 1, {
+      coordinates: null,
+      workProvince: "BUENOS AIRES",
+      supplierName: "Proveedor A",
+    }),
+    buildExplorerFixture("AR-CONTRACT-105-1003-CON21", 2, {
+      agencyName: "Agencia Sur",
+      workProvince: "CORDOBA",
+      supplierName: "Proveedor B",
+    }),
+  ] as InvestigatorExplorerCase[];
+
+  const explorer = buildInvestigatorExplorer(cases, { limit: 20 });
+  const supplierProfile = explorer.profiles.find((profile) =>
+    profile.type === "supplier" && profile.label.includes("Proveedor A")
+  );
+  const provinceProfile = explorer.profiles.find((profile) =>
+    profile.type === "province" && profile.label === "BUENOS AIRES"
+  );
+
+  assert.equal(supplierProfile?.caseCount, 2);
+  assert.equal(supplierProfile?.sourceCount, 1);
+  assert.equal(supplierProfile?.withoutMapGeometryCount, 1);
+  assert.equal(supplierProfile?.filter?.type, "supplier");
+  assert.equal(provinceProfile?.caseCount, 2);
+  assert.equal(provinceProfile?.filter, null);
+  assert.match(supplierProfile?.caveat ?? "", /No prueba relación/);
+  assert.doesNotMatch(JSON.stringify(explorer.profiles), /corrup|fraude|delito|culpable|sospech/i);
+});
+
 test("buildInvestigatorExplorer applies geometry, country, signal, and pivot filters", () => {
   const noGeometry = buildInvestigatorExplorer(allCases, {
     countries: ["AR"],

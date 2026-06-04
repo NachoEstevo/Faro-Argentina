@@ -92,6 +92,26 @@ export interface InboxPayload {
   submissions: Contribution[];
 }
 
+export interface AuditEvent {
+  id: string;
+  submissionId: string | null;
+  action: string;
+  actionLabel: string;
+  actorName: string;
+  actorRole: string;
+  targetLabel: string;
+  metadataSummary: string[];
+  createdAt: string;
+}
+
+export interface AuditPayload {
+  auditType: "faro_admin_audit_v1";
+  generatedAt: string;
+  storageMode: "local" | "neon";
+  message?: string;
+  events: AuditEvent[];
+}
+
 export const statusWorkflow: Array<{
   value: ReviewStatus;
   label: string;

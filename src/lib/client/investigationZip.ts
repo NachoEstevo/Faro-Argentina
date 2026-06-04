@@ -10,6 +10,10 @@ import {
   buildInvestigationDossier,
   type InvestigationDossier,
 } from "../data/investigationDossiers.ts";
+import {
+  buildInvestigationDossierReadiness,
+  type InvestigationDossierReadiness,
+} from "../data/investigationReadiness.ts";
 import { cleanInvestigationAnalysisMarkdown } from "../data/investigationAnalysisText.ts";
 
 export interface BuildInvestigationZipInput {
@@ -54,6 +58,10 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     input.workspace,
     input.casePacks.map((pack) => pack.evidencePack),
   );
+  const dossierReadiness = buildInvestigationDossierReadiness(
+    input.workspace,
+    input.casePacks.map((pack) => pack.evidencePack),
+  );
   const files: Array<{ name: string; content: string }> = [
     {
       name: "workspace.json",
@@ -69,7 +77,7 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
     },
     {
       name: "dossier.md",
-      content: buildDossier(input.workspace, dossier),
+      content: buildDossier(input.workspace, dossier, dossierReadiness),
     },
     {
       name: "evidence-matrix.csv",
@@ -141,11 +149,36 @@ function buildReadme(workspace: InvestigationWorkspace): string {
   ].join("\n");
 }
 
-function buildDossier(workspace: InvestigationWorkspace, dossier: InvestigationDossier): string {
+function buildDossier(
+  workspace: InvestigationWorkspace,
+  dossier: InvestigationDossier,
+  readiness: InvestigationDossierReadiness,
+): string {
   return [
     `# Dossier de trabajo: ${workspace.title}`,
     "",
     "Este dossier ordena evidencia oficial, contexto del usuario, brechas y próximos pasos. No es una publicación ni una conclusión.",
+    "",
+    "## Preparación del dossier",
+    "",
+    `Estado: ${readiness.label}`,
+    "",
+    readiness.summary,
+    "",
+    "### Checks",
+    "",
+    ...readiness.checks.map((check) => [
+      `- ${check.label}: ${formatReadinessStatus(check.status)}.`,
+      `  ${check.summary}`,
+    ].join("\n")),
+    "",
+    "### Próximas acciones",
+    "",
+    ...formatEmptyableList(
+      readiness.nextActions,
+      (action) => `- ${action}`,
+      "- Sin próximas acciones automáticas.",
+    ),
     "",
     "## Matriz de evidencia",
     "",
@@ -493,4 +526,10 @@ function formatTaskStatus(status: InvestigationVerificationTaskStatus): string {
   if (status === "done") return "Hecha";
   if (status === "blocked") return "Bloqueada";
   return "Pendiente";
+}
+
+function formatReadinessStatus(status: InvestigationDossierReadiness["checks"][number]["status"]): string {
+  if (status === "ready") return "OK";
+  if (status === "review") return "revisar";
+  return "bloquea handoff";
 }

@@ -73,6 +73,9 @@ test("buildInvestigationZip creates a portable ZIP with workspace, notes, analys
   assert.match(text, /Mismo contexto judicial/);
   assert.match(text, /Expediente agregado por contexto judicial oficial compartido/);
   assert.match(text, /Matriz de evidencia/);
+  assert.match(text, /Preparación del dossier/);
+  assert.match(text, /Material manual/);
+  assert.match(text, /La carpeta es privada y no publica aportes ni hipotesis automaticamente/);
   assert.match(text, /Brechas para verificar/);
   assert.match(text, /Próximos pasos/);
   assert.match(text, /Checklist de verificación/);

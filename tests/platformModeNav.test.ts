@@ -22,6 +22,8 @@ test("PlatformModeNav keeps primary modes centered and Aportes docked right", as
   assert.match(styles, /\.floating\s*\{[\s\S]*left: 20px;[\s\S]*right: 20px;[\s\S]*justify-content: center;/);
   assert.match(styles, /\.floating \.secondary\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.secondary[\s\S]*border: 1px solid var\(--cf-border\)/);
+  assert.match(styles, /\.item,[\s\S]*\.secondary\s*\{[\s\S]*box-sizing: border-box;[\s\S]*min-height: 38px;/);
+  assert.match(styles, /\.item svg,[\s\S]*\.secondary span\s*\{[\s\S]*pointer-events: none;/);
   assert.doesNotMatch(source, /"sidebar"/);
   assert.doesNotMatch(styles, /\.sidebar/);
   assert.doesNotMatch(source, /Mis carpetas|Aportes<\/span>/);

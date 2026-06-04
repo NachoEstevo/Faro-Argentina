@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  History,
   Inbox,
   LockKeyhole,
   RefreshCw,
@@ -18,6 +19,7 @@ import {
   sortContributionsForReview,
   statusLabel,
   statusWorkflow,
+  type AuditPayload,
   type Attachment,
   type Contribution,
   type InboxState,
@@ -50,6 +52,8 @@ export default function AdminAportesView() {
   const [curationMediaAltText, setCurationMediaAltText] = useState("");
   const [statusText, setStatusText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [audit, setAudit] = useState<AuditPayload | null>(null);
+  const [auditLoading, setAuditLoading] = useState(false);
 
   const inboxTabs = useMemo(() => buildAdminInboxTabs(inbox?.submissions ?? []), [inbox?.submissions]);
 
@@ -89,6 +93,10 @@ export default function AdminAportesView() {
     }
   }, [filtered, selectedId]);
 
+  useEffect(() => {
+    setAudit(null);
+  }, [selected?.id]);
+
   async function loadInbox() {
     setLoading(true);
     setStatusText("Cargando bandeja privada...");
@@ -106,6 +114,28 @@ export default function AdminAportesView() {
       setStatusText(error instanceof Error ? error.message : "No se pudo abrir la bandeja.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadSelectedAudit() {
+    if (!selected) return;
+    setAuditLoading(true);
+    setStatusText("Cargando auditoría interna...");
+    try {
+      const params = new URLSearchParams({
+        submissionId: selected.id,
+        limit: "12",
+      });
+      const response = await fetch(`/api/admin/audit?${params.toString()}`);
+      const payload = await response.json() as AuditPayload & { message?: string };
+      if (!response.ok) throw new Error(payload.message ?? "No se pudo abrir la auditoría.");
+      setAudit(payload);
+      setStatusText(payload.message ?? "Auditoría actualizada.");
+    } catch (error) {
+      setAudit(null);
+      setStatusText(error instanceof Error ? error.message : "No se pudo abrir la auditoría.");
+    } finally {
+      setAuditLoading(false);
     }
   }
 
@@ -408,6 +438,44 @@ export default function AdminAportesView() {
                 </button>
               ))}
             </nav>
+            {selected && (
+              <section className={styles.auditPanel} aria-label="Auditoría interna del aporte">
+                <div className={styles.auditHead}>
+                  <div>
+                    <p className={styles.eyebrow}>Auditoría interna</p>
+                    <h3>Historial operativo del aporte seleccionado</h3>
+                    <p>Vista admin con metadata redaccionada. No expone object keys, contacto ni rutas privadas.</p>
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={() => loadSelectedAudit()}
+                    disabled={auditLoading}
+                  >
+                    <History size={14} aria-hidden />
+                    Ver auditoría
+                  </button>
+                </div>
+                {audit?.message && <p className={styles.auditNotice}>{audit.message}</p>}
+                {audit && audit.events.length > 0 && (
+                  <ol className={styles.auditList}>
+                    {audit.events.map((event) => (
+                      <li key={event.id} className={styles.auditItem}>
+                        <span>{formatDate(event.createdAt)}</span>
+                        <strong>{event.actionLabel}</strong>
+                        <small>{event.actorName} · {event.actorRole} · {event.targetLabel}</small>
+                        {event.metadataSummary.length > 0 && (
+                          <p>{event.metadataSummary.join(" · ")}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                {audit && audit.events.length === 0 && (
+                  <p className={styles.empty}>No hay eventos persistentes para este aporte en el entorno actual.</p>
+                )}
+              </section>
+            )}
             <div className={styles.grid}>
               <div className={styles.list} aria-label="Aportes">
                 {filtered.length === 0 ? (

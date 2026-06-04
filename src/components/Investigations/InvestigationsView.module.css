@@ -488,6 +488,116 @@
   line-height: 1.45;
 }
 
+.readinessPanel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.readinessHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.readinessHeader span,
+.readinessActions span {
+  color: var(--cf-accent);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.readinessHeader strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--cf-text);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.readinessHeader p {
+  margin: 5px 0 0;
+  max-width: 72ch;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.readinessScore {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 180px;
+}
+
+.readinessScore span {
+  padding: 5px 8px;
+  border: 1px solid var(--cf-border);
+  border-radius: 999px;
+  color: var(--cf-text-secondary);
+  background: var(--cf-workspace-soft-bg, rgba(255, 255, 255, 0.04));
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.readinessChecks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.readinessCheck {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-soft-bg, rgba(255, 255, 255, 0.04));
+}
+
+.readinessCheck span {
+  color: var(--cf-text);
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.readinessCheck p {
+  margin: 5px 0 0;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.readiness_review {
+  border-color: color-mix(in srgb, var(--cf-state-caution) 32%, var(--cf-border));
+}
+
+.readiness_blocked {
+  border-color: color-mix(in srgb, var(--cf-state-flag) 38%, var(--cf-border));
+}
+
+.readinessActions {
+  display: grid;
+  gap: 7px;
+}
+
+.readinessActions ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .workflowStart {
   display: flex;
   align-items: center;
@@ -1110,6 +1220,45 @@
   line-height: 1.3;
 }
 
+.exportReadiness {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-workspace-card-bg-muted, rgba(13, 15, 19, 0.42));
+}
+
+.exportReadiness span {
+  color: var(--cf-accent);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.exportReadiness strong {
+  color: var(--cf-text);
+  font-size: 15px;
+}
+
+.exportReadiness p {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.exportReadiness ul {
+  display: grid;
+  gap: 4px;
+  margin: 2px 0 0;
+  padding-left: 18px;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .readyBadge,
 .notReadyBadge {
   flex: 0 0 auto;
@@ -1309,7 +1458,8 @@
 
   .planGrid,
   .notesLayout,
-  .dossierGrid {
+  .dossierGrid,
+  .readinessChecks {
     grid-template-columns: 1fr;
   }
 
@@ -1381,6 +1531,15 @@
 
   .workflowStart {
     display: grid;
+  }
+
+  .readinessHeader {
+    display: grid;
+  }
+
+  .readinessScore {
+    justify-content: flex-start;
+    min-width: 0;
   }
 
   .primaryAction {

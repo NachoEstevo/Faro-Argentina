@@ -18,6 +18,7 @@ import type { CountryCode } from "./sourceCatalog.ts";
 export type InvestigatorExplorerCase = ExplorerCase;
 export type InvestigatorGeometryFilter = "any" | "with" | "without";
 export type InvestigatorEntityType = "supplier" | "agency" | "source" | "signal";
+export type InvestigatorProfileType = InvestigatorEntityType | "province";
 
 export interface InvestigatorEntityFilter {
   type: InvestigatorEntityType;
@@ -42,6 +43,9 @@ export interface InvestigatorCaseRow {
   year: number | null;
   workNumber: string;
   procedureNumber: string;
+  workProvince: string;
+  workDepartment: string;
+  workLocality: string;
   agencyName: string;
   supplierLabel: string;
   amountLabel: string;
@@ -79,6 +83,23 @@ export interface InvestigatorFacet {
   sampleCaseId: string;
 }
 
+export interface InvestigatorEntityProfile {
+  type: InvestigatorProfileType;
+  key: string;
+  label: string;
+  categoryLabel: string;
+  caseCount: number;
+  watchCount: number;
+  sourceCount: number;
+  withoutMapGeometryCount: number;
+  amountLabel: string;
+  sampleCaseIds: string[];
+  basis: string;
+  caveat: string;
+  nextAction: string;
+  filter: InvestigatorEntityFilter | null;
+}
+
 export interface InvestigatorExplorerView {
   viewType: "faro_investigator_explorer_v1";
   filters: InvestigatorExplorerFilters;
@@ -92,6 +113,7 @@ export interface InvestigatorExplorerView {
   };
   rows: InvestigatorCaseRow[];
   facets: InvestigatorFacet[];
+  profiles: InvestigatorEntityProfile[];
   activeEntities: InvestigatorFacet[];
   activeEntity: InvestigatorFacet | null;
 }
@@ -146,6 +168,7 @@ export function buildInvestigatorExplorerFromIndex(
     .sort(compareRows);
   const filteredSummary = summarizeRows(filteredRows);
   const facets = buildFacets(facetRows);
+  const profiles = buildProfiles(filteredRows);
   const rows = filteredRows.slice(0, clampLimit(filters.limit));
   const activeEntities = findActiveEntities(
     buildFacets(facetRows, Number.POSITIVE_INFINITY),
@@ -165,6 +188,7 @@ export function buildInvestigatorExplorerFromIndex(
     },
     rows,
     facets,
+    profiles,
     activeEntities,
     activeEntity: activeEntities[0] ?? null,
   };
@@ -202,6 +226,9 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
     year: caseFile.year,
     workNumber: caseFile.workNumber,
     procedureNumber: caseFile.procedureNumber,
+    workProvince: getCaseTextField(caseFile, "workProvince"),
+    workDepartment: getCaseTextField(caseFile, "workDepartment"),
+    workLocality: getCaseTextField(caseFile, "workLocality"),
     agencyName: caseFile.agencyName || "Sin organismo",
     supplierLabel,
     amountLabel: formatAmount(amount),
@@ -233,6 +260,128 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
     ...row,
     searchText: buildSearchText(row, signals, caseFile),
   };
+}
+
+function buildProfiles(rows: InvestigatorCaseRow[], limit = 8): InvestigatorEntityProfile[] {
+  const profiles = new Map<string, MutableProfile>();
+  for (const row of rows) {
+    addProfile(profiles, row, "supplier", row.entities.supplierKey, row.supplierLabel);
+    addProfile(profiles, row, "agency", row.entities.agencyKey, row.agencyName);
+    addProfile(profiles, row, "province", entityKey(row.workProvince), row.workProvince);
+    addProfile(profiles, row, "source", row.entities.sourceKey, row.sourceName);
+    row.entities.signalFacetKeys.forEach((signalCode, index) => {
+      addProfile(profiles, row, "signal", signalCode, row.entities.signalFacetLabels[index] ?? signalCode);
+    });
+  }
+
+  return Array.from(profiles.values())
+    .map(toEntityProfile)
+    .sort(compareProfiles)
+    .slice(0, limit);
+}
+
+interface MutableProfile {
+  type: InvestigatorProfileType;
+  key: string;
+  label: string;
+  rows: InvestigatorCaseRow[];
+}
+
+function addProfile(
+  profiles: Map<string, MutableProfile>,
+  row: InvestigatorCaseRow,
+  type: InvestigatorProfileType,
+  key: string | null,
+  label: string,
+) {
+  if (!key || !label || label === "Sin proveedor" || label === "Sin organismo") return;
+  const profileKey = `${type}:${key}`;
+  const profile = profiles.get(profileKey) ?? { type, key, label, rows: [] };
+  profile.rows.push(row);
+  profiles.set(profileKey, profile);
+}
+
+function toEntityProfile(profile: MutableProfile): InvestigatorEntityProfile {
+  const sourceKeys = new Set(profile.rows.map((row) => row.entities.sourceKey));
+  const withoutMapGeometryCount = profile.rows.filter((row) => !row.hasOfficialGeometry).length;
+  const watchCount = profile.rows.filter((row) => row.primarySignal?.kind === "watch").length;
+  const sampleCaseIds = profile.rows.slice(0, 3).map((row) => row.caseId);
+  return {
+    type: profile.type,
+    key: profile.key,
+    label: profile.label,
+    categoryLabel: profileTypeLabel(profile.type),
+    caseCount: profile.rows.length,
+    watchCount,
+    sourceCount: sourceKeys.size,
+    withoutMapGeometryCount,
+    amountLabel: summarizeProfileAmount(profile.rows),
+    sampleCaseIds,
+    basis: profileBasis(profile.type),
+    caveat: profileCaveat(profile.type),
+    nextAction: profileNextAction(profile.type),
+    filter: profile.type === "province" ? null : { type: profile.type, key: profile.key },
+  };
+}
+
+function compareProfiles(left: InvestigatorEntityProfile, right: InvestigatorEntityProfile): number {
+  return (
+    right.caseCount - left.caseCount ||
+    right.watchCount - left.watchCount ||
+    right.sourceCount - left.sourceCount ||
+    profilePriority(left.type) - profilePriority(right.type) ||
+    left.label.localeCompare(right.label, "es")
+  );
+}
+
+function profilePriority(type: InvestigatorProfileType): number {
+  if (type === "supplier") return 1;
+  if (type === "agency") return 2;
+  if (type === "province") return 3;
+  if (type === "source") return 4;
+  return 5;
+}
+
+function profileTypeLabel(type: InvestigatorProfileType): string {
+  if (type === "supplier") return "Proveedor";
+  if (type === "agency") return "Organismo";
+  if (type === "province") return "Provincia";
+  if (type === "source") return "Fuente";
+  return "Señal";
+}
+
+function profileBasis(type: InvestigatorProfileType): string {
+  if (type === "supplier") return "Agrupado por proveedor/documento declarado.";
+  if (type === "agency") return "Agrupado por organismo comprador o ejecutor.";
+  if (type === "province") return "Agrupado por ubicación oficial declarada.";
+  if (type === "source") return "Agrupado por fuente y receipt.";
+  return "Agrupado por señal de revisión calculada.";
+}
+
+function profileCaveat(type: InvestigatorProfileType): string {
+  if (type === "supplier") return "No prueba relación entre expedientes fuera de la identidad declarada.";
+  if (type === "agency") return "No compara desempeño institucional ni calidad de ejecución.";
+  if (type === "province") return "La ubicación puede ser administrativa y no siempre punto exacto de obra.";
+  if (type === "source") return "La fuente define qué afirmaciones permite y cuáles quedan pendientes.";
+  return "La señal orienta revisión; no es una conclusión automática.";
+}
+
+function profileNextAction(type: InvestigatorProfileType): string {
+  if (type === "supplier") return "Abrir ejemplos y revisar receipts, CUIT y organismo antes de relacionar.";
+  if (type === "agency") return "Comparar fuentes y señales dentro del mismo organismo.";
+  if (type === "province") return "Cruzar con mapa, fuente original y expedientes sin geometría.";
+  if (type === "source") return "Leer caveats de fuente antes de usar el conjunto en carpeta.";
+  return "Abrir expedientes y convertir la señal en una tarea verificable.";
+}
+
+function summarizeProfileAmount(rows: InvestigatorCaseRow[]): string {
+  const amounts = rows.filter((row) => row.amountValue !== null && row.amountCurrency);
+  if (amounts.length === 0) return "Sin monto comparable";
+  const currencies = new Set(amounts.map((row) => row.amountCurrency));
+  if (currencies.size !== 1) return "Montos en monedas mixtas";
+  const currency = amounts[0]?.amountCurrency ?? "";
+  const total = amounts.reduce((sum, row) => sum + (row.amountValue ?? 0), 0);
+  return `${currency} ${Math.round(total).toLocaleString("es-AR")}`;
 }
 
 function matchesContextScope(caseFile: InvestigatorExplorerCase, filters: InvestigatorExplorerFilters): boolean {
@@ -438,6 +587,11 @@ function compareRows(left: InvestigatorCaseRow, right: InvestigatorCaseRow): num
 function formatSupplier(caseFile: InvestigatorExplorerCase): string {
   if (!("supplierName" in caseFile)) return "Sin proveedor";
   return [caseFile.supplierName, caseFile.supplierDocument].filter(Boolean).join(" / ") || "Sin proveedor";
+}
+
+function getCaseTextField(caseFile: InvestigatorExplorerCase, field: string): string {
+  const value = (caseFile as unknown as Record<string, unknown>)[field];
+  return typeof value === "string" ? value : "";
 }
 
 function getAmount(

@@ -19,6 +19,7 @@
 
 .sidebar h1,
 .toolbar h2,
+.auditHead h3,
 .detail h3,
 .files h4,
 .timeline h4,
@@ -299,6 +300,69 @@
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-sm);
   background: rgba(255, 255, 255, 0.03);
+}
+
+.auditPanel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.auditHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auditHead h3,
+.auditHead p,
+.auditNotice {
+  margin: 0;
+}
+
+.auditHead p,
+.auditNotice {
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.auditList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auditItem {
+  display: grid;
+  gap: 4px;
+  padding: 10px 0;
+  border-top: 1px solid var(--cf-border);
+}
+
+.auditItem span,
+.auditItem small,
+.auditItem p {
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+}
+
+.auditItem span {
+  font-family: var(--cf-font-data);
+}
+
+.auditItem strong {
+  color: var(--cf-text);
+}
+
+.auditItem p {
+  margin: 0;
 }
 
 .workflowPanel h3,

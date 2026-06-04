@@ -236,11 +236,27 @@ test("POST /api/admin/aportes/withdraw removes curated evidence from public stat
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ evidenceId: published.evidence.id }),
     }));
-    const withdrawn = await withdrawResponse.json() as { evidence: { status: string; withdrawnByName: string } };
+    const withdrawn = await withdrawResponse.json() as {
+      evidence: { status: string; withdrawnAt: string; withdrawnByName: string };
+    };
 
     assert.equal(withdrawResponse.status, 200);
     assert.equal(withdrawn.evidence.status, "withdrawn");
     assert.equal(withdrawn.evidence.withdrawnByName, "Admin Faro");
+
+    const repeatedWithdrawResponse = await POST_WITHDRAW(new Request("http://localhost/api/admin/aportes/withdraw", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ evidenceId: published.evidence.id }),
+    }));
+    const repeatedWithdrawn = await repeatedWithdrawResponse.json() as {
+      evidence: { status: string; withdrawnAt: string; withdrawnByName: string };
+    };
+
+    assert.equal(repeatedWithdrawResponse.status, 200);
+    assert.equal(repeatedWithdrawn.evidence.status, "withdrawn");
+    assert.equal(repeatedWithdrawn.evidence.withdrawnAt, withdrawn.evidence.withdrawnAt);
+    assert.equal(repeatedWithdrawn.evidence.withdrawnByName, "Admin Faro");
   } finally {
     restoreEnv(env);
   }

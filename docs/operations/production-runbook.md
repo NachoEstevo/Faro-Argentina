@@ -15,6 +15,11 @@ inventar nombres ni canales.
   investigacion no es evidencia publica.
 - El mapa solo muestra expedientes con geometria oficial validada.
 - No geocodificar, inferir ni corregir coordenadas para produccion.
+- Una carpeta "lista para handoff interno" no es una publicacion ni una
+  conclusion: solo indica que tiene evidencia, relaciones, tareas y caveats
+  suficientes para circular dentro del equipo.
+- Las metricas de datos deben leerse por fuente y etapa del ciclo; no comunicar
+  volumen bruto sin explicar que prueba y que no prueba cada fuente.
 
 ## Checklist De Entorno
 
@@ -193,6 +198,60 @@ Linea base documentada para este runbook:
 La fuente vigente es el reporte generado, no este texto. Antes de comunicar
 metricas publicas, volver a correr `npm run data:geo-report` y
 `npm run data:quality-report`.
+
+## Readiness De Carpetas
+
+La preparacion de dossier es una ayuda operativa para periodistas,
+investigadores y equipo interno. Debe mantenerse como lectura privada de
+handoff:
+
+- `Inicial`: falta evidencia oficial minima.
+- `En armado`: hay bloqueos de trabajo, como relacion sin nota o falta de
+  tareas de verificacion.
+- `Lista para handoff interno`: no hay bloqueos automaticos.
+- `Lista para handoff interno con caveats`: puede circular internamente, pero
+  conserva brechas o material manual a revisar.
+
+No usar este estado como criterio de publicacion automatica, scoring, ranking o
+validacion legal. Si una carpeta deriva en material publico, crear una decision
+editorial separada con fuentes, caveats, revision y responsable.
+
+## Auditoria Admin
+
+La auditoria interna de Aportes se consulta desde la bandeja admin y desde
+`/api/admin/audit`. En produccion requiere `DATABASE_URL` y la migracion de
+`contribution_audit_events` aplicada. En local sin base productiva la API debe
+explicar que no hay auditoria persistente, no sugerir que el aporte no tuvo
+eventos.
+
+La UI y la API de auditoria deben mostrar solo metadata redaccionada:
+
+- actor;
+- rol;
+- accion;
+- destino;
+- fecha;
+- resumen seguro de estado, storage, expediente, mime type o tamano.
+
+No mostrar object keys, rutas `submissions/...`, emails, contacto, nombres de
+archivo originales ni metadata cruda. Abrir la bandeja debe registrar
+`admin_inbox_opened` cuando hay base productiva, sin copiar contenido privado de
+los aportes al evento.
+
+## Fuentes Candidatas
+
+Las nuevas fuentes entran primero como candidatas. El estado vigente queda en la
+matriz de `/datos`, no como parser productivo:
+
+- `recommended_prototype`: vale un prototipo read-only con receipt por query.
+- `evaluating`: falta probar llave, schema o caveat.
+- `blocked`: solo contexto manual o no apta para ingestion automatica.
+- `integrated`: fuente ya entra al corpus versionado.
+
+Presupuesto Abierto credito/BAPIN es candidato a ejecucion presupuestaria
+declarada, no a pago verificado de proveedor. No unir fuentes por nombres
+parecidos, montos parecidos, ubicacion cercana o CUIT si la fuente no expone esa
+llave para el cruce.
 
 ## Incidentes Y Decisiones Pendientes
 
