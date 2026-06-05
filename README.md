@@ -140,8 +140,8 @@ lo sostiene, que caveats aplican y que deberia verificarse despues.
 ### Evidence Pack
 
 El export tecnico conserva el rastro reproducible: caso, receipt, fuentes
-relacionadas, senales, matriz de afirmaciones, caveats, hashes y pasos de
-verificacion.
+relacionadas, senales, matriz de afirmaciones, checklist investigativo, caveats,
+hashes y pasos de verificacion.
 
 ### Matriz de afirmaciones
 
@@ -153,6 +153,14 @@ contexto judicial y rastro BAPIN. Cada una queda como `supported`, `partial` o
 Esto es clave para uso profesional: si Faro no tiene fuente de pagos, el
 expediente lo dice. Si solo hay provincia/departamento, no lo convierte en punto
 de mapa. Si hay BAPIN, lo marca como proximo cruce presupuestario, no como pago.
+
+### Checklist investigativo
+
+El checklist traduce la matriz a trabajo concreto: brechas prioritarias,
+proximos cruces oficiales y afirmaciones que no conviene hacer todavia. No es un
+score de sospecha ni valida un caso. Por ejemplo, un expediente de Mapa con
+`codigobapin` puede sugerir revisar Presupuesto Abierto por `codigo_bapin_id`,
+pero ese dato queda como fuente candidata hasta guardar query, receipt y caveat.
 
 ## Stack
 
@@ -210,7 +218,7 @@ npm run build
 `npm run data:verify` valida catalogo, raw hashes, snapshot profiles y receipts.
 `npm run data:geo-report` valida elegibilidad de mapa. `npm run
 data:quality-report` resume cobertura por fuente, monto, proveedor, geometria,
-senales y blockers.
+senales, matriz de afirmaciones, checklist investigativo y blockers.
 
 No usar fetch de datos como reparacion rutinaria:
 

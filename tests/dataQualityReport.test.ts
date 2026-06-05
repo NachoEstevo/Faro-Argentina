@@ -81,6 +81,64 @@ test("buildDataQualityReport summarizes country readiness without hiding gaps", 
   assert.equal(report.byCountry.AR.claimCoverage.supplier_identity.supported, 1);
   assert.equal(report.byCountry.AR.claimCoverage.official_location.notSupported, 1);
   assert.equal(report.byCountry.AR.claimCoverage.provider_payment.notSupported, 2);
+  assert.equal(report.byCountry.AR.investigationReadiness.strongStart, 1);
+  assert.equal(report.byCountry.AR.investigationReadiness.limited, 1);
+  assert.equal(report.byCountry.AR.sourceFollowUps["AR-PAYMENT-SOURCE-PENDING"]?.manualReview, 2);
+});
+
+test("buildDataQualityReport counts BAPIN budget execution follow-up readiness without marking it integrated", () => {
+  const report = buildDataQualityReport({
+    generatedAt: "2026-05-17T00:00:00.000Z",
+    verification: {
+      checkedDatasets: 1,
+      checkedCases: 1,
+      checkedReceipts: 1,
+      checkedRawFiles: 1,
+      errors: [],
+    },
+    datasets: [{
+      source: { sourceId: "AR-MAPA-INVERSIONES-OBRAS", countryCode: "AR" },
+      stats: { rawRows: 1, caseFiles: 1, mapReadyCases: 0 },
+      cases: [{
+        id: "AR-MAPA-INV-1610",
+        countryCode: "AR",
+        caseType: "public_works_progress",
+        title: "CIERRE DE MALLA RINCON DE MILBERG",
+        year: 2019,
+        workNumber: "NA70056",
+        procedureNumber: "10",
+        agencyName: "Ministerio de Obras Publicas",
+        coordinates: null,
+        amount: { value: 100, currency: "ARS", label: "monto_total" },
+        physicalProgress: 100,
+        financialProgress: 100,
+        supplierName: null,
+        supplierDocument: null,
+        receipt: createEvidenceReceipt({
+          sourceId: "AR-MAPA-INVERSIONES-OBRAS",
+          sourceName: "Mapa de Inversiones Argentina obras",
+          sourceUrl: "https://datos.gob.ar/dataset/obras-mapa-inversiones-argentina",
+          rawPath: "data/official/ar/mapa-inversiones-obras.csv",
+          snapshotHash: "sha256-source",
+          recordId: "1610",
+          locatorType: "official_dataset",
+          extractedAt: "2026-05-16T00:00:00.000Z",
+          parserVersion: "quality-test@1",
+          row: { idproyecto: "1610", codigobapin: "10" },
+        }),
+        caveats: ["Mapa de Inversiones informa avance; falta cruce presupuestario."],
+      }],
+    }],
+  });
+
+  assert.equal(report.byCountry.AR.investigationReadiness.needsSourceCross, 1);
+  assert.equal(report.byCountry.AR.withBudgetExecutionFollowUp, 1);
+  assert.equal(
+    report.byCountry.AR.sourceFollowUps["AR-PRESUPUESTO-ABIERTO-CREDITO-BAPIN"]?.candidate,
+    1,
+  );
+  assert.equal(report.byCountry.AR.claimCoverage.budget_execution.partial, 1);
+  assert.equal(report.byCountry.AR.claimCoverage.provider_payment.notSupported, 1);
 });
 
 test("buildDataQualityReport keeps verification failures visible as blockers", () => {

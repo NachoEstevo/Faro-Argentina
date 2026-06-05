@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 
 import type { CaseReportView } from "@/lib/data/caseReport";
+import type { CaseInvestigationChecklist } from "@/lib/data/caseInvestigationChecklist";
 import type { EvidenceClaim, EvidenceClaimCode, EvidenceClaimStatus } from "@/lib/data/evidenceClaimMatrix";
 import ReportPrintButton from "./ReportPrintButton";
 import styles from "./PrintableCaseReport.module.css";
@@ -44,6 +45,7 @@ export default function PrintableCaseReport({ report }: { report: CaseReportView
         </section>
 
         <ReportClaimMatrix claims={report.claimMatrix.claims} />
+        <ReportInvestigationChecklist checklist={report.investigationChecklist} />
 
         <section className={styles.section}>
           <h2>Por qué aparece en Faro</h2>
@@ -206,6 +208,53 @@ export default function PrintableCaseReport({ report }: { report: CaseReportView
         </section>
       </article>
     </main>
+  );
+}
+
+function ReportInvestigationChecklist({ checklist }: { checklist: CaseInvestigationChecklist }) {
+  return (
+    <section className={styles.section}>
+      <h2>Brechas y próximos cruces</h2>
+      <p className={styles.sectionNote}>
+        {checklist.label}. {checklist.summary}
+      </p>
+      <div className={styles.checklistGrid}>
+        <article className={styles.checklistBox}>
+          <h3>Brechas prioritarias</h3>
+          <ul>
+            {checklist.gaps.slice(0, 4).map((gap) => (
+              <li key={`${gap.claimCode}-${gap.nextStep}`}>
+                <strong>{gap.label}</strong>
+                <span>{gap.nextStep}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+        <article className={styles.checklistBox}>
+          <h3>No afirmar todavía</h3>
+          <ul>
+            {checklist.doNotClaim.slice(0, 4).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </article>
+      </div>
+      {checklist.followUps.length > 0 && (
+        <div className={styles.followUpStrip}>
+          {checklist.followUps.slice(0, 3).map((item) => (
+            <div key={`${item.sourceId}-${item.joinKey}-${item.joinValue}`}>
+              <strong>{item.sourceName}</strong>
+              <span>
+                {item.sourceStatus === "candidate"
+                  ? `${item.joinKey}: ${item.joinValue}`
+                  : item.action}
+              </span>
+              <em>{item.caveat}</em>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

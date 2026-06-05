@@ -3,6 +3,7 @@ import { buildExpediente, type ExpedienteCaseFile, type ExpedienteReceipt } from
 import type { ArticleCitation } from "./articleCitations.ts";
 import type { CuratedContributionEvidence, PublicCuratedContributionEvidence } from "./userContributions.ts";
 import type { EvidenceClaimMatrix } from "./evidenceClaimMatrix.ts";
+import type { CaseInvestigationChecklist } from "./caseInvestigationChecklist.ts";
 
 export interface CaseReportFact {
   label: string;
@@ -67,6 +68,7 @@ export interface CaseReportView {
   journalismContext: CaseReportCitation[];
   curatedEvidence: PublicCuratedContributionEvidence[];
   claimMatrix: EvidenceClaimMatrix;
+  investigationChecklist: CaseInvestigationChecklist;
   caveats: string[];
   nextVerification: string[];
   technicalAppendix: {
@@ -127,6 +129,7 @@ export function buildCaseReportView(
     journalismContext: contextualCitations.map(toReportCitation),
     curatedEvidence: expediente.curatedEvidence,
     claimMatrix: expediente.claimMatrix,
+    investigationChecklist: expediente.investigationChecklist,
     caveats: expediente.caveats,
     nextVerification: expediente.nextVerification,
     technicalAppendix: {

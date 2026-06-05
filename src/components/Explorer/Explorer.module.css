@@ -1725,6 +1725,122 @@
   line-height: 1.45;
 }
 
+.investigationStatusPanel {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid var(--cf-border);
+  border-radius: 12px;
+  background: var(--cf-bg-elev);
+}
+
+.investigationStatusHeader h3 {
+  margin: 4px 0 0;
+  color: var(--cf-text);
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+.investigationStatusHeader p {
+  margin: 6px 0 0;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.investigationStatusChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.investigationStatusChips span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--cf-border-subtle, var(--cf-border));
+  border-radius: 999px;
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.investigationNextStep {
+  display: grid;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cf-border-subtle, var(--cf-border));
+}
+
+.investigationNextStep span {
+  color: var(--cf-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.investigationNextStep p {
+  margin: 0;
+  color: var(--cf-text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.advancedEvidenceDetails {
+  border: 1px solid var(--cf-border);
+  border-radius: 12px;
+  background: var(--cf-bg-elev);
+}
+
+.advancedEvidenceDetails summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 14px;
+  align-items: center;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.advancedEvidenceDetails summary::-webkit-details-marker {
+  display: none;
+}
+
+.advancedEvidenceDetails summary::after {
+  content: "+";
+  color: var(--cf-text-secondary);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.advancedEvidenceDetails[open] summary::after {
+  content: "-";
+}
+
+.advancedEvidenceDetails summary span {
+  color: var(--cf-text);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.advancedEvidenceDetails summary small {
+  grid-column: 1 / -1;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.advancedEvidenceContent {
+  display: grid;
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
 .curatedEvidenceCard {
   margin-top: 8px;
   padding: 14px 18px;

@@ -17,6 +17,7 @@ export function recordId(caseFile: SignalCaseFile): string {
 export function bapinLikeIdentifier(caseFile: SignalCaseFile): string | null {
   const value = clean(caseFile.procedureNumber);
   if (!value) return null;
+  if (caseFile.receipt.sourceId === "AR-MAPA-INVERSIONES-OBRAS" && /^\d+$/.test(value)) return value;
   if (/bapin/i.test(value) || /^\d{4,}$/.test(value)) return value;
   return null;
 }

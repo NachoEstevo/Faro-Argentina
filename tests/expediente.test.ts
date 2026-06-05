@@ -82,6 +82,7 @@ test("buildExpediente creates a procurement contract expediente from official re
   assert.equal(expediente.claimMatrix.claims.some((claim) =>
     claim.code === "provider_payment" && claim.status === "not_supported"
   ), true);
+  assert.equal(expediente.investigationChecklist.doNotClaim.some((item) => /pago a proveedor/i.test(item)), true);
 });
 
 test("buildExpediente summarizes technical amount labels as readable money", () => {

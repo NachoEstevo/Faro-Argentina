@@ -46,6 +46,10 @@ import {
   buildEvidenceClaimMatrix,
   type EvidenceClaimMatrix,
 } from "./data/evidenceClaimMatrix.ts";
+import {
+  buildCaseInvestigationChecklist,
+  type CaseInvestigationChecklist,
+} from "./data/caseInvestigationChecklist.ts";
 import type { EvidenceReceipt } from "./data/evidenceReceipts.ts";
 import type { CsvSnapshotProfile, JsonSnapshotProfile } from "./data/snapshots.ts";
 import type { SourceCatalogEntry } from "./data/sourceCatalog.ts";
@@ -87,6 +91,7 @@ export interface EvidencePack {
   contextualCitations: ArticleCitation[];
   signals: CaseSignal[];
   claimMatrix: EvidenceClaimMatrix;
+  investigationChecklist: CaseInvestigationChecklist;
   caveats: string[];
   verificationSteps: string[];
 }
@@ -252,6 +257,7 @@ export function getInvestigationCasePacks(ids: string[]): {
 }
 
 export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
+  const claimMatrix = buildEvidenceClaimMatrix(caseFile as SignalCaseFile);
   return {
     packType: "faro_evidence_pack",
     generatedAt: new Date().toISOString(),
@@ -260,7 +266,8 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
     relatedReceipts: getRelatedReceipts(caseFile),
     contextualCitations: getContextualCitationsForCase(caseFile.id),
     signals: buildCaseSignals(caseFile as SignalCaseFile, signalContextForCase(caseFile)),
-    claimMatrix: buildEvidenceClaimMatrix(caseFile as SignalCaseFile),
+    claimMatrix,
+    investigationChecklist: buildCaseInvestigationChecklist(caseFile as SignalCaseFile, claimMatrix),
     caveats: caseFile.caveats,
     verificationSteps: [
       "Abrir la fuente oficial indicada en el receipt.",

@@ -20,6 +20,8 @@ test("PrintableCaseReport renders simple report sections and keeps JSON secondar
 
   assert.match(source, /Qué estás mirando/);
   assert.match(source, /Qué prueba \/ qué falta/);
+  assert.match(source, /Brechas y próximos cruces/);
+  assert.match(source, /investigationChecklist/);
   assert.match(source, /Puede sostener/);
   assert.match(source, /No afirmar todavía/);
   assert.match(source, /claimMatrix/);

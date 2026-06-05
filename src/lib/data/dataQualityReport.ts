@@ -10,6 +10,11 @@ import {
   type EvidenceClaimCode,
   type EvidenceClaimStatus,
 } from "./evidenceClaimMatrix.ts";
+import {
+  buildCaseInvestigationChecklist,
+  type CaseInvestigationReadiness,
+  type CaseInvestigationSourceStatus,
+} from "./caseInvestigationChecklist.ts";
 import type { DataSpineVerificationReport } from "./dataSpineVerifier.ts";
 
 export interface DataQualityDataset {
@@ -38,6 +43,9 @@ export interface DataQualityCountry {
   withLeadEligibleSignal: number;
   signals: Record<string, number>;
   claimCoverage: Record<EvidenceClaimCode, EvidenceClaimCoverage>;
+  investigationReadiness: InvestigationReadinessCoverage;
+  sourceFollowUps: Record<string, SourceFollowUpCoverage>;
+  withBudgetExecutionFollowUp: number;
   fxCoverage: {
     converted: number;
     notConverted: Record<string, number>;
@@ -56,6 +64,18 @@ export interface EvidenceClaimCoverage {
   supported: number;
   partial: number;
   notSupported: number;
+}
+
+export interface InvestigationReadinessCoverage {
+  strongStart: number;
+  needsSourceCross: number;
+  limited: number;
+}
+
+export interface SourceFollowUpCoverage {
+  integrated: number;
+  candidate: number;
+  manualReview: number;
 }
 
 export interface DataQualityReport {
@@ -158,6 +178,16 @@ export function buildDataQualityReport({
         incrementClaimCoverage(coverage, claim.status);
         country.claimCoverage[claim.code] = coverage;
       }
+      const checklist = buildCaseInvestigationChecklist(caseFile, claimMatrix);
+      incrementInvestigationReadiness(country.investigationReadiness, checklist.readiness);
+      for (const followUp of checklist.followUps) {
+        const coverage = country.sourceFollowUps[followUp.sourceId] ?? emptySourceFollowUpCoverage();
+        incrementSourceFollowUp(coverage, followUp.sourceStatus);
+        country.sourceFollowUps[followUp.sourceId] = coverage;
+        if (followUp.sourceId === "AR-PRESUPUESTO-ABIERTO-CREDITO-BAPIN") {
+          country.withBudgetExecutionFollowUp += 1;
+        }
+      }
 
       byCountry[caseFile.countryCode] = country;
     }
@@ -198,6 +228,9 @@ function emptyCountry(): DataQualityCountry {
     withLeadEligibleSignal: 0,
     signals: {},
     claimCoverage: emptyClaimCoverageByCode(),
+    investigationReadiness: emptyInvestigationReadinessCoverage(),
+    sourceFollowUps: {},
+    withBudgetExecutionFollowUp: 0,
     fxCoverage: { converted: 0, notConverted: {} },
   };
 }
@@ -221,6 +254,14 @@ function emptyClaimCoverage(): EvidenceClaimCoverage {
   return { supported: 0, partial: 0, notSupported: 0 };
 }
 
+function emptyInvestigationReadinessCoverage(): InvestigationReadinessCoverage {
+  return { strongStart: 0, needsSourceCross: 0, limited: 0 };
+}
+
+function emptySourceFollowUpCoverage(): SourceFollowUpCoverage {
+  return { integrated: 0, candidate: 0, manualReview: 0 };
+}
+
 function incrementClaimCoverage(
   coverage: EvidenceClaimCoverage,
   status: EvidenceClaimStatus,
@@ -228,6 +269,24 @@ function incrementClaimCoverage(
   if (status === "supported") coverage.supported += 1;
   if (status === "partial") coverage.partial += 1;
   if (status === "not_supported") coverage.notSupported += 1;
+}
+
+function incrementInvestigationReadiness(
+  coverage: InvestigationReadinessCoverage,
+  readiness: CaseInvestigationReadiness,
+): void {
+  if (readiness === "strong_start") coverage.strongStart += 1;
+  if (readiness === "needs_source_cross") coverage.needsSourceCross += 1;
+  if (readiness === "limited") coverage.limited += 1;
+}
+
+function incrementSourceFollowUp(
+  coverage: SourceFollowUpCoverage,
+  status: CaseInvestigationSourceStatus,
+): void {
+  if (status === "integrated") coverage.integrated += 1;
+  if (status === "candidate") coverage.candidate += 1;
+  if (status === "manual_review") coverage.manualReview += 1;
 }
 
 function buildBlockers(verification: DataSpineVerificationReport): string[] {

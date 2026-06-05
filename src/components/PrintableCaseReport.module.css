@@ -235,6 +235,82 @@
   line-height: 1.45;
 }
 
+.checklistGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.checklistBox {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+}
+
+.checklistBox h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.checklistBox ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 16px;
+}
+
+.checklistBox li {
+  color: #374151;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.checklistBox strong {
+  display: block;
+  color: #111827;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.checklistBox span {
+  display: block;
+}
+
+.followUpStrip {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.followUpStrip div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid #d1d5db;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f9fafb;
+}
+
+.followUpStrip strong {
+  color: #111827;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.followUpStrip span,
+.followUpStrip em {
+  color: #4b5563;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .signal h3,
 .citation h3,
 .curatedItem h3 {

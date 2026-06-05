@@ -28,6 +28,10 @@ import {
   type EvidenceClaimStatus,
 } from "@/lib/data/evidenceClaimMatrix";
 import {
+  buildCaseInvestigationChecklist,
+  type CaseInvestigationChecklist,
+} from "@/lib/data/caseInvestigationChecklist";
+import {
   buildInvestigatorExplorerFromIndex,
   buildInvestigatorExplorerIndex,
   type InvestigatorCaseRow,
@@ -253,8 +257,13 @@ export default function ExplorerView({
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
   };
 
+  const returnToFilteredList = () => {
+    if (selectedDetailCase) onClearSelection();
+  };
+
   const resetFilters = () => {
     clearPreset();
+    returnToFilteredList();
     setActiveFacets([]);
     setGeometryFilter("any");
     setQuery("");
@@ -264,6 +273,7 @@ export default function ExplorerView({
 
   const toggleFacet = (facet: InvestigatorFacet) => {
     clearPreset();
+    returnToFilteredList();
     setActiveFacets((prev) => {
       const exists = prev.some((active) => isSameFacet(active, facet));
       if (exists) return prev.filter((active) => !isSameFacet(active, facet));
@@ -273,26 +283,31 @@ export default function ExplorerView({
 
   const clearActiveFacets = () => {
     clearPreset();
+    returnToFilteredList();
     setActiveFacets([]);
   };
 
   const handleGeometryFilterChange = (value: InvestigatorGeometryFilter) => {
     clearPreset();
+    returnToFilteredList();
     setGeometryFilter(value);
   };
 
   const handleYearFromChange = (value: number) => {
     clearPreset();
+    returnToFilteredList();
     setYearFrom(value);
   };
 
   const handleYearToChange = (value: number) => {
     clearPreset();
+    returnToFilteredList();
     setYearTo(value);
   };
 
   const handleQueryChange = (value: string) => {
     clearPreset();
+    returnToFilteredList();
     setQuery(value);
   };
 
@@ -300,11 +315,13 @@ export default function ExplorerView({
     clearPreset();
     setQuery(suggestion.query);
     if (suggestion.caseId) onSelectCase(suggestion.caseId, countryScope);
+    else returnToFilteredList();
   };
 
   const handleProfileSelect = (profile: InvestigatorEntityProfile) => {
     clearPreset();
     if (!profile.filter) {
+      returnToFilteredList();
       setQuery(profile.label);
       return;
     }
@@ -949,11 +966,13 @@ function DetailTabPanel({
       )}
       {activeTab === "evidencia" && (
         <>
-          <EvidenceClaimMatrixPanel caseFile={caseFile} />
-          <CaveatsCard caseFile={caseFile} />
+          <InvestigationStatusPanel caseFile={caseFile} />
           <CuratedEvidencePanel evidence={curatedEvidence} />
-          <ReceiptCard caseFile={caseFile} receiptLocator={receiptLocator} />
-          <ContextualCitationsPanel citations={caseFile.contextualCitations ?? []} compact />
+          <AdvancedEvidenceDetails
+            caseFile={caseFile}
+            receiptLocator={receiptLocator}
+            contextualCitations={caseFile.contextualCitations ?? []}
+          />
         </>
       )}
       {activeTab === "mapa" && (
@@ -990,6 +1009,75 @@ function CuratedEvidencePanel({ evidence }: { evidence: PublicCuratedEvidence[] 
       </div>
     </article>
   );
+}
+
+function InvestigationStatusPanel({ caseFile }: { caseFile: ExplorerCase }) {
+  const checklist = buildCaseInvestigationChecklist(caseFile as SignalCaseFile);
+  const chips = buildInvestigationStatusChips(checklist);
+  const primaryStep = selectPrimaryInvestigationStep(checklist);
+  return (
+    <article className={styles.investigationStatusPanel}>
+      <div className={styles.investigationStatusHeader}>
+        <p className={styles.detailCardHead}>Estado de investigación</p>
+        <h3>{checklist.label}</h3>
+        <p>{checklist.summary}</p>
+      </div>
+      {chips.length > 0 && (
+        <div className={styles.investigationStatusChips}>
+          {chips.map((chip) => (
+            <span key={chip}>{chip}</span>
+          ))}
+        </div>
+      )}
+      <div className={styles.investigationNextStep}>
+        <span>Próximo paso</span>
+        <p>{primaryStep}</p>
+      </div>
+    </article>
+  );
+}
+
+function AdvancedEvidenceDetails({
+  caseFile,
+  receiptLocator,
+  contextualCitations,
+}: {
+  caseFile: ExplorerCase;
+  receiptLocator: ReturnType<typeof describeReceiptLocator> | null;
+  contextualCitations: NonNullable<ExplorerCase["contextualCitations"]>;
+}) {
+  return (
+    <details className={styles.advancedEvidenceDetails}>
+      <summary>
+        <span>Ver matriz completa, receipts y caveats</span>
+        <small>Para auditoría, export y revisión documental fina</small>
+      </summary>
+      <div className={styles.advancedEvidenceContent}>
+        <EvidenceClaimMatrixPanel caseFile={caseFile} />
+        <CaveatsCard caseFile={caseFile} />
+        <ReceiptCard caseFile={caseFile} receiptLocator={receiptLocator} />
+        <ContextualCitationsPanel citations={contextualCitations} compact />
+      </div>
+    </details>
+  );
+}
+
+function buildInvestigationStatusChips(checklist: CaseInvestigationChecklist): string[] {
+  const chips = [
+    checklist.doNotClaim.some((item) => /pago a proveedor/i.test(item)) ? "No prueba pago" : "",
+    checklist.followUps.some((item) => item.sourceId === "AR-PRESUPUESTO-ABIERTO-CREDITO-BAPIN")
+      ? "Cruce BAPIN posible"
+      : "",
+    checklist.gaps.some((gap) => gap.claimCode === "official_location") ? "Ubicación a verificar" : "",
+    checklist.gaps.some((gap) => gap.claimCode === "supplier_identity") ? "Proveedor incompleto" : "",
+  ].filter(Boolean);
+  return Array.from(new Set(chips)).slice(0, 3);
+}
+
+function selectPrimaryInvestigationStep(checklist: CaseInvestigationChecklist): string {
+  const candidateFollowUp = checklist.followUps.find((item) => item.sourceStatus === "candidate");
+  if (candidateFollowUp) return candidateFollowUp.action;
+  return checklist.gaps[0]?.nextStep ?? checklist.followUps[0]?.action ?? "Abrir la fuente oficial y conservar el receipt antes de citar.";
 }
 
 const CLAIM_COLUMN_LIMIT = 3;

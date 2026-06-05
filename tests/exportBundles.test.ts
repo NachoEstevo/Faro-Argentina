@@ -295,6 +295,8 @@ test("buildEvidencePack includes receipts, signals and official-source verificat
   assert.equal(pack.claimMatrix.claims.some((claim) =>
     claim.code === "provider_payment" && claim.status === "not_supported"
   ), true);
+  assert.equal(pack.investigationChecklist.checklistType, "faro_case_investigation_checklist_v1");
+  assert.equal(pack.investigationChecklist.doNotClaim.some((item) => /pago a proveedor/i.test(item)), true);
 });
 
 test("buildEvidencePack appends contextual citations without changing receipt semantics", () => {

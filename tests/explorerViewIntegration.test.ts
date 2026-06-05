@@ -83,6 +83,18 @@ test("ExplorerView keeps filter controls fixed while pivots scroll", async () =>
   assert.match(css, /\.sidebarScrollRegion\s*\{[\s\S]*flex: 1 1 auto;[\s\S]*min-height: 0;[\s\S]*overflow-y: auto;/);
 });
 
+test("ExplorerView applies sidebar filters by returning from detail to the filtered list", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /const returnToFilteredList = \(\) => \{/);
+  assert.match(source, /if \(selectedDetailCase\) onClearSelection\(\)/);
+  assert.match(source, /const handleGeometryFilterChange = \(value: InvestigatorGeometryFilter\) => \{[\s\S]*returnToFilteredList\(\);[\s\S]*setGeometryFilter\(value\);/);
+  assert.match(source, /const handleYearFromChange = \(value: number\) => \{[\s\S]*returnToFilteredList\(\);[\s\S]*setYearFrom\(value\);/);
+  assert.match(source, /const handleYearToChange = \(value: number\) => \{[\s\S]*returnToFilteredList\(\);[\s\S]*setYearTo\(value\);/);
+  assert.match(source, /const toggleFacet = \(facet: InvestigatorFacet\) => \{[\s\S]*returnToFilteredList\(\);[\s\S]*setActiveFacets/);
+  assert.match(source, /const resetFilters = \(\) => \{[\s\S]*returnToFilteredList\(\);[\s\S]*setActiveFacets\(\[\]\);/);
+});
+
 test("ExplorerView uses one vertical content scroll surface", async () => {
   const css = await readFile(explorerStylesUrl, "utf8");
 
@@ -160,18 +172,26 @@ test("ExplorerView renders the approved tabbed case detail structure", async () 
   assert.match(css, /\.detailTabPanel/);
 });
 
-test("ExplorerView renders a compact evidence claim matrix in the evidence tab", async () => {
+test("ExplorerView keeps evidence details digestible with a compact status and advanced disclosure", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
   const css = await readFile(explorerStylesUrl, "utf8");
 
   assert.match(source, /buildEvidenceClaimMatrix/);
+  assert.match(source, /buildCaseInvestigationChecklist/);
   assert.match(source, /EvidenceClaimMatrixPanel/);
+  assert.match(source, /InvestigationStatusPanel/);
+  assert.match(source, /AdvancedEvidenceDetails/);
+  assert.match(source, /Estado de investigación/);
+  assert.match(source, /Próximo paso/);
+  assert.match(source, /Ver matriz completa, receipts y caveats/);
   assert.match(source, /Qué prueba \/ qué falta/);
   assert.match(source, /Puede sostener/);
   assert.match(source, /Parcial \/ revisar/);
   assert.match(source, /No afirmar todavía/);
   assert.match(source, /No hay pago a proveedor soportado/);
   assert.match(css, /\.claimMatrixPanel/);
+  assert.match(css, /\.investigationStatusPanel/);
+  assert.match(css, /\.advancedEvidenceDetails/);
   assert.match(css, /\.claimMatrixColumns/);
   assert.match(css, /\.claimStatusSupported/);
   assert.match(css, /\.claimStatusMissing/);

@@ -22,6 +22,10 @@ import {
   buildEvidenceClaimMatrix,
   type EvidenceClaimMatrix,
 } from "./evidenceClaimMatrix.ts";
+import {
+  buildCaseInvestigationChecklist,
+  type CaseInvestigationChecklist,
+} from "./caseInvestigationChecklist.ts";
 
 export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceipts"> & {
   receipt: EvidenceReceipt;
@@ -63,6 +67,7 @@ export interface ExpedienteView {
   };
   curatedEvidence: PublicCuratedContributionEvidence[];
   claimMatrix: EvidenceClaimMatrix;
+  investigationChecklist: CaseInvestigationChecklist;
   actions: {
     officialSourceHref: string;
     reportHref: string;
@@ -100,6 +105,8 @@ export function buildExpediente(
     coordinates: caseFile.coordinates ?? null,
   });
 
+  const claimMatrix = buildEvidenceClaimMatrix(caseFile);
+
   return {
     expedienteType: "faro_expediente_v1",
     generatedAt: new Date().toISOString(),
@@ -131,7 +138,8 @@ export function buildExpediente(
     curatedEvidence: curatedEvidence
       .filter((item) => item.status === "published_curated")
       .map(toPublicCuratedContributionEvidence),
-    claimMatrix: buildEvidenceClaimMatrix(caseFile),
+    claimMatrix,
+    investigationChecklist: buildCaseInvestigationChecklist(caseFile, claimMatrix),
     actions: {
       officialSourceHref: primaryReceipt.publicSourceUrl,
       reportHref: `/expediente/${encodedCaseId}/informe`,

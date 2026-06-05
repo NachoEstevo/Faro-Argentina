@@ -274,9 +274,14 @@ Reglas de gate:
 - `judicial_context` exige fuente judicial/documental oficial y caveat de
   alcance. No usar articulos periodisticos como receipt oficial.
 
-El reporte `npm run data:quality-report` incluye `claimCoverage` por pais. Antes
-de comunicar robustez de datos, mirar esa cobertura junto con receipts, hashes,
-geometria y blockers.
+El checklist investigativo viaja en expediente, informe y evidence pack. Debe
+mantener brechas, proximos cruces y "no afirmar todavia" sincronizados con la
+matriz de afirmaciones. No usarlo como score, semaforo de sospecha ni ranking.
+
+El reporte `npm run data:quality-report` incluye `claimCoverage`,
+`investigationReadiness`, `sourceFollowUps` y `withBudgetExecutionFollowUp` por
+pais. Antes de comunicar robustez de datos, mirar esa cobertura junto con
+receipts, hashes, geometria y blockers.
 
 ## Incidentes Y Decisiones Pendientes
 

@@ -280,6 +280,25 @@ Reglas de lectura:
 La matriz debe viajar en expediente, informe y evidence pack para que el usuario
 pueda descargar no solo datos, sino tambien los limites de esos datos.
 
+### Checklist Investigativo
+
+El checklist investigativo es una capa operacional sobre la matriz. No agrega
+fuentes nuevas ni cambia el estado de una afirmacion; ordena:
+
+- brechas prioritarias;
+- proximos cruces o revisiones;
+- fuentes candidatas aplicables por llave oficial;
+- afirmaciones que no deben hacerse todavia.
+
+Usar etiquetas de trabajo, no puntajes: "Buen punto de partida", "Requiere
+cruce de fuente" o "Pista limitada". La severidad de una brecha mide riesgo de
+sobreinterpretacion, no riesgo legal, penal ni reputacional.
+
+Presupuesto Abierto/BAPIN solo puede aparecer como cruce candidato mientras no
+exista query reproducible, receipt, hash, fecha de actualizacion y caveat. Un
+resultado sin filas debe registrarse como brecha de datos, no como pago cero ni
+como ejecucion cero.
+
 ### Matriz De Datos
 
 La pagina de datos y la documentacion deben explicar fuente, etapa del ciclo,
