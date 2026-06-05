@@ -291,6 +291,10 @@ test("buildEvidencePack includes receipts, signals and official-source verificat
   assert.equal(pack.signals.length > 0, true);
   assert.equal(Array.isArray(pack.verificationSteps), true);
   assert.match(pack.verificationSteps.join("\n"), /fuente oficial/i);
+  assert.equal(pack.claimMatrix.matrixType, "faro_evidence_claim_matrix_v1");
+  assert.equal(pack.claimMatrix.claims.some((claim) =>
+    claim.code === "provider_payment" && claim.status === "not_supported"
+  ), true);
 });
 
 test("buildEvidencePack appends contextual citations without changing receipt semantics", () => {

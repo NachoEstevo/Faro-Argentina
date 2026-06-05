@@ -18,6 +18,10 @@ import {
   type CuratedContributionEvidence,
   type PublicCuratedContributionEvidence,
 } from "./userContributions.ts";
+import {
+  buildEvidenceClaimMatrix,
+  type EvidenceClaimMatrix,
+} from "./evidenceClaimMatrix.ts";
 
 export type ExpedienteCaseFile = Omit<SignalCaseFile, "receipt" | "relatedReceipts"> & {
   receipt: EvidenceReceipt;
@@ -58,6 +62,7 @@ export interface ExpedienteView {
     contextualCitations: ArticleCitation[];
   };
   curatedEvidence: PublicCuratedContributionEvidence[];
+  claimMatrix: EvidenceClaimMatrix;
   actions: {
     officialSourceHref: string;
     reportHref: string;
@@ -126,6 +131,7 @@ export function buildExpediente(
     curatedEvidence: curatedEvidence
       .filter((item) => item.status === "published_curated")
       .map(toPublicCuratedContributionEvidence),
+    claimMatrix: buildEvidenceClaimMatrix(caseFile),
     actions: {
       officialSourceHref: primaryReceipt.publicSourceUrl,
       reportHref: `/expediente/${encodedCaseId}/informe`,

@@ -24,6 +24,7 @@ test("getCaseReportById builds a plain-language report for non-technical users",
   assert.equal(report.actions.printHref, `/expediente/${encodeURIComponent(vialidadCaseId)}/informe`);
   assert.equal(report.actions.evidenceJsonHref, `/api/export/${encodeURIComponent(vialidadCaseId)}`);
   assert.deepEqual(report.curatedEvidence, []);
+  assert.equal(report.claimMatrix.summary.notSupported >= 1, true);
 });
 
 test("getCaseReportById separates journalism context from official proof", () => {

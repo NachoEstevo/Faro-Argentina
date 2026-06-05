@@ -78,6 +78,9 @@ test("buildDataQualityReport summarizes country readiness without hiding gaps", 
   assert.equal(report.byCountry.AR.withLeadEligibleSignal, 2);
   assert.equal(report.byCountry.AR.signals.single_bidder, 1);
   assert.equal(report.byCountry.AR.signals.missing_amount, 1);
+  assert.equal(report.byCountry.AR.claimCoverage.supplier_identity.supported, 1);
+  assert.equal(report.byCountry.AR.claimCoverage.official_location.notSupported, 1);
+  assert.equal(report.byCountry.AR.claimCoverage.provider_payment.notSupported, 2);
 });
 
 test("buildDataQualityReport keeps verification failures visible as blockers", () => {

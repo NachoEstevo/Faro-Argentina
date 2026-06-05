@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 
 import type { CaseReportView } from "@/lib/data/caseReport";
+import type { EvidenceClaim, EvidenceClaimCode, EvidenceClaimStatus } from "@/lib/data/evidenceClaimMatrix";
 import ReportPrintButton from "./ReportPrintButton";
 import styles from "./PrintableCaseReport.module.css";
 
@@ -41,6 +42,8 @@ export default function PrintableCaseReport({ report }: { report: CaseReportView
             ))}
           </div>
         </section>
+
+        <ReportClaimMatrix claims={report.claimMatrix.claims} />
 
         <section className={styles.section}>
           <h2>Por qué aparece en Faro</h2>
@@ -204,4 +207,107 @@ export default function PrintableCaseReport({ report }: { report: CaseReportView
       </article>
     </main>
   );
+}
+
+const REPORT_CLAIM_LIMIT = 4;
+const REPORT_CLAIM_PRIORITY: EvidenceClaimCode[] = [
+  "provider_payment",
+  "official_record",
+  "declared_amount",
+  "official_budget",
+  "supplier_identity",
+  "competition",
+  "official_location",
+  "declared_progress",
+  "budget_execution",
+  "judicial_context",
+];
+
+function ReportClaimMatrix({ claims }: { claims: EvidenceClaim[] }) {
+  return (
+    <section className={styles.section}>
+      <h2>Qué prueba / qué falta</h2>
+      <p className={styles.sectionNote}>
+        Separación operativa entre evidencia directa, datos parciales y afirmaciones que este informe no sostiene todavía.
+      </p>
+      <div className={styles.claimMatrix}>
+        <ReportClaimColumn
+          title="Puede sostener"
+          status="supported"
+          claims={selectReportClaims(claims, "supported")}
+          emptyText="Sin afirmaciones fuertes con soporte directo."
+        />
+        <ReportClaimColumn
+          title="Parcial / revisar"
+          status="partial"
+          claims={selectReportClaims(claims, "partial")}
+          emptyText="Sin pistas parciales relevantes."
+        />
+        <ReportClaimColumn
+          title="No afirmar todavía"
+          status="not_supported"
+          claims={selectReportClaims(claims, "not_supported")}
+          emptyText="Sin faltantes críticos detectados."
+        />
+      </div>
+    </section>
+  );
+}
+
+function ReportClaimColumn({
+  title,
+  status,
+  claims,
+  emptyText,
+}: {
+  title: string;
+  status: EvidenceClaimStatus;
+  claims: EvidenceClaim[];
+  emptyText: string;
+}) {
+  const toneClass =
+    status === "supported"
+      ? styles.claimToneSupported
+      : status === "partial"
+        ? styles.claimTonePartial
+        : styles.claimToneMissing;
+  return (
+    <article className={`${styles.claimColumn} ${toneClass}`}>
+      <h3>{title}</h3>
+      {claims.length > 0 ? (
+        <ul>
+          {claims.map((claim) => (
+            <li key={claim.code}>
+              <strong>{formatReportClaimTitle(claim)}</strong>
+              <span>{claim.status === "not_supported" ? claim.caveat : claim.evidence}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>{emptyText}</p>
+      )}
+    </article>
+  );
+}
+
+function selectReportClaims(
+  claims: EvidenceClaim[],
+  status: EvidenceClaimStatus,
+): EvidenceClaim[] {
+  return claims
+    .filter((claim) => claim.status === status)
+    .sort((left, right) => reportClaimPriority(left.code) - reportClaimPriority(right.code))
+    .slice(0, REPORT_CLAIM_LIMIT);
+}
+
+function reportClaimPriority(code: EvidenceClaimCode): number {
+  const index = REPORT_CLAIM_PRIORITY.indexOf(code);
+  return index === -1 ? REPORT_CLAIM_PRIORITY.length : index;
+}
+
+function formatReportClaimTitle(claim: EvidenceClaim): string {
+  if (claim.code === "provider_payment" && claim.status === "not_supported") {
+    return "No hay pago a proveedor soportado";
+  }
+  return claim.label;
 }

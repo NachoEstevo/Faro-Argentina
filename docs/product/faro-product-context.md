@@ -239,6 +239,47 @@ Cuando un receipt conserva un link descargable a CSV/API, la UI publica debe
 abrir la pagina oficial del catalogo o portal cuando exista. El link crudo queda
 para export tecnico y reproducibilidad.
 
+### Matriz De Afirmaciones
+
+La matriz de afirmaciones es el contrato operativo para leer un expediente. No
+rankea sospechas ni valida un caso: separa que afirmaciones sostiene Faro, cuales
+estan parcialmente cubiertas y cuales no estan soportadas por el corpus actual.
+
+Estados:
+
+- `supported`: la fuente integrada trae un dato directo para esa afirmacion.
+- `partial`: existe una llave, dato administrativo o pista oficial, pero falta
+  otra fuente para afirmar completo.
+- `not_supported`: Faro no tiene una fuente integrada que permita decir eso.
+
+La matriz cubre:
+
+- registro oficial;
+- monto declarado;
+- presupuesto oficial;
+- proveedor;
+- competencia;
+- ubicacion oficial;
+- avance declarado;
+- pago a proveedor;
+- contexto judicial;
+- rastro presupuestario BAPIN.
+
+Reglas de lectura:
+
+- Un contrato, adjudicacion, avance declarado o credito presupuestario no prueba
+  pago a proveedor.
+- Una provincia/departamento sin latitud/longitud oficial es ubicacion parcial,
+  no punto map-safe.
+- Un BAPIN en Mapa de Inversiones permite preparar un cruce con Presupuesto
+  Abierto, pero no debe mostrarse como ejecucion presupuestaria integrada hasta
+  guardar query, receipt y caveat.
+- Un contexto judicial no prueba nada sobre otro contrato Faro sin match
+  documental exacto.
+
+La matriz debe viajar en expediente, informe y evidence pack para que el usuario
+pueda descargar no solo datos, sino tambien los limites de esos datos.
+
 ### Matriz De Datos
 
 La pagina de datos y la documentacion deben explicar fuente, etapa del ciclo,

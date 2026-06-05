@@ -83,6 +83,16 @@ test("ExplorerView keeps filter controls fixed while pivots scroll", async () =>
   assert.match(css, /\.sidebarScrollRegion\s*\{[\s\S]*flex: 1 1 auto;[\s\S]*min-height: 0;[\s\S]*overflow-y: auto;/);
 });
 
+test("ExplorerView uses one vertical content scroll surface", async () => {
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(css, /\.shell\s*\{[\s\S]*overflow-y: auto;/);
+  assert.match(css, /\.shell\s*\{[\s\S]*overflow-x: hidden;/);
+  assert.match(css, /\.main\s*\{[\s\S]*height: auto;[\s\S]*overflow: visible;/);
+  assert.doesNotMatch(css, /\.main\s*\{[\s\S]*overflow-y: auto;/);
+  assert.match(css, /\.sidebar\s*\{[\s\S]*position: sticky;[\s\S]*height: 100dvh;/);
+});
+
 test("ExplorerView opens public official source pages instead of raw receipt dataset URLs", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 
@@ -148,6 +158,23 @@ test("ExplorerView renders the approved tabbed case detail structure", async () 
   assert.match(css, /\.detailTabs/);
   assert.match(css, /\.detailTabButtonActive:hover\s*\{[\s\S]*color: var\(--cf-on-accent\);[\s\S]*\}/);
   assert.match(css, /\.detailTabPanel/);
+});
+
+test("ExplorerView renders a compact evidence claim matrix in the evidence tab", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /buildEvidenceClaimMatrix/);
+  assert.match(source, /EvidenceClaimMatrixPanel/);
+  assert.match(source, /Qué prueba \/ qué falta/);
+  assert.match(source, /Puede sostener/);
+  assert.match(source, /Parcial \/ revisar/);
+  assert.match(source, /No afirmar todavía/);
+  assert.match(source, /No hay pago a proveedor soportado/);
+  assert.match(css, /\.claimMatrixPanel/);
+  assert.match(css, /\.claimMatrixColumns/);
+  assert.match(css, /\.claimStatusSupported/);
+  assert.match(css, /\.claimStatusMissing/);
 });
 
 test("ExplorerView keeps Argentina context out of the Explorer header", async () => {

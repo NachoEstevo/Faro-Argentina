@@ -42,6 +42,10 @@ import {
   type ExpedienteCaseFile,
   type ExpedienteView,
 } from "./data/expediente.ts";
+import {
+  buildEvidenceClaimMatrix,
+  type EvidenceClaimMatrix,
+} from "./data/evidenceClaimMatrix.ts";
 import type { EvidenceReceipt } from "./data/evidenceReceipts.ts";
 import type { CsvSnapshotProfile, JsonSnapshotProfile } from "./data/snapshots.ts";
 import type { SourceCatalogEntry } from "./data/sourceCatalog.ts";
@@ -82,6 +86,7 @@ export interface EvidencePack {
   relatedReceipts: EvidenceReceipt[];
   contextualCitations: ArticleCitation[];
   signals: CaseSignal[];
+  claimMatrix: EvidenceClaimMatrix;
   caveats: string[];
   verificationSteps: string[];
 }
@@ -255,6 +260,7 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
     relatedReceipts: getRelatedReceipts(caseFile),
     contextualCitations: getContextualCitationsForCase(caseFile.id),
     signals: buildCaseSignals(caseFile as SignalCaseFile, signalContextForCase(caseFile)),
+    claimMatrix: buildEvidenceClaimMatrix(caseFile as SignalCaseFile),
     caveats: caseFile.caveats,
     verificationSteps: [
       "Abrir la fuente oficial indicada en el receipt.",

@@ -19,6 +19,10 @@ test("PrintableCaseReport renders simple report sections and keeps JSON secondar
   const source = await readFile(componentUrl, "utf8");
 
   assert.match(source, /Qué estás mirando/);
+  assert.match(source, /Qué prueba \/ qué falta/);
+  assert.match(source, /Puede sostener/);
+  assert.match(source, /No afirmar todavía/);
+  assert.match(source, /claimMatrix/);
   assert.match(source, /Por qué aparece en Faro/);
   assert.match(source, /Rastro oficial/);
   assert.match(source, /Contexto periodístico/);

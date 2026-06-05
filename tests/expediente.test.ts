@@ -79,6 +79,9 @@ test("buildExpediente creates a procurement contract expediente from official re
   assert.equal(expediente.actions.downloadEvidenceHref, "/api/export/AR-CONTRACT-14-1002-CON21");
   assert.equal(expediente.actions.caseJsonHref, "/api/cases/AR-CONTRACT-14-1002-CON21");
   assert.equal(expediente.nextVerification.length > 0, true);
+  assert.equal(expediente.claimMatrix.claims.some((claim) =>
+    claim.code === "provider_payment" && claim.status === "not_supported"
+  ), true);
 });
 
 test("buildExpediente summarizes technical amount labels as readable money", () => {

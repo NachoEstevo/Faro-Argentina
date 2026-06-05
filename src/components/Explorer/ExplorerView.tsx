@@ -22,6 +22,12 @@ import {
   type SignalCaseFile,
 } from "@/lib/data/caseSignals";
 import {
+  buildEvidenceClaimMatrix,
+  type EvidenceClaim,
+  type EvidenceClaimCode,
+  type EvidenceClaimStatus,
+} from "@/lib/data/evidenceClaimMatrix";
+import {
   buildInvestigatorExplorerFromIndex,
   buildInvestigatorExplorerIndex,
   type InvestigatorCaseRow,
@@ -943,6 +949,7 @@ function DetailTabPanel({
       )}
       {activeTab === "evidencia" && (
         <>
+          <EvidenceClaimMatrixPanel caseFile={caseFile} />
           <CaveatsCard caseFile={caseFile} />
           <CuratedEvidencePanel evidence={curatedEvidence} />
           <ReceiptCard caseFile={caseFile} receiptLocator={receiptLocator} />
@@ -983,6 +990,119 @@ function CuratedEvidencePanel({ evidence }: { evidence: PublicCuratedEvidence[] 
       </div>
     </article>
   );
+}
+
+const CLAIM_COLUMN_LIMIT = 3;
+const CLAIM_PRIORITY: EvidenceClaimCode[] = [
+  "provider_payment",
+  "official_record",
+  "declared_amount",
+  "official_budget",
+  "supplier_identity",
+  "competition",
+  "official_location",
+  "declared_progress",
+  "budget_execution",
+  "judicial_context",
+];
+
+function EvidenceClaimMatrixPanel({ caseFile }: { caseFile: ExplorerCase }) {
+  const matrix = buildEvidenceClaimMatrix(caseFile as SignalCaseFile);
+  const supportedClaims = selectClaimsForColumn(matrix.claims, "supported");
+  const partialClaims = selectClaimsForColumn(matrix.claims, "partial");
+  const missingClaims = selectClaimsForColumn(matrix.claims, "not_supported");
+
+  return (
+    <article className={styles.claimMatrixPanel}>
+      <div className={styles.claimMatrixHeader}>
+        <p className={styles.detailCardHead}>Qué prueba / qué falta</p>
+        <p className={styles.claimMatrixIntro}>
+          Lectura rápida para separar evidencia directa, pistas parciales y afirmaciones que todavía no conviene hacer.
+        </p>
+      </div>
+      <div className={styles.claimMatrixColumns}>
+        <EvidenceClaimColumn
+          title="Puede sostener"
+          status="supported"
+          claims={supportedClaims}
+          emptyText="Sin afirmaciones fuertes con soporte directo."
+        />
+        <EvidenceClaimColumn
+          title="Parcial / revisar"
+          status="partial"
+          claims={partialClaims}
+          emptyText="Sin pistas parciales relevantes."
+        />
+        <EvidenceClaimColumn
+          title="No afirmar todavía"
+          status="not_supported"
+          claims={missingClaims}
+          emptyText="Sin faltantes críticos detectados."
+        />
+      </div>
+    </article>
+  );
+}
+
+function EvidenceClaimColumn({
+  title,
+  status,
+  claims,
+  emptyText,
+}: {
+  title: string;
+  status: EvidenceClaimStatus;
+  claims: EvidenceClaim[];
+  emptyText: string;
+}) {
+  const toneClass =
+    status === "supported"
+      ? styles.claimStatusSupported
+      : status === "partial"
+        ? styles.claimStatusPartial
+        : styles.claimStatusMissing;
+  return (
+    <section className={styles.claimMatrixColumn}>
+      <div className={styles.claimMatrixColumnHead}>
+        <span className={`${styles.claimStatusDot} ${toneClass}`} aria-hidden />
+        <h3>{title}</h3>
+      </div>
+      {claims.length > 0 ? (
+        <ul className={styles.claimMatrixList}>
+          {claims.map((claim) => (
+            <li key={claim.code} className={styles.claimMatrixItem}>
+              <strong>{formatClaimTitle(claim)}</strong>
+              <span>{claim.status === "not_supported" ? claim.caveat : claim.evidence}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.claimMatrixEmpty}>{emptyText}</p>
+      )}
+    </section>
+  );
+}
+
+function selectClaimsForColumn(
+  claims: EvidenceClaim[],
+  status: EvidenceClaimStatus,
+): EvidenceClaim[] {
+  return claims
+    .filter((claim) => claim.status === status)
+    .sort((left, right) => claimPriority(left.code) - claimPriority(right.code))
+    .slice(0, CLAIM_COLUMN_LIMIT);
+}
+
+function claimPriority(code: EvidenceClaimCode): number {
+  const index = CLAIM_PRIORITY.indexOf(code);
+  return index === -1 ? CLAIM_PRIORITY.length : index;
+}
+
+function formatClaimTitle(claim: EvidenceClaim): string {
+  if (claim.code === "provider_payment" && claim.status === "not_supported") {
+    return "No hay pago a proveedor soportado";
+  }
+  return claim.label;
 }
 
 function TopCaveatCard({ caseFile }: { caseFile: ExplorerCase }) {

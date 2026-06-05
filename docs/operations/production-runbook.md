@@ -253,6 +253,31 @@ declarada, no a pago verificado de proveedor. No unir fuentes por nombres
 parecidos, montos parecidos, ubicacion cercana o CUIT si la fuente no expone esa
 llave para el cruce.
 
+## Matriz De Afirmaciones Y Gates De Datos
+
+Antes de promocionar una fuente, campo o cruce, definir que afirmacion habilita:
+registro oficial, monto, presupuesto, proveedor, competencia, ubicacion, avance,
+pago, contexto judicial o rastro presupuestario. Si no hay afirmacion nueva o
+reduce trazabilidad, no agrega valor suficiente para entrar a produccion.
+
+Reglas de gate:
+
+- `provider_payment` debe permanecer `not_supported` hasta integrar una fuente
+  oficial de pagos/certificados/ordenes con llave exacta.
+- `budget_execution` puede quedar `partial` con BAPIN de Mapa de Inversiones;
+  pasa a `supported` solo cuando exista query reproducible de Presupuesto
+  Abierto con receipt.
+- `official_location` solo es map-safe cuando pasa `data:geo-report`; si no,
+  queda como parcial o no soportada.
+- `supplier_identity` solo es fuerte con CUIT/documento exacto. Nombres sin
+  documento sirven como lectura parcial, no como entidad resuelta.
+- `judicial_context` exige fuente judicial/documental oficial y caveat de
+  alcance. No usar articulos periodisticos como receipt oficial.
+
+El reporte `npm run data:quality-report` incluye `claimCoverage` por pais. Antes
+de comunicar robustez de datos, mirar esa cobertura junto con receipts, hashes,
+geometria y blockers.
+
 ## Incidentes Y Decisiones Pendientes
 
 Completar solo cuando haya responsables explicitos:

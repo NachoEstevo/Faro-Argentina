@@ -66,6 +66,8 @@ Tocas un punto del mapa o una fila del Explorer y Faro arma un expediente con:
 - **Fuente oficial primero:** la UI abre paginas oficiales de catalogo o detalle;
   los links directos a datasets quedan para reproducibilidad tecnica.
 - **Receipts verificables:** cada caso conserva hashes, paths y version de parser.
+- **Matriz de afirmaciones:** cada expediente declara que puede sostener, que
+  esta parcialmente cubierto y que no debe afirmarse todavia.
 - **Explorer antes que sospecha:** se puede seguir el rastro por fuente,
   organismo, proveedor, senal o identificador.
 - **Mapa con prudencia:** solo se dibuja geometria validada; lo debil queda como
@@ -138,7 +140,19 @@ lo sostiene, que caveats aplican y que deberia verificarse despues.
 ### Evidence Pack
 
 El export tecnico conserva el rastro reproducible: caso, receipt, fuentes
-relacionadas, senales, caveats, hashes y pasos de verificacion.
+relacionadas, senales, matriz de afirmaciones, caveats, hashes y pasos de
+verificacion.
+
+### Matriz de afirmaciones
+
+Faro separa diez afirmaciones por expediente: registro oficial, monto,
+presupuesto, proveedor, competencia, ubicacion, avance, pago a proveedor,
+contexto judicial y rastro BAPIN. Cada una queda como `supported`, `partial` o
+`not_supported`.
+
+Esto es clave para uso profesional: si Faro no tiene fuente de pagos, el
+expediente lo dice. Si solo hay provincia/departamento, no lo convierte en punto
+de mapa. Si hay BAPIN, lo marca como proximo cruce presupuestario, no como pago.
 
 ## Stack
 

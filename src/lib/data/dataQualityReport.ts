@@ -5,6 +5,11 @@ import {
   type SignalCaseFile,
 } from "./caseSignals.ts";
 import { assessCoordinateQuality } from "./coordinateQuality.ts";
+import {
+  buildEvidenceClaimMatrix,
+  type EvidenceClaimCode,
+  type EvidenceClaimStatus,
+} from "./evidenceClaimMatrix.ts";
 import type { DataSpineVerificationReport } from "./dataSpineVerifier.ts";
 
 export interface DataQualityDataset {
@@ -32,6 +37,7 @@ export interface DataQualityCountry {
   withMapEligibleGeometry: number;
   withLeadEligibleSignal: number;
   signals: Record<string, number>;
+  claimCoverage: Record<EvidenceClaimCode, EvidenceClaimCoverage>;
   fxCoverage: {
     converted: number;
     notConverted: Record<string, number>;
@@ -44,6 +50,12 @@ export interface DataQualitySource {
   rawRows: number;
   cases: number;
   mapReadyCases: number;
+}
+
+export interface EvidenceClaimCoverage {
+  supported: number;
+  partial: number;
+  notSupported: number;
 }
 
 export interface DataQualityReport {
@@ -140,6 +152,12 @@ export function buildDataQualityReport({
       for (const signal of signals) {
         country.signals[signal.code] = (country.signals[signal.code] ?? 0) + 1;
       }
+      const claimMatrix = buildEvidenceClaimMatrix(caseFile);
+      for (const claim of claimMatrix.claims) {
+        const coverage = country.claimCoverage[claim.code] ?? emptyClaimCoverage();
+        incrementClaimCoverage(coverage, claim.status);
+        country.claimCoverage[claim.code] = coverage;
+      }
 
       byCountry[caseFile.countryCode] = country;
     }
@@ -179,8 +197,37 @@ function emptyCountry(): DataQualityCountry {
     withMapEligibleGeometry: 0,
     withLeadEligibleSignal: 0,
     signals: {},
+    claimCoverage: emptyClaimCoverageByCode(),
     fxCoverage: { converted: 0, notConverted: {} },
   };
+}
+
+function emptyClaimCoverageByCode(): Record<EvidenceClaimCode, EvidenceClaimCoverage> {
+  return {
+    official_record: emptyClaimCoverage(),
+    declared_amount: emptyClaimCoverage(),
+    official_budget: emptyClaimCoverage(),
+    supplier_identity: emptyClaimCoverage(),
+    competition: emptyClaimCoverage(),
+    official_location: emptyClaimCoverage(),
+    declared_progress: emptyClaimCoverage(),
+    provider_payment: emptyClaimCoverage(),
+    judicial_context: emptyClaimCoverage(),
+    budget_execution: emptyClaimCoverage(),
+  };
+}
+
+function emptyClaimCoverage(): EvidenceClaimCoverage {
+  return { supported: 0, partial: 0, notSupported: 0 };
+}
+
+function incrementClaimCoverage(
+  coverage: EvidenceClaimCoverage,
+  status: EvidenceClaimStatus,
+): void {
+  if (status === "supported") coverage.supported += 1;
+  if (status === "partial") coverage.partial += 1;
+  if (status === "not_supported") coverage.notSupported += 1;
 }
 
 function buildBlockers(verification: DataSpineVerificationReport): string[] {

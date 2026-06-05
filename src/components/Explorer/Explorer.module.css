@@ -2,7 +2,11 @@
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 224px 1fr;
+  grid-template-columns: 224px minmax(0, 1fr);
+  align-items: start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   background: var(--cf-bg);
   color: var(--cf-text);
   font-family: var(--cf-font-body);
@@ -10,12 +14,15 @@
 }
 
 .sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
   display: flex;
   flex-direction: column;
   background: var(--cf-bg-elev);
   border-right: 1px solid var(--cf-border);
-  height: 100%;
-  max-height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
   min-height: 0;
   overflow: hidden;
 }
@@ -464,9 +471,10 @@
 .main {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
 }
 
 .mainHeader {
@@ -1613,6 +1621,110 @@
   margin-bottom: 0;
 }
 
+.claimMatrixPanel {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--cf-border);
+  border-radius: 12px;
+  background: var(--cf-bg-elev);
+}
+
+.claimMatrixHeader {
+  display: grid;
+  gap: 4px;
+}
+
+.claimMatrixIntro {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.claimMatrixColumns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.claimMatrixColumn {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--cf-border-subtle, var(--cf-border));
+  border-radius: 10px;
+  background: var(--cf-bg);
+}
+
+.claimMatrixColumnHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.claimMatrixColumnHead h3 {
+  margin: 0;
+  color: var(--cf-text);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.claimStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.claimStatusSupported {
+  background: var(--cf-state-verified);
+}
+
+.claimStatusPartial {
+  background: var(--cf-state-caution);
+}
+
+.claimStatusMissing {
+  background: var(--cf-state-danger, #b42318);
+}
+
+.claimMatrixList {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.claimMatrixItem {
+  display: grid;
+  gap: 4px;
+  padding-top: 9px;
+  border-top: 1px solid var(--cf-border-subtle, var(--cf-border));
+}
+
+.claimMatrixItem:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.claimMatrixItem strong {
+  color: var(--cf-text);
+  font-size: 12.5px;
+  line-height: 1.3;
+}
+
+.claimMatrixItem span,
+.claimMatrixEmpty {
+  margin: 0;
+  color: var(--cf-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .curatedEvidenceCard {
   margin-top: 8px;
   padding: 14px 18px;
@@ -1893,7 +2005,8 @@
   .detailSummaryGrid,
   .detailGrid,
   .detailTabGrid,
-  .moneyTrailStrip {
+  .moneyTrailStrip,
+  .claimMatrixColumns {
     grid-template-columns: 1fr;
   }
   .moneyTrailCell {
@@ -1941,6 +2054,7 @@
   }
   .detailCard,
   .receiptCard,
+  .claimMatrixPanel,
   .detailNextStep {
     padding: 14px 16px;
     border-radius: 10px;
