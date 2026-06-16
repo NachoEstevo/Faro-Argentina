@@ -2,12 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import FaroExperience from "@/components/FaroExperience";
-import {
-  argentinaWorkDataset,
-  argentinaContractCaseFiles,
-  investigatorCaseFiles,
-} from "@/lib/caseRepository";
 import { getCountryConfig, isCountryCode } from "@/lib/data/countries";
+import { argentinaInitialMapCases } from "@/lib/data/initialMapCases";
 
 type RouteParams = Promise<{ code: string }>;
 type PageSearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -78,9 +74,8 @@ export default async function PaisPage({
 
   return (
     <FaroExperience
-      dataset={argentinaWorkDataset}
-      argentinaContractCases={argentinaContractCaseFiles}
-      explorerCases={investigatorCaseFiles}
+      initialCases={argentinaInitialMapCases}
+      fullCasesHref="/exports/faro-client-investigator-cases.json"
       initialCountry={upper}
       initialEntryOpen={false}
       initialMode={initialMode}

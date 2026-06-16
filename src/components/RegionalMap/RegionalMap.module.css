@@ -813,6 +813,95 @@
   color: var(--cf-accent);
 }
 
+.caseCorpusGate {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: clamp(18px, 4vw, 48px);
+  background: var(--cf-workspace-bg);
+}
+
+.caseCorpusGatePanel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(520px, 100%);
+  padding: 18px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-md);
+  background: var(--cf-workspace-panel-bg);
+  color: var(--cf-text);
+  box-shadow: var(--cf-shadow-soft);
+}
+
+.caseCorpusSpinner {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: 2px solid var(--cf-border);
+  border-top-color: var(--cf-accent);
+  border-radius: 999px;
+  animation: caseCorpusSpin 800ms linear infinite;
+}
+
+.caseCorpusCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.caseCorpusCopy h1 {
+  margin: 0;
+  font-family: var(--cf-font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--cf-text);
+}
+
+.caseCorpusCopy p {
+  margin: 6px 0 0;
+  font-family: var(--cf-font-body);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--cf-text-secondary);
+}
+
+.caseCorpusCopy small {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--cf-font-data);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--cf-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.caseCorpusRetry {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--cf-border-strong);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+  color: var(--cf-text);
+  font-family: var(--cf-font-body);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.caseCorpusRetry:hover {
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
+}
+
+@keyframes caseCorpusSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 600px) {
   .mapLegend {
     right: 12px;
@@ -831,6 +920,11 @@
     bottom: 12px;
     width: 36px;
     height: 36px;
+  }
+
+  .caseCorpusGatePanel {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
@@ -919,6 +1013,24 @@
   pointer-events: auto;
 }
 
+/* Top control bar: back button (left) + mode nav. Laying them out as flex
+   siblings guarantees they never overlap at any width. The bar itself is
+   click-through; only its children capture pointer events. */
+.overlayTopBar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.overlayTopBar > * {
+  pointer-events: auto;
+}
+
 .leafletHost :global(.leaflet-container) {
   background: var(--cf-bg-map);
   font-family: var(--cf-font-body);
@@ -993,9 +1105,7 @@
 }
 
 .backToGlobal {
-  position: absolute;
-  top: 20px;
-  left: calc(var(--sidebar-width) + 20px);
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1018,7 +1128,15 @@
   color: var(--cf-accent);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .overlayTopBar {
+    /* Sits below the mobile header (brand + menu, ~64px tall) so the back
+       button and mode nav never overlap it. */
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    gap: 8px;
+  }
   .backToGlobal span {
     display: none;
   }
@@ -1299,6 +1417,13 @@
 
   .overlayLayer {
     left: 0;
+  }
+
+  /* The mobile header (brand + menu) appears at this breakpoint pinned to the
+     top edge. Push the back button / mode nav below it so they stack instead
+     of overlapping in the top-left and top-right corners. */
+  .overlayTopBar {
+    top: 72px;
   }
 
   .sidebar {

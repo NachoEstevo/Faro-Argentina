@@ -107,6 +107,27 @@
   right: 0;
 }
 
+/* In-flow sibling of an external control (e.g. a back button) inside a flex
+   bar. Keeps the floating look — centered primary group, secondary action
+   pinned to the right — but never overlaps its sibling because layout is
+   driven by the parent flex container instead of absolute positioning. */
+.floatingBar {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+}
+
+.floatingBar .primary {
+  flex: 0 1 auto;
+}
+
+.floatingBar .secondary {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .header {
   justify-content: flex-end;
 }
@@ -144,6 +165,21 @@
   }
 
   .floating .secondary {
+    position: static;
+    flex: 0 0 auto;
+  }
+
+  .floatingBar {
+    justify-content: space-between;
+  }
+
+  .floatingBar .primary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    flex: 1 1 auto;
+  }
+
+  .floatingBar .secondary {
     position: static;
     flex: 0 0 auto;
   }

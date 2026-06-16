@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 const paisPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
+const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
 
 test("country route wires the selected Explorer preset into FaroExperience", async () => {
   const pageSource = await readFile(paisPageUrl, "utf8");
@@ -26,6 +27,28 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
+});
+
+test("country route keeps the heavy investigator corpus out of the initial client payload", async () => {
+  const pageSource = await readFile(paisPageUrl, "utf8");
+  const experienceSource = await readFile(faroExperienceUrl, "utf8");
+  const countriesSource = await readFile(countriesUrl, "utf8");
+
+  assert.match(pageSource, /argentinaInitialMapCases/);
+  assert.match(pageSource, /initialCases=\{argentinaInitialMapCases\}/);
+  assert.match(pageSource, /fullCasesHref="\/exports\/faro-client-investigator-cases\.json"/);
+  assert.doesNotMatch(pageSource, /caseRepository/);
+  assert.doesNotMatch(pageSource, /investigatorCaseFiles/);
+  assert.doesNotMatch(pageSource, /explorerCases=\{/);
+
+  assert.match(experienceSource, /loadFullCaseCorpus/);
+  assert.match(experienceSource, /fetch\(href, \{ cache: "force-cache" \}\)/);
+  assert.match(experienceSource, /CaseCorpusGate/);
+  assert.doesNotMatch(experienceSource, /dataset: CaseDataset/);
+  assert.doesNotMatch(experienceSource, /filterExplorerCases/);
+
+  assert.match(countriesSource, /caseSummary/);
+  assert.doesNotMatch(countriesSource, /caseRepository/);
 });
 
 test("FaroExperience scopes light and dark themes to work views only", async () => {

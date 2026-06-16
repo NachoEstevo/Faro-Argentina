@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-06-14T23:15:52.337Z",
+  "totalCases": 7932,
+  "countries": {
+    "AR": {
+      "caseCount": 7932
+    }
+  },
+  "sourceCounts": {
+    "argentinaWorkCases": 246,
+    "argentinaContractCases": 389,
+    "argentinaInvestmentMapCases": 7285,
+    "argentinaHistoricalJudicialCases": 12
+  }
+}

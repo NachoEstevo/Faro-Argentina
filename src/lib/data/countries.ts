@@ -1,5 +1,5 @@
 import type { CountryCode } from "./sourceCatalog.ts";
-import { getCasesByCountry } from "../caseRepository.ts";
+import caseSummary from "../../data/caseSummary.json" with { type: "json" };
 
 export type { CountryCode };
 
@@ -28,7 +28,7 @@ const STATIC: Record<CountryCode, Omit<CountryConfig, "caseCount">> = {
 export const COUNTRIES: CountryConfig[] = (Object.keys(STATIC) as CountryCode[]).map(
   (code) => ({
     ...STATIC[code],
-    caseCount: getCasesByCountry(code).length,
+    caseCount: caseSummary.countries[code]?.caseCount ?? 0,
   }),
 );
 

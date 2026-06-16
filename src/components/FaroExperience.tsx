@@ -5,11 +5,9 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import type { CaseDataset } from "@/lib/caseRepository";
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
 import { resolveCaseYear } from "@/lib/data/caseYear";
 import type { WaybackState } from "./WaybackControl";
-import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
 import { buildCaseLeads } from "@/lib/data/caseLeads";
 import {
   buildCaseSignalContext,
@@ -22,8 +20,7 @@ import {
   FINDING_CODES,
   type FindingOption,
 } from "./RegionalMap/SidebarFilters";
-import type { ArgentinaContractCaseFile } from "@/lib/data/argentinaContractCases";
-import { filterExplorerCases, type ExplorerCase } from "@/lib/data/explorerCases";
+import type { ExplorerCase } from "@/lib/data/explorerCases";
 import {
   buildSearchSuggestionIndex,
   buildSearchSuggestionsFromIndex,
@@ -48,9 +45,8 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
 });
 
 interface Props {
-  dataset: CaseDataset<ArgentinaWorkCase>;
-  argentinaContractCases: ArgentinaContractCaseFile[];
-  explorerCases?: ExplorerCase[];
+  initialCases: ExplorerCase[];
+  fullCasesHref?: string;
   initialCountry?: "AR";
   initialEntryOpen?: boolean;
   initialMode?: PlatformMode;
@@ -59,17 +55,18 @@ interface Props {
 }
 
 type InterfaceTheme = "dark" | "light";
+type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
+const fullCaseCorpusPromises = new Map<string, Promise<ExplorerCase[]>>();
 
 const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
   AR: { label: "Argentina", status: "CONTRAT.AR + Mapa de Inversiones" },
 };
 
 export default function FaroExperience({
-  dataset,
-  argentinaContractCases,
-  explorerCases,
+  initialCases,
+  fullCasesHref,
   initialCountry = "AR",
   initialEntryOpen = true,
   initialMode = "map",
@@ -77,10 +74,12 @@ export default function FaroExperience({
   initialExplorerPreset = null,
 }: Props) {
   const router = useRouter();
-  const allCases = useMemo(
-    () => explorerCases ?? [...dataset.cases, ...argentinaContractCases],
-    [argentinaContractCases, dataset.cases, explorerCases],
+  const [allCases, setAllCases] = useState<ExplorerCase[]>(() => initialCases);
+  const [caseCorpusStatus, setCaseCorpusStatus] = useState<CaseCorpusStatus>(
+    fullCasesHref ? "initial" : "ready",
   );
+  const [caseCorpusError, setCaseCorpusError] = useState("");
+  const [caseCorpusRequestKey, setCaseCorpusRequestKey] = useState(0);
   const explorerSignalContext = useMemo(
     () => buildCaseSignalContext(allCases as SignalCaseFile[]),
     [allCases],
@@ -105,6 +104,39 @@ export default function FaroExperience({
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
+  const needsFullCaseCorpus = viewMode !== "map";
+  const hasFullCaseCorpus = !fullCasesHref || caseCorpusStatus === "ready";
+
+  useEffect(() => {
+    if (!needsFullCaseCorpus || !fullCasesHref || caseCorpusStatus === "ready") return;
+
+    let cancelled = false;
+    setCaseCorpusStatus("loading");
+    setCaseCorpusError("");
+    loadFullCaseCorpus(fullCasesHref)
+      .then((cases) => {
+        if (cancelled) return;
+        setAllCases(cases);
+        setCaseCorpusStatus("ready");
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setCaseCorpusError(error instanceof Error ? error.message : "Error desconocido");
+        setCaseCorpusStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [caseCorpusRequestKey, fullCasesHref, needsFullCaseCorpus]);
+
+  const handleRetryCaseCorpus = useCallback(() => {
+    if (!fullCasesHref) return;
+    fullCaseCorpusPromises.delete(fullCasesHref);
+    setCaseCorpusStatus("initial");
+    setCaseCorpusError("");
+    setCaseCorpusRequestKey((key) => key + 1);
+  }, [fullCasesHref]);
 
   useEffect(() => {
     try {
@@ -134,36 +166,6 @@ export default function FaroExperience({
     [router, selectedCountry],
   );
 
-  const yearBounds = useMemo(() => {
-    const pool = filterExplorerCases({
-      countryCode: selectedCountry,
-      argentinaCases: dataset.cases,
-      argentinaContractCases,
-      query: "",
-      year: null,
-    });
-    return getYearBounds(pool);
-  }, [argentinaContractCases, dataset.cases, selectedCountry]);
-
-  // Clamp year range to current bounds whenever the country (and thus the
-  // available year span) changes. Null means "match the bound" — clearing
-  // any explicit pin so the range reads as wide as the country allows.
-  useEffect(() => {
-    setYearFrom((current) => {
-      if (current === null) return null;
-      if (current < yearBounds.min || current > yearBounds.max) return null;
-      return current;
-    });
-    setYearTo((current) => {
-      if (current === null) return null;
-      if (current < yearBounds.min || current > yearBounds.max) return null;
-      return current;
-    });
-  }, [yearBounds.min, yearBounds.max]);
-
-  const effectiveYearFrom = yearFrom ?? yearBounds.min;
-  const effectiveYearTo = yearTo ?? yearBounds.max;
-
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       setDebouncedQuery(query);
@@ -187,6 +189,27 @@ export default function FaroExperience({
     () => buildCaseSignalContext(countryReviewContextCases as SignalCaseFile[]),
     [countryReviewContextCases],
   );
+
+  const yearBounds = useMemo(() => getYearBounds(countryReviewContextCases), [countryReviewContextCases]);
+
+  // Clamp year range to current bounds whenever the country (and thus the
+  // available year span) changes. Null means "match the bound" — clearing
+  // any explicit pin so the range reads as wide as the country allows.
+  useEffect(() => {
+    setYearFrom((current) => {
+      if (current === null) return null;
+      if (current < yearBounds.min || current > yearBounds.max) return null;
+      return current;
+    });
+    setYearTo((current) => {
+      if (current === null) return null;
+      if (current < yearBounds.min || current > yearBounds.max) return null;
+      return current;
+    });
+  }, [yearBounds.min, yearBounds.max]);
+
+  const effectiveYearFrom = yearFrom ?? yearBounds.min;
+  const effectiveYearTo = yearTo ?? yearBounds.max;
 
   // Apply the active sidebar filters (year range, case type, family, severity)
   // to produce the cases that drive both the map markers and the lead list.
@@ -505,28 +528,30 @@ export default function FaroExperience({
       )}
 
       <div className={styles.overlayLayer}>
-        {showBackControl && (
-          <button
-            type="button"
-            className={styles.backToGlobal}
-            onClick={() => {
-              if (selectedCaseId) {
-                setSelectedCaseId("");
-                return;
-              }
-              router.push("/");
-            }}
-            aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
-          >
-            <ArrowLeft size={14} aria-hidden />
-            <span>{selectedCaseId ? country.label : "Mapa general"}</span>
-          </button>
-        )}
-        <PlatformModeNav
-          activeMode={viewMode}
-          onModeChange={switchViewMode}
-          variant="floating"
-        />
+        <div className={styles.overlayTopBar}>
+          {showBackControl && (
+            <button
+              type="button"
+              className={styles.backToGlobal}
+              onClick={() => {
+                if (selectedCaseId) {
+                  setSelectedCaseId("");
+                  return;
+                }
+                router.push("/");
+              }}
+              aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
+            >
+              <ArrowLeft size={14} aria-hidden />
+              <span>{selectedCaseId ? country.label : "Mapa general"}</span>
+            </button>
+          )}
+          <PlatformModeNav
+            activeMode={viewMode}
+            onModeChange={switchViewMode}
+            variant="floatingBar"
+          />
+        </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
             highCount={severityCounts.high}
@@ -544,32 +569,56 @@ export default function FaroExperience({
       )}
 
       {viewMode === "explorer" && (
-        <ExplorerView
-          cases={allCases}
-          selectedCountry={selectedCountry}
-          selectedCase={selectedCase}
-          onSelectCase={(caseId, countryCode) => {
-            setSelectedCountry(countryCode);
-            setSelectedCaseId(caseId);
-          }}
-          onClearSelection={() => setSelectedCaseId("")}
-          onSwitchToInvestigations={() => switchViewMode("investigations")}
-          initialPreset={initialExplorerPreset}
-        />
+        hasFullCaseCorpus ? (
+          <ExplorerView
+            cases={allCases}
+            selectedCountry={selectedCountry}
+            selectedCase={selectedCase}
+            onSelectCase={(caseId, countryCode) => {
+              setSelectedCountry(countryCode);
+              setSelectedCaseId(caseId);
+            }}
+            onClearSelection={() => setSelectedCaseId("")}
+            onSwitchToInvestigations={() => switchViewMode("investigations")}
+            initialPreset={initialExplorerPreset}
+          />
+        ) : (
+          <CaseCorpusGate
+            status={caseCorpusStatus}
+            error={caseCorpusError}
+            onRetry={handleRetryCaseCorpus}
+          />
+        )
       )}
 
       {viewMode === "aportes" && (
-        <AportesView
-          selectedCountry={selectedCountry}
-          cases={allCases}
-        />
+        hasFullCaseCorpus ? (
+          <AportesView
+            selectedCountry={selectedCountry}
+            cases={allCases}
+          />
+        ) : (
+          <CaseCorpusGate
+            status={caseCorpusStatus}
+            error={caseCorpusError}
+            onRetry={handleRetryCaseCorpus}
+          />
+        )
       )}
 
       {viewMode === "investigations" && (
-        <InvestigationsView
-          cases={allCases}
-          selectedCountry={selectedCountry}
-        />
+        hasFullCaseCorpus ? (
+          <InvestigationsView
+            cases={allCases}
+            selectedCountry={selectedCountry}
+          />
+        ) : (
+          <CaseCorpusGate
+            status={caseCorpusStatus}
+            error={caseCorpusError}
+            onRetry={handleRetryCaseCorpus}
+          />
+        )
       )}
 
       {selectedCase && viewMode === "map" && (
@@ -608,6 +657,64 @@ export default function FaroExperience({
         />
       )}
     </main>
+  );
+}
+
+function loadFullCaseCorpus(href: string): Promise<ExplorerCase[]> {
+  const existing = fullCaseCorpusPromises.get(href);
+  if (existing) return existing;
+
+  const request = fetch(href, { cache: "force-cache" })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const payload = (await response.json()) as { cases?: unknown };
+      if (!Array.isArray(payload.cases)) {
+        throw new Error("El corpus no tiene el formato esperado.");
+      }
+      return payload.cases as ExplorerCase[];
+    })
+    .catch((error: unknown) => {
+      fullCaseCorpusPromises.delete(href);
+      throw error;
+    });
+
+  fullCaseCorpusPromises.set(href, request);
+  return request;
+}
+
+function CaseCorpusGate({
+  status,
+  error,
+  onRetry,
+}: {
+  status: CaseCorpusStatus;
+  error: string;
+  onRetry: () => void;
+}) {
+  const isError = status === "error";
+
+  return (
+    <section className={styles.caseCorpusGate} aria-live="polite">
+      <div className={styles.caseCorpusGatePanel} role={isError ? "alert" : "status"}>
+        {!isError && <span className={styles.caseCorpusSpinner} aria-hidden />}
+        <div className={styles.caseCorpusCopy}>
+          <h1>{isError ? "No se pudo cargar el corpus" : "Cargando corpus investigador"}</h1>
+          <p>
+            {isError
+              ? "La vista conserva el mapa inicial. Reintentá la descarga del corpus completo."
+              : "Preparando los expedientes completos para esta vista."}
+          </p>
+          {isError && error && <small>{error}</small>}
+        </div>
+        {isError && (
+          <button type="button" onClick={onRetry} className={styles.caseCorpusRetry}>
+            Reintentar
+          </button>
+        )}
+      </div>
+    </section>
   );
 }
 

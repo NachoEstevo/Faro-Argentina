@@ -12,6 +12,7 @@ import {
 } from "../src/lib/data/staticExportArtifacts.ts";
 
 const outputDirectory = new URL("../public/exports/", import.meta.url);
+const clientInvestigatorCasesFileName = "faro-client-investigator-cases.json";
 const filters = buildCoreStaticExportFilters(investigatorCaseFiles);
 const artifacts: StaticExportArtifact[] = [];
 
@@ -27,10 +28,24 @@ for (const filter of filters) {
 }
 
 await writeFile(
+  new URL(clientInvestigatorCasesFileName, outputDirectory),
+  `${JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    artifactType: "faro_client_investigator_cases",
+    cases: investigatorCaseFiles,
+  })}\n`,
+  "utf8",
+);
+
+await writeFile(
   new URL("manifest.json", outputDirectory),
   `${JSON.stringify({
     generatedAt: new Date().toISOString(),
     artifactType: "faro_static_export_manifest",
+    clientInvestigatorCases: {
+      fileName: clientInvestigatorCasesFileName,
+      href: `/exports/${clientInvestigatorCasesFileName}`,
+    },
     artifacts,
   }, null, 2)}\n`,
   "utf8",

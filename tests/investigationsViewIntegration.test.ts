@@ -129,7 +129,7 @@ test("FaroExperience keeps private modes isolated from the map sidebar", async (
   assert.match(source, /const showBackControl = viewMode === "map";/);
   assert.match(source, /{showMapChrome && <MobileHeader/);
   assert.match(source, /{showMapChrome && \(\s*<CountrySidebar/s);
-  assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*variant="floating"/);
+  assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*variant="floatingBar"/);
   assert.match(source, /<div className=\{styles\.overlayLayer\}>/);
   assert.doesNotMatch(source, /overlayLayerGlobal/);
 });
@@ -176,8 +176,10 @@ test("regional landing exposes Carpetas while aportes mode can still link to it"
   assert.doesNotMatch(floatingSource, /Mis carpetas/);
   assert.match(floatingSource, /Explorar/);
   assert.match(stylesSource, /text-decoration: none/);
-  assert.match(stylesSource, /\.overlayLayer\s*\{[\s\S]*left: 0;[\s\S]*right: 0;/);
-  assert.match(stylesSource, /\.backToGlobal\s*\{[\s\S]*left: calc\(var\(--sidebar-width\) \+ 20px\);/);
+  assert.match(stylesSource, /\.overlayLayer\s*\{[\s\S]*left: var\(--sidebar-width\);[\s\S]*right: 0;/);
+  assert.match(stylesSource, /\.overlayTopBar\s*\{[\s\S]*display: flex;[\s\S]*gap: 12px;/);
+  assert.match(stylesSource, /\.overlayTopBar > \*\s*\{[\s\S]*pointer-events: auto;/);
+  assert.match(stylesSource, /\.backToGlobal\s*\{[\s\S]*flex: 0 0 auto;/);
   assert.match(floatingSource, /FolderOpen/);
   assert.doesNotMatch(aportesSource, /variant="sidebar"|switchPlatformMode/);
   assert.match(aportesSource, /Carpetas/);
