@@ -19,7 +19,7 @@ export default function SecurityPage() {
           body: (
             <ul>
               <li>Exploracion publica: no requiere cuenta.</li>
-              <li>Cuenta privada: permite carpetas persistentes y usa autenticacion.</li>
+              <li>Cuenta privada: permite operar areas internas y usa autenticacion.</li>
               <li>Aporte sin contacto: no pide nombre ni email.</li>
               <li>Aporte con contacto: permite que el equipo pida contexto adicional.</li>
             </ul>
@@ -38,7 +38,6 @@ export default function SecurityPage() {
               <li>Los aportes quedan en revision privada.</li>
               <li>Los archivos no se publican como adjuntos publicos automaticamente.</li>
               <li>Los archivos privados deben servirse por accesos limitados, no por URLs publicas permanentes.</li>
-              <li>Las carpetas privadas requieren cuenta.</li>
               <li>Los accesos administrativos deben estar limitados a roles internos.</li>
               <li>La evidencia oficial se mantiene separada del material aportado por usuarios.</li>
             </ul>

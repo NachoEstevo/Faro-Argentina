@@ -150,26 +150,19 @@ test("ExplorerView keeps technical JSON out of the common case detail actions", 
   assert.match(source, /buildReportHref/);
 });
 
-test("ExplorerView lets investigators save expedientes into local case folders", async () => {
+test("ExplorerView keeps case folders out of the public explorer workflow", async () => {
   const source = [
     await readFile(explorerViewUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
   ].join("\n");
   const css = await readFile(explorerStylesUrl, "utf8");
 
-  assert.match(source, /addCaseToStoredInvestigationWorkspace/);
-  assert.match(source, /onSwitchToInvestigations/);
-  assert.match(source, /Carpetas/);
+  assert.doesNotMatch(source, /addCaseToStoredInvestigationWorkspace/);
+  assert.doesNotMatch(source, /onSwitchToInvestigations/);
+  assert.doesNotMatch(source, /Carpetas|Guardar en carpeta|Ver carpeta/);
   assert.match(source, /Aportar/);
-  assert.doesNotMatch(source, /Mis carpetas/);
-  assert.match(source, /Guardar en carpeta/);
-  assert.match(source, /FolderPlus/);
-  assert.match(source, /event\.stopPropagation\(\)/);
-  assert.match(source, /Motivo/);
-  assert.match(source, /Nota de relación/);
-  assert.match(source, /Ver carpeta/);
-  assert.match(css, /\.saveCaseButton/);
-  assert.match(css, /\.detailFolderForm/);
+  assert.doesNotMatch(source, /Mis carpetas|FolderPlus|event\.stopPropagation\(\)/);
+  assert.doesNotMatch(css, /\.saveCaseButton|\.detailFolderForm/);
 });
 
 test("ExplorerView renders the approved tabbed case detail structure", async () => {

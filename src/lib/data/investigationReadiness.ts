@@ -77,7 +77,7 @@ function buildOfficialEvidenceCheck(
       "official_evidence",
       "Evidencia oficial",
       "blocked",
-      "La carpeta todavia no tiene expedientes oficiales.",
+      "El espacio todavia no tiene expedientes oficiales.",
       ["Agregar al menos un expediente desde Explorer o desde el detalle."],
     );
   }
@@ -111,7 +111,7 @@ function buildRelationContextCheck(workspace: InvestigationWorkspace): Investiga
       "Relacion declarada",
       "blocked",
       "No hay relaciones para documentar.",
-      ["Agregar expedientes y declarar por que entran en la carpeta."],
+      ["Agregar expedientes y declarar por que entran en el espacio."],
     );
   }
 
@@ -169,7 +169,7 @@ function buildSourceCoverageCheck(
       "source_coverage",
       "Cobertura de fuentes",
       "review",
-      `La carpeta se apoya en una sola fuente: ${sourceIds[0]}.`,
+      `El espacio se apoya en una sola fuente: ${sourceIds[0]}.`,
       ["Revisar si existe fuente complementaria de pago, avance, recepcion, ampliacion o contexto."],
     );
   }
@@ -280,7 +280,7 @@ function buildPublicationBoundaryCheck(): InvestigationReadinessCheck {
     "publication_boundary",
     "Limite publico",
     "ready",
-    "La carpeta es privada y no publica aportes ni hipotesis automaticamente.",
+    "El espacio es privado y no publica aportes ni hipotesis automaticamente.",
     [],
   );
 }

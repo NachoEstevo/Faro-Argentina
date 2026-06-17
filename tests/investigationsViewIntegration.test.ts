@@ -31,7 +31,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /useDeferredValue/);
   assert.match(source, /buildSearchSuggestionIndex/);
   assert.match(source, /buildSearchSuggestionsFromIndex/);
-  assert.match(source, /Exportar carpeta ZIP/);
+  assert.match(source, /Exportar ZIP/);
   assert.match(source, /Generar análisis de trabajo/);
   assert.match(source, /INVESTIGATION_RELATION_REASON_OPTIONS/);
   assert.match(source, /Motivo de relación/);
@@ -62,7 +62,7 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /Base de identidad/);
   assert.match(source, /Brechas para verificar/);
   assert.match(source, /Próximos pasos/);
-  assert.match(source, /Crear carpeta de investigación/);
+  assert.match(source, /Crear espacio de investigación/);
   assert.match(source, /Definí una pregunta de trabajo/);
   assert.match(source, /Abrir fuente oficial/);
   assert.match(source, /Guardar próximos pasos como nota/);
@@ -100,26 +100,25 @@ test("InvestigationsView manages local workspaces, analysis and ZIP export", asy
   assert.match(source, /sincronizar con tu cuenta/i);
   assert.doesNotMatch(source, /x-faro-workspace-code/);
   assert.doesNotMatch(source, /Código privado/);
-  assert.match(source, /Carpetas guardadas/);
-  assert.match(source, /Seleccionar carpeta/);
-  assert.match(source, /Nueva carpeta/);
+  assert.match(source, /Espacios guardados/);
+  assert.match(source, /Seleccionar espacio/);
+  assert.match(source, /Nuevo espacio/);
   assert.doesNotMatch(source, /<pre className=\{styles\.analysis\}/);
   assert.doesNotMatch(source, /Denuncia|Caso probado|Score de corrupción|Score de corrupcion|Publicar caso/);
 });
 
-test("FaroExperience exposes Carpetas from the main mode toggle", async () => {
+test("FaroExperience keeps workspace mode out of the main mode toggle", async () => {
   const source = [
     await readFile(faroExperienceUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
   ].join("\n");
 
-  assert.match(source, /InvestigationsView/);
-  assert.match(source, /"map" \| "explorer" \| "investigations" \| "aportes"/);
-  assert.match(source, /viewMode === "investigations"/);
-  assert.match(source, /FolderOpen/);
-  assert.match(source, /switchViewMode\("investigations"\)/);
-  assert.match(source, /Carpetas/);
-  assert.doesNotMatch(source, /Mis carpetas/);
+  assert.match(source, /"map" \| "explorer" \| "aportes"/);
+  assert.doesNotMatch(source, /InvestigationsView/);
+  assert.doesNotMatch(source, /"investigations"/);
+  assert.doesNotMatch(source, /viewMode === "investigations"/);
+  assert.doesNotMatch(source, /FolderOpen/);
+  assert.doesNotMatch(source, /Carpetas|Mis carpetas/);
 });
 
 test("FaroExperience keeps private modes isolated from the map sidebar", async () => {
@@ -152,14 +151,14 @@ test("InvestigationsView inherits platform work-view theme surfaces", async () =
   assert.match(styles, /\.tabButtonActive,[\s\S]*\.tabButton\[aria-selected="true"\]\s*\{[\s\S]*background: var\(--cf-accent\);[\s\S]*color: var\(--cf-on-accent\);/);
 });
 
-test("country route can open investigations mode directly", async () => {
+test("country route falls back to map for removed workspace mode", async () => {
   const source = await readFile(countryPageUrl, "utf8");
 
-  assert.match(source, /mode\) === "investigations"/);
-  assert.match(source, /"investigations"/);
+  assert.doesNotMatch(source, /mode\) === "investigations"/);
+  assert.doesNotMatch(source, /"investigations"/);
 });
 
-test("regional landing exposes Carpetas while aportes mode can still link to it", async () => {
+test("regional landing keeps workspace mode out of public navigation", async () => {
   const floatingSource = [
     await readFile(floatingToggleUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
@@ -171,16 +170,15 @@ test("regional landing exposes Carpetas while aportes mode can still link to it"
   ].join("\n");
 
   assert.match(floatingSource, /buildPlatformModeHref/);
-  assert.match(floatingSource, /mode: "investigations"/);
-  assert.match(floatingSource, /Carpetas/);
-  assert.doesNotMatch(floatingSource, /Mis carpetas/);
+  assert.doesNotMatch(floatingSource, /mode: "investigations"/);
+  assert.doesNotMatch(floatingSource, /Carpetas|Mis carpetas/);
   assert.match(floatingSource, /Explorar/);
   assert.match(stylesSource, /text-decoration: none/);
   assert.match(stylesSource, /\.overlayLayer\s*\{[\s\S]*left: var\(--sidebar-width\);[\s\S]*right: 0;/);
   assert.match(stylesSource, /\.overlayTopBar\s*\{[\s\S]*display: flex;[\s\S]*gap: 12px;/);
   assert.match(stylesSource, /\.overlayTopBar > \*\s*\{[\s\S]*pointer-events: auto;/);
   assert.match(stylesSource, /\.backToGlobal\s*\{[\s\S]*flex: 0 0 auto;/);
-  assert.match(floatingSource, /FolderOpen/);
+  assert.doesNotMatch(floatingSource, /FolderOpen/);
   assert.doesNotMatch(aportesSource, /variant="sidebar"|switchPlatformMode/);
-  assert.match(aportesSource, /Carpetas/);
+  assert.doesNotMatch(aportesSource, /Carpetas/);
 });

@@ -98,7 +98,7 @@ interface AnalysisRequestBody {
 function buildWorkspace(workspace: AnalysisRequestBody["workspace"], caseIds: string[]) {
   return {
     ...createInvestigationWorkspace({
-      title: workspace?.title ?? "Carpeta de investigación",
+      title: workspace?.title ?? "Espacio de investigación",
       countryCode: workspace?.countryCode ?? null,
       description: workspace?.description ?? "",
       investigationQuestion: workspace?.investigationQuestion ?? null,

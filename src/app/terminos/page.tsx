@@ -25,7 +25,6 @@ export default function TermsPage() {
           body: (
             <ul>
               <li>Explorar expedientes, fuentes y datos oficiales.</li>
-              <li>Guardar carpetas privadas de investigacion.</li>
               <li>Descargar evidencia y preparar revision periodistica, institucional o academica.</li>
               <li>Enviar aportes verificables para revision privada.</li>
             </ul>
@@ -37,7 +36,7 @@ export default function TermsPage() {
             <ul>
               <li>Subir informacion falsa, manipulada o presentada como verificada sin respaldo.</li>
               <li>Usar Faro para hostigar, doxxear o acusar personas sin evidencia.</li>
-              <li>Intentar acceder a carpetas, aportes o areas internas de otras personas.</li>
+              <li>Intentar acceder a aportes o areas internas de otras personas.</li>
               <li>Publicar material privado de terceros sin autorizacion o base legal.</li>
             </ul>
           ),

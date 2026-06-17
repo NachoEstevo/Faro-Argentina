@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           title: "Que datos tratamos",
           body: (
             <>
-              <p>Faro puede tratar datos de cuenta, sesiones, carpetas privadas, notas de investigacion, aportes enviados a revision, archivos adjuntos, vinculos internos, datos tecnicos de seguridad y comunicaciones voluntarias.</p>
+              <p>Faro puede tratar datos de cuenta, sesiones, aportes enviados a revision, archivos adjuntos, vinculos internos, datos tecnicos de seguridad y comunicaciones voluntarias.</p>
               <p>En aportes sin contacto no pedimos nombre ni email. Si el envio incluye archivos, Faro puede neutralizar el nombre visible en el manifiesto interno, pero el contenido del archivo puede conservar metadatos propios.</p>
               <p>Los expedientes publicos de Faro se construyen sobre fuentes oficiales, recibos, rutas de fuente, hashes y caveats. Los aportes de usuarios no se publican automaticamente.</p>
             </>
@@ -28,9 +28,9 @@ export default function PrivacyPage() {
           title: "Para que usamos los datos",
           body: (
             <ul>
-              <li>Operar cuentas, sesiones y carpetas privadas.</li>
+              <li>Operar cuentas y sesiones.</li>
               <li>Recibir, revisar y auditar aportes privados.</li>
-              <li>Vincular material aprobado a expedientes o carpetas internas sin cambiar la fuente oficial.</li>
+              <li>Vincular material aprobado a expedientes internos sin cambiar la fuente oficial.</li>
               <li>Proteger el servicio, prevenir abuso y responder incidentes.</li>
               <li>Mejorar la calidad de datos, fuentes y experiencia de investigacion.</li>
             </ul>

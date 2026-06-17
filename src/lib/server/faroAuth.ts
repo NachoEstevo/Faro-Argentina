@@ -57,7 +57,7 @@ export async function requireFaroUser(): Promise<FaroAuthResult> {
         ok: false,
         status: 401,
         error: "login_required",
-        message: "Iniciá sesión para sincronizar tus carpetas privadas.",
+        message: "Iniciá sesión para sincronizar tus espacios privados.",
       };
     }
     const user = await currentUser();
@@ -75,7 +75,7 @@ export async function requireFaroUser(): Promise<FaroAuthResult> {
       ok: false,
       status: 401,
       error: "login_required",
-      message: "Iniciá sesión para sincronizar tus carpetas privadas.",
+      message: "Iniciá sesión para sincronizar tus espacios privados.",
     };
   }
 }

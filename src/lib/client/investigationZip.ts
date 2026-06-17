@@ -126,16 +126,16 @@ function buildFiles(input: BuildInvestigationZipInput): Array<{ name: string; co
 
 function buildReadme(workspace: InvestigationWorkspace): string {
   return [
-    "Carpeta de investigación Faro",
+    "Espacio de investigación Faro",
     "",
     `Título: ${workspace.title}`,
     `País: ${workspace.countryCode ?? "sin país fijo"}`,
     "",
-    "Este ZIP es una carpeta privada de trabajo. No es una publicación de Faro,",
+    "Este ZIP es un espacio privado de trabajo. No es una publicación de Faro,",
     "no prueba hechos y no reemplaza la revisión de fuentes oficiales.",
     "",
     "Archivos principales:",
-    "- workspace.json: datos estructurados de la carpeta.",
+    "- workspace.json: datos estructurados del espacio.",
     "- summary.md: resumen determinístico de expedientes, vínculos y brechas.",
     "- dossier.md: matriz de evidencia, actores, brechas y próximos pasos.",
     "- evidence-matrix.csv: matriz portable por expediente.",
@@ -497,7 +497,7 @@ function slugify(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-  return slug || "carpeta";
+  return slug || "espacio";
 }
 
 function fileSafeId(value: string): string {

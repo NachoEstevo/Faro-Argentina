@@ -16,7 +16,7 @@ test("PlatformModeNav keeps primary modes centered and Aportes docked right", as
   assert.match(source, /PRIMARY_MODES/);
   assert.match(source, /mode: "map"/);
   assert.match(source, /mode: "explorer"/);
-  assert.match(source, /mode: "investigations"/);
+  assert.doesNotMatch(source, /mode: "investigations"/);
   assert.match(source, /mode="aportes"/);
   assert.match(source, /styles\.secondary/);
   assert.match(styles, /\.floating\s*\{[\s\S]*left: 20px;[\s\S]*right: 20px;[\s\S]*justify-content: center;/);
@@ -36,7 +36,7 @@ test("PlatformModeNav keeps primary modes centered and Aportes docked right", as
   assert.match(styles, /\.item svg,[\s\S]*\.secondary span\s*\{[\s\S]*pointer-events: none;/);
   assert.doesNotMatch(source, /"sidebar"/);
   assert.doesNotMatch(styles, /\.sidebar/);
-  assert.doesNotMatch(source, /Mis carpetas|Aportes<\/span>/);
+  assert.doesNotMatch(source, /Carpetas|Mis carpetas|FolderOpen|Aportes<\/span>/);
 });
 
 test("FaroExperience syncs mode changes into the country URL without touching CaseMap markers", async () => {

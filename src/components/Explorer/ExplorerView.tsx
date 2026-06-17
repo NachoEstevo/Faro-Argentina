@@ -1,18 +1,16 @@
 "use client";
 
-import { type FormEvent, type MouseEvent, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { type MouseEvent, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   Download,
   FileText,
-  FolderPlus,
   PanelLeftClose,
   Search,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { addCaseToStoredInvestigationWorkspace } from "@/lib/client/investigationWorkspaceStorage";
 import { CURATED_CASES } from "@/data/curatedCases";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CountryCode } from "@/lib/data/countries";
@@ -45,10 +43,6 @@ import {
   type InvestigatorGeometryFilter,
 } from "@/lib/data/investigatorExplorer";
 import {
-  INVESTIGATION_RELATION_REASON_OPTIONS,
-  type InvestigationCaseRelationReason,
-} from "@/lib/data/investigationWorkspaces";
-import {
   buildSearchSuggestionIndex,
   buildSearchSuggestionsFromIndex,
   normalizeSearchText,
@@ -71,7 +65,6 @@ interface Props {
   selectedCaseStatus?: "idle" | "loading" | "ready" | "error";
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onClearSelection: () => void;
-  onSwitchToInvestigations: () => void;
   initialPreset?: ExplorerPreset;
 }
 
@@ -132,7 +125,6 @@ export default function ExplorerView({
   selectedCaseStatus = "idle",
   onSelectCase,
   onClearSelection,
-  onSwitchToInvestigations,
   initialPreset = null,
 }: Props) {
   const router = useRouter();
@@ -144,7 +136,6 @@ export default function ExplorerView({
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const [page, setPage] = useState(0);
-  const [folderStatus, setFolderStatus] = useState<{ caseId: string; message: string } | null>(null);
   const [preset, setPreset] = useState<ExplorerPreset>(initialPreset);
   const shellRef = useRef<HTMLElement | null>(null);
 
@@ -356,15 +347,6 @@ export default function ExplorerView({
     });
   };
 
-  const saveRowToFolder = (event: MouseEvent<HTMLButtonElement>, row: InvestigatorCaseRow) => {
-    event.stopPropagation();
-    const result = addCaseToStoredInvestigationWorkspace({
-      caseId: row.caseId,
-      countryCode: "AR",
-    });
-    setFolderStatus({ caseId: row.caseId, message: labelFolderSaveStatus(result.status) });
-  };
-
   return (
     <section ref={shellRef} className={styles.shell} aria-label="Explorar">
       <aside className={styles.sidebar} aria-label="Filtros y guardados">
@@ -498,7 +480,6 @@ export default function ExplorerView({
             poolRows={countryAllRows}
             onBack={onClearSelection}
             onSelectCase={onSelectCase}
-            onSwitchToInvestigations={onSwitchToInvestigations}
           />
         ) : selectedCaseStatus === "loading" ? (
           <ExplorerDetailGate status="loading" />
@@ -729,13 +710,12 @@ export default function ExplorerView({
                     <th className={styles.tableNumeric}>Monto</th>
                     <th>Fuente</th>
                     <th>Señal</th>
-                    <th>Carpeta</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pagedRows.length === 0 && (
                     <tr className={styles.tableEmptyRow}>
-                      <td colSpan={8} className={styles.tableEmpty}>
+                      <td colSpan={7} className={styles.tableEmpty}>
                         No hay expedientes que coincidan con los filtros actuales.
                       </td>
                     </tr>
@@ -770,19 +750,6 @@ export default function ExplorerView({
                             {state.label}
                           </span>
                         </td>
-                        <td className={styles.tableActionCell} data-label="Carpeta">
-                          <button
-                            type="button"
-                            className={`${styles.saveCaseButton} ${
-                              folderStatus?.caseId === caseFile.caseId ? styles.saveCaseButtonSaved : ""
-                            }`}
-                            onClick={(event) => saveRowToFolder(event, caseFile)}
-                            aria-label={`Guardar ${caseFile.caseId} en carpeta`}
-                          >
-                            <FolderPlus size={13} aria-hidden />
-                            <span>{folderStatus?.caseId === caseFile.caseId ? "Guardado" : "Guardar"}</span>
-                          </button>
-                        </td>
                       </tr>
                     );
                   })}
@@ -803,13 +770,11 @@ function ExplorerDetail({
   poolRows,
   onBack,
   onSelectCase,
-  onSwitchToInvestigations,
 }: {
   caseFile: ExplorerCase;
   poolRows: InvestigatorCaseRow[];
   onBack: () => void;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
-  onSwitchToInvestigations: () => void;
 }) {
   const [activeDetailTab, setActiveDetailTab] = useState<ExplorerDetailTab>("resumen");
   const [curatedEvidence, setCuratedEvidence] = useState<PublicCuratedEvidence[]>([]);
@@ -906,14 +871,6 @@ function ExplorerDetail({
               {receiptLocator?.actionLabel ?? "Abrir fuente"}
             </a>
           )}
-          <button
-            type="button"
-            className={styles.detailSecondaryAction}
-            onClick={() => setActiveDetailTab("actores")}
-          >
-            <FolderPlus size={13} aria-hidden />
-            Guardar en carpeta
-          </button>
         </div>
         {sourceActionStatus !== "idle" && (
           <p className={styles.detailActionStatus} role="status">
@@ -973,7 +930,6 @@ function ExplorerDetail({
         similar={similar}
         curatedEvidence={curatedEvidence}
         onSelectCase={onSelectCase}
-        onSwitchToInvestigations={onSwitchToInvestigations}
       />
     </section>
   );
@@ -1241,7 +1197,6 @@ function DetailTabPanel({
   similar,
   curatedEvidence,
   onSelectCase,
-  onSwitchToInvestigations,
 }: {
   activeTab: ExplorerDetailTab;
   caseFile: ExplorerCase;
@@ -1250,7 +1205,6 @@ function DetailTabPanel({
   similar: SimilarCaseSummary[];
   curatedEvidence: PublicCuratedEvidence[];
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
-  onSwitchToInvestigations: () => void;
 }) {
   return (
     <div className={styles.detailTabPanel}>
@@ -1269,14 +1223,11 @@ function DetailTabPanel({
         </div>
       )}
       {activeTab === "actores" && (
-        <>
-          <AddToInvestigationForm caseFile={caseFile} onSwitchToInvestigations={onSwitchToInvestigations} />
-          <div className={styles.detailTabGrid}>
-            <ProveedorCard caseFile={caseFile} fallback={fallback} />
-            <ProcedimientoCard caseFile={caseFile} />
-            <OrganismoCard caseFile={caseFile} />
-          </div>
-        </>
+        <div className={styles.detailTabGrid}>
+          <ProveedorCard caseFile={caseFile} fallback={fallback} />
+          <ProcedimientoCard caseFile={caseFile} />
+          <OrganismoCard caseFile={caseFile} />
+        </div>
       )}
       {activeTab === "evidencia" && (
         <>
@@ -1624,68 +1575,6 @@ function SimilarCasesPanel({
   );
 }
 
-function AddToInvestigationForm({
-  caseFile,
-  onSwitchToInvestigations,
-}: {
-  caseFile: ExplorerCase;
-  onSwitchToInvestigations: () => void;
-}) {
-  const [reason, setReason] = useState<InvestigationCaseRelationReason>("manual_hypothesis");
-  const [note, setNote] = useState("");
-  const [statusText, setStatusText] = useState("");
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const result = addCaseToStoredInvestigationWorkspace({
-      caseId: caseFile.id,
-      countryCode: "AR",
-      reason,
-      note,
-    });
-    setStatusText(labelFolderSaveStatus(result.status));
-    if (result.status === "created" || result.status === "added" || result.status === "updated") {
-      setNote("");
-    }
-  }
-
-  return (
-    <form className={styles.detailFolderForm} onSubmit={handleSubmit}>
-      <div className={styles.detailFolderFields}>
-        <label className={styles.detailFolderField}>
-          <span>Motivo</span>
-          <select
-            value={reason}
-            onChange={(event) => setReason(event.target.value as InvestigationCaseRelationReason)}
-          >
-            {INVESTIGATION_RELATION_REASON_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
-        <label className={styles.detailFolderField}>
-          <span>Nota de relación</span>
-          <input
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder="Por qué entra en esta carpeta"
-          />
-        </label>
-      </div>
-      <button className={styles.detailFolderSubmit} type="submit">
-        <FolderPlus size={13} aria-hidden />
-        Guardar en carpeta
-      </button>
-      {statusText && (
-        <p className={styles.detailFolderStatus}>
-          <span>{statusText}</span>
-          <button type="button" onClick={onSwitchToInvestigations}>Ver carpeta</button>
-        </p>
-      )}
-    </form>
-  );
-}
-
 function DetailRow({
   label,
   value,
@@ -1740,13 +1629,6 @@ function formatFacetLabel(facet: Pick<InvestigatorFacet, "type" | "label">): str
 
 function shouldShowFacetCount(type: InvestigatorFacet["type"]): boolean {
   return type !== "agency" && type !== "supplier";
-}
-
-function labelFolderSaveStatus(status: "created" | "added" | "updated" | "already_present"): string {
-  if (status === "created") return "Carpeta creada y expediente guardado.";
-  if (status === "added") return "Expediente guardado en tu carpeta.";
-  if (status === "updated") return "Motivo y nota actualizados.";
-  return "Este expediente ya estaba en tu carpeta.";
 }
 
 function isSameFacet(

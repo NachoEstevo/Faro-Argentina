@@ -38,7 +38,8 @@ const ARGENTINA_OVERVIEW_ZOOM = 5;
 const ARGENTINA_OVERVIEW_MAX_ZOOM = 6;
 const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120;
 const prefetchedWaybackTiles = new Set<string>();
-const MAX_TOOLTIP_SUMMARY_LENGTH = 130;
+const MAX_TOOLTIP_ROW_LENGTH = 52;
+const MAX_TOOLTIP_SIGNAL_LENGTH = 46;
 
 export default function CaseMap({
   cases,
@@ -177,15 +178,12 @@ export default function CaseMap({
                       <span className="caseMapTooltipSignalLabel">
                         {tooltip.primarySignal.heading}: {tooltip.primarySignal.label}
                       </span>
-                      <span className="caseMapTooltipSignalSummary">
-                        {tooltip.primarySignal.summary}
-                      </span>
                     </span>
                   )}
                   {tooltip.referenceLabel ? (
                     <span className="caseMapTooltipReference">{tooltip.referenceLabel}</span>
                   ) : null}
-                  <span className="caseMapTooltipAction">Clic para abrir el expediente</span>
+                  <span className="caseMapTooltipAction">Abrir expediente</span>
                 </div>
               </Tooltip>
             </CircleMarker>
@@ -208,7 +206,6 @@ interface MarkerTooltip {
     kind: CaseSignal["kind"];
     heading: string;
     label: string;
-    summary: string;
   } | null;
   referenceLabel: string | null;
 }
@@ -308,8 +305,7 @@ function buildMarkerTooltip(
       ? {
           kind: primarySignal.kind,
           heading: labelSignalHeading(primarySignal),
-          label: primarySignal.label,
-          summary: summarizeTooltipText(primarySignal.summary),
+          label: summarizeTooltipText(primarySignal.label, MAX_TOOLTIP_SIGNAL_LENGTH),
         }
       : null,
     referenceLabel,
@@ -347,11 +343,16 @@ function labelCaseType(caseFile: ExplorerCase): string {
 
 function buildTooltipRows(caseFile: ExplorerCase): Array<{ label: string; value: string }> {
   const rows: Array<{ label: string; value: string }> = [];
-  addTooltipRow(rows, "Organismo", caseFile.agencyName);
-  if ("supplierName" in caseFile) addTooltipRow(rows, "Proveedor", caseFile.supplierName);
+  if ("supplierName" in caseFile && caseFile.supplierName) {
+    addTooltipRow(rows, "Proveedor", caseFile.supplierName);
+  } else {
+    addTooltipRow(rows, "Organismo", caseFile.agencyName);
+  }
   addTooltipRow(rows, "Monto", formatTooltipAmount("amount" in caseFile ? caseFile.amount : null));
-  addTooltipRow(rows, "Procedimiento", caseFile.procedureNumber || caseFile.workNumber);
-  return rows.slice(0, 4);
+  if (rows.length < 2) {
+    addTooltipRow(rows, "Proced.", caseFile.procedureNumber || caseFile.workNumber);
+  }
+  return rows.slice(0, 2);
 }
 
 function addTooltipRow(
@@ -361,15 +362,14 @@ function addTooltipRow(
 ) {
   const cleaned = cleanText(value);
   if (!cleaned) return;
-  rows.push({ label, value: summarizeTooltipText(cleaned, 72) });
+  rows.push({ label, value: summarizeTooltipText(cleaned, MAX_TOOLTIP_ROW_LENGTH) });
 }
 
 function formatTooltipAmount(amount: SignalCaseFile["amount"]): string | null {
   if (!amount || !Number.isFinite(amount.value) || amount.value <= 0) return null;
-  const local = `${amount.currency} ${Math.round(amount.value).toLocaleString("es-AR")}`;
   const usdEquivalent = readUsdEquivalent(amount);
-  if (usdEquivalent !== null) return `US$ ${Math.round(usdEquivalent).toLocaleString("es-AR")} (${local})`;
-  return local;
+  if (usdEquivalent !== null) return `US$ ${Math.round(usdEquivalent).toLocaleString("es-AR")}`;
+  return `${amount.currency} ${Math.round(amount.value).toLocaleString("es-AR")}`;
 }
 
 function readUsdEquivalent(amount: SignalCaseFile["amount"]): number | null {
@@ -385,7 +385,7 @@ function labelSignalHeading(signal: CaseSignal): string {
   return "Contexto";
 }
 
-function summarizeTooltipText(value: string, maxLength = MAX_TOOLTIP_SUMMARY_LENGTH): string {
+function summarizeTooltipText(value: string, maxLength = MAX_TOOLTIP_ROW_LENGTH): string {
   const cleaned = cleanText(value);
   if (cleaned.length <= maxLength) return cleaned;
   return `${cleaned.slice(0, Math.max(0, maxLength - 3)).trim()}...`;

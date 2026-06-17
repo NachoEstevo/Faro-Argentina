@@ -198,7 +198,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error: "invalid_review_link_target",
-        message: "Elegí si el aporte se vincula a un expediente o a una carpeta.",
+        message: "Elegí si el aporte se vincula a un expediente o a un espacio privado.",
       },
       { status: 400 },
     );

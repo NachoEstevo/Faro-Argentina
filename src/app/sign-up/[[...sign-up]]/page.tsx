@@ -7,9 +7,9 @@ export default function SignUpPage() {
     <main className={styles.authShell}>
       <section className={styles.authContext}>
         <p className={styles.eyebrow}>Cuenta Faro</p>
-        <h1>Creá un espacio privado de investigación.</h1>
+        <h1>Creá tu cuenta Faro.</h1>
         <p>
-          Reuní expedientes, fuentes y notas en carpetas privadas. Faro no publica hipótesis ni acusa.
+          Usá funciones internas con una sesión identificada. Faro no publica hipótesis ni acusa.
         </p>
         <ul className={styles.bullets}>
           <li>Workspace personal para periodistas e investigadores.</li>

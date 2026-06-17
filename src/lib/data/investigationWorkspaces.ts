@@ -198,7 +198,7 @@ export function createInvestigationWorkspace(
   return {
     id: createWorkspaceId(now),
     version: "faro_investigation_workspace_v1",
-    title: normalizeInvestigationText(input.title) || "Carpeta de investigación",
+    title: normalizeInvestigationText(input.title) || "Espacio de investigación",
     countryCode: input.countryCode ?? null,
     description: normalizeInvestigationText(input.description),
     investigationQuestion: optionalText(input.investigationQuestion),
@@ -260,7 +260,7 @@ export function addVerificationTaskToWorkspace(
 ): InvestigationWorkspace {
   const action = normalizeInvestigationText(input.action);
   const title = normalizeInvestigationText(input.title) || action || "Verificación pendiente";
-  const source = normalizeInvestigationText(input.source) || "Carpeta";
+  const source = normalizeInvestigationText(input.source) || "Espacio";
   const createdAt = now.toISOString();
   const task: InvestigationVerificationTask = {
     id: nextVerificationTaskId(workspace),
@@ -347,7 +347,7 @@ export function ensureInvestigationWorkspaceWithCase(
   const normalizedCaseId = normalizeInvestigationText(input.caseId);
   const workspace = input.workspace ?? createInvestigationWorkspace(
     {
-      title: input.title ?? "Carpeta de investigación",
+      title: input.title ?? "Espacio de investigación",
       countryCode: input.countryCode,
       description: "Selección privada de expedientes para verificar.",
     },

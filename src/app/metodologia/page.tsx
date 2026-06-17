@@ -32,8 +32,8 @@ export default function MethodologyPage() {
           text: "Cada señal explica qué puede leerse y qué no debería concluirse solo con ese registro.",
         },
         {
-          title: "Carpetas",
-          text: "Las hipótesis de trabajo se arman en espacios privados antes de cualquier publicación.",
+          title: "Exportación",
+          text: "Los expedientes se pueden descargar para revisión documental externa sin convertir señales en conclusiones.",
         },
       ]}
       sections={[
@@ -133,16 +133,6 @@ export default function MethodologyPage() {
           ),
         },
         {
-          title: "Carpetas de investigación",
-          body: (
-            <p>
-              Las carpetas son espacios privados para reunir expedientes, notas, fuentes manuales, tareas de verificación y
-              próximos pasos. Funcionan como una mesa de trabajo: permiten armar una hipótesis sin convertirla en afirmación
-              pública.
-            </p>
-          ),
-        },
-        {
           title: "Qué no afirma Faro",
           body: (
             <ul>
@@ -160,9 +150,8 @@ export default function MethodologyPage() {
             <ol>
               <li>Entrá al mapa o Explorer para ubicar una obra, proveedor, organismo o señal.</li>
               <li>Abrí el expediente y revisá fuente, receipts, caveats y datos faltantes.</li>
-              <li>Guardá los registros relevantes en una carpeta privada.</li>
-              <li>Sumá notas, relaciones y tareas verificables antes de sacar conclusiones.</li>
-              <li>Descargá el informe o ZIP como punto de partida para investigación externa.</li>
+              <li>Descargá el informe del expediente como punto de partida para revisión externa.</li>
+              <li>Contrastá documentos, relaciones y tareas verificables antes de sacar conclusiones.</li>
             </ol>
           ),
         },

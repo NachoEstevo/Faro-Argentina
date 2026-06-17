@@ -396,7 +396,7 @@ export async function listLinkedContributionReviews(
     throw new ContributionReviewOperationError(
       400,
       "missing_review_target",
-      "Indicá el expediente o carpeta que querés revisar.",
+      "Indicá el expediente o espacio privado que querés revisar.",
     );
   }
   const targetLabel = resolveTargetLabel(targetType, targetId, input.targetLabel);
@@ -433,14 +433,14 @@ export async function linkContributionToReviewTarget(
     throw new ContributionReviewOperationError(
       400,
       "missing_review_target",
-      "Indicá el expediente o carpeta que querés vincular.",
+      "Indicá el expediente o espacio privado que querés vincular.",
     );
   }
   if (!note) {
     throw new ContributionReviewOperationError(
       400,
       "missing_review_note",
-      "Agregá una nota interna que explique por qué este aporte entra en el expediente o carpeta.",
+      "Agregá una nota interna que explique por qué este aporte entra en el expediente o espacio privado.",
     );
   }
   const targetLabel = resolveTargetLabel(targetType, targetId, input.targetLabel);
@@ -454,7 +454,7 @@ export async function linkContributionToReviewTarget(
       throw new ContributionReviewOperationError(
         409,
         "contribution_not_approved",
-        "Aprobá el aporte antes de vincularlo a un expediente o carpeta.",
+        "Aprobá el aporte antes de vincularlo a un expediente o espacio privado.",
       );
     }
     const existingLink = (hydrated.reviewLinks ?? []).find((link) =>
@@ -490,7 +490,7 @@ export async function linkContributionToReviewTarget(
     throw new ContributionReviewOperationError(
       409,
       "contribution_not_approved",
-      "Aprobá el aporte antes de vincularlo a un expediente o carpeta.",
+      "Aprobá el aporte antes de vincularlo a un expediente o espacio privado.",
     );
   }
 
@@ -767,7 +767,7 @@ function normalizeReviewLinkTarget(value: string): ContributionReviewLinkTarget 
     throw new ContributionReviewOperationError(
       400,
       "invalid_review_link_target",
-      "Elegí si el aporte se vincula a un expediente o a una carpeta.",
+      "Elegí si el aporte se vincula a un expediente o a un espacio privado.",
     );
   }
   return value;

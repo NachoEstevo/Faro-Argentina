@@ -48,10 +48,6 @@ const AportesView = dynamic(() => import("./Aportes/AportesView"), {
   ssr: false,
   loading: () => <div className="mapLoading">Preparando aportes</div>,
 });
-const InvestigationsView = dynamic(() => import("./Investigations/InvestigationsView"), {
-  ssr: false,
-  loading: () => <div className="mapLoading">Preparando carpetas</div>,
-});
 const EntryGate = dynamic(() => import("./EntryGate"), {
   ssr: false,
 });
@@ -132,7 +128,7 @@ export default function FaroExperience({
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
-  const needsFullCaseCorpus = viewMode === "aportes" || viewMode === "investigations";
+  const needsFullCaseCorpus = viewMode === "aportes";
   const hasExplorerIndex = explorerIndexStatus === "ready" && explorerIndex !== null;
   const hasFullCaseCorpus = !fullCasesHref || caseCorpusStatus === "ready";
 
@@ -359,7 +355,7 @@ export default function FaroExperience({
   }, [countryReviewCases]);
 
   useEffect(() => {
-    if (viewMode === "aportes" || viewMode === "investigations") {
+    if (viewMode === "aportes") {
       setSelectedCaseId("");
       return;
     }
@@ -720,7 +716,6 @@ export default function FaroExperience({
               setSelectedCaseId(caseId);
             }}
             onClearSelection={() => setSelectedCaseId("")}
-            onSwitchToInvestigations={() => switchViewMode("investigations")}
             initialPreset={initialExplorerPreset}
           />
         ) : (
@@ -741,21 +736,6 @@ export default function FaroExperience({
           <AportesView
             selectedCountry={selectedCountry}
             cases={allCases}
-          />
-        ) : (
-          <CaseCorpusGate
-            status={caseCorpusStatus}
-            error={caseCorpusError}
-            onRetry={handleRetryCaseCorpus}
-          />
-        )
-      )}
-
-      {viewMode === "investigations" && (
-        hasFullCaseCorpus ? (
-          <InvestigationsView
-            cases={allCases}
-            selectedCountry={selectedCountry}
           />
         ) : (
           <CaseCorpusGate

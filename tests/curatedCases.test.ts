@@ -118,7 +118,7 @@ test("institutional package stays grounded in selected cases and evidence bounda
   assert.match(source, /Faro no acusa/);
   assert.match(source, /\/pais\/AR\?mode=explorer&preset=selected/);
   assert.match(source, /\/pais\/AR\?mode=aportes/);
-  assert.match(source, /\/pais\/AR\?mode=investigations/);
+  assert.doesNotMatch(source, /\/pais\/AR\?mode=investigations/);
   assert.match(source, /\/admin\/aportes/);
   assert.match(source, /\/expediente\/AR-CONTRACT-74-0052-CON23\/informe/);
   assert.match(source, /Frontera de evidencia/);

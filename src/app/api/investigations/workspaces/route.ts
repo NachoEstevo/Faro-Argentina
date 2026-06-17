@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         error: "workspace_sync_unavailable",
-        message: "No pudimos cargar tus carpetas privadas en este momento.",
+        message: "No pudimos cargar tus espacios privados en este momento.",
       },
       { status: 503 },
     );
@@ -72,7 +72,7 @@ export async function PUT(request: Request) {
       return Response.json(
         {
           error: "invalid_workspace_collection",
-          message: "No pudimos guardar la carpeta porque el payload esta incompleto.",
+          message: "No pudimos guardar el espacio privado porque el payload esta incompleto.",
         },
         { status: 400 },
       );
@@ -81,7 +81,7 @@ export async function PUT(request: Request) {
     return Response.json(
       {
         error: "workspace_sync_unavailable",
-        message: "No pudimos guardar tus carpetas privadas en este momento.",
+        message: "No pudimos guardar tus espacios privados en este momento.",
       },
       { status: 503 },
     );

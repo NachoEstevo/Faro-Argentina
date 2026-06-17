@@ -23,7 +23,6 @@ interface Props {
   inboxNote: string;
   linkTargetType: ReviewLinkTarget;
   linkTargetId: string;
-  linkTargetLabel: string;
   linkNote: string;
   publicationTargetId: string;
   publicationCaseLinks: NonNullable<Contribution["reviewLinks"]>;
@@ -40,7 +39,6 @@ interface Props {
   onInboxNoteChange: (value: string) => void;
   onLinkTargetTypeChange: (value: ReviewLinkTarget) => void;
   onLinkTargetIdChange: (value: string) => void;
-  onLinkTargetLabelChange: (value: string) => void;
   onLinkNoteChange: (value: string) => void;
   onPublicationTargetIdChange: (value: string) => void;
   onCurationStatusChange: (value: Extract<PublicationStatus, "candidate" | "published_curated">) => void;
@@ -65,7 +63,6 @@ export default function AdminAportesDetail({
   inboxNote,
   linkTargetType,
   linkTargetId,
-  linkTargetLabel,
   linkNote,
   publicationTargetId,
   publicationCaseLinks,
@@ -82,7 +79,6 @@ export default function AdminAportesDetail({
   onInboxNoteChange,
   onLinkTargetTypeChange,
   onLinkTargetIdChange,
-  onLinkTargetLabelChange,
   onLinkNoteChange,
   onPublicationTargetIdChange,
   onCurationStatusChange,
@@ -222,7 +218,7 @@ export default function AdminAportesDetail({
       </section>
       <section className={styles.linkBox}>
         <div className={styles.linkIntro}>
-          <h4>Vincular a expediente o carpeta</h4>
+          <h4>Vincular a expediente</h4>
           <p>Sólo material aprobado. El vínculo queda privado y no modifica el expediente oficial.</p>
         </div>
         <div className={styles.linkGrid}>
@@ -233,23 +229,16 @@ export default function AdminAportesDetail({
               onChange={(event) => onLinkTargetTypeChange(event.target.value as ReviewLinkTarget)}
             >
               <option value="case">Expediente existente</option>
-              <option value="workspace">Carpeta interna</option>
             </select>
           </label>
           <label>
-            <span>ID de expediente o carpeta</span>
+            <span>ID de expediente</span>
             <input
               value={linkTargetId}
               onChange={(event) => onLinkTargetIdChange(event.target.value)}
-              placeholder={linkTargetType === "case" ? "AR-CONTRACT-..." : "carpeta-lazaro-baez"}
+              placeholder="AR-CONTRACT-..."
             />
           </label>
-          {linkTargetType === "workspace" && (
-            <label>
-              <span>Nombre visible de carpeta</span>
-              <input value={linkTargetLabel} onChange={(event) => onLinkTargetLabelChange(event.target.value)} />
-            </label>
-          )}
           <label className={styles.linkNote}>
             <span>Nota de vínculo</span>
             <textarea value={linkNote} onChange={(event) => onLinkNoteChange(event.target.value)} />
@@ -268,7 +257,7 @@ export default function AdminAportesDetail({
           <div className={styles.linkList}>
             {links.map((link) => (
               <div key={link.id}>
-                <span>{link.targetType === "case" ? "Expediente" : "Carpeta"}</span>
+                <span>{link.targetType === "case" ? "Expediente" : "Espacio privado"}</span>
                 <strong>{link.targetLabel}</strong>
                 <small>{link.targetId} · {formatDate(link.createdAt)} · {link.linkedBy}</small>
                 {link.note && <p>{link.note}</p>}

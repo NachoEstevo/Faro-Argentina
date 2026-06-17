@@ -65,9 +65,7 @@ export default async function PaisPage({
       ? "explorer"
       : readParam(search.mode) === "aportes"
         ? "aportes"
-        : readParam(search.mode) === "investigations"
-          ? "investigations"
-          : "map";
+        : "map";
   const initialCaseId = readParam(search.case);
   const initialExplorerPreset =
     readParam(search.preset) === "selected" ? "selected" : null;

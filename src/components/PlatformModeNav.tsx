@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   FileSearch,
-  FolderOpen,
   Map as MapIcon,
   MessageSquarePlus,
   type LucideIcon,
@@ -11,7 +10,7 @@ import {
 
 import styles from "./PlatformModeNav.module.css";
 
-export type PlatformMode = "map" | "explorer" | "investigations" | "aportes";
+export type PlatformMode = "map" | "explorer" | "aportes";
 type PrimaryMode = Exclude<PlatformMode, "aportes">;
 type PlatformModeNavVariant = "floating" | "floatingBar" | "header";
 
@@ -25,7 +24,6 @@ interface PlatformModeItem {
 const PRIMARY_MODES: PlatformModeItem[] = [
   { mode: "map", label: "Mapa", ariaLabel: "Abrir mapa", Icon: MapIcon },
   { mode: "explorer", label: "Explorar", ariaLabel: "Abrir explorador de expedientes", Icon: FileSearch },
-  { mode: "investigations", label: "Carpetas", ariaLabel: "Abrir carpetas", Icon: FolderOpen },
 ];
 
 interface Props {

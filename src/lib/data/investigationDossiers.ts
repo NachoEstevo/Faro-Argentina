@@ -150,7 +150,7 @@ function buildGaps(
   if (missingRelationNoteCount > 0) gaps.push(`${formatCount(missingRelationNoteCount, "expediente")} sin nota explícita de relación.`);
   if (workspace.sourceLinks.length > 0) gaps.push(`${formatCount(workspace.sourceLinks.length, "fuente manual")} cargada por el usuario requiere validación.`);
   if (gaps.length === 0 && packs.length > 0) gaps.push("No hay brechas automáticas críticas; revisar caveats de cada expediente.");
-  if (packs.length === 0) gaps.push("La carpeta todavía no tiene expedientes para construir matriz.");
+  if (packs.length === 0) gaps.push("El espacio todavía no tiene expedientes para construir matriz.");
 
   return uniqueStrings(gaps);
 }
@@ -165,7 +165,7 @@ function buildNextSteps(
     ...packs.flatMap((pack) => pack.verificationSteps).slice(0, 4),
   ];
   if (workspace.caseIds.some((caseId) => !(workspace.caseRelations ?? []).some((relation) => relation.caseId === caseId && normalizeInvestigationText(relation.note)))) {
-    steps.push("Documentar por qué cada expediente entra en esta carpeta.");
+    steps.push("Documentar por qué cada expediente entra en este espacio.");
   }
   if (gaps.some((gap) => /geometría/i.test(gap))) {
     steps.push("Resolver brechas de geometría solo con fuente oficial validada.");

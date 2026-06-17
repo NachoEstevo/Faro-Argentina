@@ -33,7 +33,7 @@ export interface CuratedCase {
   keyFacts: CuratedKeyFact[];
   contextNote: string;
   mapLabel: string;
-  actions: Array<"open_case" | "open_source" | "save_to_folder" | "export">;
+  actions: Array<"open_case" | "open_source" | "export">;
   tags: string[];
 }
 
@@ -62,7 +62,7 @@ export const CURATED_CASES: CuratedCase[] = [
     ],
     contextNote: "Contrato moderno de DNV con geometria oficial; no debe mezclarse automaticamente con Causa Vialidad.",
     mapLabel: "geometria oficial validada",
-    actions: ["open_case", "open_source", "save_to_folder", "export"],
+    actions: ["open_case", "open_source", "export"],
     tags: ["DNV", "RN 3", "Mapa"],
   },
   {
@@ -89,7 +89,7 @@ export const CURATED_CASES: CuratedCase[] = [
     ],
     contextNote: "El dato de avance existe, pero el snapshot no trae coordenadas: Faro lo conserva como brecha, no como punto.",
     mapLabel: "sin punto de mapa validado",
-    actions: ["open_case", "open_source", "save_to_folder", "export"],
+    actions: ["open_case", "open_source", "export"],
     tags: ["Mapa de Inversiones", "Avance", "Sin geometria"],
   },
   {
@@ -116,7 +116,7 @@ export const CURATED_CASES: CuratedCase[] = [
     ],
     contextNote: "Faro tiene el contexto judicial y algunos extractos historicos; la carga completa de las 51 obras requiere otro sprint de datos.",
     mapLabel: "sin punto de mapa validado",
-    actions: ["open_case", "open_source", "save_to_folder", "export"],
+    actions: ["open_case", "open_source", "export"],
     tags: ["CIJ", "Contexto", "Vialidad"],
   },
   {
@@ -143,7 +143,7 @@ export const CURATED_CASES: CuratedCase[] = [
     ],
     contextNote: "Es contexto de red y entidades mencionadas; no convierte contratos Faro en hechos del juicio.",
     mapLabel: "sin punto de mapa validado",
-    actions: ["open_case", "open_source", "save_to_folder", "export"],
+    actions: ["open_case", "open_source", "export"],
     tags: ["MPF", "TOF 7", "Contexto"],
   },
   {
@@ -170,7 +170,7 @@ export const CURATED_CASES: CuratedCase[] = [
     ],
     contextNote: "Caso chico con geometria y rastro economico completo; la baja competencia exige revisar pliegos y actas antes de concluir.",
     mapLabel: "geometria oficial validada",
-    actions: ["open_case", "open_source", "save_to_folder", "export"],
+    actions: ["open_case", "open_source", "export"],
     tags: ["Parques Nacionales", "Saneamiento", "Mapa"],
   },
 ];

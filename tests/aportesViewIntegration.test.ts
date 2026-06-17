@@ -116,7 +116,7 @@ test("FaroExperience exposes Aportes as a secondary action, not a primary mode t
 
   assert.match(source, /AportesView/);
   assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
-  assert.match(source, /type PlatformMode = "map" \| "explorer" \| "investigations" \| "aportes"/);
+  assert.match(source, /type PlatformMode = "map" \| "explorer" \| "aportes"/);
   assert.match(source, /viewMode === "aportes"/);
   assert.match(source, /MessageSquarePlus/);
   assert.match(source, /Aportar/);

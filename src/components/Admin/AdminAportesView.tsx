@@ -499,14 +499,12 @@ export default function AdminAportesView() {
                 inboxNote={inboxNote}
                 linkTargetType={linkTargetType}
                 linkTargetId={linkTargetId}
-                linkTargetLabel={linkTargetLabel}
                 linkNote={linkNote}
                 publicationTargetId={publicationTargetId}
                 publicationCaseLinks={selectedCaseLinks}
                 onNoteChange={setNote}
                 onLinkTargetTypeChange={setLinkTargetType}
                 onLinkTargetIdChange={setLinkTargetId}
-                onLinkTargetLabelChange={setLinkTargetLabel}
                 onLinkNoteChange={setLinkNote}
                 onPublicationTargetIdChange={setPublicationTargetId}
                 curationStatus={curationStatus}

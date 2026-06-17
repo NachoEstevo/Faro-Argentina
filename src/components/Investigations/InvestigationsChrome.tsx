@@ -129,7 +129,7 @@ export function InvestigationsSidebar({
         </div>
       </header>
       <div className={styles.sidebarIntro}>
-        <p className={styles.eyebrow}>Carpetas privadas</p>
+        <p className={styles.eyebrow}>Espacios privados</p>
         <h1 className={styles.title}>Mesa de investigación</h1>
         <p className={styles.intro}>
           Reuní expedientes, fuentes, notas y tareas verificables sin publicar hipótesis.
@@ -172,23 +172,23 @@ export function WorkspaceSwitcher({
   return (
     <div className={styles.workspaceSwitcher}>
       <div className={styles.switcherHeader}>
-        <span>Carpetas guardadas</span>
+        <span>Espacios guardados</span>
         <button type="button" onClick={onCreateWorkspace}>
           <Plus size={13} aria-hidden />
-          Nueva carpeta
+          Nuevo espacio
         </button>
       </div>
       {workspaces.length === 0 ? (
-        <p className={styles.switcherEmpty}>Creá una carpeta para empezar a reunir expedientes.</p>
+        <p className={styles.switcherEmpty}>Creá un espacio para empezar a reunir expedientes.</p>
       ) : (
-        <div className={styles.workspaceList} aria-label="Carpetas guardadas">
+        <div className={styles.workspaceList} aria-label="Espacios guardados">
           {workspaces.map((workspace) => (
             <button
               key={workspace.id}
               type="button"
               className={`${styles.workspaceOption} ${workspace.id === activeWorkspaceId ? styles.workspaceOptionActive : ""}`}
               onClick={() => onSelectWorkspace(workspace.id)}
-              aria-label={`Seleccionar carpeta ${workspace.title}`}
+              aria-label={`Seleccionar espacio ${workspace.title}`}
             >
               <strong>{workspace.title}</strong>
               <small>{workspace.caseIds.length} expedientes · {workspace.notes.length} notas</small>
@@ -227,11 +227,11 @@ export function WorkspaceSyncPanel({
           <UserRound size={13} aria-hidden />
           Cuenta privada
         </span>
-        <small>{workspaceCount} carpeta{workspaceCount === 1 ? "" : "s"}</small>
+        <small>{workspaceCount} espacio{workspaceCount === 1 ? "" : "s"}</small>
       </summary>
       {!user && (
         <p className={styles.syncCopy}>
-          Podés trabajar localmente. Iniciá sesión para guardar y recuperar carpetas entre dispositivos.
+          Podés trabajar localmente. Iniciá sesión para guardar y recuperar espacios entre dispositivos.
         </p>
       )}
       {!user && (
@@ -275,8 +275,8 @@ export function CreateWorkspaceForm({ onSubmit }: CreateFormProps) {
     <form className={styles.form} onSubmit={onSubmit}>
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>Nueva carpeta</p>
-          <h2>Crear carpeta de investigación</h2>
+          <p className={styles.eyebrow}>Nuevo espacio</p>
+          <h2>Crear espacio de investigación</h2>
           <p>Definí una pregunta de trabajo antes de reunir expedientes, fuentes y notas.</p>
         </div>
       </header>
@@ -298,7 +298,7 @@ export function CreateWorkspaceForm({ onSubmit }: CreateFormProps) {
       </label>
       <button className={styles.primary} type="submit">
         <Plus size={15} aria-hidden />
-        Crear carpeta
+        Crear espacio
       </button>
     </form>
   );
@@ -402,11 +402,11 @@ export function WorkspaceHeader({ workspace }: WorkspaceHeaderProps) {
   return (
     <header className={styles.header}>
       <div>
-        <p className={styles.eyebrow}>Carpeta activa</p>
+        <p className={styles.eyebrow}>Espacio activo</p>
         <h2>{workspace.title}</h2>
-        <p>{workspace.description || "Carpeta local de trabajo."}</p>
+        <p>{workspace.description || "Espacio local de trabajo."}</p>
       </div>
-      <div className={styles.headerMeta} aria-label="Resumen de carpeta">
+      <div className={styles.headerMeta} aria-label="Resumen de espacio">
         <span>
           <strong>{workspace.caseIds.length}</strong>
           expedientes
@@ -428,7 +428,7 @@ export function WorkspaceTabs({
   onTabChange: (tab: WorkspaceTab) => void;
 }) {
   return (
-    <div className={styles.tabs} role="tablist" aria-label="Secciones de carpeta">
+    <div className={styles.tabs} role="tablist" aria-label="Secciones de espacio">
       {WORKSPACE_TABS.map((tab) => (
         <button
           key={tab.id}
@@ -490,7 +490,7 @@ export function WorkspaceExportPanel({
       )}
       <button className={styles.primary} type="button" onClick={onExport}>
         <Download size={15} aria-hidden />
-        Exportar carpeta ZIP
+        Exportar ZIP
       </button>
     </section>
   );
@@ -810,7 +810,7 @@ export function SelectedCasesPanel({ selectedCases, workspace, onRemoveCase }: S
       <div className={styles.panelHeading}>
         <div>
           <h3>Expedientes seleccionados</h3>
-          <p>Cada fila debe explicar por qué entra en la carpeta y qué falta verificar.</p>
+          <p>Cada fila debe explicar por qué entra en el espacio y qué falta verificar.</p>
         </div>
       </div>
       <div className={styles.caseList}>

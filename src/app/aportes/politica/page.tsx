@@ -57,7 +57,7 @@ export default function ContributionPolicyPage() {
         {
           title: "Uso posterior",
           body: (
-            <p>Si un aporte es util, Faro puede usarlo como pista interna, vincularlo a una carpeta de revision o convertirlo en una mejora de datos solo despues de verificar fuente, contexto, permiso y caveats.</p>
+            <p>Si un aporte es util, Faro puede usarlo como pista interna o convertirlo en una mejora de datos solo despues de verificar fuente, contexto, permiso y caveats.</p>
           ),
         },
         {

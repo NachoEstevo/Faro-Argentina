@@ -400,7 +400,7 @@ export default function InvestigationsView({
 
   async function handleLoadServerWorkspaces() {
     setSyncState("loading");
-    setSyncStatusText("Cargando carpetas de tu cuenta...");
+    setSyncStatusText("Cargando espacios privados de tu cuenta...");
     try {
       const response = await fetch("/api/investigations/workspaces");
       const payload = await response.json() as WorkspaceSyncResponse;
@@ -412,18 +412,18 @@ export default function InvestigationsView({
       setSyncState("success");
       setSyncStatusText(
         payload.collection.workspaces.length === 0
-          ? "Todavía no hay carpetas guardadas en tu cuenta."
-          : "Carpetas cargadas en este navegador.",
+          ? "Todavía no hay espacios privados guardados en tu cuenta."
+          : "Espacios privados cargados en este navegador.",
       );
     } catch (error) {
       setSyncState("error");
-      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron cargar tus carpetas.");
+      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron cargar tus espacios privados.");
     }
   }
 
   async function handleSaveServerWorkspaces() {
     setSyncState("saving");
-    setSyncStatusText("Guardando carpetas en tu cuenta...");
+    setSyncStatusText("Guardando espacios privados en tu cuenta...");
     try {
       const response = await fetch("/api/investigations/workspaces", {
         method: "PUT",
@@ -438,10 +438,10 @@ export default function InvestigationsView({
       }
       persistWorkspaceCollection(payload.collection);
       setSyncState("success");
-      setSyncStatusText("Carpetas guardadas en tu cuenta.");
+      setSyncStatusText("Espacios privados guardados en tu cuenta.");
     } catch (error) {
       setSyncState("error");
-      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron guardar tus carpetas.");
+      setSyncStatusText(error instanceof Error ? error.message : "No se pudieron guardar tus espacios privados.");
     }
   }
 
@@ -546,7 +546,7 @@ export default function InvestigationsView({
                       className={styles.textarea}
                       value={noteText}
                       onChange={(event) => setNoteText(event.target.value)}
-                      placeholder="Qué observaste, qué falta pedir o por qué esta carpeta sigue abierta"
+                      placeholder="Qué observaste, qué falta pedir o por qué este espacio sigue abierto"
                     />
                   </label>
                   <button className={styles.secondary} type="button" onClick={handleAddNote}>Agregar nota</button>
@@ -667,7 +667,7 @@ function WorkspaceOverviewPanel({
       <div className={styles.panelHeading}>
         <div>
           <h3>Plan de trabajo</h3>
-          <p>La carpeta debe explicar qué se busca verificar, qué evidencia existe y qué falta pedir.</p>
+          <p>El espacio debe explicar qué se busca verificar, qué evidencia existe y qué falta pedir.</p>
         </div>
       </div>
       <div className={styles.planGrid}>
@@ -678,7 +678,7 @@ function WorkspaceOverviewPanel({
             <p>Conviene escribirla antes de exportar o compartir el paquete internamente.</p>
           )}
         </div>
-        <div className={styles.metrics} aria-label="Estado de la carpeta">
+        <div className={styles.metrics} aria-label="Estado del espacio">
           <span>{workspace.caseIds.length} expedientes</span>
           <span>{workspace.notes.length} notas</span>
           <span>{sourceCount} fuentes</span>
@@ -753,7 +753,7 @@ function DossierReadinessPanel({ readiness }: { readiness: InvestigationDossierR
 function labelAnalysisError(error?: string): string {
   if (error === "invalid_access_code") return "Código no válido para generar análisis.";
   if (error === "analysis_unavailable") return "Análisis no disponible en este entorno.";
-  if (error === "too_many_case_ids") return "La carpeta tiene demasiados expedientes para este corte.";
+  if (error === "too_many_case_ids") return "El espacio tiene demasiados expedientes para este corte.";
   return "No se pudo generar el análisis.";
 }
 
@@ -764,7 +764,7 @@ interface WorkspaceSyncResponse {
 }
 
 function labelWorkspaceSyncError(error?: string): string {
-  if (error === "login_required") return "Iniciá sesión para sincronizar tus carpetas.";
+  if (error === "login_required") return "Iniciá sesión para sincronizar tus espacios privados.";
   if (error === "auth_not_configured") return "La autenticación privada todavía no está configurada.";
   if (error === "workspace_sync_unavailable") return "La sincronización privada no está disponible en este momento.";
   return "No se pudo sincronizar tu cuenta.";

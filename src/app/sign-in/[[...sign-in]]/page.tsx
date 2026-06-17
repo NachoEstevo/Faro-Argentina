@@ -7,12 +7,12 @@ export default function SignInPage() {
     <main className={styles.authShell}>
       <section className={styles.authContext}>
         <p className={styles.eyebrow}>Cuenta Faro</p>
-        <h1>Entrá a tus carpetas privadas.</h1>
+        <h1>Entrá a tu cuenta Faro.</h1>
         <p>
-          Guardá investigaciones, expedientes, notas y fuentes sin publicar nada. El mapa y el explorador siguen abiertos.
+          Accedé a las áreas internas que requieren identidad. El mapa y el explorador siguen abiertos.
         </p>
         <ul className={styles.bullets}>
-          <li>Carpetas por usuario.</li>
+          <li>Sesión privada por usuario.</li>
           <li>Sincronización segura entre dispositivos.</li>
           <li>Preparado para revisión interna y aportes privados.</li>
         </ul>

@@ -404,7 +404,7 @@ function profileNextAction(type: InvestigatorProfileType): string {
   if (type === "supplier") return "Abrir ejemplos y revisar receipts, CUIT y organismo antes de relacionar.";
   if (type === "agency") return "Comparar fuentes y señales dentro del mismo organismo.";
   if (type === "province") return "Cruzar con mapa, fuente original y expedientes sin geometría.";
-  if (type === "source") return "Leer caveats de fuente antes de usar el conjunto en carpeta.";
+  if (type === "source") return "Leer caveats de fuente antes de usar el conjunto en revisión externa.";
   return "Abrir expedientes y convertir la señal en una tarea verificable.";
 }
 

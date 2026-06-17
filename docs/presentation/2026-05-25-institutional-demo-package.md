@@ -2,7 +2,7 @@
 
 ## Narrativa
 
-Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El producto parte del mapa, permite abrir expedientes, leer el rastro economico, distinguir fuente oficial de contexto, recibir aportes privados y armar carpetas descargables para investigacion. Faro no acusa: muestra donde mirar, por que mirar y que falta verificar.
+Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El producto parte del mapa, permite abrir expedientes, leer el rastro economico, distinguir fuente oficial de contexto, recibir aportes privados y descargar informes para investigacion. Faro no acusa: muestra donde mirar, por que mirar y que falta verificar.
 
 ## Estado Y Currentness
 
@@ -22,8 +22,7 @@ Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El 
 3. Abrir `AR-CONTRACT-74-0052-CON23` para mostrar expediente, presupuesto, adjudicacion, proveedor, caveats y punto de mapa.
 4. Abrir `/expediente/AR-CONTRACT-74-0052-CON23/informe` para mostrar el informe descargable.
 5. Volver a `/pais/AR?mode=aportes` para explicar aporte privado y modo sin contacto.
-6. Abrir `/pais/AR?mode=investigations` para mostrar carpetas de investigacion.
-7. Abrir `/admin/aportes` solo como vista interna de revision: recibido, en revision, necesita mas info, aprobado para cargar o descartado.
+6. Abrir `/admin/aportes` solo como vista interna de revision: recibido, en revision, necesita mas info, aprobado para cargar o descartado.
 
 ## Casos seleccionados
 
@@ -42,7 +41,6 @@ Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El 
 | Evidencia oficial | Dataset, recibo, ruta de archivo, hash, fuente publica y caveats. | Como base verificable del expediente. |
 | Contexto documental | Material judicial, fiscal o periodistico citado como apoyo. | Como contexto separado de la fuente oficial del expediente. |
 | Aporte privado | Material enviado por usuarios para revision. | Como pista interna, nunca como publicacion automatica. |
-| Carpeta | Seleccion de expedientes y notas de trabajo. | Como paquete de investigacion para revisar y descargar. |
 
 ## Guion de tres minutos
 
@@ -51,7 +49,7 @@ Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El 
 3. "El rastro economico compara presupuesto oficial, adjudicacion y variacion sin convertir eso en conclusion."
 4. "La evidencia oficial y el contexto se separan: una fuente judicial o periodistica ayuda, pero no reemplaza el expediente."
 5. "Los aportes entran a revision privada; el modo sin contacto reduce datos pedidos, pero no promete anonimato absoluto."
-6. "Las carpetas permiten reunir expedientes relacionados y descargar un informe para trabajo periodistico o institucional."
+6. "Los informes descargables permiten llevar el expediente a una revision periodistica o institucional."
 
 ## Checklist del presentador
 

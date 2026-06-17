@@ -157,7 +157,7 @@ test("ensureInvestigationWorkspaceWithCase creates a local folder from Explorer"
   });
 
   assert.equal(result.status, "created");
-  assert.equal(result.workspace.title, "Carpeta de investigación");
+  assert.equal(result.workspace.title, "Espacio de investigación");
   assert.equal(result.workspace.countryCode, "AR");
   assert.equal(result.workspace.description, "Selección privada de expedientes para verificar.");
   assert.deepEqual(result.workspace.caseIds, ["AR-CASE-1"]);

@@ -17,9 +17,6 @@ export default function WelcomeOverlay({ dismissed, onCTA }: Props) {
         Evidencia pública para investigar obra pública en Argentina.
       </h1>
       <button type="button" className={styles.welcomeCTA} onClick={onCTA}>
-        <span className={styles.welcomeCTASource} aria-hidden>
-          <img src="/brand/faro-mark-transparent.svg" alt="" width={56} height={56} decoding="async" />
-        </span>
         <span className={styles.welcomeCTALabel}>Ver el mapa</span>
         <span className={styles.welcomeCTAArrow} aria-hidden>
           <ArrowRight size={18} strokeWidth={1.9} />

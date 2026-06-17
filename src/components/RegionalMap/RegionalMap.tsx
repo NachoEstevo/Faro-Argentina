@@ -62,6 +62,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
 
   const shellClasses = [
     styles.shell,
+    !overlayDismissed ? styles.shellWelcome : "",
     sidebarCollapsed ? styles.shellCollapsed : "",
     mobileMenuOpen ? styles.shellMobileMenuOpen : "",
   ]
@@ -94,7 +95,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
       <div className={styles.overlayLayer}>
         <div className={styles.vignetteTop} aria-hidden />
         <div className={styles.vignetteSides} aria-hidden />
-        <FloatingModeToggle />
+        <FloatingModeToggle showSecondaryAction={overlayDismissed} />
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>

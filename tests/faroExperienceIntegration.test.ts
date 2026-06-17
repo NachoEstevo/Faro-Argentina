@@ -5,7 +5,9 @@ import { readFile } from "node:fs/promises";
 import { argentinaInitialMapCases } from "../src/lib/data/initialMapCases.ts";
 
 const paisPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
+const regionalMapUrl = new URL("../src/components/RegionalMap/RegionalMap.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
+const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
@@ -125,6 +127,37 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
   assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*min-width: 78px;[\s\S]*min-height: 40px;/);
   assert.match(styles, /\.interfaceThemeOption\s*\{/);
   assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
+});
+
+test("regional welcome CTA stays a plain map action", async () => {
+  const source = await readFile(welcomeOverlayUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Ver el mapa<\/span>/);
+  assert.match(source, /ArrowRight/);
+  assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
+  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 22px 0 24px;/);
+  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
+  assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
+});
+
+test("regional welcome sidebar matches the light map palette", async () => {
+  const source = await readFile(regionalMapUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(source, /!overlayDismissed \? styles\.shellWelcome : ""/);
+  assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--cf-welcome-panel-bg: rgba\(247, 242, 230, 0\.94\);/);
+  assert.match(styles, /\.shellWelcome \.sidebar\s*\{[\s\S]*linear-gradient\(180deg, var\(--cf-welcome-panel-bg-strong\), var\(--cf-welcome-panel-bg\)\)/);
+  assert.match(styles, /\.shellWelcome \.introTitle,[\s\S]*\.shellWelcome \.stepTitle,[\s\S]*\.shellWelcome \.settingLabel\s*\{[\s\S]*color: var\(--cf-welcome-panel-text\);/);
+  assert.match(styles, /\.settingRow\s*\{[\s\S]*text-decoration: none;/);
+  assert.match(styles, /\.shellWelcome \.syncFooter\s*\{[\s\S]*background: rgba\(255, 252, 244, 0\.46\);/);
+});
+
+test("regional welcome hides the Aportar action until the map is open", async () => {
+  const source = await readFile(regionalMapUrl, "utf8");
+
+  assert.match(source, /<FloatingModeToggle showSecondaryAction=\{overlayDismissed\} \/>/);
+  assert.match(source, /<WelcomeOverlay dismissed=\{overlayDismissed\}/);
 });
 
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {

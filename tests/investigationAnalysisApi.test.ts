@@ -79,7 +79,7 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
               "<think>Voy a analizar el paquete estructurado antes de responder.</think>",
               "```markdown",
               "# Análisis de trabajo",
-              "La carpeta contiene evidencia oficial y huecos de verificacion.",
+              "El espacio contiene evidencia oficial y huecos de verificacion.",
               "```",
             ].join("\n\n"),
           },
@@ -95,7 +95,7 @@ test("POST /api/investigations/analyze calls MiniMax server-side and returns str
       workspace: {
         title: "Causa Vialidad",
         countryCode: "AR",
-        description: "Carpeta privada de prueba.",
+        description: "Espacio privado de prueba.",
         caseRelations: [{
           caseId: vialidadCaseId,
           reason: "same_judicial_context",

@@ -50,8 +50,9 @@ test("/admin/aportes renders a private review tray, not a public publishing flow
   assert.match(source, /Material no verificado/);
   assert.match(source, /No se publica automáticamente/);
   assert.match(source, /aria-live="polite"/);
-  assert.match(source, /Vincular a expediente o carpeta/);
-  assert.match(source, /ID de expediente o carpeta/);
+  assert.match(source, /Vincular a expediente/);
+  assert.match(source, /ID de expediente/);
+  assert.doesNotMatch(source, /Carpeta interna|ID de expediente o carpeta|Vincular a expediente o carpeta/);
   assert.match(source, /Sólo material aprobado/);
   assert.match(source, /Guardar vínculo/);
   assert.match(source, /Publicación curada/);

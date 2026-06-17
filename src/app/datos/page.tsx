@@ -59,7 +59,7 @@ export default function DataPage() {
               </p>
               <p>
                 Por eso la matriz separa etapa, casos, filas crudas y elegibilidad de mapa. Un expediente puede ser muy útil
-                para Explorer o para una carpeta aunque no sea seguro dibujarlo en el mapa.
+                para Explorer o para revisión documental aunque no sea seguro dibujarlo en el mapa.
               </p>
             </>
           ),
@@ -181,7 +181,7 @@ export default function DataPage() {
           title: "Exportación",
           body: (
             <p>
-              Los datos visibles pueden exportarse para auditoría, revisión documental o armado de carpetas de investigación.
+              Los datos visibles pueden exportarse para auditoría, revisión documental o análisis externo.
               El export principal de Argentina está disponible en{" "}
               <Link href="/api/export?country=AR">/api/export?country=AR</Link>.
             </p>

@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         error: "invalid_review_link_target",
-        message: "Elegí si querés revisar un expediente o una carpeta.",
+        message: "Elegí si querés revisar un expediente o un espacio privado.",
       },
       { status: 400 },
     );

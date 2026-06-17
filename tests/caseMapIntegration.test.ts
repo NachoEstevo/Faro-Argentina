@@ -35,11 +35,17 @@ test("CaseMap hover tooltip surfaces useful official context without accusation 
   assert.match(source, /"Organismo"/);
   assert.match(source, /"Proveedor"/);
   assert.match(source, /"Monto"/);
-  assert.match(source, /"Procedimiento"/);
+  assert.match(source, /"Proced\."/);
+  assert.match(source, /return rows\.slice\(0, 2\)/);
   assert.match(source, /Señal de revisión/);
-  assert.match(source, /Clic para abrir el expediente/);
+  assert.match(source, /Abrir expediente/);
+  assert.doesNotMatch(source, /caseMapTooltipSignalSummary/);
+  assert.doesNotMatch(source, /return rows\.slice\(0, 4\)/);
   assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipFacts\)/);
   assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipSignal-watch\)/);
+  assert.match(styles, /--cf-tooltip-bg: #fffaf0/);
+  assert.match(styles, /max-width: min\(292px, calc\(100vw - 32px\)\)/);
+  assert.match(styles, /opacity: 1 !important/);
   assert.doesNotMatch(source, /corrupci[oó]n|fraude|culpable|delito|irregularidad/i);
 });
 
