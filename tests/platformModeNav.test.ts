@@ -49,6 +49,14 @@ test("FaroExperience syncs mode changes into the country URL without touching Ca
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
 });
 
+test("Floating home navigation links Mapa directly to the country map", async () => {
+  const source = await readFile(navUrl, "utf8");
+
+  assert.match(source, /const href = hrefForMode\?\.\(mode\);/);
+  assert.match(source, /if \(href\) \{/);
+  assert.match(source, /<Link className=\{controlClassName\} href=\{href\} aria-label=\{ariaLabel\}>/);
+});
+
 test("map review language avoids alert-style accusation wording", async () => {
   const source = [
     await readFile(countrySidebarUrl, "utf8"),

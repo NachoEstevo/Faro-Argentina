@@ -126,6 +126,8 @@ export function GuidedTourButton({ onClick }: ButtonProps) {
       type="button"
       className={styles.tourButton}
       onClick={onClick}
+      aria-label="Abrir tutorial guiado"
+      title="Tutorial"
       data-tour="tutorial-button"
     >
       <HelpCircle size={14} aria-hidden />

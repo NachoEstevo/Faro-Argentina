@@ -102,7 +102,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>
-        <WelcomeOverlay dismissed={overlayDismissed} onCTA={handleCTA} />
+        <WelcomeOverlay dismissed={overlayDismissed} ctaHref="/pais/AR" onCTA={handleCTA} />
       </div>
     </main>
   );

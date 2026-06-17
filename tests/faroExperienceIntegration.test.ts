@@ -155,10 +155,14 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
 
 test("regional welcome CTA stays a plain map action", async () => {
   const source = await readFile(welcomeOverlayUrl, "utf8");
+  const regionalSource = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
 
+  assert.match(source, /import Link from "next\/link"/);
+  assert.match(source, /href=\{ctaHref\}/);
   assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Ver el mapa<\/span>/);
   assert.match(source, /ArrowRight/);
+  assert.match(regionalSource, /ctaHref="\/pais\/AR"/);
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 22px 0 24px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
@@ -208,6 +212,8 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(legendSource, /data-tour="legend"/);
 
   assert.match(tourSource, /type GuidedTourStepId/);
+  assert.match(tourSource, /aria-label="Abrir tutorial guiado"/);
+  assert.match(tourSource, /title="Tutorial"/);
   assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);

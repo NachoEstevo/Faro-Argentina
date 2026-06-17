@@ -113,7 +113,7 @@ function ModeControl({
   }
 
   const href = hrefForMode?.(mode);
-  if (href && !active) {
+  if (href) {
     return (
       <Link className={controlClassName} href={href} aria-label={ariaLabel}>
         {content}
