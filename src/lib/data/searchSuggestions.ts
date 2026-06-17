@@ -45,7 +45,7 @@ export interface CaseLinkSuggestionIndex {
   sourceCandidates: SearchSuggestionCandidate[];
 }
 
-interface SearchSuggestionCandidate {
+export interface SearchSuggestionCandidate {
   suggestion: SearchSuggestion;
   searchText: string;
 }

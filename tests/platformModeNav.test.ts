@@ -20,6 +20,11 @@ test("PlatformModeNav keeps primary modes centered and Aportes docked right", as
   assert.match(source, /mode="aportes"/);
   assert.match(source, /styles\.secondary/);
   assert.match(styles, /\.floating\s*\{[\s\S]*left: 20px;[\s\S]*right: 20px;[\s\S]*justify-content: center;/);
+  assert.match(styles, /\.floating\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.root\.floating\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.floatingBar\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.root\.floatingBar\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.floatingBar \.primary\s*\{[\s\S]*pointer-events: auto;/);
   assert.match(styles, /\.floating \.secondary\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.secondary[\s\S]*border: 1px solid var\(--cf-border\)/);
   assert.match(styles, /\.item,[\s\S]*\.secondary\s*\{[\s\S]*box-sizing: border-box;[\s\S]*min-height: 38px;/);
@@ -35,6 +40,7 @@ test("FaroExperience syncs mode changes into the country URL without touching Ca
   assert.match(source, /const switchViewMode = useCallback/);
   assert.match(source, /router\.replace\(buildPlatformModeHref\(mode, selectedCountry\), \{ scroll: false \}\)/);
   assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*onModeChange=\{switchViewMode\}/);
+  assert.match(source, /showSecondaryAction=\{viewMode !== "map"\}/);
   assert.match(source, /<CaseMap[\s\S]*cases=\{countryReviewCases\}/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
 });

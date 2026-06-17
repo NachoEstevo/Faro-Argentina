@@ -32,6 +32,8 @@ export interface InvestigatorExplorerFilters {
   signalCode?: string;
   entity?: InvestigatorEntityFilter;
   entities?: InvestigatorEntityFilter[];
+  yearFrom?: number;
+  yearTo?: number;
   limit?: number;
 }
 
@@ -61,7 +63,9 @@ export interface InvestigatorCaseRow {
   primarySignal: CaseSignal | null;
   signalCodes: string[];
   signalLabels: string[];
-  entities: {
+  signalFacetCodes?: string[];
+  publicWorkNumber?: string | null;
+  entities?: {
     supplierKey: string | null;
     agencyKey: string | null;
     sourceKey: string;
@@ -71,7 +75,7 @@ export interface InvestigatorCaseRow {
   };
   exportHref: string;
   sortScore: number;
-  searchText: string;
+  searchText?: string;
 }
 
 export interface InvestigatorFacet {
@@ -151,6 +155,36 @@ export function buildInvestigatorExplorerIndex(
     filters,
     totalCases: cases.length,
     rows: allRows,
+  };
+}
+
+export function buildClientInvestigatorExplorerIndex(
+  cases: InvestigatorExplorerCase[],
+  filters: InvestigatorExplorerFilters = {},
+): InvestigatorExplorerIndex {
+  const index = buildInvestigatorExplorerIndex(cases, filters);
+  const casesById = new Map(cases.map((caseFile) => [caseFile.id, caseFile]));
+  return {
+    ...index,
+    rows: index.rows.map((row) => {
+      const caseFile = casesById.get(row.caseId);
+      const { entities: _entities, searchText: _searchText, ...compactRow } = row;
+      return {
+        ...compactRow,
+        signalFacetCodes: getInvestigatorRowSignalFacetKeys(row),
+        publicWorkNumber: getCaseTextField(caseFile, "publicWorkNumber") || null,
+        primarySignal: row.primarySignal
+          ? {
+              code: row.primarySignal.code,
+              kind: row.primarySignal.kind,
+              severity: row.primarySignal.severity,
+              priority: row.primarySignal.priority,
+              label: row.primarySignal.label,
+              leadEligible: row.primarySignal.leadEligible,
+          } as CaseSignal
+          : null,
+      };
+    }),
   };
 }
 
@@ -265,12 +299,12 @@ function toInvestigatorRow(caseFile: InvestigatorExplorerCase, signalContext: Ca
 function buildProfiles(rows: InvestigatorCaseRow[], limit = 8): InvestigatorEntityProfile[] {
   const profiles = new Map<string, MutableProfile>();
   for (const row of rows) {
-    addProfile(profiles, row, "supplier", row.entities.supplierKey, row.supplierLabel);
-    addProfile(profiles, row, "agency", row.entities.agencyKey, row.agencyName);
+    addProfile(profiles, row, "supplier", getInvestigatorRowSupplierKey(row), row.supplierLabel);
+    addProfile(profiles, row, "agency", getInvestigatorRowAgencyKey(row), row.agencyName);
     addProfile(profiles, row, "province", entityKey(row.workProvince), row.workProvince);
-    addProfile(profiles, row, "source", row.entities.sourceKey, row.sourceName);
-    row.entities.signalFacetKeys.forEach((signalCode, index) => {
-      addProfile(profiles, row, "signal", signalCode, row.entities.signalFacetLabels[index] ?? signalCode);
+    addProfile(profiles, row, "source", getInvestigatorRowSourceKey(row), row.sourceName);
+    getInvestigatorRowSignalFacetKeys(row).forEach((signalCode) => {
+      addProfile(profiles, row, "signal", signalCode, getInvestigatorRowSignalLabel(row, signalCode));
     });
   }
 
@@ -302,7 +336,7 @@ function addProfile(
 }
 
 function toEntityProfile(profile: MutableProfile): InvestigatorEntityProfile {
-  const sourceKeys = new Set(profile.rows.map((row) => row.entities.sourceKey));
+  const sourceKeys = new Set(profile.rows.map((row) => getInvestigatorRowSourceKey(row)));
   const withoutMapGeometryCount = profile.rows.filter((row) => !row.hasOfficialGeometry).length;
   const watchCount = profile.rows.filter((row) => row.primarySignal?.kind === "watch").length;
   const sampleCaseIds = profile.rows.slice(0, 3).map((row) => row.caseId);
@@ -393,6 +427,8 @@ function matchesContextScope(caseFile: InvestigatorExplorerCase, filters: Invest
 
 function matchesFilters(row: InvestigatorCaseRow, filters: InvestigatorExplorerFilters): boolean {
   if (filters.countries?.length && !filters.countries.includes(row.countryCode)) return false;
+  if (filters.yearFrom !== undefined && row.year !== null && row.year < filters.yearFrom) return false;
+  if (filters.yearTo !== undefined && row.year !== null && row.year > filters.yearTo) return false;
   if (filters.geometry === "with" && !row.hasOfficialGeometry) return false;
   if (filters.geometry === "without" && row.hasOfficialGeometry) return false;
   if (filters.signalCode && !row.signalCodes.includes(filters.signalCode)) return false;
@@ -400,7 +436,7 @@ function matchesFilters(row: InvestigatorCaseRow, filters: InvestigatorExplorerF
 
   const query = normalize(filters.query);
   if (!query) return true;
-  return row.searchText.includes(query);
+  return getInvestigatorRowSearchText(row).includes(query);
 }
 
 function getEntityFilters(filters: InvestigatorExplorerFilters): InvestigatorEntityFilter[] {
@@ -431,10 +467,10 @@ function matchesCaseEntities(
 }
 
 function matchesEntity(row: InvestigatorCaseRow, entity: InvestigatorEntityFilter): boolean {
-  if (entity.type === "supplier") return row.entities.supplierKey === entity.key;
-  if (entity.type === "agency") return row.entities.agencyKey === entity.key;
-  if (entity.type === "source") return row.entities.sourceKey === entity.key;
-  return row.entities.signalKeys.includes(entity.key);
+  if (entity.type === "supplier") return getInvestigatorRowSupplierKey(row) === entity.key;
+  if (entity.type === "agency") return getInvestigatorRowAgencyKey(row) === entity.key;
+  if (entity.type === "source") return getInvestigatorRowSourceKey(row) === entity.key;
+  return getInvestigatorRowSignalKeys(row).includes(entity.key);
 }
 
 function matchesCaseEntity(
@@ -463,11 +499,11 @@ function buildFacets(rows: InvestigatorCaseRow[], limit = 32): InvestigatorFacet
   const facets = new Map<string, MutableFacet>();
 
   for (const row of rows) {
-    addFacet(facets, row, "source", row.entities.sourceKey, row.sourceName);
-    addFacet(facets, row, "agency", row.entities.agencyKey, row.agencyName);
-    addFacet(facets, row, "supplier", row.entities.supplierKey, row.supplierLabel);
-    row.entities.signalFacetKeys.forEach((signalCode, index) => {
-      addFacet(facets, row, "signal", signalCode, row.entities.signalFacetLabels[index] ?? signalCode);
+    addFacet(facets, row, "source", getInvestigatorRowSourceKey(row), row.sourceName);
+    addFacet(facets, row, "agency", getInvestigatorRowAgencyKey(row), row.agencyName);
+    addFacet(facets, row, "supplier", getInvestigatorRowSupplierKey(row), row.supplierLabel);
+    getInvestigatorRowSignalFacetKeys(row).forEach((signalCode) => {
+      addFacet(facets, row, "signal", signalCode, getInvestigatorRowSignalLabel(row, signalCode));
     });
   }
 
@@ -568,6 +604,80 @@ function buildSearchText(
   ]);
 }
 
+function buildCompactSearchText(
+  row: InvestigatorCaseRow,
+  caseFile: InvestigatorExplorerCase | undefined,
+): string {
+  const signalFacetLabels = getInvestigatorRowSignalFacetKeys(row).map((signalCode) =>
+    getInvestigatorRowSignalLabel(row, signalCode),
+  );
+
+  return normalize([
+    row.caseId,
+    row.countryCode,
+    row.caseType,
+    row.title,
+    row.workNumber,
+    row.procedureNumber,
+    row.agencyName,
+    getCaseTextField(caseFile, "agencyCode"),
+    getCaseTextField(caseFile, "contractingUnit"),
+    row.supplierLabel,
+    getCaseTextField(caseFile, "supplierDocument"),
+    row.workProvince,
+    row.workDepartment,
+    row.workLocality,
+    row.amountLabel,
+    row.sourceId,
+    row.sourceName,
+    row.recordId,
+    row.locatorLabel,
+    ...row.signalCodes,
+    ...row.signalLabels,
+    ...signalFacetLabels,
+  ]);
+}
+
+export function getInvestigatorRowSupplierKey(row: InvestigatorCaseRow): string | null {
+  if (row.entities) return row.entities.supplierKey;
+  if (!row.supplierLabel || row.supplierLabel === "Sin proveedor") return null;
+  return entityKey(row.supplierLabel);
+}
+
+export function getInvestigatorRowAgencyKey(row: InvestigatorCaseRow): string | null {
+  return row.entities?.agencyKey ?? entityKey(row.agencyName);
+}
+
+export function getInvestigatorRowSourceKey(row: InvestigatorCaseRow): string {
+  return row.entities?.sourceKey ?? entityKey(row.sourceId) ?? row.sourceId.toLowerCase();
+}
+
+export function getInvestigatorRowSignalKeys(row: InvestigatorCaseRow): string[] {
+  return row.entities?.signalKeys ?? row.signalCodes;
+}
+
+export function getInvestigatorRowSignalFacetKeys(row: InvestigatorCaseRow): string[] {
+  return row.entities?.signalFacetKeys ?? row.signalFacetCodes ?? [];
+}
+
+export function getInvestigatorRowSignalLabel(row: InvestigatorCaseRow, signalCode: string): string {
+  const facetIndex = row.entities?.signalFacetKeys.indexOf(signalCode) ?? -1;
+  if (facetIndex >= 0) return row.entities?.signalFacetLabels[facetIndex] ?? signalCode;
+  const signalIndex = row.signalCodes.indexOf(signalCode);
+  return signalIndex >= 0 ? row.signalLabels[signalIndex] ?? signalCode : signalCode;
+}
+
+const compactSearchTextCache = new WeakMap<InvestigatorCaseRow, string>();
+
+export function getInvestigatorRowSearchText(row: InvestigatorCaseRow): string {
+  if (row.searchText) return row.searchText;
+  const cached = compactSearchTextCache.get(row);
+  if (cached) return cached;
+  const searchText = buildCompactSearchText(row, undefined);
+  compactSearchTextCache.set(row, searchText);
+  return searchText;
+}
+
 function computeSortScore(
   signals: CaseSignal[],
   primarySignal: CaseSignal | null,
@@ -589,8 +699,8 @@ function formatSupplier(caseFile: InvestigatorExplorerCase): string {
   return [caseFile.supplierName, caseFile.supplierDocument].filter(Boolean).join(" / ") || "Sin proveedor";
 }
 
-function getCaseTextField(caseFile: InvestigatorExplorerCase, field: string): string {
-  const value = (caseFile as unknown as Record<string, unknown>)[field];
+function getCaseTextField(caseFile: InvestigatorExplorerCase | undefined, field: string): string {
+  const value = (caseFile as unknown as Record<string, unknown> | undefined)?.[field];
   return typeof value === "string" ? value : "";
 }
 

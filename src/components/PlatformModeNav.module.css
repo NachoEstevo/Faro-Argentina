@@ -95,16 +95,23 @@
   right: 20px;
   transform: none;
   justify-content: center;
+  pointer-events: none;
+}
+
+.root.floating {
+  pointer-events: none;
 }
 
 .floating .primary {
   flex: 0 1 auto;
+  pointer-events: auto;
 }
 
 .floating .secondary {
   position: absolute;
   top: 0;
   right: 0;
+  pointer-events: auto;
 }
 
 /* In-flow sibling of an external control (e.g. a back button) inside a flex
@@ -116,16 +123,23 @@
   flex: 1 1 auto;
   min-width: 0;
   justify-content: center;
+  pointer-events: none;
+}
+
+.root.floatingBar {
+  pointer-events: none;
 }
 
 .floatingBar .primary {
   flex: 0 1 auto;
+  pointer-events: auto;
 }
 
 .floatingBar .secondary {
   position: absolute;
   top: 0;
   right: 0;
+  pointer-events: auto;
 }
 
 .header {

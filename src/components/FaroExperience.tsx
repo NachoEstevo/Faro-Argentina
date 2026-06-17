@@ -21,6 +21,7 @@ import {
   type FindingOption,
 } from "./RegionalMap/SidebarFilters";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
+import type { InvestigatorExplorerIndex } from "@/lib/data/investigatorExplorer";
 import {
   buildSearchSuggestionIndex,
   buildSearchSuggestionsFromIndex,
@@ -28,10 +29,6 @@ import {
   type SearchSuggestion,
 } from "@/lib/data/searchSuggestions";
 import CasePanel from "./MapUI/CasePanel";
-import AportesView from "./Aportes/AportesView";
-import EntryGate from "./EntryGate";
-import ExplorerView from "./Explorer/ExplorerView";
-import InvestigationsView from "./Investigations/InvestigationsView";
 import PlatformModeNav, { buildPlatformModeHref, type PlatformMode } from "./PlatformModeNav";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
 import LeadsPanel from "./RegionalMap/LeadsPanel";
@@ -43,10 +40,26 @@ const CaseMap = dynamic(() => import("./CaseMap"), {
   ssr: false,
   loading: () => <div className="mapLoading">Cargando mapa</div>,
 });
+const ExplorerView = dynamic(() => import("./Explorer/ExplorerView"), {
+  ssr: false,
+  loading: () => <div className="mapLoading">Preparando Explorer</div>,
+});
+const AportesView = dynamic(() => import("./Aportes/AportesView"), {
+  ssr: false,
+  loading: () => <div className="mapLoading">Preparando aportes</div>,
+});
+const InvestigationsView = dynamic(() => import("./Investigations/InvestigationsView"), {
+  ssr: false,
+  loading: () => <div className="mapLoading">Preparando carpetas</div>,
+});
+const EntryGate = dynamic(() => import("./EntryGate"), {
+  ssr: false,
+});
 
 interface Props {
   initialCases: ExplorerCase[];
   fullCasesHref?: string;
+  explorerIndexHref?: string;
   initialCountry?: "AR";
   initialEntryOpen?: boolean;
   initialMode?: PlatformMode;
@@ -58,7 +71,9 @@ type InterfaceTheme = "dark" | "light";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
+const explorerIndexPromises = new Map<string, Promise<InvestigatorExplorerIndex>>();
 const fullCaseCorpusPromises = new Map<string, Promise<ExplorerCase[]>>();
+const fullMapCasePromises = new Map<string, Promise<ExplorerCase>>();
 
 const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
   AR: { label: "Argentina", status: "CONTRAT.AR + Mapa de Inversiones" },
@@ -67,6 +82,7 @@ const COUNTRY_META: Record<"AR", { label: string; status: string }> = {
 export default function FaroExperience({
   initialCases,
   fullCasesHref,
+  explorerIndexHref,
   initialCountry = "AR",
   initialEntryOpen = true,
   initialMode = "map",
@@ -75,11 +91,21 @@ export default function FaroExperience({
 }: Props) {
   const router = useRouter();
   const [allCases, setAllCases] = useState<ExplorerCase[]>(() => initialCases);
+  const [explorerIndex, setExplorerIndex] = useState<InvestigatorExplorerIndex | null>(null);
+  const [explorerIndexStatus, setExplorerIndexStatus] = useState<CaseCorpusStatus>(
+    explorerIndexHref ? "initial" : "error",
+  );
+  const [explorerIndexError, setExplorerIndexError] = useState("");
+  const [explorerIndexRequestKey, setExplorerIndexRequestKey] = useState(0);
   const [caseCorpusStatus, setCaseCorpusStatus] = useState<CaseCorpusStatus>(
     fullCasesHref ? "initial" : "ready",
   );
   const [caseCorpusError, setCaseCorpusError] = useState("");
   const [caseCorpusRequestKey, setCaseCorpusRequestKey] = useState(0);
+  const [selectedFullMapCase, setSelectedFullMapCase] = useState<ExplorerCase | null>(null);
+  const [selectedFullMapCaseStatus, setSelectedFullMapCaseStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [selectedExplorerCase, setSelectedExplorerCase] = useState<ExplorerCase | null>(null);
+  const [selectedExplorerCaseStatus, setSelectedExplorerCaseStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const explorerSignalContext = useMemo(
     () => buildCaseSignalContext(allCases as SignalCaseFile[]),
     [allCases],
@@ -104,8 +130,33 @@ export default function FaroExperience({
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
-  const needsFullCaseCorpus = viewMode !== "map";
+  const needsExplorerIndex = viewMode === "explorer";
+  const needsFullCaseCorpus = viewMode === "aportes" || viewMode === "investigations";
+  const hasExplorerIndex = explorerIndexStatus === "ready" && explorerIndex !== null;
   const hasFullCaseCorpus = !fullCasesHref || caseCorpusStatus === "ready";
+
+  useEffect(() => {
+    if (!needsExplorerIndex || !explorerIndexHref || explorerIndexStatus === "ready") return;
+
+    let cancelled = false;
+    setExplorerIndexStatus("loading");
+    setExplorerIndexError("");
+    loadExplorerIndex(explorerIndexHref)
+      .then((index) => {
+        if (cancelled) return;
+        setExplorerIndex(index);
+        setExplorerIndexStatus("ready");
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setExplorerIndexError(error instanceof Error ? error.message : "Error desconocido");
+        setExplorerIndexStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [explorerIndexHref, explorerIndexRequestKey, explorerIndexStatus, needsExplorerIndex]);
 
   useEffect(() => {
     if (!needsFullCaseCorpus || !fullCasesHref || caseCorpusStatus === "ready") return;
@@ -137,6 +188,15 @@ export default function FaroExperience({
     setCaseCorpusError("");
     setCaseCorpusRequestKey((key) => key + 1);
   }, [fullCasesHref]);
+
+  const handleRetryExplorerIndex = useCallback(() => {
+    if (!explorerIndexHref) return;
+    explorerIndexPromises.delete(explorerIndexHref);
+    setExplorerIndex(null);
+    setExplorerIndexStatus("initial");
+    setExplorerIndexError("");
+    setExplorerIndexRequestKey((key) => key + 1);
+  }, [explorerIndexHref]);
 
   useEffect(() => {
     try {
@@ -302,17 +362,95 @@ export default function FaroExperience({
       setSelectedCaseId("");
       return;
     }
-    const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
-    if (selectedCaseId && !selectedPool.some((caseFile) => caseFile.id === selectedCaseId)) {
+    if (viewMode === "explorer") {
+      if (
+        selectedCaseId &&
+        hasExplorerIndex &&
+        !explorerIndex.rows.some((row) => row.caseId === selectedCaseId)
+      ) {
+        setSelectedCaseId("");
+      }
+      return;
+    }
+    if (selectedCaseId && !countryReviewCases.some((caseFile) => caseFile.id === selectedCaseId)) {
       setSelectedCaseId("");
     }
-  }, [allCases, countryReviewCases, selectedCaseId, viewMode]);
+  }, [countryReviewCases, explorerIndex, hasExplorerIndex, selectedCaseId, viewMode]);
 
-  const selectedPool = viewMode === "explorer" ? allCases : countryReviewCases;
+  const selectedMapCase =
+    countryReviewCases.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
   const selectedCase =
-    selectedPool.find((caseFile) => caseFile.id === selectedCaseId) ?? null;
+    viewMode === "explorer"
+      ? selectedExplorerCase
+      : selectedMapCase;
+  const selectedPanelCase = viewMode === "map" ? selectedFullMapCase : selectedCase;
   const selectedCaseWaybackEligible = shouldEnableWaybackForCase(selectedCase);
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
+
+  useEffect(() => {
+    if (viewMode !== "explorer" || !selectedCaseId) {
+      setSelectedExplorerCase(null);
+      setSelectedExplorerCaseStatus("idle");
+      return;
+    }
+
+    const loadedCase = allCases.find((caseFile) => caseFile.id === selectedCaseId);
+    if (loadedCase && hasFullMapCaseDetails(loadedCase)) {
+      setSelectedExplorerCase(loadedCase);
+      setSelectedExplorerCaseStatus("ready");
+      return;
+    }
+
+    let cancelled = false;
+    setSelectedExplorerCase(null);
+    setSelectedExplorerCaseStatus("loading");
+    loadFullMapCase(selectedCaseId)
+      .then((caseFile) => {
+        if (cancelled) return;
+        setSelectedExplorerCase(caseFile);
+        setSelectedExplorerCaseStatus("ready");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setSelectedExplorerCaseStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allCases, selectedCaseId, viewMode]);
+
+  useEffect(() => {
+    if (viewMode !== "map" || !selectedCase?.id) {
+      setSelectedFullMapCase(null);
+      setSelectedFullMapCaseStatus("idle");
+      return;
+    }
+
+    if (hasFullMapCaseDetails(selectedCase)) {
+      setSelectedFullMapCase(selectedCase);
+      setSelectedFullMapCaseStatus("ready");
+      return;
+    }
+
+    let cancelled = false;
+    setSelectedFullMapCase(null);
+    setSelectedFullMapCaseStatus("loading");
+    loadFullMapCase(selectedCase.id)
+      .then((caseFile) => {
+        if (cancelled) return;
+        setSelectedFullMapCase(caseFile);
+        setSelectedFullMapCaseStatus("ready");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setSelectedFullMapCaseStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCase?.id, selectedCase, viewMode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -550,6 +688,7 @@ export default function FaroExperience({
             activeMode={viewMode}
             onModeChange={switchViewMode}
             variant="floatingBar"
+            showSecondaryAction={viewMode !== "map"}
           />
         </div>
         {viewMode === "map" && !selectedCase && (
@@ -569,11 +708,12 @@ export default function FaroExperience({
       )}
 
       {viewMode === "explorer" && (
-        hasFullCaseCorpus ? (
+        hasExplorerIndex ? (
           <ExplorerView
-            cases={allCases}
+            index={explorerIndex}
             selectedCountry={selectedCountry}
             selectedCase={selectedCase}
+            selectedCaseStatus={selectedExplorerCaseStatus}
             onSelectCase={(caseId, countryCode) => {
               setSelectedCountry(countryCode);
               setSelectedCaseId(caseId);
@@ -584,9 +724,13 @@ export default function FaroExperience({
           />
         ) : (
           <CaseCorpusGate
-            status={caseCorpusStatus}
-            error={caseCorpusError}
-            onRetry={handleRetryCaseCorpus}
+            status={explorerIndexStatus}
+            error={explorerIndexError}
+            onRetry={handleRetryExplorerIndex}
+            loadingTitle="Preparando Explorer"
+            loadingDescription="Cargando el índice compacto de expedientes para esta vista."
+            errorTitle="No se pudo cargar Explorer"
+            errorDescription="La vista conserva el mapa inicial. Reintentá la descarga del índice compacto."
           />
         )
       )}
@@ -621,10 +765,10 @@ export default function FaroExperience({
         )
       )}
 
-      {selectedCase && viewMode === "map" && (
+      {selectedCase && viewMode === "map" && selectedPanelCase && (
         <aside className="casePanel" aria-label="Expediente Faro">
           <CasePanel
-            caseFile={selectedCase}
+            caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
             traceMode={traceMode}
             onTraceModeChange={setTraceMode}
@@ -637,6 +781,12 @@ export default function FaroExperience({
             }}
             onWaybackRetry={() => setWaybackRetryToken((token) => token + 1)}
           />
+        </aside>
+      )}
+
+      {selectedCase && viewMode === "map" && !selectedPanelCase && (
+        <aside className="casePanel" aria-label="Expediente Faro">
+          <CasePanelGate status={selectedFullMapCaseStatus} />
         </aside>
       )}
 
@@ -684,14 +834,96 @@ function loadFullCaseCorpus(href: string): Promise<ExplorerCase[]> {
   return request;
 }
 
+function loadExplorerIndex(href: string): Promise<InvestigatorExplorerIndex> {
+  const existing = explorerIndexPromises.get(href);
+  if (existing) return existing;
+
+  const request = fetch(href, { cache: "no-cache" })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const payload = (await response.json()) as { index?: unknown };
+      if (!payload.index || typeof payload.index !== "object") {
+        throw new Error("El indice no tiene el formato esperado.");
+      }
+      return payload.index as InvestigatorExplorerIndex;
+    })
+    .catch((error: unknown) => {
+      explorerIndexPromises.delete(href);
+      throw error;
+    });
+
+  explorerIndexPromises.set(href, request);
+  return request;
+}
+
+function loadFullMapCase(caseId: string): Promise<ExplorerCase> {
+  const existing = fullMapCasePromises.get(caseId);
+  if (existing) return existing;
+
+  const request = fetch(`/api/cases/${encodeURIComponent(caseId)}/case-file`, { cache: "force-cache" })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const payload = (await response.json()) as { caseFile?: unknown };
+      if (!payload.caseFile || typeof payload.caseFile !== "object") {
+        throw new Error("El expediente no tiene el formato esperado.");
+      }
+      return payload.caseFile as ExplorerCase;
+    })
+    .catch((error: unknown) => {
+      fullMapCasePromises.delete(caseId);
+      throw error;
+    });
+
+  fullMapCasePromises.set(caseId, request);
+  return request;
+}
+
+function hasFullMapCaseDetails(caseFile: ExplorerCase): boolean {
+  return Boolean(
+    caseFile.receipt &&
+    "fileHash" in caseFile.receipt &&
+    "rawPath" in caseFile.receipt &&
+    Array.isArray(caseFile.caveats),
+  );
+}
+
+function CasePanelGate({ status }: { status: "idle" | "loading" | "ready" | "error" }) {
+  const isError = status === "error";
+  return (
+    <div className="casePanelGate" role={isError ? "alert" : "status"} aria-live="polite">
+      {!isError && <span className="casePanelGateSpinner" aria-hidden />}
+      <div>
+        <strong>{isError ? "No se pudo cargar el expediente" : "Cargando expediente"}</strong>
+        <p>
+          {isError
+            ? "El mapa sigue disponible. Cerrá el panel y volvé a intentar abrir este expediente."
+            : "Abriendo la ficha completa con receipts, hashes y fuentes oficiales."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CaseCorpusGate({
   status,
   error,
   onRetry,
+  loadingTitle = "Cargando corpus investigador",
+  loadingDescription = "Preparando los expedientes completos para esta vista.",
+  errorTitle = "No se pudo cargar el corpus",
+  errorDescription = "La vista conserva el mapa inicial. Reintentá la descarga del corpus completo.",
 }: {
   status: CaseCorpusStatus;
   error: string;
   onRetry: () => void;
+  loadingTitle?: string;
+  loadingDescription?: string;
+  errorTitle?: string;
+  errorDescription?: string;
 }) {
   const isError = status === "error";
 
@@ -700,12 +932,8 @@ function CaseCorpusGate({
       <div className={styles.caseCorpusGatePanel} role={isError ? "alert" : "status"}>
         {!isError && <span className={styles.caseCorpusSpinner} aria-hidden />}
         <div className={styles.caseCorpusCopy}>
-          <h1>{isError ? "No se pudo cargar el corpus" : "Cargando corpus investigador"}</h1>
-          <p>
-            {isError
-              ? "La vista conserva el mapa inicial. Reintentá la descarga del corpus completo."
-              : "Preparando los expedientes completos para esta vista."}
-          </p>
+          <h1>{isError ? errorTitle : loadingTitle}</h1>
+          <p>{isError ? errorDescription : loadingDescription}</p>
           {isError && error && <small>{error}</small>}
         </div>
         {isError && (

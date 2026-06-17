@@ -23,12 +23,14 @@ interface Props {
   onWaybackTileLoadingChange: (loading: boolean) => void;
 }
 
-const ARGENMAP_DARK_URL =
-  "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/argenmap_oscuro@EPSG%3A3857@png/{z}/{x}/{-y}.png";
+const ARGENMAP_LIGHT_URL =
+  "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png";
 const ARGENMAP_ATTRIBUTION = "Mapa base: Instituto Geográfico Nacional - Argenmap";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 const WAYBACK_PREFETCH_ZOOM = 17;
 const WAYBACK_TILE_SIZE = 256;
+const ARGENTINA_INITIAL_ZOOM = 5;
+const ARGENTINA_OVERVIEW_MAX_ZOOM = 5;
 const prefetchedWaybackTiles = new Set<string>();
 
 export default function CaseMap({
@@ -66,7 +68,7 @@ export default function CaseMap({
   return (
     <MapContainer
         center={[-31.5, -64.2]}
-        zoom={5}
+        zoom={ARGENTINA_INITIAL_ZOOM}
         minZoom={3}
         maxZoom={19}
         zoomControl={false}
@@ -90,9 +92,9 @@ export default function CaseMap({
             maxNativeZoom={17}
           />
         ) : (
-          <TileLayer attribution={ARGENMAP_ATTRIBUTION} url={ARGENMAP_DARK_URL} />
+          <TileLayer attribution={ARGENMAP_ATTRIBUTION} url={ARGENMAP_LIGHT_URL} />
         )}
-        <ZoomControl position="bottomright" />
+        <ZoomControl position="topright" />
         <MapFocus
           cases={mapCases}
           selectedCase={selectedCase}
@@ -350,7 +352,7 @@ function MapFocus({
     if (coordinates.length > 1) {
       map.flyToBounds(coordinates, {
         padding: [80, 80],
-        maxZoom: 5,
+        maxZoom: ARGENTINA_OVERVIEW_MAX_ZOOM,
         duration: WAYBACK_FLY_DURATION_SECONDS,
       });
     }

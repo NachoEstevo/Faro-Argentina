@@ -76,6 +76,7 @@ export default async function PaisPage({
     <FaroExperience
       initialCases={argentinaInitialMapCases}
       fullCasesHref="/exports/faro-client-investigator-cases.json"
+      explorerIndexHref="/exports/faro-client-explorer-index.json"
       initialCountry={upper}
       initialEntryOpen={false}
       initialMode={initialMode}

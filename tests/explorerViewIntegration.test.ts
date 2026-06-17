@@ -12,7 +12,7 @@ const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", impo
 test("ExplorerView consumes the tested investigator explorer view model", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 
-  assert.match(source, /buildInvestigatorExplorerIndex/);
+  assert.match(source, /index: InvestigatorExplorerIndex/);
   assert.match(source, /buildInvestigatorExplorerFromIndex/);
   assert.match(source, /useDeferredValue/);
 });
@@ -105,11 +105,32 @@ test("ExplorerView uses one vertical content scroll surface", async () => {
   assert.match(css, /\.sidebar\s*\{[\s\S]*position: sticky;[\s\S]*height: 100dvh;/);
 });
 
+test("ExplorerView keeps detail report actions below the floating mode nav", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /Informe PDF/);
+  assert.match(source, /href=\{buildReportHref\(caseFile\.id\)\}/);
+  assert.match(css, /\.main\s*\{[\s\S]*padding-top: 72px;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-top: 124px;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.detailTopBar\s*\{[\s\S]*top: 128px;/);
+});
+
 test("ExplorerView opens public official source pages instead of raw receipt dataset URLs", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
+  const topSourceActionStart = source.indexOf("href={sourceUrl}");
+  const topSourceActionEnd = source.indexOf("{receiptLocator?.actionLabel", topSourceActionStart);
+  const topSourceAction = source.slice(topSourceActionStart, topSourceActionEnd);
 
   assert.match(source, /getPublicOfficialSourceHref\(caseFile\.receipt\)/);
   assert.doesNotMatch(source, /href=\{caseFile\.receipt\.sourceUrl\}/);
+  assert.match(topSourceAction, /onClick=\{handleSourceAction\}/);
+  assert.doesNotMatch(topSourceAction, /target=|rel=/);
+  assert.match(source, /navigator\.clipboard\.writeText\(sourceUrl\)/);
+  assert.match(source, /window\.open\(sourceUrl, "_blank", "noopener,noreferrer"\)/);
+  assert.match(source, /Enlace oficial copiado/);
+  assert.match(source, /Enlace oficial:/);
+  assert.match(source, /detailActionUrl/);
 });
 
 test("ExplorerView shows article citations as context, not as official trail", async () => {
@@ -275,7 +296,7 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /useSearchParams/);
   assert.match(source, /\.delete\("preset"\)/);
   assert.match(source, /router\.replace/);
-  assert.match(source, /presetScopedCases/);
+  assert.match(source, /presetScopedRows/);
   assert.match(css, /\.presetBanner/);
   assert.match(css, /\[data-platform-theme="light"\]\) \.presetBanner/);
   assert.match(css, /\.presetBannerHeader/);

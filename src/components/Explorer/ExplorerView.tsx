@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, type MouseEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { type FormEvent, type MouseEvent, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -33,11 +33,15 @@ import {
 } from "@/lib/data/caseInvestigationChecklist";
 import {
   buildInvestigatorExplorerFromIndex,
-  buildInvestigatorExplorerIndex,
+  getInvestigatorRowSignalFacetKeys,
+  getInvestigatorRowSignalLabel,
+  getInvestigatorRowSearchText,
+  getInvestigatorRowSupplierKey,
   type InvestigatorCaseRow,
   type InvestigatorEntityFilter,
   type InvestigatorEntityProfile,
   type InvestigatorFacet,
+  type InvestigatorExplorerIndex,
   type InvestigatorGeometryFilter,
 } from "@/lib/data/investigatorExplorer";
 import {
@@ -47,8 +51,10 @@ import {
 import {
   buildSearchSuggestionIndex,
   buildSearchSuggestionsFromIndex,
+  normalizeSearchText,
   type SearchSuggestion,
-  type SearchSuggestionCase,
+  type SearchSuggestionCandidate,
+  type SearchSuggestionIndex,
 } from "@/lib/data/searchSuggestions";
 import { describeReceiptLocator } from "@/lib/data/evidenceReceipts";
 import { getPublicOfficialSourceHref } from "@/lib/data/receiptOfficialSource";
@@ -59,9 +65,10 @@ import SearchSuggestionGroups from "../SearchSuggestionGroups";
 import styles from "./Explorer.module.css";
 
 interface Props {
-  cases: ExplorerCase[];
+  index: InvestigatorExplorerIndex;
   selectedCountry: CountryCode;
   selectedCase: ExplorerCase | null;
+  selectedCaseStatus?: "idle" | "loading" | "ready" | "error";
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onClearSelection: () => void;
   onSwitchToInvestigations: () => void;
@@ -95,6 +102,18 @@ interface PublicCuratedEvidence {
   promotedAt: string;
 }
 
+interface DetailFallback {
+  amount: NonNullable<Amount> | null;
+  officialBudget: NonNullable<Amount> | null;
+  supplierName: string | null;
+  supplierDocument: string | null;
+}
+
+type SimilarCaseSummary = Pick<
+  InvestigatorCaseRow,
+  "caseId" | "countryCode" | "workNumber" | "title" | "agencyName"
+>;
+
 const DETAIL_TABS: Array<{ id: ExplorerDetailTab; label: string }> = [
   { id: "resumen", label: "Resumen" },
   { id: "dinero", label: "Dinero" },
@@ -107,9 +126,10 @@ const DETAIL_TABS: Array<{ id: ExplorerDetailTab; label: string }> = [
 const LEADING_AGENCY_CODE_PATTERN = /^\d+\s*-?\s*/;
 
 export default function ExplorerView({
-  cases,
+  index,
   selectedCountry,
   selectedCase,
+  selectedCaseStatus = "idle",
   onSelectCase,
   onClearSelection,
   onSwitchToInvestigations,
@@ -126,6 +146,7 @@ export default function ExplorerView({
   const [page, setPage] = useState(0);
   const [folderStatus, setFolderStatus] = useState<{ caseId: string; message: string } | null>(null);
   const [preset, setPreset] = useState<ExplorerPreset>(initialPreset);
+  const shellRef = useRef<HTMLElement | null>(null);
 
   const countries = useMemo(() => [countryScope], [countryScope]);
   const selectedCaseIds = useMemo(
@@ -134,34 +155,34 @@ export default function ExplorerView({
   );
   const selectedCasesForBanner = useMemo(
     () => CURATED_CASES.filter((caseFile) =>
-      cases.some((candidate) => candidate.id === caseFile.caseId && candidate.countryCode === countryScope)
+      index.rows.some((candidate) => candidate.caseId === caseFile.caseId && candidate.countryCode === countryScope)
     ),
-    [cases, countryScope],
+    [countryScope, index.rows],
   );
 
-  const presetScopedCases = useMemo(
+  const presetScopedRows = useMemo(
     () =>
       preset === "selected"
-        ? cases.filter((caseFile) => selectedCaseIds.has(caseFile.id))
-        : cases,
-    [cases, preset, selectedCaseIds],
+        ? index.rows.filter((row) => selectedCaseIds.has(row.caseId))
+        : index.rows,
+    [index.rows, preset, selectedCaseIds],
   );
 
-  const countryAll = useMemo(
-    () => presetScopedCases.filter((caseFile) => caseFile.countryCode === countryScope),
-    [countryScope, presetScopedCases],
+  const countryAllRows = useMemo(
+    () => presetScopedRows.filter((row) => row.countryCode === countryScope),
+    [countryScope, presetScopedRows],
   );
 
   const yearBounds = useMemo(() => {
-    const years = countryAll
-      .map((caseFile) => caseFile.year)
+    const years = countryAllRows
+      .map((row) => row.year)
       .filter((value): value is number => value !== null);
     if (years.length === 0) {
       const now = new Date().getFullYear();
       return { min: now, max: now };
     }
     return { min: Math.min(...years), max: Math.max(...years) };
-  }, [countryAll]);
+  }, [countryAllRows]);
 
   const [yearFrom, setYearFrom] = useState<number>(yearBounds.min);
   const [yearTo, setYearTo] = useState<number>(yearBounds.max);
@@ -194,19 +215,14 @@ export default function ExplorerView({
       ? selectedCase
       : null;
 
-  const yearScopedCases = useMemo(
-    () => presetScopedCases.filter((caseFile) =>
-      caseFile.year === null || (caseFile.year >= yearFrom && caseFile.year <= yearTo),
-    ),
-    [presetScopedCases, yearFrom, yearTo],
-  );
+  useEffect(() => {
+    if (!selectedDetailCase) return;
+    shellRef.current?.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [selectedDetailCase?.id, selectedDetailCase]);
 
-  const explorerIndex = useMemo(
-    () => buildInvestigatorExplorerIndex(yearScopedCases, {
-      countries,
-      entities: activeEntities,
-    }),
-    [activeEntities, countries, yearScopedCases],
+  const explorerIndex = useMemo<InvestigatorExplorerIndex>(
+    () => ({ ...index, rows: presetScopedRows }),
+    [index, presetScopedRows],
   );
 
   const explorer = useMemo(
@@ -214,19 +230,24 @@ export default function ExplorerView({
       countries,
       entities: activeEntities,
       geometry: geometryFilter,
+      yearFrom,
+      yearTo,
       limit: 500,
       query: deferredQuery,
     }),
-    [activeEntities, countries, deferredQuery, explorerIndex, geometryFilter],
+    [activeEntities, countries, deferredQuery, explorerIndex, geometryFilter, yearFrom, yearTo],
   );
 
+  const hasSearchQuery = deferredQuery.trim().length > 0;
   const searchSuggestionIndex = useMemo(
-    () => buildSearchSuggestionIndex(yearScopedCases as SearchSuggestionCase[]),
-    [yearScopedCases],
+    () => hasSearchQuery ? buildExplorerSearchSuggestionIndex(countryAllRows, yearFrom, yearTo) : null,
+    [countryAllRows, hasSearchQuery, yearFrom, yearTo],
   );
 
   const searchSuggestions = useMemo(
-    () => buildSearchSuggestionsFromIndex(searchSuggestionIndex, deferredQuery, { limit: 12 }),
+    () => searchSuggestionIndex
+      ? buildSearchSuggestionsFromIndex(searchSuggestionIndex, deferredQuery, { limit: 12 })
+      : [],
     [deferredQuery, searchSuggestionIndex],
   );
 
@@ -345,7 +366,7 @@ export default function ExplorerView({
   };
 
   return (
-    <section className={styles.shell} aria-label="Explorar">
+    <section ref={shellRef} className={styles.shell} aria-label="Explorar">
       <aside className={styles.sidebar} aria-label="Filtros y guardados">
         <header className={styles.sidebarBrand}>
           <div className={styles.sidebarBrandIdentity}>
@@ -474,16 +495,118 @@ export default function ExplorerView({
         {selectedDetailCase ? (
           <ExplorerDetail
             caseFile={selectedDetailCase}
-            pool={countryAll}
+            poolRows={countryAllRows}
             onBack={onClearSelection}
             onSelectCase={onSelectCase}
             onSwitchToInvestigations={onSwitchToInvestigations}
           />
+        ) : selectedCaseStatus === "loading" ? (
+          <ExplorerDetailGate status="loading" />
+        ) : selectedCaseStatus === "error" ? (
+          <ExplorerDetailGate status="error" />
         ) : (
         <>
         <header className={styles.mainHeader}>
           <h1 className={styles.mainTitle}>Explorar</h1>
         </header>
+        <details className={styles.mobileFilterDetails}>
+          <summary>
+            <span>Filtros</span>
+            <strong>
+              {GEOMETRY_OPTIONS.find((option) => option.id === geometryFilter)?.label ?? "Todas"} · {yearFrom}–{yearTo}
+            </strong>
+          </summary>
+          <div className={styles.mobileFilterBody}>
+            <div className={styles.mobileFilterGroup}>
+              <p className={styles.filterGroupLabel}>Ubicación en mapa</p>
+              <div className={styles.mobileSegmentedFilters}>
+                {GEOMETRY_OPTIONS.map((option) => {
+                  const isChecked = geometryFilter === option.id;
+                  return (
+                    <label key={`mobile-${option.id}`} className={styles.mobileSegmentOption}>
+                      <input
+                        type="radio"
+                        name="explorer-geometry-mobile"
+                        checked={isChecked}
+                        onChange={() => handleGeometryFilterChange(option.id)}
+                      />
+                      <span>{option.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className={styles.mobileFilterGroup}>
+              <div className={styles.filterRowHead}>
+                <span className={styles.filterGroupLabel}>Período</span>
+                <span className={styles.filterRowValue}>
+                  {yearFrom} – {yearTo}
+                </span>
+              </div>
+              <RangeSlider
+                min={yearBounds.min}
+                max={yearBounds.max}
+                from={yearFrom}
+                to={yearTo}
+                onFromChange={handleYearFromChange}
+                onToChange={handleYearToChange}
+              />
+            </div>
+            {activeFacets.length > 0 && (
+              <div className={styles.activePivotList} aria-label="Pivots activos">
+                {activeFacets.map((facet) => (
+                  <button
+                    key={`mobile-active-${facet.type}:${facet.key}`}
+                    type="button"
+                    className={styles.activePivotChip}
+                    onClick={() => toggleFacet(facet)}
+                  >
+                    <span>{facetTypeLabel(facet.type)}</span>
+                    <span className={styles.activePivotLabel}>{formatFacetLabel(facet)}</span>
+                    <span className={styles.activePivotRemove} aria-hidden>×</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className={styles.mobileFacetGroups}>
+              {facetGroups.map((group) => (
+                <section key={`mobile-${group.type}`} className={styles.facetGroup}>
+                  <div className={styles.facetGroupHead}>
+                    <span>{group.label}</span>
+                  </div>
+                  <div className={styles.facetList}>
+                    {group.facets.map((facet) => {
+                      const isActive = activeFacets.some((active) => isSameFacet(active, facet));
+                      return (
+                        <button
+                          key={`mobile-${facet.type}:${facet.key}`}
+                          type="button"
+                          className={`${styles.facetButton} ${isActive ? styles.facetButtonActive : ""}`}
+                          onClick={() => toggleFacet(facet)}
+                          aria-pressed={isActive}
+                        >
+                          <span className={styles.facetLabel}>{formatFacetLabel(facet)}</span>
+                          {shouldShowFacetCount(group.type) && (
+                            <span className={styles.facetCount}>{facet.count}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+            <div className={styles.mobileFilterActions}>
+              <button type="button" className={styles.sectionLink} onClick={resetFilters}>
+                Limpiar filtros
+              </button>
+              <a className={styles.mobileExportLink} href={buildExportHref(countryScope, query)}>
+                <Download size={14} aria-hidden />
+                Exportar resultados
+              </a>
+            </div>
+          </div>
+        </details>
         {preset === "selected" && (
           <div className={styles.searchWrap}>
             <section className={styles.presetBanner} aria-label="Expedientes seleccionados">
@@ -625,29 +748,29 @@ export default function ExplorerView({
                         className={styles.tableRow}
                         onClick={() => onSelectCase(caseFile.caseId, caseFile.countryCode)}
                       >
-                        <td className={styles.cellId}>
+                        <td className={styles.cellId} data-label="ID">
                           <span>{caseFile.countryCode}</span>
                           <span>#{caseFile.workNumber || caseFile.caseId}</span>
                         </td>
-                        <td>{caseTypeLabel(caseFile.caseType)}</td>
-                        <td className={styles.cellEllipsis}>{caseFile.agencyName}</td>
-                        <td className={styles.cellEllipsis}>{caseFile.supplierLabel}</td>
-                        <td className={styles.tableNumeric}>
+                        <td data-label="Tipo">{caseTypeLabel(caseFile.caseType)}</td>
+                        <td className={styles.cellEllipsis} data-label="Organismo">{caseFile.agencyName}</td>
+                        <td className={styles.cellEllipsis} data-label="Proveedor">{caseFile.supplierLabel}</td>
+                        <td className={styles.tableNumeric} data-label="Monto">
                           <span className={styles.rowAmount}>{caseFile.amountLabel}</span>
                         </td>
-                        <td className={styles.cellEllipsis}>
+                        <td className={styles.cellEllipsis} data-label="Fuente">
                           <span className={styles.sourceStack}>
                             <span>{caseFile.sourceName}</span>
                             <span>{caseFile.locatorLabel}</span>
                           </span>
                         </td>
-                        <td>
+                        <td data-label="Señal">
                           <span className={`${styles.stateBadge} ${styles[`state_${state.tone}`]}`}>
                             <span className={styles.stateBadgeDot} aria-hidden />
                             {state.label}
                           </span>
                         </td>
-                        <td className={styles.tableActionCell}>
+                        <td className={styles.tableActionCell} data-label="Carpeta">
                           <button
                             type="button"
                             className={`${styles.saveCaseButton} ${
@@ -677,40 +800,40 @@ export default function ExplorerView({
 
 function ExplorerDetail({
   caseFile,
-  pool,
+  poolRows,
   onBack,
   onSelectCase,
   onSwitchToInvestigations,
 }: {
   caseFile: ExplorerCase;
-  pool: ExplorerCase[];
+  poolRows: InvestigatorCaseRow[];
   onBack: () => void;
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onSwitchToInvestigations: () => void;
 }) {
   const [activeDetailTab, setActiveDetailTab] = useState<ExplorerDetailTab>("resumen");
   const [curatedEvidence, setCuratedEvidence] = useState<PublicCuratedEvidence[]>([]);
+  const [sourceActionStatus, setSourceActionStatus] =
+    useState<"idle" | "opening" | "copied" | "blocked">("idle");
   const signals = buildCaseSignals(caseFile as SignalCaseFile);
   const primarySignal = selectPrimaryDetailSignal(signals);
   const nextAction = getDetailNextAction(primarySignal);
-  const relatedContract =
-    pool.find(
+  const relatedContractRow =
+    poolRows.find(
       (entry) =>
-        entry.id !== caseFile.id &&
-        typeof (entry as AnyCase).publicWorkNumber === "string" &&
-        (entry as AnyCase).publicWorkNumber === caseFile.workNumber,
+        entry.caseId !== caseFile.id &&
+        entry.publicWorkNumber === caseFile.workNumber,
     ) ?? null;
+  const relatedFallback = relatedContractRow ? buildDetailFallback(relatedContractRow) : null;
   const supplierKey =
     "supplierName" in caseFile && caseFile.supplierName
-      ? caseFile.supplierName.trim().toLowerCase()
+      ? entityKeyForExplorer(caseFile.supplierName)
       : null;
-  const similar = pool
-    .filter((entry) => entry.id !== caseFile.id)
+  const similar = poolRows
+    .filter((entry) => entry.caseId !== caseFile.id)
     .filter((entry) => {
       if (entry.agencyName === caseFile.agencyName) return true;
-      if (supplierKey && "supplierName" in entry && entry.supplierName) {
-        return entry.supplierName.trim().toLowerCase() === supplierKey;
-      }
+      if (supplierKey && getInvestigatorRowSupplierKey(entry) === supplierKey) return true;
       return false;
     })
     .slice(0, 4);
@@ -722,6 +845,7 @@ function ExplorerDetail({
     : null;
   useEffect(() => {
     setActiveDetailTab("resumen");
+    setSourceActionStatus("idle");
   }, [caseFile.id]);
   useEffect(() => {
     let cancelled = false;
@@ -738,6 +862,25 @@ function ExplorerDetail({
       cancelled = true;
     };
   }, [caseFile.id]);
+  const handleSourceAction = async (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!sourceUrl) return;
+    event.preventDefault();
+
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(sourceUrl);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+
+    const opened = window.open(sourceUrl, "_blank", "noopener,noreferrer");
+    if (copied) {
+      setSourceActionStatus("copied");
+      return;
+    }
+    setSourceActionStatus(opened ? "opening" : "blocked");
+  };
 
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
@@ -758,8 +901,7 @@ function ExplorerDetail({
             <a
               className={styles.detailSecondaryAction}
               href={sourceUrl}
-              target="_blank"
-              rel="noreferrer"
+              onClick={handleSourceAction}
             >
               {receiptLocator?.actionLabel ?? "Abrir fuente"}
             </a>
@@ -773,6 +915,20 @@ function ExplorerDetail({
             Guardar en carpeta
           </button>
         </div>
+        {sourceActionStatus !== "idle" && (
+          <p className={styles.detailActionStatus} role="status">
+            {sourceActionStatus === "copied"
+              ? "Enlace oficial copiado. Si el portal no abre, pegalo en otra pestaña."
+              : sourceActionStatus === "opening"
+                ? "Intentando abrir la fuente oficial."
+                : (
+                    <>
+                      El navegador bloqueó la apertura y no permitió copiar el enlace. Enlace oficial:{" "}
+                      <span className={styles.detailActionUrl}>{sourceUrl}</span>
+                    </>
+                  )}
+          </p>
+        )}
       </div>
       <p className={styles.detailEyebrow}>
         {caseFile.countryCode} · #{caseFile.workNumber}
@@ -798,9 +954,9 @@ function ExplorerDetail({
         </div>
       )}
       <CaseDetailSummary primarySignal={primarySignal} nextAction={nextAction} />
-      <MoneyTrailStrip caseFile={caseFile} fallback={relatedContract} />
+      <MoneyTrailStrip caseFile={caseFile} fallback={relatedFallback} />
       {caseFile.workNumber.includes("OBR") &&
-        !relatedContract &&
+        !relatedContractRow &&
         !("amount" in caseFile && (caseFile as AnyCase).amount) && (
           <p className={styles.detailNote}>
             Esta obra aparece declarada en el catálogo oficial pero todavía no
@@ -812,7 +968,7 @@ function ExplorerDetail({
       <DetailTabPanel
         activeTab={activeDetailTab}
         caseFile={caseFile}
-        fallback={relatedContract}
+        fallback={relatedFallback}
         receiptLocator={receiptLocator}
         similar={similar}
         curatedEvidence={curatedEvidence}
@@ -821,6 +977,164 @@ function ExplorerDetail({
       />
     </section>
   );
+}
+
+function ExplorerDetailGate({ status }: { status: "loading" | "error" }) {
+  const isError = status === "error";
+  return (
+    <section className={styles.detail} aria-label="Detalle de expediente">
+      <article className={styles.detailEmpty} role={isError ? "alert" : "status"} aria-live="polite">
+        {isError
+          ? "No se pudo cargar el expediente completo. Volvé al listado e intentá abrirlo otra vez."
+          : "Cargando expediente completo con receipts, caveats y fuente oficial."}
+      </article>
+    </section>
+  );
+}
+
+function buildExplorerSearchSuggestionIndex(
+  rows: InvestigatorCaseRow[],
+  yearFrom: number,
+  yearTo: number,
+): SearchSuggestionIndex {
+  const scopedRows = rows.filter((row) =>
+    row.year === null || (row.year >= yearFrom && row.year <= yearTo),
+  );
+  const staticCandidates = buildSearchSuggestionIndex([]).staticCandidates;
+  const entityCandidates: SearchSuggestionCandidate[] = [];
+  const caseCandidates: SearchSuggestionCandidate[] = [];
+
+  for (const row of scopedRows) {
+    const [supplierName, supplierDocument] = splitSupplierLabel(row.supplierLabel);
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "supplier",
+      label: supplierName,
+      detail: supplierDocument ? `Proveedor · ${supplierDocument}` : "Proveedor",
+      candidateText: row.supplierLabel,
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "document",
+      label: supplierDocument,
+      detail: "CUIT / documento de proveedor",
+      candidateText: [supplierDocument, compactIdentifier(supplierDocument)].join(" "),
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "agency",
+      label: row.agencyName,
+      detail: "Organismo",
+      candidateText: row.agencyName,
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "source",
+      label: row.sourceName,
+      detail: row.sourceId,
+      candidateText: [row.sourceName, row.sourceId].join(" "),
+    });
+    [row.procedureNumber, row.workNumber].forEach((identifier) => {
+      addExplorerFieldCandidate(entityCandidates, {
+        kind: "identifier",
+        label: identifier,
+        detail: "Identificador oficial",
+        candidateText: identifier,
+      });
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "location",
+      label: row.workProvince,
+      detail: "Provincia",
+      candidateText: row.workProvince,
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "location",
+      label: row.workDepartment,
+      detail: "Departamento",
+      candidateText: row.workDepartment,
+    });
+    addExplorerFieldCandidate(entityCandidates, {
+      kind: "location",
+      label: row.workLocality,
+      detail: "Localidad",
+      candidateText: row.workLocality,
+    });
+    for (const signalCode of getInvestigatorRowSignalFacetKeys(row)) {
+      const signalLabel = getInvestigatorRowSignalLabel(row, signalCode);
+      addExplorerFieldCandidate(entityCandidates, {
+        kind: "signal",
+        label: signalLabel,
+        detail: "Señal",
+        candidateText: [signalLabel, signalCode].join(" "),
+      });
+    }
+    caseCandidates.push({
+      suggestion: {
+        id: `case:${row.caseId}`,
+        kind: "case",
+        label: row.title,
+        detail: `${caseTypeLabel(row.caseType)} · ${row.sourceName}`,
+        query: row.title,
+        caseId: row.caseId,
+      },
+      searchText: normalizeSearchText(getInvestigatorRowSearchText(row)),
+    });
+  }
+
+  return { staticCandidates, entityCandidates, caseCandidates };
+}
+
+function addExplorerFieldCandidate(
+  candidates: SearchSuggestionCandidate[],
+  {
+    kind,
+    label,
+    detail,
+    candidateText,
+  }: {
+    kind: SearchSuggestion["kind"];
+    label: string | null | undefined;
+    detail: string;
+    candidateText: string | null | undefined;
+  },
+) {
+  const cleanLabel = String(label ?? "").trim();
+  if (!cleanLabel) return;
+  candidates.push({
+    suggestion: {
+      id: `${kind}:${normalizeSearchText(cleanLabel)}`,
+      kind,
+      label: cleanLabel,
+      detail,
+      query: cleanLabel,
+      matchCount: 1,
+    },
+    searchText: normalizeSearchText(candidateText),
+  });
+}
+
+function buildDetailFallback(row: InvestigatorCaseRow): DetailFallback {
+  const [supplierName, supplierDocument] = splitSupplierLabel(row.supplierLabel);
+  return {
+    amount: row.amountValue !== null && row.amountCurrency
+      ? { value: row.amountValue, currency: row.amountCurrency, label: row.amountLabel }
+      : null,
+    officialBudget: null,
+    supplierName,
+    supplierDocument,
+  };
+}
+
+function splitSupplierLabel(label: string): [string | null, string | null] {
+  if (!label || label === "Sin proveedor") return [null, null];
+  const [name, document] = label.split(" / ");
+  return [name?.trim() || null, document?.trim() || null];
+}
+
+function compactIdentifier(value: string | null | undefined): string {
+  return String(value ?? "").replace(/[^a-zA-Z0-9]/g, "");
+}
+
+function entityKeyForExplorer(value: string | null | undefined): string | null {
+  const normalized = normalizeSearchText(value);
+  return normalized.length > 0 ? normalized : null;
 }
 
 function CaseDetailSummary({
@@ -854,10 +1168,10 @@ function MoneyTrailStrip({
   fallback,
 }: {
   caseFile: ExplorerCase;
-  fallback?: ExplorerCase | null;
+  fallback?: DetailFallback | null;
 }) {
-  const amount = getField<Amount>(caseFile, "amount") ?? (fallback ? getField<Amount>(fallback, "amount") : null);
-  const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
+  const amount = getField<Amount>(caseFile, "amount") ?? fallback?.amount ?? null;
+  const budget = getField<Amount>(caseFile, "officialBudget") ?? fallback?.officialBudget ?? null;
   if (!amount && !budget) return null;
   const variation = formatMoneyVariation(amount, budget);
   return (
@@ -931,9 +1245,9 @@ function DetailTabPanel({
 }: {
   activeTab: ExplorerDetailTab;
   caseFile: ExplorerCase;
-  fallback?: ExplorerCase | null;
+  fallback?: DetailFallback | null;
   receiptLocator: ReturnType<typeof describeReceiptLocator> | null;
-  similar: ExplorerCase[];
+  similar: SimilarCaseSummary[];
   curatedEvidence: PublicCuratedEvidence[];
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
   onSwitchToInvestigations: () => void;
@@ -1279,7 +1593,7 @@ function SimilarCasesPanel({
   similar,
   onSelectCase,
 }: {
-  similar: ExplorerCase[];
+  similar: SimilarCaseSummary[];
   onSelectCase: (caseId: string, countryCode: CountryCode) => void;
 }) {
   if (similar.length === 0) {
@@ -1295,10 +1609,10 @@ function SimilarCasesPanel({
       <div className={styles.similarGrid}>
         {similar.map((entry) => (
           <button
-            key={entry.id}
+            key={entry.caseId}
             type="button"
             className={styles.similarCard}
-            onClick={() => onSelectCase(entry.id, entry.countryCode)}
+            onClick={() => onSelectCase(entry.caseId, entry.countryCode)}
           >
             <span className={styles.similarCardId}>#{entry.workNumber}</span>
             <strong className={styles.similarCardTitle}>{entry.title}</strong>
@@ -1562,10 +1876,10 @@ function MontoCard({
   fallback,
 }: {
   caseFile: ExplorerCase;
-  fallback?: ExplorerCase | null;
+  fallback?: DetailFallback | null;
 }) {
-  const amount = getField<Amount>(caseFile, "amount") ?? (fallback ? getField<Amount>(fallback, "amount") : null);
-  const budget = getField<Amount>(caseFile, "officialBudget") ?? (fallback ? getField<Amount>(fallback, "officialBudget") : null);
+  const amount = getField<Amount>(caseFile, "amount") ?? fallback?.amount ?? null;
+  const budget = getField<Amount>(caseFile, "officialBudget") ?? fallback?.officialBudget ?? null;
   if (!amount && !budget) return null;
   let overrun: string | null = null;
   if (amount && budget && budget.value > 0 && amount.currency === budget.currency) {
@@ -1652,20 +1966,18 @@ function ProveedorCard({
   fallback,
 }: {
   caseFile: ExplorerCase;
-  fallback?: ExplorerCase | null;
+  fallback?: DetailFallback | null;
 }) {
   const name =
     getField<string>(caseFile, "supplierName") ??
-    (fallback ? getField<string>(fallback, "supplierName") : null);
+    fallback?.supplierName ??
+    null;
   const document =
     getField<string>(caseFile, "supplierDocument") ??
-    (fallback ? getField<string>(fallback, "supplierDocument") : null);
-  const locality =
-    getField<string>(caseFile, "supplierLocality") ??
-    (fallback ? getField<string>(fallback, "supplierLocality") : null);
-  const province =
-    getField<string>(caseFile, "supplierProvince") ??
-    (fallback ? getField<string>(fallback, "supplierProvince") : null);
+    fallback?.supplierDocument ??
+    null;
+  const locality = getField<string>(caseFile, "supplierLocality");
+  const province = getField<string>(caseFile, "supplierProvince");
   if (!name && !document) return null;
   return (
     <div className={styles.detailCard}>

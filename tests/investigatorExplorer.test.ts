@@ -4,9 +4,12 @@ import assert from "node:assert/strict";
 import argentinaDataset from "../src/data/argentinaWorkCases.json" with { type: "json" };
 import argentinaContractDataset from "../src/data/argentinaContractCases.json" with { type: "json" };
 import {
+  buildClientInvestigatorExplorerIndex,
   buildInvestigatorExplorer,
   buildInvestigatorExplorerFromIndex,
   buildInvestigatorExplorerIndex,
+  getInvestigatorRowAgencyKey,
+  getInvestigatorRowSupplierKey,
   type InvestigatorExplorerCase,
 } from "../src/lib/data/investigatorExplorer.ts";
 import { createEvidenceReceipt } from "../src/lib/data/evidenceReceipts.ts";
@@ -68,6 +71,23 @@ test("buildInvestigatorExplorerFromIndex filters a reusable row index", () => {
     true,
   );
   assert.equal(sourceSearch.rows.every((row) => row.sourceName.toLowerCase().includes("contrat.ar")), true);
+});
+
+test("buildClientInvestigatorExplorerIndex keeps search and facets working without heavy row internals", () => {
+  const index = buildClientInvestigatorExplorerIndex(allCases, { countries: ["AR"] });
+  const firstRow = index.rows[0] as typeof index.rows[number] & {
+    entities?: unknown;
+    searchText?: unknown;
+  };
+  const supplierSearch = buildInvestigatorExplorerFromIndex(index, { query: "warlet", limit: 50 });
+
+  assert.equal(firstRow.entities, undefined);
+  assert.equal(firstRow.searchText, undefined);
+  assert.equal(supplierSearch.rows.some((row) => row.caseId === "AR-CONTRACT-14-1002-CON21"), true);
+  assert.equal(
+    supplierSearch.facets.some((facet) => facet.type === "supplier" && facet.label.includes("WARLET")),
+    true,
+  );
 });
 
 test("buildInvestigatorExplorer searches by official location fields used by suggestions", () => {
@@ -153,7 +173,7 @@ test("buildInvestigatorExplorer applies geometry, country, signal, and pivot fil
 
   assert.equal(pivoted.activeEntity?.label.includes("WARLET"), true);
   assert.equal(pivoted.rows.length > 0, true);
-  assert.equal(pivoted.rows.every((row) => row.entities.supplierKey === supplierFacet?.key), true);
+  assert.equal(pivoted.rows.every((row) => getInvestigatorRowSupplierKey(row) === supplierFacet?.key), true);
 });
 
 test("buildInvestigatorExplorer applies multiple pivot filters grouped by type", () => {
@@ -190,7 +210,7 @@ test("buildInvestigatorExplorer applies multiple pivot filters grouped by type",
     ["AR-CONTRACT-381-1001-CON21", "AR-CONTRACT-381-1002-CON21"],
   );
   assert.equal(filtered.activeEntities.length, 3);
-  assert.equal(filtered.rows.every((row) => row.entities.agencyKey === agencyNorte?.key), true);
+  assert.equal(filtered.rows.every((row) => getInvestigatorRowAgencyKey(row) === agencyNorte?.key), true);
 });
 
 test("buildInvestigatorExplorer uses the coordinate quality gate for geometry status", () => {

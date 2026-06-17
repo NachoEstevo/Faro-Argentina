@@ -4,6 +4,7 @@ import {
   buildCaseCollectionPack,
   investigatorCaseFiles,
 } from "../src/lib/caseRepository.ts";
+import { buildClientInvestigatorExplorerIndex } from "../src/lib/data/investigatorExplorer.ts";
 import {
   buildCoreStaticExportFilters,
   buildStaticExportFileName,
@@ -13,6 +14,7 @@ import {
 
 const outputDirectory = new URL("../public/exports/", import.meta.url);
 const clientInvestigatorCasesFileName = "faro-client-investigator-cases.json";
+const clientExplorerIndexFileName = "faro-client-explorer-index.json";
 const filters = buildCoreStaticExportFilters(investigatorCaseFiles);
 const artifacts: StaticExportArtifact[] = [];
 
@@ -38,6 +40,16 @@ await writeFile(
 );
 
 await writeFile(
+  new URL(clientExplorerIndexFileName, outputDirectory),
+  `${JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    artifactType: "faro_client_explorer_index",
+    index: buildClientInvestigatorExplorerIndex(investigatorCaseFiles, { countries: ["AR"] }),
+  })}\n`,
+  "utf8",
+);
+
+await writeFile(
   new URL("manifest.json", outputDirectory),
   `${JSON.stringify({
     generatedAt: new Date().toISOString(),
@@ -45,6 +57,10 @@ await writeFile(
     clientInvestigatorCases: {
       fileName: clientInvestigatorCasesFileName,
       href: `/exports/${clientInvestigatorCasesFileName}`,
+    },
+    clientExplorerIndex: {
+      fileName: clientExplorerIndexFileName,
+      href: `/exports/${clientExplorerIndexFileName}`,
     },
     artifacts,
   }, null, 2)}\n`,
