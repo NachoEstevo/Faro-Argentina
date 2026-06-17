@@ -1138,6 +1138,16 @@
   z-index: 0;
 }
 
+.mapTourTarget {
+  position: absolute;
+  top: 96px;
+  right: 420px;
+  bottom: 64px;
+  left: var(--sidebar-width);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .mapTileStatusRegion {
   position: absolute;
   inset: 0;
@@ -2008,6 +2018,13 @@
     top: 72px;
   }
 
+  .mapTourTarget {
+    top: 118px;
+    right: 396px;
+    bottom: 72px;
+    left: 16px;
+  }
+
   .sidebar {
     width: 320px;
     left: 0;
@@ -2229,6 +2246,15 @@
 
   .tourButton {
     padding: 0 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mapTourTarget {
+    top: 132px;
+    right: 16px;
+    bottom: 220px;
+    left: 16px;
   }
 }
 

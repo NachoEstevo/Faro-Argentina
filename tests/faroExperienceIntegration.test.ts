@@ -205,6 +205,7 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(experienceSource, /onStartGuide=\{handleStartGuidedTour\}/);
   assert.match(experienceSource, /setGuidedTourOpen\(true\)/);
   assert.match(experienceSource, /data-tour="map-canvas"/);
+  assert.match(experienceSource, /data-tour="map-viewport"/);
   assert.match(experienceSource, /data-tour="case-panel"/);
   assert.match(navSource, /data-tour="mode-nav"/);
   assert.match(navSource, /data-tour="mode-nav-items"/);
@@ -215,12 +216,14 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 
   assert.match(tourSource, /type GuidedTourStepId/);
   assert.match(tourSource, /target: '\[data-tour="mode-nav-items"\]'/);
+  assert.match(tourSource, /id: "map"[\s\S]*target: '\[data-tour="map-viewport"\]'[\s\S]*placement: "right"/);
   assert.match(tourSource, /aria-label="Abrir tutorial guiado"/);
   assert.match(tourSource, /title="Tutorial"/);
   assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);
   assert.match(styles, /\.tourButton\s*\{/);
+  assert.match(styles, /\.mapTourTarget\s*\{[\s\S]*right: 420px;[\s\S]*left: var\(--sidebar-width\);/);
   assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
   assert.match(styles, /\.tourCard\s*\{/);
 });

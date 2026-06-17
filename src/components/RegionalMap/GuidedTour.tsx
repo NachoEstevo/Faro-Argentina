@@ -68,8 +68,8 @@ const TOUR_STEPS: GuidedTourStep[] = [
   },
   {
     id: "map",
-    target: '[data-tour="map-canvas"]',
-    placement: "center",
+    target: '[data-tour="map-viewport"]',
+    placement: "right",
     kicker: "Mapa",
     title: "Cada punto dibujado pasó por una compuerta de geometría.",
     body:

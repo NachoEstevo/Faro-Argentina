@@ -628,6 +628,7 @@ export default function FaroExperience({
             <div className="explorerBackdrop" />
           )}
         </div>
+        {viewMode === "map" && <div className={styles.mapTourTarget} data-tour="map-viewport" aria-hidden />}
         {showMapChrome && waybackTileLoading && (
           <div
             className={`${styles.mapTileStatusRegion} ${selectedCase ? styles.mapTileStatusRegionWithCase : ""}`}
