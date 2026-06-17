@@ -38,8 +38,9 @@ const ARGENTINA_OVERVIEW_ZOOM = 5;
 const ARGENTINA_OVERVIEW_MAX_ZOOM = 6;
 const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120;
 const prefetchedWaybackTiles = new Set<string>();
-const MAX_TOOLTIP_ROW_LENGTH = 52;
-const MAX_TOOLTIP_SIGNAL_LENGTH = 46;
+const MAX_TOOLTIP_TITLE_LENGTH = 72;
+const MAX_TOOLTIP_ROW_LENGTH = 38;
+const MAX_TOOLTIP_SIGNAL_LENGTH = 34;
 
 export default function CaseMap({
   cases,
@@ -299,7 +300,7 @@ function buildMarkerTooltip(
   const primarySignal = pickTooltipSignal(signals);
   return {
     kicker: buildTooltipKicker(caseFile),
-    title: caseFile.title,
+    title: summarizeTooltipText(caseFile.title, MAX_TOOLTIP_TITLE_LENGTH),
     rows: buildTooltipRows(caseFile),
     primarySignal: primarySignal
       ? {

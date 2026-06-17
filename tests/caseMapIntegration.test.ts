@@ -37,6 +37,9 @@ test("CaseMap hover tooltip surfaces useful official context without accusation 
   assert.match(source, /"Monto"/);
   assert.match(source, /"Proced\."/);
   assert.match(source, /return rows\.slice\(0, 2\)/);
+  assert.match(source, /MAX_TOOLTIP_TITLE_LENGTH = 72/);
+  assert.match(source, /MAX_TOOLTIP_ROW_LENGTH = 38/);
+  assert.match(source, /MAX_TOOLTIP_SIGNAL_LENGTH = 34/);
   assert.match(source, /Señal de revisión/);
   assert.match(source, /Abrir expediente/);
   assert.doesNotMatch(source, /caseMapTooltipSignalSummary/);
@@ -44,7 +47,10 @@ test("CaseMap hover tooltip surfaces useful official context without accusation 
   assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipFacts\)/);
   assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipSignal-watch\)/);
   assert.match(styles, /--cf-tooltip-bg: #fffaf0/);
-  assert.match(styles, /max-width: min\(292px, calc\(100vw - 32px\)\)/);
+  assert.match(styles, /width: min\(312px, calc\(100vw - 32px\)\) !important/);
+  assert.match(styles, /max-width: min\(312px, calc\(100vw - 32px\)\) !important/);
+  assert.match(styles, /\.caseMapTooltipSignal\) \{[\s\S]*max-width: 100%;[\s\S]*overflow: hidden;/);
+  assert.match(styles, /\.caseMapTooltipSignalLabel\) \{[\s\S]*-webkit-line-clamp: 2;[\s\S]*white-space: normal;/);
   assert.match(styles, /opacity: 1 !important/);
   assert.doesNotMatch(source, /corrupci[oó]n|fraude|culpable|delito|irregularidad/i);
 });
