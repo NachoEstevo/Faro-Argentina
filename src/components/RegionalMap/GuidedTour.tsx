@@ -41,7 +41,7 @@ interface Point {
 const TOUR_STEPS: GuidedTourStep[] = [
   {
     id: "modes",
-    target: '[data-tour="mode-nav"]',
+    target: '[data-tour="mode-nav-items"]',
     placement: "bottom",
     kicker: "Orientación",
     title: "Mapa y Explorer son dos ritmos de revisión.",

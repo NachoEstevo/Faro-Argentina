@@ -207,12 +207,14 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(experienceSource, /data-tour="map-canvas"/);
   assert.match(experienceSource, /data-tour="case-panel"/);
   assert.match(navSource, /data-tour="mode-nav"/);
+  assert.match(navSource, /data-tour="mode-nav-items"/);
   assert.match(sidebarSource, /data-tour="search"/);
   assert.match(sidebarSource, /data-tour="filters"/);
   assert.match(sidebarSource, /data-tour="review-leads"/);
   assert.match(legendSource, /data-tour="legend"/);
 
   assert.match(tourSource, /type GuidedTourStepId/);
+  assert.match(tourSource, /target: '\[data-tour="mode-nav-items"\]'/);
   assert.match(tourSource, /aria-label="Abrir tutorial guiado"/);
   assert.match(tourSource, /title="Tutorial"/);
   assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);

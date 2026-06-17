@@ -49,7 +49,7 @@ export default function PlatformModeNav({
 
   return (
     <nav className={rootClassName} aria-label="Navegación principal de Faro" data-tour="mode-nav">
-      <div className={styles.primary} role="group" aria-label="Modo de trabajo">
+      <div className={styles.primary} role="group" aria-label="Modo de trabajo" data-tour="mode-nav-items">
         {PRIMARY_MODES.map((item) => (
           <ModeControl
             key={item.mode}
