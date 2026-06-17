@@ -31,6 +31,10 @@ import {
 import CasePanel from "./MapUI/CasePanel";
 import PlatformModeNav, { buildPlatformModeHref, type PlatformMode } from "./PlatformModeNav";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
+import GuidedTour, {
+  GuidedTourButton,
+  type GuidedTourStepId,
+} from "./RegionalMap/GuidedTour";
 import LeadsPanel from "./RegionalMap/LeadsPanel";
 import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
@@ -68,6 +72,7 @@ type PlatformTheme = InterfaceTheme | "mapCream";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
+const SIDEBAR_TOUR_STEPS = new Set<GuidedTourStepId>(["search", "filters", "review-button"]);
 const explorerIndexPromises = new Map<string, Promise<InvestigatorExplorerIndex>>();
 const fullCaseCorpusPromises = new Map<string, Promise<ExplorerCase[]>>();
 const fullMapCasePromises = new Map<string, Promise<ExplorerCase>>();
@@ -126,6 +131,7 @@ export default function FaroExperience({
   const [waybackTileLoading, setWaybackTileLoading] = useState(false);
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
+  const [guidedTourOpen, setGuidedTourOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
   const needsFullCaseCorpus = viewMode === "aportes";
@@ -558,6 +564,31 @@ export default function FaroExperience({
     setLeadsPanelOpen(false);
   }, []);
 
+  const handleStartGuidedTour = useCallback(() => {
+    if (viewMode !== "map") {
+      switchViewMode("map");
+    }
+    setEntryOpen(false);
+    setSelectedCaseId("");
+    setSidebarCollapsed(false);
+    setMobileMenuOpen(false);
+    setLeadsPanelOpen(false);
+    window.setTimeout(() => setGuidedTourOpen(true), 0);
+  }, [switchViewMode, viewMode]);
+
+  const handleGuidedTourStepChange = useCallback((stepId: GuidedTourStepId) => {
+    const isSmallViewport = window.innerWidth <= 900;
+    const needsSidebar = SIDEBAR_TOUR_STEPS.has(stepId);
+
+    if (isSmallViewport && needsSidebar) {
+      setMobileMenuOpen(true);
+    } else {
+      setMobileMenuOpen(false);
+    }
+
+    setLeadsPanelOpen(stepId === "review-list");
+  }, []);
+
   const handleWaybackTileLoadingChange = useCallback((loading: boolean) => {
     setWaybackTileLoading(loading);
   }, []);
@@ -583,7 +614,7 @@ export default function FaroExperience({
   return (
     <main className={shellClasses} data-platform-theme={activePlatformTheme}>
       <div className={styles.mapArea}>
-        <div className={styles.leafletHost}>
+        <div className={styles.leafletHost} data-tour="map-canvas">
           {viewMode === "map" ? (
             <CaseMap
               cases={countryReviewCases}
@@ -685,8 +716,8 @@ export default function FaroExperience({
             activeMode={viewMode}
             onModeChange={switchViewMode}
             variant="floatingBar"
-            showSecondaryAction={viewMode !== "map"}
           />
+          {showMapChrome && <GuidedTourButton onClick={handleStartGuidedTour} />}
         </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
@@ -747,7 +778,7 @@ export default function FaroExperience({
       )}
 
       {selectedCase && viewMode === "map" && selectedPanelCase && (
-        <aside className="casePanel" aria-label="Expediente Faro">
+        <aside className="casePanel" aria-label="Expediente Faro" data-tour="case-panel">
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
@@ -766,17 +797,14 @@ export default function FaroExperience({
       )}
 
       {selectedCase && viewMode === "map" && !selectedPanelCase && (
-        <aside className="casePanel" aria-label="Expediente Faro">
+        <aside className="casePanel" aria-label="Expediente Faro" data-tour="case-panel">
           <CasePanelGate status={selectedFullMapCaseStatus} />
         </aside>
       )}
 
       {entryOpen && (
         <EntryGate
-          onStartGuide={() => {
-            switchViewMode("map");
-            setEntryOpen(false);
-          }}
+          onStartGuide={handleStartGuidedTour}
           onEnterMap={() => {
             switchViewMode("map");
             setEntryOpen(false);
@@ -787,6 +815,15 @@ export default function FaroExperience({
           }}
         />
       )}
+      <GuidedTour
+        open={guidedTourOpen}
+        onClose={() => {
+          setGuidedTourOpen(false);
+          setLeadsPanelOpen(false);
+          setMobileMenuOpen(false);
+        }}
+        onStepChange={handleGuidedTourStepChange}
+      />
     </main>
   );
 }

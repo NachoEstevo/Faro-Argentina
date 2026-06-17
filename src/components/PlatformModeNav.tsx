@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   FileSearch,
   Map as MapIcon,
-  MessageSquarePlus,
   type LucideIcon,
 } from "lucide-react";
 
@@ -31,7 +30,6 @@ interface Props {
   onModeChange?: (mode: PlatformMode) => void;
   hrefForMode?: (mode: PlatformMode) => string;
   variant?: PlatformModeNavVariant;
-  showSecondaryAction?: boolean;
   className?: string;
 }
 
@@ -45,13 +43,12 @@ export default function PlatformModeNav({
   onModeChange,
   hrefForMode,
   variant = "header",
-  showSecondaryAction = true,
   className,
 }: Props) {
   const rootClassName = [styles.root, styles[variant], className].filter(Boolean).join(" ");
 
   return (
-    <nav className={rootClassName} aria-label="Navegación principal de Faro">
+    <nav className={rootClassName} aria-label="Navegación principal de Faro" data-tour="mode-nav">
       <div className={styles.primary} role="group" aria-label="Modo de trabajo">
         {PRIMARY_MODES.map((item) => (
           <ModeControl
@@ -68,19 +65,6 @@ export default function PlatformModeNav({
           />
         ))}
       </div>
-      {showSecondaryAction && (
-        <ModeControl
-          mode="aportes"
-          label="Aportar"
-          ariaLabel="Enviar aporte a revisión"
-          Icon={MessageSquarePlus}
-          active={activeMode === "aportes"}
-          className={styles.secondary}
-          activeClassName={styles.secondaryActive}
-          onModeChange={onModeChange}
-          hrefForMode={hrefForMode}
-        />
-      )}
     </nav>
   );
 }

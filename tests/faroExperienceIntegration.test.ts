@@ -5,10 +5,17 @@ import { readFile } from "node:fs/promises";
 import { argentinaInitialMapCases } from "../src/lib/data/initialMapCases.ts";
 
 const paisPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
+const appLayoutUrl = new URL("../src/app/layout.tsx", import.meta.url);
+const adminLayoutUrl = new URL("../src/app/admin/layout.tsx", import.meta.url);
+const signInLayoutUrl = new URL("../src/app/sign-in/layout.tsx", import.meta.url);
+const signUpLayoutUrl = new URL("../src/app/sign-up/layout.tsx", import.meta.url);
 const regionalMapUrl = new URL("../src/components/RegionalMap/RegionalMap.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
+const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
+const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
+const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
 const caseFileRouteUrl = new URL("../src/app/api/cases/[id]/case-file/route.ts", import.meta.url);
@@ -22,6 +29,23 @@ test("country route wires the selected Explorer preset into FaroExperience", asy
   assert.match(pageSource, /initialExplorerPreset/);
   assert.match(experienceSource, /initialExplorerPreset/);
   assert.match(experienceSource, /<ExplorerView[\s\S]*initialPreset=\{initialExplorerPreset\}/);
+});
+
+test("public map routes stay outside Clerk chrome while private routes keep Clerk", async () => {
+  const layoutSource = await readFile(appLayoutUrl, "utf8");
+  const adminLayoutSource = await readFile(adminLayoutUrl, "utf8");
+  const signInLayoutSource = await readFile(signInLayoutUrl, "utf8");
+  const signUpLayoutSource = await readFile(signUpLayoutUrl, "utf8");
+
+  assert.match(layoutSource, /<body>\{children\}<\/body>/);
+  assert.doesNotMatch(layoutSource, /import \{ ClerkProvider \} from "@clerk\/nextjs"/);
+
+  assert.match(adminLayoutSource, /import \{ ClerkProvider \} from "@clerk\/nextjs"/);
+  assert.match(adminLayoutSource, /<ClerkProvider>\{children\}<\/ClerkProvider>/);
+  assert.match(signInLayoutSource, /import \{ ClerkProvider \} from "@clerk\/nextjs"/);
+  assert.match(signInLayoutSource, /<ClerkProvider>\{children\}<\/ClerkProvider>/);
+  assert.match(signUpLayoutSource, /import \{ ClerkProvider \} from "@clerk\/nextjs"/);
+  assert.match(signUpLayoutSource, /<ClerkProvider>\{children\}<\/ClerkProvider>/);
 });
 
 test("FaroExperience preserves operational map case rendering", async () => {
@@ -141,23 +165,55 @@ test("regional welcome CTA stays a plain map action", async () => {
   assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
 });
 
-test("regional welcome sidebar matches the light map palette", async () => {
+test("regional welcome starts without sidebar chrome", async () => {
   const source = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
 
   assert.match(source, /!overlayDismissed \? styles\.shellWelcome : ""/);
-  assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--cf-welcome-panel-bg: rgba\(247, 242, 230, 0\.94\);/);
-  assert.match(styles, /\.shellWelcome \.sidebar\s*\{[\s\S]*linear-gradient\(180deg, var\(--cf-welcome-panel-bg-strong\), var\(--cf-welcome-panel-bg\)\)/);
-  assert.match(styles, /\.shellWelcome \.introTitle,[\s\S]*\.shellWelcome \.stepTitle,[\s\S]*\.shellWelcome \.settingLabel\s*\{[\s\S]*color: var\(--cf-welcome-panel-text\);/);
+  assert.match(source, /const showSidebar = overlayDismissed;/);
+  assert.match(source, /\{showSidebar && <MobileHeader onOpenMenu=\{handleOpenMobileMenu\} \/>}/);
+  assert.match(source, /\{showSidebar && \(\s*<RegionalSidebar/);
+  assert.match(source, /\{showSidebar && mobileMenuOpen && \(/);
+  assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--sidebar-width: 0px;/);
+  assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--cf-welcome-panel-bg: rgba\(12, 18, 24, 0\.9\);/);
   assert.match(styles, /\.settingRow\s*\{[\s\S]*text-decoration: none;/);
-  assert.match(styles, /\.shellWelcome \.syncFooter\s*\{[\s\S]*background: rgba\(255, 252, 244, 0\.46\);/);
 });
 
-test("regional welcome hides the Aportar action until the map is open", async () => {
+test("regional navigation omits the public Aportar action", async () => {
   const source = await readFile(regionalMapUrl, "utf8");
 
-  assert.match(source, /<FloatingModeToggle showSecondaryAction=\{overlayDismissed\} \/>/);
+  assert.match(source, /<FloatingModeToggle \/>/);
+  assert.doesNotMatch(source, /showSecondaryAction|Aportar/);
   assert.match(source, /<WelcomeOverlay dismissed=\{overlayDismissed\}/);
+});
+
+test("guided tutorial is wired to stable map UI targets", async () => {
+  const experienceSource = await readFile(faroExperienceUrl, "utf8");
+  const navSource = await readFile(new URL("../src/components/PlatformModeNav.tsx", import.meta.url), "utf8");
+  const sidebarSource = await readFile(countrySidebarUrl, "utf8");
+  const legendSource = await readFile(mapLegendUrl, "utf8");
+  const tourSource = await readFile(guidedTourUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(experienceSource, /GuidedTourButton/);
+  assert.match(experienceSource, /handleStartGuidedTour/);
+  assert.match(experienceSource, /onStartGuide=\{handleStartGuidedTour\}/);
+  assert.match(experienceSource, /setGuidedTourOpen\(true\)/);
+  assert.match(experienceSource, /data-tour="map-canvas"/);
+  assert.match(experienceSource, /data-tour="case-panel"/);
+  assert.match(navSource, /data-tour="mode-nav"/);
+  assert.match(sidebarSource, /data-tour="search"/);
+  assert.match(sidebarSource, /data-tour="filters"/);
+  assert.match(sidebarSource, /data-tour="review-leads"/);
+  assert.match(legendSource, /data-tour="legend"/);
+
+  assert.match(tourSource, /type GuidedTourStepId/);
+  assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);
+  assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
+  assert.match(tourSource, /no una acusación/);
+  assert.match(styles, /\.tourButton\s*\{/);
+  assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
+  assert.match(styles, /\.tourCard\s*\{/);
 });
 
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {

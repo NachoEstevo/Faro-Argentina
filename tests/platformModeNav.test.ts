@@ -9,7 +9,7 @@ const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const sidebarFiltersUrl = new URL("../src/components/RegionalMap/SidebarFilters.tsx", import.meta.url);
 
-test("PlatformModeNav keeps primary modes centered and Aportes docked right", async () => {
+test("PlatformModeNav keeps only public primary modes centered", async () => {
   const source = await readFile(navUrl, "utf8");
   const styles = await readFile(navStylesUrl, "utf8");
 
@@ -17,26 +17,25 @@ test("PlatformModeNav keeps primary modes centered and Aportes docked right", as
   assert.match(source, /mode: "map"/);
   assert.match(source, /mode: "explorer"/);
   assert.doesNotMatch(source, /mode: "investigations"/);
-  assert.match(source, /mode="aportes"/);
-  assert.match(source, /styles\.secondary/);
+  assert.doesNotMatch(source, /mode="aportes"|Aportar|MessageSquarePlus|styles\.secondary/);
   assert.match(styles, /\.floating\s*\{[\s\S]*left: 20px;[\s\S]*right: 20px;[\s\S]*justify-content: center;/);
   assert.match(styles, /\.floating\s*\{[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.root\.floating\s*\{[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.floatingBar\s*\{[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.root\.floatingBar\s*\{[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.floatingBar \.primary\s*\{[\s\S]*pointer-events: auto;/);
-  assert.match(styles, /\.floating \.secondary\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
-  assert.match(styles, /\.secondary[\s\S]*border: 1px solid var\(--cf-border\)/);
   assert.match(styles, /--argentina-blue: #75aadb;/);
   assert.match(styles, /--argentina-white: #ffffff;/);
   assert.match(styles, /--argentina-gold: #fcbf49;/);
   assert.doesNotMatch(styles, /#843511/);
   assert.match(styles, /outline: 2px solid var\(--argentina-gold\)/);
-  assert.match(styles, /\.item,[\s\S]*\.secondary\s*\{[\s\S]*box-sizing: border-box;[\s\S]*min-height: 38px;/);
-  assert.match(styles, /\.item svg,[\s\S]*\.secondary span\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.item\s*\{[\s\S]*box-sizing: border-box;[\s\S]*min-height: 38px;/);
+  assert.match(styles, /\.item svg,[\s\S]*\.item span\s*\{[\s\S]*pointer-events: none;/);
+  assert.match(styles, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/);
   assert.doesNotMatch(source, /"sidebar"/);
   assert.doesNotMatch(styles, /\.sidebar/);
   assert.doesNotMatch(source, /Carpetas|Mis carpetas|FolderOpen|Aportes<\/span>/);
+  assert.doesNotMatch(styles, /\.secondary/);
 });
 
 test("FaroExperience syncs mode changes into the country URL without touching CaseMap markers", async () => {
@@ -45,7 +44,7 @@ test("FaroExperience syncs mode changes into the country URL without touching Ca
   assert.match(source, /const switchViewMode = useCallback/);
   assert.match(source, /router\.replace\(buildPlatformModeHref\(mode, selectedCountry\), \{ scroll: false \}\)/);
   assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*onModeChange=\{switchViewMode\}/);
-  assert.match(source, /showSecondaryAction=\{viewMode !== "map"\}/);
+  assert.doesNotMatch(source, /showSecondaryAction/);
   assert.match(source, /<CaseMap[\s\S]*cases=\{countryReviewCases\}/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
 });

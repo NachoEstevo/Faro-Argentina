@@ -21,7 +21,7 @@ Faro es una mesa de trabajo para revisar obra publica con evidencia oficial. El 
 2. Entrar a `/pais/AR?mode=explorer&preset=selected` desde `Expedientes seleccionados`.
 3. Abrir `AR-CONTRACT-74-0052-CON23` para mostrar expediente, presupuesto, adjudicacion, proveedor, caveats y punto de mapa.
 4. Abrir `/expediente/AR-CONTRACT-74-0052-CON23/informe` para mostrar el informe descargable.
-5. Volver a `/pais/AR?mode=aportes` para explicar aporte privado y modo sin contacto.
+5. Explicar aportes solo como frontera interna de revision, sin abrirlo como flujo publico de la demo.
 6. Abrir `/admin/aportes` solo como vista interna de revision: recibido, en revision, necesita mas info, aprobado para cargar o descartado.
 
 ## Casos seleccionados

@@ -27,8 +27,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-.item,
-.secondary {
+.item {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -54,9 +53,7 @@
 }
 
 .item svg,
-.item span,
-.secondary svg,
-.secondary span {
+.item span {
   pointer-events: none;
 }
 
@@ -64,45 +61,20 @@
   border-right: 1px solid color-mix(in srgb, var(--argentina-blue) 42%, transparent);
 }
 
-.item:hover,
-.secondary:hover {
+.item:hover {
   color: var(--argentina-ink);
   background: color-mix(in srgb, var(--argentina-blue) 16%, var(--argentina-white));
 }
 
 .active,
-.active:hover,
-.secondaryActive,
-.secondaryActive:hover {
+.active:hover {
   color: var(--argentina-ink);
   background: var(--argentina-blue);
 }
 
-.item:focus-visible,
-.secondary:focus-visible {
+.item:focus-visible {
   outline: 2px solid var(--argentina-gold);
   outline-offset: 2px;
-}
-
-.secondary {
-  border: 1px solid var(--cf-border);
-  border-color: color-mix(in srgb, var(--argentina-blue) 72%, var(--cf-border));
-  border-radius: var(--cf-radius-md);
-  background: var(--argentina-white);
-  color: var(--argentina-ink);
-  box-shadow: 0 16px 34px rgba(5, 15, 26, 0.16);
-}
-
-.secondary:hover {
-  border-color: var(--argentina-blue);
-  color: var(--argentina-ink);
-}
-
-.secondaryActive,
-.secondaryActive:hover {
-  border-color: var(--argentina-blue);
-  background: var(--argentina-blue);
-  color: var(--argentina-ink);
 }
 
 .floating {
@@ -124,17 +96,9 @@
   pointer-events: auto;
 }
 
-.floating .secondary {
-  position: absolute;
-  top: 0;
-  right: 0;
-  pointer-events: auto;
-}
-
 /* In-flow sibling of an external control (e.g. a back button) inside a flex
-   bar. Keeps the floating look — centered primary group, secondary action
-   pinned to the right — but never overlaps its sibling because layout is
-   driven by the parent flex container instead of absolute positioning. */
+   bar. Keeps the floating look centered without overlapping its sibling
+   because layout is driven by the parent flex container. */
 .floatingBar {
   position: relative;
   flex: 1 1 auto;
@@ -152,13 +116,6 @@
   pointer-events: auto;
 }
 
-.floatingBar .secondary {
-  position: absolute;
-  top: 0;
-  right: 0;
-  pointer-events: auto;
-}
-
 .header {
   justify-content: flex-end;
 }
@@ -171,12 +128,8 @@
 
   .header .primary {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     flex: 1 1 auto;
-  }
-
-  .header .secondary {
-    flex: 0 0 auto;
   }
 }
 
@@ -191,13 +144,8 @@
 
   .floating .primary {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     flex: 1 1 auto;
-  }
-
-  .floating .secondary {
-    position: static;
-    flex: 0 0 auto;
   }
 
   .floatingBar {
@@ -206,17 +154,11 @@
 
   .floatingBar .primary {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     flex: 1 1 auto;
   }
 
-  .floatingBar .secondary {
-    position: static;
-    flex: 0 0 auto;
-  }
-
-  .item,
-  .secondary {
+  .item {
     min-height: 36px;
     padding: 0 10px;
     font-size: 11.5px;
@@ -228,8 +170,7 @@
     gap: 6px;
   }
 
-  .item,
-  .secondary {
+  .item {
     gap: 5px;
     padding: 0 8px;
   }

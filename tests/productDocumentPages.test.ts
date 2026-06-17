@@ -13,7 +13,7 @@ test("product document navigation keeps public resources inside Faro", async () 
   assert.match(source, /\/metodologia/);
   assert.match(source, /\/datos/);
   assert.match(source, /\/privacidad/);
-  assert.match(source, /\/pais\/AR\?mode=aportes/);
+  assert.doesNotMatch(source, /\/pais\/AR\?mode=aportes|label: "Aportes"/);
   assert.doesNotMatch(source, /github\.com/);
 });
 

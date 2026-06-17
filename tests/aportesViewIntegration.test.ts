@@ -108,7 +108,7 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
   assert.match(styles, /\.securityNote/);
 });
 
-test("FaroExperience exposes Aportes as a secondary action, not a primary mode tab", async () => {
+test("FaroExperience keeps Aportes direct-only and out of public navigation", async () => {
   const source = [
     await readFile(faroExperienceUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
@@ -118,10 +118,7 @@ test("FaroExperience exposes Aportes as a secondary action, not a primary mode t
   assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
   assert.match(source, /type PlatformMode = "map" \| "explorer" \| "aportes"/);
   assert.match(source, /viewMode === "aportes"/);
-  assert.match(source, /MessageSquarePlus/);
-  assert.match(source, /Aportar/);
-  assert.match(source, /mode="aportes"/);
-  assert.match(source, /styles\.secondary/);
+  assert.doesNotMatch(source, /MessageSquarePlus|Aportar|mode="aportes"|styles\.secondary|showSecondaryAction/);
   assert.doesNotMatch(source, /Aportes[\s\S]*?aria-pressed=\{false\}/);
 });
 
@@ -140,7 +137,7 @@ test("country route can open the aportes mode directly", async () => {
   assert.match(source, /"aportes"/);
 });
 
-test("regional landing exposes Aportes as a secondary action", async () => {
+test("regional landing does not expose public Aportes entry points", async () => {
   const source = [
     await readFile(floatingToggleUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
@@ -148,17 +145,14 @@ test("regional landing exposes Aportes as a secondary action", async () => {
   const resourcesSource = await readFile(resourcesSectionUrl, "utf8");
 
   assert.match(source, /buildPlatformModeHref/);
-  assert.match(source, /mode="aportes"/);
-  assert.match(source, /Aportar/);
-  assert.match(source, /MessageSquarePlus/);
+  assert.doesNotMatch(source, /mode="aportes"|Aportar|MessageSquarePlus|showSecondaryAction/);
   assert.match(resourcesSource, /Metodología/);
   assert.match(resourcesSource, /\/metodologia/);
   assert.match(resourcesSource, /Datos abiertos/);
   assert.match(resourcesSource, /\/datos/);
   assert.match(resourcesSource, /Privacidad y seguridad/);
   assert.match(resourcesSource, /\/privacidad/);
-  assert.match(resourcesSource, /Reportar un error/);
-  assert.match(resourcesSource, /\/pais\/AR\?mode=aportes/);
+  assert.doesNotMatch(resourcesSource, /Reportar un error|\/pais\/AR\?mode=aportes/);
   assert.doesNotMatch(resourcesSource, /github\.com\/NachoEstevo\/Faro/);
   assert.doesNotMatch(resourcesSource, /target="_blank"|externalLinkProps/);
   assert.doesNotMatch(source, /Comunidad|Denuncia/);

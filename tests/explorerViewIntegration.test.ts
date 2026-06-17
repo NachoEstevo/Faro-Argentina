@@ -160,7 +160,7 @@ test("ExplorerView keeps case folders out of the public explorer workflow", asyn
   assert.doesNotMatch(source, /addCaseToStoredInvestigationWorkspace/);
   assert.doesNotMatch(source, /onSwitchToInvestigations/);
   assert.doesNotMatch(source, /Carpetas|Guardar en carpeta|Ver carpeta/);
-  assert.match(source, /Aportar/);
+  assert.doesNotMatch(source, /Aportar|MessageSquarePlus|mode="aportes"/);
   assert.doesNotMatch(source, /Mis carpetas|FolderPlus|event\.stopPropagation\(\)/);
   assert.doesNotMatch(css, /\.saveCaseButton|\.detailFolderForm/);
 });

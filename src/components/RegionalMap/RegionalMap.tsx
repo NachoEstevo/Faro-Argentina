@@ -68,6 +68,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
   ]
     .filter(Boolean)
     .join(" ");
+  const showSidebar = overlayDismissed;
 
   return (
     <main className={shellClasses}>
@@ -76,15 +77,17 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
           <CountryMap geojson={geojson} />
         </div>
       </div>
-      <MobileHeader onOpenMenu={handleOpenMobileMenu} />
-      <RegionalSidebar
-        syncLabel={syncLabel}
-        collapsed={sidebarCollapsed}
-        onToggle={handleSidebarToggle}
-        mobileOpen={mobileMenuOpen}
-        onCloseMobile={handleCloseMobileMenu}
-      />
-      {mobileMenuOpen && (
+      {showSidebar && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}
+      {showSidebar && (
+        <RegionalSidebar
+          syncLabel={syncLabel}
+          collapsed={sidebarCollapsed}
+          onToggle={handleSidebarToggle}
+          mobileOpen={mobileMenuOpen}
+          onCloseMobile={handleCloseMobileMenu}
+        />
+      )}
+      {showSidebar && mobileMenuOpen && (
         <button
           type="button"
           className={styles.mobileBackdrop}
@@ -95,7 +98,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
       <div className={styles.overlayLayer}>
         <div className={styles.vignetteTop} aria-hidden />
         <div className={styles.vignetteSides} aria-hidden />
-        <FloatingModeToggle showSecondaryAction={overlayDismissed} />
+        <FloatingModeToggle />
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>

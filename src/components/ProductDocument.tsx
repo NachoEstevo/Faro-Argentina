@@ -35,7 +35,6 @@ const navItems = [
   { href: "/privacidad", label: "Privacidad" },
   { href: "/terminos", label: "Términos" },
   { href: "/seguridad", label: "Seguridad" },
-  { href: "/pais/AR?mode=aportes", label: "Aportes" },
 ] as const;
 
 export default function ProductDocument({ eyebrow, title, intro, summaryItems, actions, sections, closing }: Props) {

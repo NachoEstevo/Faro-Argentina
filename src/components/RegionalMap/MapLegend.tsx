@@ -9,7 +9,7 @@ interface Props {
 export default function MapLegend({ highCount, mediumCount, totalCount }: Props) {
   const normalCount = Math.max(0, totalCount - highCount - mediumCount);
   return (
-    <aside className={styles.mapLegend} aria-label="Leyenda del mapa">
+    <aside className={styles.mapLegend} aria-label="Leyenda del mapa" data-tour="legend">
       <p className={styles.mapLegendTitle}>Referencias</p>
       <ul className={styles.mapLegendList}>
         <li>

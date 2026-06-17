@@ -96,7 +96,7 @@ export default function CountrySidebar({
             <p className={styles.eyebrow} id="search-heading">
               Buscar
             </p>
-            <div className={styles.cpSearchWrap}>
+            <div className={styles.cpSearchWrap} data-tour="search">
               <label className={styles.cpSearch}>
                 <Search size={15} aria-hidden />
                 <input
@@ -148,7 +148,7 @@ export default function CountrySidebar({
             </div>
           </section>
 
-          <section className={styles.section} aria-labelledby="filter-heading">
+          <section className={styles.section} aria-labelledby="filter-heading" data-tour="filters">
             <SidebarFilters
               value={filters}
               yearBounds={yearBounds}
@@ -171,6 +171,7 @@ export default function CountrySidebar({
               disabled={leadsCount === 0}
               aria-expanded={leadsPanelOpen}
               aria-controls="leads-panel"
+              data-tour="review-leads"
             >
               <AlertTriangle size={18} aria-hidden className={styles.cpLeadsButtonIcon} />
               <span className={styles.cpLeadsButtonLabel}>

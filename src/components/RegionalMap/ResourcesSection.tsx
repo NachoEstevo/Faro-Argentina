@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import { BookOpen, ChevronRight, Download, Flag, ShieldCheck } from "lucide-react";
+import { BookOpen, ChevronRight, Download, ShieldCheck } from "lucide-react";
 import styles from "./RegionalMap.module.css";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { size?: number }>;
@@ -14,7 +14,6 @@ const ROWS: ResourceRow[] = [
   { label: "Metodología", icon: BookOpen, href: "/metodologia" },
   { label: "Datos abiertos", icon: Download, href: "/datos" },
   { label: "Privacidad y seguridad", icon: ShieldCheck, href: "/privacidad" },
-  { label: "Reportar un error", icon: Flag, href: "/pais/AR?mode=aportes" },
 ];
 
 export default function ResourcesSection() {
