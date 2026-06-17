@@ -61,3 +61,17 @@ test("getMapExposureStatus blocks Argentina coordinates with suspicious signs", 
   assert.equal(status.expose, false);
   assert.deepEqual(status.reasons, ["sign_suspect"]);
 });
+
+test("getMapExposureStatus blocks reviewed official coordinates that fall in water", () => {
+  const status = getMapExposureStatus({
+    id: "AR-WORK-46-0028-OBR21",
+    countryCode: "AR",
+    coordinates: { lat: -34.392726, lon: -58.312183 },
+    evidenceLevel: "official_dataset",
+    receipt,
+    caveats: ["Coordenada declarada por fuente oficial."],
+  });
+
+  assert.equal(status.expose, false);
+  assert.deepEqual(status.reasons, ["known_bad_geometry"]);
+});

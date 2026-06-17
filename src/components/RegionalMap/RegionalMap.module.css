@@ -6,46 +6,104 @@
   background: var(--cf-bg);
   color: var(--cf-text);
   --sidebar-width: 360px;
+  --cf-arg-sky: #75aadb;
+  --cf-arg-white: #ffffff;
+  --cf-arg-gold: #fcbf49;
+  --cf-arg-sun-dark: #843511;
+  --cf-bg: #0f151b;
+  --cf-bg-elev: rgba(18, 24, 31, 0.96);
+  --cf-bg-overlay: rgba(29, 39, 49, 0.86);
+  --cf-bg-surface: rgba(23, 32, 41, 0.9);
+  --cf-border: rgba(117, 170, 219, 0.16);
+  --cf-border-strong: rgba(117, 170, 219, 0.3);
+  --cf-text: #f4f8fb;
+  --cf-text-secondary: #b8c7d4;
+  --cf-text-muted: #7f91a3;
+  --cf-accent: #75aadb;
+  --cf-accent-hi: #d5ecff;
+  --cf-accent-dim: #3f83b5;
+  --cf-accent-faint: rgba(117, 170, 219, 0.14);
+  --cf-on-accent: #0f151b;
+  --cf-state-verified: #8fc29a;
+  --cf-state-caution: #fcbf49;
+  --cf-state-flag: #d68a6a;
+  --cf-state-unknown: #75aadb;
+  --cf-state-danger: #d94c3a;
   --cf-workspace-bg:
-    linear-gradient(135deg, rgba(13, 15, 19, 0.98), rgba(18, 26, 34, 0.96)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 42px);
-  --cf-workspace-sidebar-bg: rgba(13, 15, 19, 0.64);
-  --cf-workspace-panel-bg: rgba(21, 28, 35, 0.58);
-  --cf-workspace-card-bg: rgba(21, 28, 35, 0.54);
-  --cf-workspace-card-bg-muted: rgba(13, 15, 19, 0.42);
-  --cf-workspace-input-bg: rgba(13, 15, 19, 0.78);
-  --cf-workspace-analysis-bg: rgba(21, 28, 35, 0.58);
+    linear-gradient(135deg, rgba(15, 21, 27, 0.98), rgba(18, 31, 41, 0.96)),
+    linear-gradient(90deg, rgba(117, 170, 219, 0.06), transparent 36%, rgba(252, 191, 73, 0.035)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.026) 0 1px, transparent 1px 42px);
+  --cf-workspace-sidebar-bg: rgba(16, 22, 29, 0.88);
+  --cf-workspace-panel-bg: rgba(22, 31, 40, 0.78);
+  --cf-workspace-card-bg: rgba(22, 31, 40, 0.7);
+  --cf-workspace-card-bg-muted: rgba(12, 18, 24, 0.54);
+  --cf-workspace-input-bg: rgba(12, 18, 24, 0.78);
+  --cf-workspace-analysis-bg: rgba(22, 31, 40, 0.76);
 }
 
 .shell[data-platform-theme="light"] {
-  --cf-bg: #f5f7fa;
-  --cf-bg-elev: #ffffff;
-  --cf-bg-overlay: #eef3f7;
-  --cf-bg-surface: #f8fafc;
-  --cf-border: #d8e0ea;
-  --cf-border-strong: #acbac9;
-  --cf-text: #17202b;
-  --cf-text-secondary: #485465;
-  --cf-text-muted: #748092;
-  --cf-accent: #2e7db3;
-  --cf-accent-hi: #145b86;
-  --cf-accent-dim: #6ba7cd;
-  --cf-accent-faint: #e3f1fa;
+  --cf-bg: #eee8dc;
+  --cf-bg-elev: rgba(247, 242, 230, 0.96);
+  --cf-bg-overlay: rgba(255, 252, 244, 0.84);
+  --cf-bg-surface: rgba(255, 250, 240, 0.72);
+  --cf-border: rgba(125, 111, 82, 0.22);
+  --cf-border-strong: rgba(106, 92, 64, 0.36);
+  --cf-text: #1f2a32;
+  --cf-text-secondary: #4d5b63;
+  --cf-text-muted: #5d6870;
+  --cf-accent: #1f6f9f;
+  --cf-accent-hi: #144e72;
+  --cf-accent-dim: #75aadb;
+  --cf-accent-faint: rgba(117, 170, 219, 0.16);
   --cf-on-accent: #ffffff;
   --cf-state-verified: #2f855a;
-  --cf-state-caution: #986f13;
-  --cf-state-flag: #b65b3b;
-  --cf-shadow-pop: 0 20px 40px rgba(20, 32, 44, 0.16);
-  --cf-shadow-soft: 0 12px 32px rgba(20, 32, 44, 0.12);
+  --cf-state-caution: #8b6814;
+  --cf-state-flag: #a2492d;
+  --cf-state-unknown: #1f6f9f;
+  --cf-state-danger: #b42318;
+  --cf-shadow-pop: 0 22px 44px rgba(68, 58, 38, 0.2);
+  --cf-shadow-soft: 0 14px 34px rgba(68, 58, 38, 0.16);
   --cf-workspace-bg:
-    linear-gradient(135deg, rgba(247, 249, 252, 0.98), rgba(238, 243, 248, 0.96)),
-    repeating-linear-gradient(90deg, rgba(24, 32, 43, 0.035) 0 1px, transparent 1px 42px);
-  --cf-workspace-sidebar-bg: rgba(255, 255, 255, 0.86);
-  --cf-workspace-panel-bg: #ffffff;
-  --cf-workspace-card-bg: #ffffff;
-  --cf-workspace-card-bg-muted: #eef3f7;
-  --cf-workspace-input-bg: #ffffff;
-  --cf-workspace-analysis-bg: #ffffff;
+    linear-gradient(135deg, rgba(248, 244, 234, 0.98), rgba(235, 229, 215, 0.96)),
+    linear-gradient(90deg, rgba(117, 170, 219, 0.08), transparent 42%, rgba(252, 191, 73, 0.06)),
+    repeating-linear-gradient(90deg, rgba(31, 42, 50, 0.035) 0 1px, transparent 1px 42px);
+  --cf-workspace-sidebar-bg: rgba(247, 242, 230, 0.92);
+  --cf-workspace-panel-bg: rgba(255, 252, 244, 0.92);
+  --cf-workspace-card-bg: rgba(255, 252, 244, 0.92);
+  --cf-workspace-card-bg-muted: rgba(238, 232, 220, 0.88);
+  --cf-workspace-input-bg: rgba(255, 252, 244, 0.96);
+  --cf-workspace-analysis-bg: rgba(255, 252, 244, 0.92);
+}
+
+.shell[data-platform-theme="mapCream"] {
+  --cf-bg: #eee8dc;
+  --cf-bg-elev: rgba(247, 242, 230, 0.96);
+  --cf-bg-overlay: rgba(255, 252, 244, 0.84);
+  --cf-bg-surface: rgba(255, 250, 240, 0.72);
+  --cf-border: rgba(125, 111, 82, 0.22);
+  --cf-border-strong: rgba(106, 92, 64, 0.36);
+  --cf-text: #1f2a32;
+  --cf-text-secondary: #4d5b63;
+  --cf-text-muted: #5d6870;
+  --cf-accent: #1f6f9f;
+  --cf-accent-hi: #144e72;
+  --cf-accent-dim: #75aadb;
+  --cf-accent-faint: rgba(117, 170, 219, 0.16);
+  --cf-on-accent: #ffffff;
+  --cf-state-verified: #2f855a;
+  --cf-state-caution: #8b6814;
+  --cf-state-flag: #a2492d;
+  --cf-shadow-pop: 0 22px 44px rgba(68, 58, 38, 0.2);
+  --cf-shadow-soft: 0 14px 34px rgba(68, 58, 38, 0.16);
+  --cf-workspace-bg:
+    linear-gradient(135deg, rgba(248, 244, 234, 0.98), rgba(235, 229, 215, 0.96)),
+    repeating-linear-gradient(90deg, rgba(31, 42, 50, 0.035) 0 1px, transparent 1px 42px);
+  --cf-workspace-sidebar-bg: rgba(247, 242, 230, 0.92);
+  --cf-workspace-panel-bg: rgba(255, 252, 244, 0.92);
+  --cf-workspace-card-bg: rgba(255, 252, 244, 0.92);
+  --cf-workspace-card-bg-muted: rgba(238, 232, 220, 0.88);
+  --cf-workspace-input-bg: rgba(255, 252, 244, 0.96);
+  --cf-workspace-analysis-bg: rgba(255, 252, 244, 0.92);
 }
 
 .shellCollapsed {
@@ -67,6 +125,12 @@
   overflow: hidden;
   z-index: 10;
   min-height: 0;
+}
+
+.shell[data-platform-theme="mapCream"] .sidebar {
+  background:
+    linear-gradient(180deg, rgba(250, 246, 235, 0.97), rgba(238, 232, 218, 0.96));
+  box-shadow: 14px 0 34px rgba(68, 58, 38, 0.14);
 }
 
 .sidebarCollapsed {
@@ -294,7 +358,7 @@
 }
 
 .settingRow:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--cf-bg-overlay) 72%, transparent);
 }
 
 .settingRow:last-child {
@@ -399,10 +463,10 @@
   padding: 6px;
   border: 1px solid var(--cf-border);
   border-radius: var(--cf-radius-md);
-  background: rgba(13, 15, 19, 0.98);
+  background: var(--cf-bg-elev);
   box-shadow: var(--cf-shadow-soft);
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  scrollbar-color: color-mix(in srgb, var(--cf-text-muted) 28%, transparent) transparent;
 }
 
 .cpSuggestion {
@@ -518,7 +582,7 @@
   margin: 0 -4px;
   padding: 0 8px 4px 4px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  scrollbar-color: color-mix(in srgb, var(--cf-text-muted) 28%, transparent) transparent;
 }
 
 .cpLeadsList::-webkit-scrollbar {
@@ -530,12 +594,12 @@
 }
 
 .cpLeadsList::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--cf-text-muted) 24%, transparent);
   border-radius: 3px;
 }
 
 .cpLeadsList::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: color-mix(in srgb, var(--cf-text-muted) 36%, transparent);
 }
 
 .cpLeadCard {
@@ -674,13 +738,13 @@
 }
 
 .cpPageButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--cf-bg-overlay);
   color: var(--cf-text);
   border-color: var(--cf-border-strong);
 }
 
 .cpPageButton:disabled {
-  color: rgba(255, 255, 255, 0.2);
+  color: color-mix(in srgb, var(--cf-text-muted) 45%, transparent);
   cursor: not-allowed;
 }
 
@@ -706,7 +770,7 @@
   padding: 12px 14px;
   border-radius: var(--cf-radius-md);
   border: 1px solid var(--cf-border);
-  background: rgba(13, 15, 19, 0.86);
+  background: color-mix(in srgb, var(--cf-bg-elev) 92%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: var(--cf-shadow-soft);
@@ -791,26 +855,53 @@
 .interfaceThemeDock {
   position: absolute;
   right: 18px;
-  bottom: 18px;
+  bottom: 72px;
   z-index: 65;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 78px;
+  min-height: 40px;
+  padding: 3px;
   border: 1px solid var(--cf-border);
-  border-radius: var(--cf-radius-md);
-  background: var(--cf-bg-elev);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cf-bg-elev) 88%, transparent);
   color: var(--cf-text-secondary);
   box-shadow: var(--cf-shadow-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.interfaceThemeOption {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cf-text-muted);
   cursor: pointer;
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
-.interfaceThemeDock:hover {
+.interfaceThemeOption:hover {
   border-color: var(--cf-accent);
   background: var(--cf-bg-surface);
   color: var(--cf-accent);
+}
+
+.interfaceThemeOptionActive {
+  border-color: color-mix(in srgb, var(--cf-accent) 36%, var(--cf-border));
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.interfaceThemeOptionActive:hover {
+  background: var(--cf-accent);
+  color: var(--cf-on-accent);
 }
 
 .caseCorpusGate {
@@ -917,9 +1008,9 @@
 
   .interfaceThemeDock {
     right: 12px;
-    bottom: 12px;
-    width: 36px;
-    height: 36px;
+    bottom: 72px;
+    min-width: 74px;
+    min-height: 38px;
   }
 
   .caseCorpusGatePanel {
@@ -1046,7 +1137,7 @@
 }
 
 .leafletHost :global(.leaflet-tooltip) {
-  background: rgba(13, 15, 19, 0.92) !important;
+  background: color-mix(in srgb, var(--cf-bg-elev) 94%, transparent) !important;
   color: var(--cf-text) !important;
   border: 1px solid var(--cf-border-strong) !important;
   border-radius: var(--cf-radius-sm) !important;
@@ -1064,6 +1155,135 @@
 .leafletHost :global(.leaflet-tooltip span) {
   color: var(--cf-text-secondary) !important;
   font-size: 11px;
+}
+
+.leafletHost :global(.caseMapTooltip) {
+  max-width: min(330px, calc(100vw - 32px));
+  padding: 0 !important;
+  white-space: normal !important;
+}
+
+.leafletHost :global(.caseMapTooltipInner) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 11px 12px 12px;
+}
+
+.leafletHost :global(.caseMapTooltipKicker) {
+  font-family: var(--cf-font-data) !important;
+  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--cf-accent) !important;
+}
+
+.leafletHost :global(.caseMapTooltipTitle) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--cf-text) !important;
+  font-family: var(--cf-font-heading) !important;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.24;
+}
+
+.leafletHost :global(.caseMapTooltipFacts) {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 7px 0 0;
+  border-top: 1px solid var(--cf-border);
+}
+
+.leafletHost :global(.caseMapTooltipFact) {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+
+.leafletHost :global(.caseMapTooltipFact dt) {
+  margin: 0;
+  color: var(--cf-text-muted);
+  font-family: var(--cf-font-data);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.leafletHost :global(.caseMapTooltipFact dd) {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--cf-text-secondary);
+  font-family: var(--cf-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.leafletHost :global(.caseMapTooltipSignal) {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 8px;
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-bg-surface);
+}
+
+.leafletHost :global(.caseMapTooltipSignalLabel) {
+  color: var(--cf-text) !important;
+  font-family: var(--cf-font-body) !important;
+  font-size: 11px !important;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.leafletHost :global(.caseMapTooltipSignalSummary) {
+  color: var(--cf-text-secondary) !important;
+  font-family: var(--cf-font-body) !important;
+  font-size: 10.5px !important;
+  line-height: 1.35;
+}
+
+.leafletHost :global(.caseMapTooltipSignal-watch) {
+  border-color: rgba(217, 76, 58, 0.34);
+  background: rgba(217, 76, 58, 0.08);
+}
+
+.leafletHost :global(.caseMapTooltipSignal-gap) {
+  border-color: rgba(31, 111, 159, 0.3);
+  background: rgba(117, 170, 219, 0.12);
+}
+
+.leafletHost :global(.caseMapTooltipSignal-ready) {
+  border-color: rgba(47, 133, 90, 0.28);
+  background: rgba(47, 133, 90, 0.1);
+}
+
+.leafletHost :global(.caseMapTooltipReference) {
+  color: var(--cf-state-caution) !important;
+  font-family: var(--cf-font-body) !important;
+  font-size: 10.5px !important;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.leafletHost :global(.caseMapTooltipAction) {
+  color: var(--cf-accent-hi) !important;
+  font-family: var(--cf-font-data) !important;
+  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .leafletHost :global(.leaflet-tooltip-top:before),
@@ -1120,7 +1340,7 @@
   gap: 8px;
   padding: 8px 14px;
   border-radius: var(--cf-radius-md);
-  background: rgba(13, 15, 19, 0.8);
+  background: color-mix(in srgb, var(--cf-bg-elev) 88%, transparent);
   border: 1px solid var(--cf-border);
   color: var(--cf-text);
   font-family: var(--cf-font-body);
@@ -1372,7 +1592,7 @@
   gap: 14px;
   height: 46px;
   padding: 0 22px;
-  background: rgba(13, 15, 19, 0.86);
+  background: color-mix(in srgb, var(--cf-bg-elev) 90%, transparent);
   border: 1px solid var(--cf-border);
   border-radius: 999px;
   backdrop-filter: blur(18px);
@@ -1520,7 +1740,7 @@
     left: 0;
     transform: none;
     transition: none;
-    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--cf-shadow-soft);
     border-right: 1px solid var(--cf-border);
     padding: clamp(16px, 2.4vh, 24px) 20px;
   }
@@ -1578,9 +1798,9 @@
     gap: 10px;
     min-height: 40px;
     padding: 4px 12px 4px 4px;
-    border: 1px solid rgba(184, 218, 240, 0.24);
+    border: 1px solid var(--cf-border);
     border-radius: 10px;
-    background: rgba(13, 15, 19, 0.76);
+    background: color-mix(in srgb, var(--cf-bg-elev) 86%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: var(--cf-shadow-soft);
@@ -1621,7 +1841,7 @@
     height: 36px;
     padding: 0;
     border: 1px solid var(--cf-border);
-    background: rgba(13, 15, 19, 0.7);
+    background: color-mix(in srgb, var(--cf-bg-elev) 86%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 8px;

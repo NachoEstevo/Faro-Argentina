@@ -7,7 +7,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
-  background: var(--cf-bg);
+  background: var(--cf-workspace-bg, var(--cf-bg));
   color: var(--cf-text);
   font-family: var(--cf-font-body);
   z-index: 30;
@@ -19,8 +19,9 @@
   align-self: start;
   display: flex;
   flex-direction: column;
-  background: var(--cf-bg-elev);
+  background: var(--cf-workspace-sidebar-bg, var(--cf-bg-elev));
   border-right: 1px solid var(--cf-border);
+  box-shadow: 10px 0 30px color-mix(in srgb, var(--cf-text) 8%, transparent);
   height: 100dvh;
   max-height: 100dvh;
   min-height: 0;
@@ -142,7 +143,7 @@
   padding: 0 10px;
   border: 1px solid var(--cf-border);
   border-radius: 8px;
-  background: var(--cf-bg);
+  background: var(--cf-workspace-input-bg, var(--cf-bg));
   color: var(--cf-text);
   font-family: var(--cf-font-body);
   font-size: 12px;
@@ -663,18 +664,18 @@
 }
 
 :global([data-platform-theme="light"]) .presetBanner {
-  border-color: #c8d8e6;
-  background: #ffffff;
-  box-shadow: 0 12px 28px rgba(23, 32, 43, 0.08);
+  border-color: color-mix(in srgb, var(--cf-accent-dim) 42%, var(--cf-border));
+  background: var(--cf-workspace-panel-bg);
+  box-shadow: var(--cf-shadow-soft);
 }
 
 :global([data-platform-theme="light"]) .presetRationaleItem {
-  background: #f8fbfd;
-  box-shadow: none;
+  background: var(--cf-workspace-card-bg);
+  box-shadow: 0 12px 28px rgba(68, 58, 38, 0.08);
 }
 
 :global([data-platform-theme="light"]) .presetRationaleItem:hover {
-  background: #eef6fc;
+  background: color-mix(in srgb, var(--cf-accent-faint) 48%, var(--cf-workspace-card-bg));
 }
 
 @media (max-width: 1280px) {
@@ -689,7 +690,7 @@
   gap: 10px;
   height: 46px;
   padding: 0 16px;
-  background: var(--cf-bg-elev);
+  background: var(--cf-workspace-input-bg, var(--cf-bg-elev));
   border: 1px solid var(--cf-border);
   border-radius: 10px;
   color: var(--cf-text-muted);
@@ -726,7 +727,7 @@
   flex-direction: column;
   gap: 10px;
   padding: 16px 18px;
-  background: var(--cf-bg-elev);
+  background: var(--cf-workspace-card-bg, var(--cf-bg-elev));
   border: 1px solid var(--cf-border);
   border-radius: 10px;
 }
@@ -865,11 +866,11 @@
 
 :global([data-platform-theme="light"]) .profilePanel,
 :global([data-platform-theme="light"]) .profileCard {
-  background: #ffffff;
+  background: var(--cf-workspace-card-bg);
 }
 
 :global([data-platform-theme="light"]) .profileCard:hover {
-  background: #eef6fc;
+  background: color-mix(in srgb, var(--cf-accent-faint) 48%, var(--cf-workspace-card-bg));
 }
 
 .rowAmount {

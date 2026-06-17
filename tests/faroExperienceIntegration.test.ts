@@ -7,6 +7,7 @@ import { argentinaInitialMapCases } from "../src/lib/data/initialMapCases.ts";
 const paisPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
+const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
 const caseFileRouteUrl = new URL("../src/app/api/cases/[id]/case-file/route.ts", import.meta.url);
 const staticExportsScriptUrl = new URL("../scripts/build-static-exports.ts", import.meta.url);
@@ -90,23 +91,40 @@ test("country map initial cases stay compact while preserving map signal fields"
   assert.equal(argentinaInitialMapCases.some((caseFile) => "supplierName" in caseFile), true);
 });
 
-test("FaroExperience scopes light and dark themes to work views only", async () => {
+test("FaroExperience uses a cream map theme and keeps work-view theme toggles scoped", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
+  const casePanelStyles = await readFile(casePanelStylesUrl, "utf8");
 
   assert.match(source, /type InterfaceTheme = "dark" \| "light"/);
+  assert.match(source, /type PlatformTheme = InterfaceTheme \| "mapCream"/);
   assert.match(source, /faro-interface-theme/);
-  assert.match(source, /const activePlatformTheme = viewMode === "map" \? "dark" : interfaceTheme;/);
+  assert.match(source, /const activePlatformTheme: PlatformTheme = viewMode === "map" \? "mapCream" : interfaceTheme;/);
   assert.match(source, /data-platform-theme=\{activePlatformTheme\}/);
   assert.match(source, /viewMode !== "map" && \(\s*<InterfaceThemeToggle/);
-  assert.match(source, /const nextTheme: InterfaceTheme = theme === "dark" \? "light" : "dark";/);
-  assert.match(source, /aria-label=\{nextLabel\}/);
-  assert.match(source, /<ThemeIcon size=\{15\} aria-hidden \/>/);
-  assert.doesNotMatch(source, /<span>Claro<\/span>|<span>Oscuro<\/span>|role="group" aria-label="Tema de interfaz"/);
+  assert.match(source, /role="group" aria-label="Tema de interfaz"/);
+  assert.match(source, /aria-label="Modo claro"/);
+  assert.match(source, /aria-label="Modo oscuro"/);
+  assert.match(source, /aria-pressed=\{theme === "light"\}/);
+  assert.match(source, /aria-pressed=\{theme === "dark"\}/);
+  assert.doesNotMatch(source, /<span>Claro<\/span>|<span>Oscuro<\/span>|const nextTheme/);
 
   assert.match(styles, /\.shell\[data-platform-theme="light"\]/);
-  assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*width: 38px;[\s\S]*height: 38px;/);
-  assert.doesNotMatch(styles, /\.interfaceThemeButton|\.interfaceThemeButtonActive/);
+  assert.match(styles, /\.shell\[data-platform-theme="mapCream"\]/);
+  assert.match(styles, /--cf-bg: #eee8dc;/);
+  assert.match(styles, /--cf-arg-sky: #75aadb;/);
+  assert.match(styles, /--cf-arg-gold: #fcbf49;/);
+  assert.match(styles, /\.shell\[data-platform-theme="light"\]\s*\{[\s\S]*--cf-workspace-sidebar-bg: rgba\(247, 242, 230, 0\.92\);/);
+  assert.match(styles, /\.shell\[data-platform-theme="mapCream"\] \.sidebar\s*\{[\s\S]*linear-gradient\(180deg, rgba\(250, 246, 235, 0\.97\), rgba\(238, 232, 218, 0\.96\)\);/);
+  assert.match(styles, /\.mapLegend\s*\{[\s\S]*background: color-mix\(in srgb, var\(--cf-bg-elev\) 92%, transparent\);/);
+  assert.doesNotMatch(styles, /\.mapLegend\s*\{[\s\S]*background: rgba\(13, 15, 19, 0\.86\);/);
+  assert.match(casePanelStyles, /--cp-surface: #f3eddf;/);
+  assert.match(casePanelStyles, /--cp-text: #1f2a32;/);
+  assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.watch\)\s*\{[\s\S]*color: #755300;/);
+  assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.gap\)\s*\{[\s\S]*color: #1f5f8b;/);
+  assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*min-width: 78px;[\s\S]*min-height: 40px;/);
+  assert.match(styles, /\.interfaceThemeOption\s*\{/);
+  assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
 });
 
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {

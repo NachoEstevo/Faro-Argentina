@@ -1,4 +1,10 @@
 .root {
+  --argentina-blue: #75aadb;
+  --argentina-white: #ffffff;
+  --argentina-gold: #fcbf49;
+  --argentina-ink: #17263a;
+  --argentina-muted: #52677f;
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -13,9 +19,12 @@
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
-  border: 1px solid var(--cf-border);
+  border: 1px solid color-mix(in srgb, var(--argentina-blue) 58%, var(--cf-border));
   border-radius: var(--cf-radius-md);
-  background: var(--cf-bg-overlay);
+  background: color-mix(in srgb, var(--argentina-white) 94%, var(--argentina-blue));
+  box-shadow:
+    0 12px 26px rgba(5, 15, 26, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .item,
@@ -32,7 +41,7 @@
   border: 0;
   appearance: none;
   background: transparent;
-  color: var(--cf-text-muted);
+  color: var(--argentina-muted);
   font-family: var(--cf-font-body);
   font-size: 12px;
   font-weight: 600;
@@ -52,40 +61,48 @@
 }
 
 .item:not(:last-child) {
-  border-right: 1px solid var(--cf-border);
+  border-right: 1px solid color-mix(in srgb, var(--argentina-blue) 42%, transparent);
 }
 
 .item:hover,
 .secondary:hover {
-  color: var(--cf-text);
-  background: var(--cf-bg-surface);
+  color: var(--argentina-ink);
+  background: color-mix(in srgb, var(--argentina-blue) 16%, var(--argentina-white));
 }
 
 .active,
 .active:hover,
 .secondaryActive,
 .secondaryActive:hover {
-  color: var(--cf-on-accent);
-  background: var(--cf-accent);
+  color: var(--argentina-ink);
+  background: var(--argentina-blue);
+}
+
+.item:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--argentina-gold);
+  outline-offset: 2px;
 }
 
 .secondary {
   border: 1px solid var(--cf-border);
+  border-color: color-mix(in srgb, var(--argentina-blue) 72%, var(--cf-border));
   border-radius: var(--cf-radius-md);
-  background: var(--cf-bg-surface);
-  color: var(--cf-text);
+  background: var(--argentina-white);
+  color: var(--argentina-ink);
+  box-shadow: 0 16px 34px rgba(5, 15, 26, 0.16);
 }
 
 .secondary:hover {
-  border-color: var(--cf-accent);
-  color: var(--cf-accent);
+  border-color: var(--argentina-blue);
+  color: var(--argentina-ink);
 }
 
 .secondaryActive,
 .secondaryActive:hover {
-  border-color: var(--cf-accent);
-  background: var(--cf-accent);
-  color: var(--cf-on-accent);
+  border-color: var(--argentina-blue);
+  background: var(--argentina-blue);
+  color: var(--argentina-ink);
 }
 
 .floating {

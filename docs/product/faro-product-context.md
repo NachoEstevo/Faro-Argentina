@@ -388,7 +388,7 @@ Datos actuales segun reportes generados el 2026-05-21:
 - `7.285` proyectos de Mapa de Inversiones cargados como cobertura de avance,
   sin mapa porque el CSV actual no trae latitud/longitud;
 - `12` expedientes historico-judiciales;
-- `431` expedientes elegibles para mapa despues del gate;
+- `426` expedientes elegibles para mapa despues del gate;
 - `9.617` receipts.
 
 Currentness:

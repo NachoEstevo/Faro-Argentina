@@ -299,6 +299,10 @@ test("ExplorerView supports a closed selected-expedientes preset", async () => {
   assert.match(source, /presetScopedRows/);
   assert.match(css, /\.presetBanner/);
   assert.match(css, /\[data-platform-theme="light"\]\) \.presetBanner/);
+  assert.match(css, /background: var\(--cf-workspace-bg, var\(--cf-bg\)\);/);
+  assert.match(css, /background: var\(--cf-workspace-sidebar-bg, var\(--cf-bg-elev\)\);/);
+  assert.match(css, /background: var\(--cf-workspace-input-bg, var\(--cf-bg-elev\)\);/);
+  assert.doesNotMatch(css, /background: #ffffff;|background: #f8fbfd;|background: #eef6fc;/);
   assert.match(css, /\.presetBannerHeader/);
   assert.match(css, /\.presetRationaleList/);
   assert.match(css, /\.presetRationaleItem/);

@@ -9,6 +9,13 @@ import type { ArgentinaContractCaseFile } from "../src/lib/data/argentinaContrac
 
 const argentinaCases = argentinaDataset.cases as ArgentinaWorkCase[];
 const argentinaContractCases = argentinaContractDataset.cases as ArgentinaContractCaseFile[];
+const rioDeLaPlataCoordinateCaseIds = [
+  "AR-WORK-46-0028-OBR21",
+  "AR-WORK-46-0002-OBR23",
+  "AR-CONTRACT-46-1551-CON21",
+  "AR-CONTRACT-46-0143-CON23",
+  "AR-CONTRACT-46-0658-CON22",
+];
 
 test("filterExplorerCases includes Argentina contracts only after official geo enrichment", () => {
   const cases = filterExplorerCases({
@@ -21,12 +28,18 @@ test("filterExplorerCases includes Argentina contracts only after official geo e
 
   const contractCases = cases.filter((caseFile) => caseFile.id.startsWith("AR-CONTRACT-"));
 
-  assert.equal(cases.length, 431);
-  assert.equal(contractCases.length, 210);
+  assert.equal(cases.length, 426);
+  assert.equal(contractCases.length, 207);
   assert.equal(contractCases.every((caseFile) => caseFile.coordinates !== null), true);
   assert.equal(cases.some((caseFile) => caseFile.id === "AR-WORK-74-0001-OBR21"), false);
   assert.equal(cases.some((caseFile) => caseFile.id === "AR-WORK-74-0005-OBR21"), false);
   assert.equal(cases.some((caseFile) => caseFile.id === "AR-CONTRACT-74-1345-CON21"), false);
+  assert.deepEqual(
+    rioDeLaPlataCoordinateCaseIds.filter((id) =>
+      cases.some((caseFile) => caseFile.id === id),
+    ),
+    [],
+  );
 });
 
 test("filterExplorerCases lets Argentina map search find suppliers", () => {

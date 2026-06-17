@@ -20,7 +20,7 @@ Date: 2026-05-21
 - 389 canonical CONTRAT.AR contract cases.
 - 7,285 Mapa de Inversiones progress cases.
 - 12 historical-judicial context cases.
-- 431 map-eligible cases after the coordinate gate.
+- 426 map-eligible cases after the coordinate gate.
 - 9,617 receipts.
 - 11 verified raw files.
 
@@ -54,6 +54,11 @@ This catches the known ocean duplicates while preserving mainland/Tierra del
 Fuego points west of the Atlantic band. The original coordinate remains in the
 case data as a review gap; Faro does not correct or replace it.
 
+The gate also blocks the reviewed Rio de la Plata coordinate
+`-34.392726, -58.312183`, which CONTRAT.AR reports for DNV signage works and
+related contracts but which falls near Playa Honda. Those cases stay in the data
+as official-coordinate review gaps and are not drawn on the map.
+
 ## Verification
 
 Passing after regeneration:
@@ -66,7 +71,7 @@ Passing after regeneration:
 
 Observed reports:
 
-- `data:geo-report`: 7,932 total cases, 431 map-eligible, 6 known-bad geometry
+- `data:geo-report`: 7,932 total cases, 426 map-eligible, 11 known-bad geometry
   records, 7,441 missing-geometry records.
 - `data:quality-report`: 6 datasets, 7,932 cases, 7,935 raw rows, 9,617
   receipts, 11 raw files, 0 blockers.

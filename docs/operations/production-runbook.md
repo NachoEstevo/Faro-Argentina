@@ -192,7 +192,7 @@ Linea base documentada para este runbook:
 - Mapa de Inversiones agregado: `2026-05-21`.
 - Expedientes Argentina: `7.932`.
 - Receipts: `9.617`.
-- Expedientes map-safe: `431`.
+- Expedientes map-safe: `426`.
 - Casos con geometria faltante reportados por `data:geo-report`: `7.441`.
 
 La fuente vigente es el reporte generado, no este texto. Antes de comunicar

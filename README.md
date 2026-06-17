@@ -83,7 +83,7 @@ Corpus versionado en el repo segun los reportes generados del 2026-05-21:
 - `7.932` expedientes de Argentina;
 - `9.617` receipts;
 - `11` archivos raw verificados;
-- `431` expedientes elegibles para mapa despues del gate de geometria.
+- `426` expedientes elegibles para mapa despues del gate de geometria.
 
 Para confirmar la linea base actual, ejecutar:
 

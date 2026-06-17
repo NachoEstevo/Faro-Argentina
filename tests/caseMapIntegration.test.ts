@@ -24,6 +24,25 @@ test("CaseMap labels administrative centroid markers as references", async () =>
   assert.match(source, /dashArray/);
 });
 
+test("CaseMap hover tooltip surfaces useful official context without accusation wording", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(source, /buildCaseSignalContext\(mapCases as SignalCaseFile\[\]\)/);
+  assert.match(source, /buildCaseSignals\(caseFile as SignalCaseFile, signalContext\)/);
+  assert.match(source, /selectPrimaryCaseSignal\(signals\)/);
+  assert.match(source, /className="caseMapTooltip"/);
+  assert.match(source, /"Organismo"/);
+  assert.match(source, /"Proveedor"/);
+  assert.match(source, /"Monto"/);
+  assert.match(source, /"Procedimiento"/);
+  assert.match(source, /Señal de revisión/);
+  assert.match(source, /Clic para abrir el expediente/);
+  assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipFacts\)/);
+  assert.match(styles, /\.leafletHost :global\(\.caseMapTooltipSignal-watch\)/);
+  assert.doesNotMatch(source, /corrupci[oó]n|fraude|culpable|delito|irregularidad/i);
+});
+
 test("CaseMap keeps selected case zoom independent from Wayback state", async () => {
   const source = await readFile(caseMapUrl, "utf8");
 
@@ -43,8 +62,12 @@ test("CaseMap uses the official Argenmap light base layer outside Wayback mode",
 test("CaseMap keeps overview zoom on whole Leaflet steps for responsive wheel zoom", async () => {
   const source = await readFile(caseMapUrl, "utf8");
 
+  assert.match(source, /const ARGENTINA_OVERVIEW_CENTER: \[number, number\] = \[-38\.4, -64\.4\]/);
   assert.match(source, /const ARGENTINA_INITIAL_ZOOM = 5/);
-  assert.match(source, /const ARGENTINA_OVERVIEW_MAX_ZOOM = 5/);
+  assert.match(source, /const ARGENTINA_OVERVIEW_ZOOM = 5/);
+  assert.match(source, /const ARGENTINA_OVERVIEW_MAX_ZOOM = 6/);
+  assert.match(source, /const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120/);
+  assert.match(source, /map\.flyTo\(ARGENTINA_OVERVIEW_CENTER, ARGENTINA_OVERVIEW_ZOOM/);
   assert.match(source, /<ZoomControl position="topright" \/>/);
   assert.doesNotMatch(source, /zoomSnap=\{0\.25\}/);
   assert.doesNotMatch(source, /const ARGENTINA_INITIAL_ZOOM = 5\.25/);

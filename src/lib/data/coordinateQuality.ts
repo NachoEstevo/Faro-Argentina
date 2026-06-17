@@ -50,6 +50,12 @@ const knownBadGeometryCaseIds = new Set([
   "AR-WORK-74-0005-OBR21",
 ]);
 
+const knownBadGeometryCoordinates: GeoPoint[] = [
+  // CONTRAT.AR reports this location for several nationwide DNV signage works,
+  // but the point falls in the Rio de la Plata near Playa Honda.
+  { lat: -34.392726, lon: -58.312183 },
+];
+
 export function assessCoordinateQuality(
   candidate: CoordinateCandidate,
 ): CoordinateQuality {
@@ -84,6 +90,14 @@ export function assessCoordinateQuality(
       candidate,
       "known_bad_geometry",
       "Coordenadas oficiales bloqueadas por control de calidad manual.",
+    );
+  }
+
+  if (candidate.countryCode === "AR" && isKnownBadGeometryCoordinate(coordinates)) {
+    return buildQuality(
+      candidate,
+      "known_bad_geometry",
+      "Coordenadas oficiales bloqueadas por control de calidad geografica.",
     );
   }
 
@@ -195,6 +209,14 @@ function isInsideBounds(coordinates: GeoPoint, bounds: Bounds): boolean {
 
 function isSouthernAtlanticCoordinate(coordinates: GeoPoint): boolean {
   return coordinates.lat <= -53 && coordinates.lon >= -60;
+}
+
+function isKnownBadGeometryCoordinate(coordinates: GeoPoint): boolean {
+  return knownBadGeometryCoordinates.some(
+    (knownBad) =>
+      nearlyEqual(coordinates.lat, knownBad.lat) &&
+      nearlyEqual(coordinates.lon, knownBad.lon),
+  );
 }
 
 function looksLikeMissingSign(coordinates: GeoPoint, bounds: Bounds): boolean {

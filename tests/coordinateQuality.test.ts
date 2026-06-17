@@ -103,6 +103,29 @@ test("assessCoordinateQuality blocks southern Atlantic coordinates inside the br
   assert.match(quality.summary, /control de calidad/i);
 });
 
+test("assessCoordinateQuality blocks the Rio de la Plata signage coordinate", () => {
+  const quality = assessCoordinateQuality({
+    caseId: "AR-WORK-46-0028-OBR21",
+    countryCode: "AR",
+    coordinates: { lat: -34.392726, lon: -58.312183 },
+  });
+
+  assert.equal(quality.status, "known_bad_geometry");
+  assert.equal(quality.exposeOnMap, false);
+  assert.match(quality.summary, /control de calidad/i);
+});
+
+test("assessCoordinateQuality keeps checked coastal urban coordinates map-safe", () => {
+  const quality = assessCoordinateQuality({
+    caseId: "AR-WORK-LA-PLATA-COASTAL-CHECK",
+    countryCode: "AR",
+    coordinates: { lat: -34.920494, lon: -57.953565 },
+  });
+
+  assert.equal(quality.status, "valid_official_geometry");
+  assert.equal(quality.exposeOnMap, true);
+});
+
 test("assessCoordinateQuality reports unsupported countries distinctly", () => {
   const quality = assessCoordinateQuality({
     caseId: "UY-TENDER-VALID-LOOKING",

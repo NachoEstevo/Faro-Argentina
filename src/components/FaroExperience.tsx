@@ -68,6 +68,7 @@ interface Props {
 }
 
 type InterfaceTheme = "dark" | "light";
+type PlatformTheme = InterfaceTheme | "mapCream";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
@@ -569,7 +570,7 @@ export default function FaroExperience({
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
   const showBackControl = viewMode === "map";
-  const activePlatformTheme = viewMode === "map" ? "dark" : interfaceTheme;
+  const activePlatformTheme: PlatformTheme = viewMode === "map" ? "mapCream" : interfaceTheme;
 
   const shellClasses = [
     styles.shell,
@@ -953,20 +954,29 @@ function InterfaceThemeToggle({
   theme: InterfaceTheme;
   onThemeChange: (theme: InterfaceTheme) => void;
 }) {
-  const nextTheme: InterfaceTheme = theme === "dark" ? "light" : "dark";
-  const nextLabel = nextTheme === "dark" ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
-  const ThemeIcon = theme === "dark" ? Sun : Moon;
-
   return (
-    <button
-      type="button"
-      className={styles.interfaceThemeDock}
-      onClick={() => onThemeChange(nextTheme)}
-      aria-label={nextLabel}
-      title={nextLabel}
-    >
-      <ThemeIcon size={15} aria-hidden />
-    </button>
+    <div className={styles.interfaceThemeDock} role="group" aria-label="Tema de interfaz">
+      <button
+        type="button"
+        className={`${styles.interfaceThemeOption} ${theme === "light" ? styles.interfaceThemeOptionActive : ""}`}
+        onClick={() => onThemeChange("light")}
+        aria-label="Modo claro"
+        aria-pressed={theme === "light"}
+        title="Modo claro"
+      >
+        <Sun size={15} aria-hidden />
+      </button>
+      <button
+        type="button"
+        className={`${styles.interfaceThemeOption} ${theme === "dark" ? styles.interfaceThemeOptionActive : ""}`}
+        onClick={() => onThemeChange("dark")}
+        aria-label="Modo oscuro"
+        aria-pressed={theme === "dark"}
+        title="Modo oscuro"
+      >
+        <Moon size={15} aria-hidden />
+      </button>
+    </div>
   );
 }
 

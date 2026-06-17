@@ -37,7 +37,7 @@
 }
 
 .clearAll:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--cf-bg-overlay);
   color: var(--cf-text);
 }
 
@@ -108,18 +108,18 @@
 }
 
 .chip:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--cf-bg-overlay);
   color: var(--cf-text);
 }
 
 .chipActive {
-  background: rgba(90, 169, 229, 0.12);
+  background: var(--cf-accent-faint);
   border-color: var(--cf-accent);
   color: var(--cf-accent);
 }
 
 .chipActive:hover {
-  background: rgba(90, 169, 229, 0.18);
+  background: color-mix(in srgb, var(--cf-accent-faint) 76%, var(--cf-bg-overlay));
 }
 
 .chipDot {
@@ -153,7 +153,7 @@
   left: 4px;
   right: 4px;
   height: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--cf-border) 82%, transparent);
   border-radius: 2px;
 }
 
@@ -184,9 +184,9 @@
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background: var(--cf-text);
-  border: 0;
-  box-shadow: 0 0 0 4px rgba(90, 169, 229, 0.22), 0 1px 2px rgba(0, 0, 0, 0.6);
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cf-accent) 22%, transparent), 0 1px 2px rgba(20, 32, 44, 0.24);
   cursor: pointer;
   pointer-events: auto;
 }
@@ -195,9 +195,9 @@
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background: var(--cf-text);
-  border: 0;
-  box-shadow: 0 0 0 4px rgba(90, 169, 229, 0.22), 0 1px 2px rgba(0, 0, 0, 0.6);
+  background: var(--cf-bg-elev);
+  border: 1px solid var(--cf-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cf-accent) 22%, transparent), 0 1px 2px rgba(20, 32, 44, 0.24);
   cursor: pointer;
   pointer-events: auto;
 }
