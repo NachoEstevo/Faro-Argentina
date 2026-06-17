@@ -9,6 +9,7 @@ const appLayoutUrl = new URL("../src/app/layout.tsx", import.meta.url);
 const adminLayoutUrl = new URL("../src/app/admin/layout.tsx", import.meta.url);
 const signInLayoutUrl = new URL("../src/app/sign-in/layout.tsx", import.meta.url);
 const signUpLayoutUrl = new URL("../src/app/sign-up/layout.tsx", import.meta.url);
+const globalStylesUrl = new URL("../src/app/globals.css", import.meta.url);
 const regionalMapUrl = new URL("../src/components/RegionalMap/RegionalMap.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.tsx", import.meta.url);
@@ -224,6 +225,7 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {
   const styles = await readFile(regionalMapStylesUrl, "utf8");
+  const globalStyles = await readFile(globalStylesUrl, "utf8");
 
   assert.match(styles, /\.shellMobileMenuOpen \.overlayLayer\s*\{[\s\S]*z-index: 4;[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.sidebar\s*\{[\s\S]*left: 0;[\s\S]*transition: none;/);
@@ -233,4 +235,7 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /\.mobileBackdrop\s*\{[\s\S]*z-index: 60;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*--sidebar-width: 320px;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*max-width: 210px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 16px;[\s\S]*right: 72px;/);
+  assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
 });

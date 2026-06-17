@@ -119,6 +119,13 @@ a {
   margin-right: 18px;
 }
 
+@media (max-width: 640px) {
+  .leafletRoot .leaflet-top.leaflet-right .leaflet-control-zoom {
+    margin-top: 132px;
+    margin-right: 18px;
+  }
+}
+
 .leafletRoot .leaflet-control-zoom a {
   background: transparent !important;
   border: 0 !important;

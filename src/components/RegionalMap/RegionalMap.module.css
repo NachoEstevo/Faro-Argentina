@@ -2194,6 +2194,44 @@
   }
 }
 
+@media (min-width: 641px) and (max-width: 900px) {
+  .mobileHeader {
+    justify-content: flex-end;
+    padding: 16px 18px;
+    pointer-events: none;
+  }
+
+  .mobileBrand {
+    display: none;
+  }
+
+  .mobileMenuButton {
+    pointer-events: auto;
+  }
+
+  .overlayTopBar {
+    top: 16px;
+    left: 18px;
+    right: 72px;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .backToGlobal,
+  .tourButton {
+    min-height: 40px;
+  }
+
+  .backToGlobal {
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .tourButton {
+    padding: 0 14px;
+  }
+}
+
 @media (max-width: 1280px) {
   .trustSelectedFull {
     display: none;
