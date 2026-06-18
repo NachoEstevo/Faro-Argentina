@@ -482,9 +482,9 @@ export default function ExplorerView({
             onSelectCase={onSelectCase}
           />
         ) : selectedCaseStatus === "loading" ? (
-          <ExplorerDetailGate status="loading" />
+          <ExplorerDetailGate status="loading" onBack={onClearSelection} />
         ) : selectedCaseStatus === "error" ? (
-          <ExplorerDetailGate status="error" />
+          <ExplorerDetailGate status="error" onBack={onClearSelection} />
         ) : (
         <>
         <header className={styles.mainHeader}>
@@ -935,14 +935,24 @@ function ExplorerDetail({
   );
 }
 
-function ExplorerDetailGate({ status }: { status: "loading" | "error" }) {
+function ExplorerDetailGate({ status, onBack }: { status: "loading" | "error"; onBack: () => void }) {
   const isError = status === "error";
   return (
     <section className={styles.detail} aria-label="Detalle de expediente">
       <article className={styles.detailEmpty} role={isError ? "alert" : "status"} aria-live="polite">
-        {isError
-          ? "No se pudo cargar el expediente completo. Volvé al listado e intentá abrirlo otra vez."
-          : "Cargando expediente completo con receipts, caveats y fuente oficial."}
+        <p>
+          {isError
+            ? "No se pudo cargar el expediente completo. El expediente puede seguir disponible como brecha de datos en el listado."
+            : "Cargando expediente completo con receipts, caveats y fuente oficial."}
+        </p>
+        {isError && (
+          <div className={styles.detailEmptyActions}>
+            <button type="button" className={styles.detailBack} onClick={onBack}>
+              <ChevronLeft size={14} aria-hidden />
+              <span>Volver al listado</span>
+            </button>
+          </div>
+        )}
       </article>
     </section>
   );

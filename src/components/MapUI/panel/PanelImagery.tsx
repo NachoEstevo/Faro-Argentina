@@ -90,14 +90,42 @@ function Scrubber({
 
   return (
     <div className={styles.imageryCard}>
+      <div className={styles.imagerySummary}>
+        <span className={styles.imagerySummaryLabel}>Año visible</span>
+        <span className={styles.imageryReadout} aria-hidden>
+          {formatReleaseYear(activeRelease)}
+        </span>
+      </div>
       <div
         className={styles.imageryStage}
         style={{ ["--cp-scrub" as string]: `${percent}%` }}
       >
-        <span className={styles.imageryReadout} aria-hidden>
-          {formatReleaseYear(activeRelease)}
-        </span>
-        <span className={styles.imageryTick} aria-hidden />
+        <div className={styles.imageryTicks} aria-hidden>
+          {releases.map((release, index) => {
+            const tickPercent = last === 0 ? 0 : (index / last) * 100;
+            const isActive = release.releaseId === activeReleaseId;
+            const showLabel =
+              releases.length <= 7 ||
+              index === 0 ||
+              index === last ||
+              isActive ||
+              release.year % 2 === 0;
+            const edge = index === 0 ? "start" : index === last ? "end" : undefined;
+            return (
+              <span
+                key={release.releaseId}
+                className={`${styles.imageryYearTick} ${isActive ? styles.imageryYearTickActive : ""}`}
+                data-edge={edge}
+                style={{ ["--cp-tick" as string]: `${tickPercent}%` }}
+              >
+                <span className={styles.imageryTickLine} />
+                {showLabel && (
+                  <span className={styles.imageryTickYear}>{release.year}</span>
+                )}
+              </span>
+            );
+          })}
+        </div>
         <input
           type="range"
           min={0}
@@ -110,13 +138,11 @@ function Scrubber({
           }}
           disabled={releases.length <= 1}
           aria-label="Año de la imagen satelital"
+          aria-valuemin={firstRelease.year}
+          aria-valuemax={lastRelease.year}
           aria-valuetext={formatReleaseYear(activeRelease)}
           className={styles.imagerySlider}
         />
-        <div className={styles.imageryEnds} aria-hidden>
-          <span>{firstRelease.year}</span>
-          <span>{lastRelease.year}</span>
-        </div>
       </div>
     </div>
   );

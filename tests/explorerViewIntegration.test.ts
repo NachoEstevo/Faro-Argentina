@@ -81,6 +81,20 @@ test("ExplorerView keeps filter controls fixed while pivots scroll", async () =>
   assert.doesNotMatch(source, /<p className=\{styles\.filterGroupLabel\}>Geometría<\/p>/);
   assert.match(css, /\.sidebar\s*\{[\s\S]*overflow: hidden;/);
   assert.match(css, /\.sidebarScrollRegion\s*\{[\s\S]*flex: 1 1 auto;[\s\S]*min-height: 0;[\s\S]*overflow-y: auto;/);
+  assert.match(css, /\.sidebarScrollRegion\s*\{[\s\S]*scrollbar-width: thin;/);
+  assert.match(css, /\.sidebarScrollRegion::\-webkit\-scrollbar\s*\{[\s\S]*width: 8px;/);
+  assert.match(css, /\.sidebarScrollRegion::\-webkit\-scrollbar-thumb\s*\{[\s\S]*border-radius: 999px;/);
+});
+
+test("ExplorerView lets users return from failed full-case loads", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /selectedCaseStatus === "error" \? \(\s*<ExplorerDetailGate status="error" onBack=\{onClearSelection\} \/>/);
+  assert.match(source, /function ExplorerDetailGate\(\{ status, onBack \}/);
+  assert.match(source, /No se pudo cargar el expediente completo/);
+  assert.match(source, /<button type="button" className=\{styles\.detailBack\} onClick=\{onBack\}>[\s\S]*Volver al listado/);
+  assert.match(css, /\.detailEmptyActions\s*\{/);
 });
 
 test("ExplorerView applies sidebar filters by returning from detail to the filtered list", async () => {

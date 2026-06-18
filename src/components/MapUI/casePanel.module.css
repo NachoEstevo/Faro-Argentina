@@ -334,61 +334,121 @@
 /* ── Imagery scrubber ───────────────────────────────────────────── */
 
 .imageryCard {
-  padding: 18px 4px 4px;
+  padding: 8px 4px 2px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.imagerySummary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 14px;
+  min-width: 0;
 }
 
-/* The "stage" hosts the readout, the rail, and the end labels.
-   Everything aligns to a shared horizontal scrub axis driven by
-   the --cp-scrub custom property (a percentage). */
-.imageryStage {
-  position: relative;
-  padding-top: 44px;
-  padding-bottom: 22px;
+.imagerySummaryLabel {
+  min-width: 0;
+  color: var(--cp-text-faint);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-/* Year readout — slides horizontally with the thumb. */
 .imageryReadout {
-  position: absolute;
-  top: 0;
-  left: var(--cp-scrub, 0%);
-  transform: translateX(-50%);
+  flex: 0 0 auto;
+  max-width: 48%;
   font-family: var(--cf-font-data);
-  font-size: 28px;
+  font-size: clamp(21px, 4.6vw, 28px);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--cp-text);
   white-space: nowrap;
-  transition: left 220ms var(--cp-ease);
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
   pointer-events: none;
 }
 
-/* Vertical hairline from the readout down to the rail — anchors the
-   year to the position visually. */
-.imageryTick {
+/* The "stage" hosts the rail and year tick marks. Everything aligns to a
+   shared horizontal scrub axis driven by the --cp-scrub custom property. */
+.imageryStage {
+  position: relative;
+  padding-top: 18px;
+  padding-bottom: 24px;
+}
+
+.imageryTicks {
   position: absolute;
-  top: 30px;
-  left: var(--cp-scrub, 0%);
-  width: 1px;
-  height: 10px;
-  background: linear-gradient(to bottom, transparent, var(--cp-accent));
-  transform: translateX(-50%);
-  transition: left 220ms var(--cp-ease);
+  top: 0;
+  left: 7px;
+  right: 7px;
+  height: 42px;
   pointer-events: none;
 }
 
-/* The slider itself sits on the rail line. */
+.imageryYearTick {
+  position: absolute;
+  top: 0;
+  left: var(--cp-tick, 0%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 1px;
+  transform: translateX(-50%);
+}
+
+.imageryYearTick[data-edge="start"] {
+  align-items: flex-start;
+  transform: translateX(0);
+}
+
+.imageryYearTick[data-edge="end"] {
+  align-items: flex-end;
+  transform: translateX(-100%);
+}
+
+.imageryTickLine {
+  width: 1px;
+  height: 7px;
+  background: color-mix(in srgb, var(--cp-text-faint) 40%, transparent);
+  border-radius: 999px;
+}
+
+.imageryTickYear {
+  font-family: var(--cf-font-data);
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: color-mix(in srgb, var(--cp-text-faint) 86%, transparent);
+  white-space: nowrap;
+}
+
+.imageryYearTickActive .imageryTickLine {
+  height: 13px;
+  background: var(--cp-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cp-accent) 12%, transparent);
+}
+
+.imageryYearTickActive .imageryTickYear {
+  color: var(--cp-text);
+  font-weight: 600;
+}
+
 .imagerySlider {
   position: relative;
   z-index: 1;
   appearance: none;
   width: 100%;
   height: 18px;
-  margin: 0;
+  margin: 10px 0 0;
   padding: 0;
   background: transparent;
   outline: none;
@@ -471,22 +531,6 @@
 .imagerySlider:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
-
-/* End labels — the available range as ambient context. */
-.imageryEnds {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--cf-font-data);
-  font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  color: var(--cp-text-faint);
-  letter-spacing: -0.01em;
-  pointer-events: none;
 }
 
 /* Single discreet attribution line under the stage. */

@@ -615,6 +615,10 @@ export default function FaroExperience({
   const showMapChrome = viewMode === "map";
   const showBackControl = viewMode === "map";
   const activePlatformTheme: PlatformTheme = viewMode === "map" ? "mapCream" : interfaceTheme;
+  const backControlLabel = selectedCaseId ? "Volver al mapa" : "Mapa general";
+  const backControlAriaLabel = selectedCaseId
+    ? `Volver al mapa de ${country.label}`
+    : "Volver al mapa general";
 
   const shellClasses = [
     styles.shell,
@@ -740,10 +744,10 @@ export default function FaroExperience({
                 }
                 router.push("/");
               }}
-              aria-label={selectedCaseId ? `Volver a ${country.label}` : "Volver al mapa general"}
+              aria-label={backControlAriaLabel}
             >
               <ArrowLeft size={14} aria-hidden />
-              <span>{selectedCaseId ? country.label : "Mapa general"}</span>
+              <span>{backControlLabel}</span>
             </button>
           )}
           <PlatformModeNav

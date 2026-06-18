@@ -63,6 +63,15 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /viewMode === "map"/);
 });
 
+test("case detail back control names the action instead of the country", async () => {
+  const source = await readFile(faroExperienceUrl, "utf8");
+
+  assert.match(source, /const backControlLabel = selectedCaseId \? "Volver al mapa" : "Mapa general";/);
+  assert.match(source, /const backControlAriaLabel = selectedCaseId[\s\S]*`Volver al mapa de \$\{country\.label\}`/);
+  assert.match(source, /<span>\{backControlLabel\}<\/span>/);
+  assert.doesNotMatch(source, /<span>\{selectedCaseId \? country\.label : "Mapa general"\}<\/span>/);
+});
+
 test("Wayback timeline floats over the map with a mobile inline fallback", async () => {
   const experienceSource = await readFile(faroExperienceUrl, "utf8");
   const casePanelSource = await readFile(casePanelUrl, "utf8");
@@ -78,9 +87,17 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   assert.match(casePanelSource, /styles\.mobileInlineImagery/);
   assert.match(casePanelSource, /<PanelImagery[\s\S]*onActiveReleaseChange=\{onWaybackReleaseChange\}/);
   assert.match(panelImagerySource, /Año de la imagen satelital/);
+  assert.match(panelImagerySource, /Año visible/);
+  assert.match(panelImagerySource, /styles\.imageryTicks/);
+  assert.match(panelImagerySource, /styles\.imageryYearTick/);
+  assert.match(panelImagerySource, /styles\.imageryTickYear/);
+  assert.match(panelImagerySource, /release\.year % 2 === 0/);
   assert.match(styles, /\.mapImageryControl\s*\{[\s\S]*bottom: 22px;[\s\S]*justify-content: center;/);
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControl\s*\{[\s\S]*display: none;/);
-  assert.match(styles, /\.mapImageryControlCard\s*\{[\s\S]*width: min\(540px, calc\(100% - 40px\)\);/);
+  assert.match(styles, /\.mapImageryControlCard\s*\{[\s\S]*width: min\(460px, calc\(100% - 40px\)\);/);
+  assert.match(casePanelStyles, /\.imagerySummary\s*\{/);
+  assert.match(casePanelStyles, /\.imageryReadout\s*\{[\s\S]*max-width: 48%;/);
+  assert.match(casePanelStyles, /\.imageryYearTickActive \.imageryTickLine\s*\{/);
   assert.match(casePanelStyles, /\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: flex;/);
 });
@@ -193,7 +210,21 @@ test("regional welcome CTA stays a plain map action", async () => {
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 22px 0 24px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
+  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*text-decoration: none;/);
   assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
+});
+
+test("regional welcome uses a paced entrance animation without forcing motion", async () => {
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(styles, /\.welcomeKicker\s*\{[\s\S]*animation: welcomeHeroReveal 720ms/);
+  assert.match(styles, /\.welcomeHeadline\s*\{[\s\S]*animation: welcomeHeroReveal 760ms/);
+  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonReveal 780ms/);
+  assert.match(styles, /\.shellWelcome \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapSettle 980ms/);
+  assert.match(styles, /@keyframes welcomeHeroReveal\s*\{/);
+  assert.match(styles, /@keyframes welcomeButtonReveal\s*\{/);
+  assert.match(styles, /@keyframes welcomeMapSettle\s*\{/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeKicker,[\s\S]*\.welcomeHeadline,[\s\S]*\.welcomeCTA,[\s\S]*animation: none;/);
 });
 
 test("regional welcome starts without sidebar chrome", async () => {

@@ -1141,6 +1141,18 @@
     linear-gradient(135deg, #f4efe3 0%, #eee8dc 42%, #c9e5f7 100%);
 }
 
+.shellWelcome .leafletHost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(6, 10, 14, 0) 0 24%, rgba(6, 10, 14, 0.34) 58%, rgba(6, 10, 14, 0.56) 100%),
+    linear-gradient(180deg, rgba(4, 8, 12, 0.22), rgba(4, 8, 12, 0.1));
+  animation: welcomeMapSettle 980ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
 .mapTourTarget {
   position: absolute;
   top: 96px;
@@ -1206,8 +1218,8 @@
 }
 
 .mapImageryControlCard {
-  width: min(540px, calc(100% - 40px));
-  padding: 13px 18px 15px;
+  width: min(460px, calc(100% - 40px));
+  padding: 13px 18px 14px;
   border: 1px solid var(--cf-border-strong);
   border-radius: 12px;
   background: color-mix(in srgb, var(--cf-bg-elev) 94%, transparent);
@@ -1859,6 +1871,7 @@
   filter: blur(18px);
   opacity: 0.95;
   pointer-events: none;
+  animation: welcomeHaloReveal 920ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
 }
 
 .welcomeKicker {
@@ -1873,6 +1886,8 @@
     0 1px 2px rgba(0, 0, 0, 0.82),
     0 6px 26px rgba(0, 0, 0, 0.78),
     0 0 52px rgba(0, 0, 0, 0.72);
+  animation: welcomeHeroReveal 720ms cubic-bezier(0.16, 1, 0.3, 1) 90ms both;
+  will-change: opacity, transform, filter;
 }
 
 .welcomeHeadline {
@@ -1889,6 +1904,8 @@
     0 1px 2px rgba(0, 0, 0, 0.9),
     0 4px 18px rgba(0, 0, 0, 0.78),
     0 0 46px rgba(0, 0, 0, 0.68);
+  animation: welcomeHeroReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) 190ms both;
+  will-change: opacity, transform, filter;
 }
 
 .welcomeCTA {
@@ -1908,6 +1925,7 @@
   font-weight: 650;
   letter-spacing: 0.01em;
   line-height: 1;
+  text-decoration: none;
   cursor: pointer;
   pointer-events: auto;
   overflow: hidden;
@@ -1923,6 +1941,8 @@
     box-shadow 180ms ease,
     color 180ms ease,
     transform 220ms ease;
+  animation: welcomeButtonReveal 780ms cubic-bezier(0.16, 1, 0.3, 1) 340ms both;
+  will-change: opacity, transform, filter;
 }
 
 .welcomeCTALabel {
@@ -1930,6 +1950,7 @@
   white-space: nowrap;
   font-weight: inherit;
   text-shadow: none;
+  text-decoration: none;
 }
 
 .welcomeCTAArrow {
@@ -1965,6 +1986,55 @@
   box-shadow:
     0 0 0 3px rgba(184, 218, 240, 0.18),
     0 20px 60px rgba(0, 0, 0, 0.38);
+}
+
+@keyframes welcomeHeroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes welcomeButtonReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes welcomeHaloReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+}
+
+@keyframes welcomeMapSettle {
+  0% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .trustStrip {
@@ -2455,9 +2525,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shellWelcome .leafletHost::after,
+  .welcomeOverlay::before,
+  .welcomeKicker,
+  .welcomeHeadline,
   .welcomeCTA,
   .welcomeCTAArrow {
+    animation: none;
     transition: none;
+    filter: none;
+  }
+
+  .shellWelcome .leafletHost::after {
+    opacity: 0;
   }
 }
 
