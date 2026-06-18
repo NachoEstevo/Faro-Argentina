@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
 import { resolveCaseYear } from "@/lib/data/caseYear";
@@ -94,6 +94,8 @@ export default function FaroExperience({
   initialExplorerPreset = null,
 }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [allCases, setAllCases] = useState<ExplorerCase[]>(() => initialCases);
   const [explorerIndex, setExplorerIndex] = useState<InvestigatorExplorerIndex | null>(null);
   const [explorerIndexStatus, setExplorerIndexStatus] = useState<CaseCorpusStatus>(
@@ -229,6 +231,20 @@ export default function FaroExperience({
       router.replace(buildPlatformModeHref(mode, selectedCountry), { scroll: false });
     },
     [router, selectedCountry],
+  );
+
+  const replaceExplorerCaseHref = useCallback(
+    (caseId: string | null, countryCode: "AR" = selectedCountry) => {
+      const nextSearchParams = new URLSearchParams(searchParams.toString());
+      nextSearchParams.set("mode", "explorer");
+      if (caseId) nextSearchParams.set("case", caseId);
+      else nextSearchParams.delete("case");
+      const nextQuery = nextSearchParams.toString();
+      const nextHref = `/pais/${countryCode}${nextQuery ? `?${nextQuery}` : ""}`;
+      if (`${pathname}?${searchParams.toString()}` === nextHref) return;
+      router.replace(nextHref, { scroll: false });
+    },
+    [pathname, router, searchParams, selectedCountry],
   );
 
   useEffect(() => {
@@ -559,6 +575,20 @@ export default function FaroExperience({
     [],
   );
 
+  const handleSelectExplorerCase = useCallback(
+    (caseId: string, countryCode: "AR") => {
+      setSelectedCountry(countryCode);
+      setSelectedCaseId(caseId);
+      replaceExplorerCaseHref(caseId, countryCode);
+    },
+    [replaceExplorerCaseHref],
+  );
+
+  const handleClearExplorerSelection = useCallback(() => {
+    setSelectedCaseId("");
+    replaceExplorerCaseHref(null);
+  }, [replaceExplorerCaseHref]);
+
   useEffect(() => {
     if (viewMode !== "map") setLeadsPanelOpen(false);
   }, [viewMode]);
@@ -775,18 +805,15 @@ export default function FaroExperience({
 
       {viewMode === "explorer" && (
         hasExplorerIndex ? (
-          <ExplorerView
-            index={explorerIndex}
-            selectedCountry={selectedCountry}
-            selectedCase={selectedCase}
-            selectedCaseStatus={selectedExplorerCaseStatus}
-            onSelectCase={(caseId, countryCode) => {
-              setSelectedCountry(countryCode);
-              setSelectedCaseId(caseId);
-            }}
-            onClearSelection={() => setSelectedCaseId("")}
-            initialPreset={initialExplorerPreset}
-          />
+              <ExplorerView
+                index={explorerIndex}
+                selectedCountry={selectedCountry}
+                selectedCase={selectedCase}
+                selectedCaseStatus={selectedExplorerCaseStatus}
+                onSelectCase={handleSelectExplorerCase}
+                onClearSelection={handleClearExplorerSelection}
+                initialPreset={initialExplorerPreset}
+              />
         ) : (
           <CaseCorpusGate
             status={explorerIndexStatus}

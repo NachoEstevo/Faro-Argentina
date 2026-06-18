@@ -72,6 +72,21 @@ test("case detail back control names the action instead of the country", async (
   assert.doesNotMatch(source, /<span>\{selectedCaseId \? country\.label : "Mapa general"\}<\/span>/);
 });
 
+test("Explorer selections update the country URL so expedientes can be shared", async () => {
+  const source = await readFile(faroExperienceUrl, "utf8");
+
+  assert.match(source, /usePathname, useRouter, useSearchParams/);
+  assert.match(source, /const replaceExplorerCaseHref = useCallback/);
+  assert.match(source, /nextSearchParams\.set\("mode", "explorer"\)/);
+  assert.match(source, /if \(caseId\) nextSearchParams\.set\("case", caseId\);/);
+  assert.match(source, /else nextSearchParams\.delete\("case"\);/);
+  assert.match(source, /router\.replace\(nextHref, \{ scroll: false \}\)/);
+  assert.match(source, /const handleSelectExplorerCase = useCallback/);
+  assert.match(source, /const handleClearExplorerSelection = useCallback/);
+  assert.match(source, /onSelectCase=\{handleSelectExplorerCase\}/);
+  assert.match(source, /onClearSelection=\{handleClearExplorerSelection\}/);
+});
+
 test("Wayback timeline floats over the map with a mobile inline fallback", async () => {
   const experienceSource = await readFile(faroExperienceUrl, "utf8");
   const casePanelSource = await readFile(casePanelUrl, "utf8");
