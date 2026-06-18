@@ -14,12 +14,13 @@ export default function WelcomeOverlay({ dismissed, ctaHref, onCTA }: Props) {
   if (dismissed) return null;
   return (
     <div className={styles.welcomeOverlay} aria-hidden="false">
-      <p className={styles.welcomeKicker}>Faro</p>
-      <h1 className={styles.welcomeHeadline}>
-        Evidencia pública para investigar obra pública en Argentina.
-      </h1>
+      <p className={styles.welcomeKicker}>Evidencia oficial de obra pública</p>
+      <h1 className={styles.welcomeHeadline}>Faro</h1>
+      <p className={styles.welcomeCopy}>
+        Mapa, contratos y expedientes públicos para ver qué existe, dónde mirar y qué falta verificar.
+      </p>
       <Link className={styles.welcomeCTA} href={ctaHref} onClick={onCTA}>
-        <span className={styles.welcomeCTALabel}>Ver el mapa</span>
+        <span className={styles.welcomeCTALabel}>Entrar al mapa</span>
         <span className={styles.welcomeCTAArrow} aria-hidden>
           <ArrowRight size={18} strokeWidth={1.9} />
         </span>

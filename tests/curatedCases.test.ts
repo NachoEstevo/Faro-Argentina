@@ -105,7 +105,7 @@ test("regional home keeps the map clean and links selected cases from the trust 
 
   assert.doesNotMatch(regionalMapSource, /CuratedCasesPanel|faro-featured-host|curatedPanelHost/);
   assert.doesNotMatch(countryMapSource, /FeaturedCasesOverlay/);
-  assert.match(trustStripSource, /Expedientes seleccionados/);
+  assert.match(trustStripSource, /Ver seleccionados/);
   assert.match(trustStripSource, /Seleccionados/);
   assert.match(trustStripSource, /preset=selected/);
   assert.match(curatedDataSource, /sin punto de mapa validado/i);

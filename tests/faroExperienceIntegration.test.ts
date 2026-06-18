@@ -219,13 +219,17 @@ test("regional welcome CTA stays a plain map action", async () => {
 
   assert.match(source, /import Link from "next\/link"/);
   assert.match(source, /href=\{ctaHref\}/);
-  assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Ver el mapa<\/span>/);
+  assert.match(source, /Evidencia oficial de obra pública/);
+  assert.match(source, /Mapa, contratos y expedientes públicos/);
+  assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Entrar al mapa<\/span>/);
   assert.match(source, /ArrowRight/);
   assert.match(regionalSource, /ctaHref="\/pais\/AR"/);
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
-  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 22px 0 24px;/);
+  assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 20px 0 22px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*text-decoration: none;/);
+  assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*max-width: 44ch;/);
+  assert.match(styles, /\.shellWelcome \.leafletHost :global\(\.leaflet-tooltip\)\s*\{[\s\S]*display: none !important;/);
   assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
 });
 
@@ -234,12 +238,13 @@ test("regional welcome uses a paced entrance animation without forcing motion", 
 
   assert.match(styles, /\.welcomeKicker\s*\{[\s\S]*animation: welcomeHeroReveal 720ms/);
   assert.match(styles, /\.welcomeHeadline\s*\{[\s\S]*animation: welcomeHeroReveal 760ms/);
+  assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*animation: welcomeHeroReveal 760ms/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonReveal 780ms/);
   assert.match(styles, /\.shellWelcome \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapSettle 980ms/);
   assert.match(styles, /@keyframes welcomeHeroReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeButtonReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeMapSettle\s*\{/);
-  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeKicker,[\s\S]*\.welcomeHeadline,[\s\S]*\.welcomeCTA,[\s\S]*animation: none;/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeKicker,[\s\S]*\.welcomeHeadline,[\s\S]*\.welcomeCopy,[\s\S]*\.welcomeCTA,[\s\S]*animation: none;/);
 });
 
 test("regional welcome starts without sidebar chrome", async () => {

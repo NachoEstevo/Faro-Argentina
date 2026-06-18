@@ -13,12 +13,12 @@ export default function TrustStrip({ totalCases }: Props) {
     <div className={styles.trustStrip} aria-label="Resumen de la fuente">
       <span className={styles.trustItem}>
         <ShieldCheck size={13} aria-hidden className={styles.trustVerified} />
-        <strong>Fuentes oficiales · Argentina</strong>
+        <strong>Fuentes oficiales</strong>
       </span>
       <span className={`${styles.trustDivider} ${styles.trustExtras}`} aria-hidden />
       <span className={`${styles.trustItem} ${styles.trustExtras}`}>
         <Database size={12} aria-hidden className={styles.trustMuted} />
-        {totalCases.toLocaleString("es-AR")} expedientes
+        {totalCases.toLocaleString("es-AR")} expedientes de Argentina
       </span>
       <span className={styles.trustDivider} aria-hidden />
       <Link
@@ -27,7 +27,7 @@ export default function TrustStrip({ totalCases }: Props) {
         aria-label={`Abrir ${CURATED_CASES.length.toLocaleString("es-AR")} expedientes seleccionados`}
       >
         <FileSearch size={12} aria-hidden />
-        <span className={styles.trustSelectedFull}>Expedientes seleccionados</span>
+        <span className={styles.trustSelectedFull}>Ver seleccionados</span>
         <span className={styles.trustSelectedShort}>Seleccionados</span>
       </Link>
     </div>

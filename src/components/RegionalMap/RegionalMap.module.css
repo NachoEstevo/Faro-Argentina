@@ -1153,6 +1153,10 @@
   animation: welcomeMapSettle 980ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
 }
 
+.shellWelcome .leafletHost :global(.leaflet-tooltip) {
+  display: none !important;
+}
+
 .mapTourTarget {
   position: absolute;
   top: 96px;
@@ -1848,13 +1852,13 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -54%);
+  transform: translate(-50%, -50%);
   isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-  width: min(760px, calc(100% - 80px));
+  gap: 16px;
+  width: min(680px, calc(100% - 80px));
   text-align: center;
   pointer-events: none;
 }
@@ -1862,49 +1866,65 @@
 .welcomeOverlay::before {
   content: "";
   position: absolute;
-  inset: -46px -76px -38px;
+  inset: -40px -70px -42px;
   z-index: -1;
-  border-radius: 36px;
+  border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(4, 8, 12, 0.36), rgba(4, 8, 12, 0.2)),
-    linear-gradient(90deg, rgba(4, 8, 12, 0), rgba(4, 8, 12, 0.44) 34%, rgba(4, 8, 12, 0.44) 66%, rgba(4, 8, 12, 0));
-  filter: blur(18px);
-  opacity: 0.95;
+    radial-gradient(circle at 50% 42%, rgba(3, 8, 13, 0.52), rgba(3, 8, 13, 0.34) 42%, transparent 72%),
+    linear-gradient(90deg, rgba(4, 8, 12, 0), rgba(4, 8, 12, 0.34) 34%, rgba(4, 8, 12, 0.34) 66%, rgba(4, 8, 12, 0));
+  filter: blur(20px);
+  opacity: 0.9;
   pointer-events: none;
   animation: welcomeHaloReveal 920ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
 }
 
 .welcomeKicker {
-  margin: 0 0 2px;
-  color: #ffffff;
-  font-family: var(--cf-font-heading);
-  font-size: clamp(44px, 6.8vw, 78px);
-  font-weight: 650;
-  letter-spacing: 0;
-  line-height: 0.9;
+  margin: 0;
+  color: var(--cf-accent-hi);
+  font-family: var(--cf-font-data);
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
   text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.82),
-    0 6px 26px rgba(0, 0, 0, 0.78),
-    0 0 52px rgba(0, 0, 0, 0.72);
+    0 1px 2px rgba(0, 0, 0, 0.76),
+    0 5px 22px rgba(0, 0, 0, 0.62);
   animation: welcomeHeroReveal 720ms cubic-bezier(0.16, 1, 0.3, 1) 90ms both;
   will-change: opacity, transform, filter;
 }
 
 .welcomeHeadline {
   margin: 0;
-  max-width: 22ch;
+  max-width: 10ch;
   font-family: var(--cf-font-heading);
-  font-size: clamp(26px, 3.7vw, 40px);
-  font-weight: 650;
+  font-size: clamp(60px, 8.4vw, 116px);
+  font-weight: 680;
   letter-spacing: 0;
-  line-height: 1.1;
+  line-height: 0.86;
   color: #f9fbff;
   text-wrap: balance;
   text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.9),
-    0 4px 18px rgba(0, 0, 0, 0.78),
-    0 0 46px rgba(0, 0, 0, 0.68);
+    0 1px 2px rgba(0, 0, 0, 0.86),
+    0 8px 28px rgba(0, 0, 0, 0.72),
+    0 0 54px rgba(0, 0, 0, 0.58);
   animation: welcomeHeroReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) 190ms both;
+  will-change: opacity, transform, filter;
+}
+
+.welcomeCopy {
+  margin: 0;
+  max-width: 44ch;
+  color: rgba(244, 248, 251, 0.88);
+  font-family: var(--cf-font-body);
+  font-size: clamp(17px, 1.8vw, 22px);
+  font-weight: 500;
+  line-height: 1.36;
+  text-wrap: balance;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.78),
+    0 8px 24px rgba(0, 0, 0, 0.68);
+  animation: welcomeHeroReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
   will-change: opacity, transform, filter;
 }
 
@@ -1914,8 +1934,9 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  min-height: 54px;
-  padding: 0 22px 0 24px;
+  min-height: 52px;
+  margin-top: 2px;
+  padding: 0 20px 0 22px;
   border: 1px solid rgba(184, 218, 240, 0.38);
   border-radius: 8px;
   background: rgba(8, 12, 17, 0.88);
@@ -2039,43 +2060,44 @@
 
 .trustStrip {
   position: absolute;
-  bottom: 28px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  height: 46px;
-  padding: 0 22px;
-  background: color-mix(in srgb, var(--cf-bg-elev) 90%, transparent);
-  border: 1px solid var(--cf-border);
-  border-radius: 999px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: var(--cf-shadow-soft);
+  gap: 12px;
+  min-height: 38px;
+  padding: 0 16px;
+  background: rgba(8, 12, 17, 0.48);
+  border: 1px solid rgba(184, 218, 240, 0.18);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
   max-width: calc(100% - 48px);
   overflow: hidden;
+  opacity: 0.88;
 }
 
 .trustItem {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-family: var(--cf-font-body);
-  font-size: 12.5px;
-  color: var(--cf-text-secondary);
+  font-size: 12px;
+  color: rgba(244, 248, 251, 0.72);
 }
 
 .trustItem strong {
-  color: var(--cf-text);
-  font-weight: 500;
+  color: rgba(244, 248, 251, 0.88);
+  font-weight: 600;
 }
 
 .trustDivider {
   width: 1px;
-  height: 20px;
-  background: var(--cf-border);
+  height: 16px;
+  background: rgba(184, 218, 240, 0.18);
 }
 
 .trustVerified {
@@ -2092,9 +2114,9 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: var(--cf-accent-hi);
+  color: rgba(213, 236, 255, 0.9);
   font-family: var(--cf-font-body);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: color 160ms ease, transform 160ms ease;
@@ -2341,18 +2363,26 @@
   }
 
   .welcomeHeadline {
-    font-size: clamp(20px, 6vw, 26px);
-    line-height: 1.15;
+    font-size: clamp(56px, 16vw, 78px);
+    line-height: 0.88;
   }
 
   .welcomeKicker {
-    font-size: clamp(42px, 13vw, 62px);
+    max-width: 30ch;
+    font-size: 10px;
+    line-height: 1.35;
   }
 
   .welcomeOverlay {
     width: min(420px, calc(100% - 40px));
-    gap: 18px;
+    gap: 14px;
     transform: translate(-50%, -50%);
+  }
+
+  .welcomeCopy {
+    max-width: 32ch;
+    font-size: clamp(15px, 4.3vw, 18px);
+    line-height: 1.42;
   }
 
   .welcomeCTA {
@@ -2364,9 +2394,9 @@
 
   .trustStrip {
     bottom: 18px;
-    gap: 10px;
-    padding: 0 16px;
-    height: 42px;
+    gap: 9px;
+    padding: 0 13px;
+    min-height: 38px;
     max-width: calc(100% - 24px);
   }
 
@@ -2469,11 +2499,16 @@
     gap: 12px;
   }
   .welcomeHeadline {
-    font-size: clamp(16px, 4vh, 22px);
+    font-size: clamp(42px, 13vh, 62px);
   }
 
   .welcomeKicker {
-    font-size: clamp(34px, 9vh, 48px);
+    font-size: 9px;
+  }
+
+  .welcomeCopy {
+    font-size: clamp(13px, 3.6vh, 16px);
+    max-width: 36ch;
   }
   .welcomeCTA {
     min-height: 50px;
@@ -2504,10 +2539,10 @@
 /* Ultra-wide: trust strip un poco más ancho. */
 @media (min-width: 2400px) {
   .welcomeHeadline {
-    font-size: clamp(38px, 3vw, 56px);
+    font-size: clamp(92px, 5vw, 132px);
   }
   .welcomeKicker {
-    font-size: clamp(66px, 4.6vw, 98px);
+    font-size: clamp(13px, 0.8vw, 16px);
   }
   .welcomeOverlay {
     width: min(960px, calc(100% - 200px));
@@ -2529,6 +2564,7 @@
   .welcomeOverlay::before,
   .welcomeKicker,
   .welcomeHeadline,
+  .welcomeCopy,
   .welcomeCTA,
   .welcomeCTAArrow {
     animation: none;
