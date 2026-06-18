@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, ExternalLink, Route } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
@@ -9,13 +9,10 @@ import styles from "../casePanel.module.css";
 interface Props {
   caseFile: ExplorerCase;
   signalContext?: CaseSignalContext;
-  traceMode: boolean;
-  onTraceModeChange: (next: boolean) => void;
 }
 
-export default function PanelActions({ caseFile, signalContext, traceMode, onTraceModeChange }: Props) {
+export default function PanelActions({ caseFile, signalContext }: Props) {
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext);
-  const { hasOfficialGeometry } = expediente.investigationContext;
   const encodedId = encodeURIComponent(caseFile.id);
   return (
     <div className={styles.actions}>
@@ -32,16 +29,6 @@ export default function PanelActions({ caseFile, signalContext, traceMode, onTra
           <Download size={14} aria-hidden /> Exportar
         </a>
       </div>
-      <button
-        type="button"
-        className={`${styles.actionButton} ${styles.actionWide} ${traceMode && hasOfficialGeometry ? styles.actionWideActive : ""}`}
-        disabled={!hasOfficialGeometry}
-        onClick={() => {
-          if (hasOfficialGeometry) onTraceModeChange(!traceMode);
-        }}
-      >
-        <Route size={14} aria-hidden /> Rastro visual
-      </button>
     </div>
   );
 }

@@ -17,7 +17,10 @@ const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.
 const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
 const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
+const caseMapUrl = new URL("../src/components/CaseMap.tsx", import.meta.url);
+const caseDetailsUrl = new URL("../src/components/CaseDetails.tsx", import.meta.url);
 const casePanelUrl = new URL("../src/components/MapUI/CasePanel.tsx", import.meta.url);
+const panelActionsUrl = new URL("../src/components/MapUI/panel/PanelActions.tsx", import.meta.url);
 const panelImageryUrl = new URL("../src/components/MapUI/panel/PanelImagery.tsx", import.meta.url);
 const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
@@ -53,6 +56,10 @@ test("public map routes stay outside Clerk chrome while private routes keep Cler
 
 test("FaroExperience preserves operational map case rendering", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
+  const caseMapSource = await readFile(caseMapUrl, "utf8");
+  const casePanelSource = await readFile(casePanelUrl, "utf8");
+  const panelActionsSource = await readFile(panelActionsUrl, "utf8");
+  const caseDetailsSource = await readFile(caseDetailsUrl, "utf8");
 
   assert.match(source, /<CaseMap[\s\S]*cases=\{countryReviewCases\}/);
   assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
@@ -61,6 +68,11 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
+  assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
+  assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
+  assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);
+  assert.doesNotMatch(panelActionsSource, /Rastro visual|Route|traceMode|onTraceModeChange|actionWideActive/);
+  assert.doesNotMatch(caseDetailsSource, /Rastro visual|traceMode|onTraceModeChange|traceBox|describeTraceContext/);
 });
 
 test("case detail back control names the action instead of the country", async () => {

@@ -14,8 +14,6 @@ import styles from "./casePanel.module.css";
 interface Props {
   caseFile: ExplorerCase;
   signalContext?: CaseSignalContext;
-  traceMode: boolean;
-  onTraceModeChange: (next: boolean) => void;
   onClose: () => void;
   waybackState: WaybackState;
   onWaybackReleaseChange: (releaseId: number) => void;
@@ -25,8 +23,6 @@ interface Props {
 export default function CasePanel({
   caseFile,
   signalContext,
-  traceMode,
-  onTraceModeChange,
   onClose,
   waybackState,
   onWaybackReleaseChange,
@@ -50,12 +46,7 @@ export default function CasePanel({
         )}
         <PanelTechDetails caseFile={caseFile} signalContext={signalContext} />
         <PanelNextSteps caseFile={caseFile} signalContext={signalContext} />
-        <PanelActions
-          caseFile={caseFile}
-          signalContext={signalContext}
-          traceMode={traceMode}
-          onTraceModeChange={onTraceModeChange}
-        />
+        <PanelActions caseFile={caseFile} signalContext={signalContext} />
       </div>
     </div>
   );

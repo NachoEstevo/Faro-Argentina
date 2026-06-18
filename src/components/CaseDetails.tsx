@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Download, ExternalLink, FileText, Route, ShieldCheck } from "lucide-react";
+import { Download, ExternalLink, FileText, ShieldCheck } from "lucide-react";
 
 import type { CaseDataset } from "@/lib/caseRepository";
 import type { ArgentinaWorkCase } from "@/lib/data/argentinaWorks";
@@ -17,21 +17,16 @@ export function CaseDetails({
   caseFile,
   dataset,
   signalContext,
-  traceMode,
-  onTraceModeChange,
 }: {
   caseFile: ExplorerCase;
   dataset: CaseDataset;
   signalContext?: CaseSignalContext;
-  traceMode: boolean;
-  onTraceModeChange: (next: boolean) => void;
 }) {
   const isContract = isArgentinaContractCase(caseFile) && caseFile.caseType === "procurement_contract";
   const isInvestmentMap = isArgentinaInvestmentMapCase(caseFile);
   const relatedReceipts = "relatedReceipts" in caseFile ? caseFile.relatedReceipts ?? [] : [];
   const contextualCitations = caseFile.contextualCitations ?? [];
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext, contextualCitations);
-  const { hasOfficialGeometry } = expediente.investigationContext;
   const encodedCaseId = encodeURIComponent(caseFile.id);
   return (
     <div className="caseDetails">
@@ -114,21 +109,6 @@ export function CaseDetails({
       </section>
 
       <ContextualCitationsPanel citations={expediente.investigationContext.contextualCitations} />
-
-      <section className="traceBox">
-        <button
-          type="button"
-          className={hasOfficialGeometry && traceMode ? "active" : ""}
-          disabled={!hasOfficialGeometry}
-          onClick={() => {
-            if (hasOfficialGeometry) onTraceModeChange(!traceMode);
-          }}
-        >
-          <Route size={17} aria-hidden />
-          Rastro visual
-        </button>
-        <p>{describeTraceContext({ hasOfficialGeometry, isContract })}</p>
-      </section>
 
       <section className="nextStepsBox">
         <h2>Que verificar despues</h2>
@@ -219,23 +199,6 @@ function formatInvestmentLocation(
     .filter((value): value is string => Boolean(value));
   return parts.length > 0 ? parts.join(", ") : caseFile.locationName ?? "Sin dato";
 }
-
-function describeTraceContext({
-  hasOfficialGeometry,
-  isContract,
-}: {
-  hasOfficialGeometry: boolean;
-  isContract: boolean;
-}): string {
-  if (!hasOfficialGeometry) {
-    return "Faro no dibuja este caso en el mapa hasta tener geometria oficial confiable. La fuente es verificable, pero no hay punto ni rastro visual habilitado.";
-  }
-  if (isContract) {
-    return "El punto se dibuja porque el contrato cruza contra una obra con coordenada oficial. El domicilio del proveedor no se usa como ubicacion de ejecucion.";
-  }
-  return "En esta capa el rastro financiero no se dibuja hasta tener origen y destino geograficos verificados. Por ahora se ilumina el punto oficial de la obra.";
-}
-
 
 function formatBidderCount(
   caseFile: Pick<ArgentinaContractCaseFile, "bidderCount" | "offerCount">,

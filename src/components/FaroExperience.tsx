@@ -128,7 +128,6 @@ export default function FaroExperience({
   const [yearTo, setYearTo] = useState<number | null>(null);
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
-  const [traceMode, setTraceMode] = useState(false);
   const [viewMode, setViewMode] = useState<PlatformMode>(initialMode);
   const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -684,7 +683,6 @@ export default function FaroExperience({
             <CaseMap
               cases={countryReviewCases}
               selectedCaseId={selectedCase?.id ?? null}
-              traceMode={traceMode}
               onSelectCase={setSelectedCaseId}
               waybackState={waybackState}
               onWaybackTileLoadingChange={handleWaybackTileLoadingChange}
@@ -861,8 +859,6 @@ export default function FaroExperience({
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
-            traceMode={traceMode}
-            onTraceModeChange={setTraceMode}
             onClose={() => setSelectedCaseId("")}
             waybackState={waybackState}
             onWaybackReleaseChange={handleWaybackReleaseChange}

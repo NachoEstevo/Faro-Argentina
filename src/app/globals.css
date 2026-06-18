@@ -990,8 +990,7 @@ a.faroMark:hover .faroMarkIcon {
 
 .panelKicker,
 .statusStrip span,
-.actionRow a,
-.traceBox button {
+.actionRow a {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1163,7 +1162,6 @@ a.faroMark:hover .faroMarkIcon {
 .signalsBox,
 .receiptBox,
 .contextCitations,
-.traceBox,
 .nextStepsBox {
   border: 1px solid var(--faro-line);
   background: rgba(255, 255, 255, 0.035);
@@ -1228,7 +1226,6 @@ a.faroMark:hover .faroMarkIcon {
 
 .whyBox p,
 .signalItem p,
-.traceBox p,
 .explorerIntro,
 .emptyState p {
   margin: 0;
@@ -1606,7 +1603,6 @@ a.faroMark:hover .faroMarkIcon {
 }
 
 .actionRow a,
-.traceBox button,
 .entryContent button {
   justify-content: center;
   min-height: 42px;
@@ -1615,20 +1611,6 @@ a.faroMark:hover .faroMarkIcon {
   color: var(--faro-amber-strong);
   cursor: pointer;
   text-decoration: none;
-}
-
-.traceBox {
-  display: grid;
-  gap: 10px;
-}
-
-.traceBox button {
-  width: fit-content;
-  padding: 0 12px;
-}
-
-.traceBox button.active {
-  background: rgba(243, 201, 105, 0.23);
 }
 
 .nextStepsBox {

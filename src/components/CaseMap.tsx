@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Circle, CircleMarker, MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
+import { CircleMarker, MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
 import { canvas as createCanvasRenderer, type Map as LeafletMap } from "leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
@@ -20,7 +20,6 @@ import type { WaybackState } from "./WaybackControl";
 interface Props {
   cases: ExplorerCase[];
   selectedCaseId: string | null;
-  traceMode: boolean;
   onSelectCase: (id: string) => void;
   waybackState: WaybackState;
   onWaybackTileLoadingChange: (loading: boolean) => void;
@@ -52,7 +51,6 @@ const MAX_PREFETCHED_ARGENMAP_TILES = 180;
 export default function CaseMap({
   cases,
   selectedCaseId,
-  traceMode,
   onSelectCase,
   waybackState,
   onWaybackTileLoadingChange,
@@ -157,20 +155,6 @@ export default function CaseMap({
           caseFile={hoveredCase}
           tooltip={hoveredCase ? markerContextById.get(hoveredCase.id)?.tooltip ?? null : null}
         />
-        {selectedCase?.coordinates && traceMode && (
-          <Circle
-            center={[selectedCase.coordinates.lat, selectedCase.coordinates.lon]}
-            radius={65000}
-            renderer={markerRenderer}
-            pathOptions={{
-              color: "#5aa9e5",
-              fillColor: "#5aa9e5",
-              fillOpacity: 0.08,
-              opacity: 0.7,
-              weight: 1,
-            }}
-          />
-        )}
         {mapCases.map((caseFile, index) => {
           const isSelected = caseFile.id === selectedCaseId;
           const markerContext = markerContextById.get(caseFile.id);

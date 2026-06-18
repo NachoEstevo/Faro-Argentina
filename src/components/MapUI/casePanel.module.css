@@ -323,14 +323,6 @@
   cursor: not-allowed;
 }
 
-.actionWide { width: 100%; }
-
-.actionWideActive {
-  background: rgba(90, 169, 229, 0.12);
-  border-color: var(--cp-accent);
-  color: var(--cp-accent);
-}
-
 /* ── Imagery scrubber ───────────────────────────────────────────── */
 
 .imageryCard {
