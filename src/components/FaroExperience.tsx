@@ -74,6 +74,8 @@ type PlatformTheme = InterfaceTheme | "mapCream";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
+const GUIDED_TOUR_STORAGE_KEY = "faro-guided-tour-seen";
+const GUIDED_TOUR_SEEN_VALUE = "seen";
 const SIDEBAR_TOUR_STEPS = new Set<GuidedTourStepId>(["search", "filters", "review-button"]);
 const explorerIndexPromises = new Map<string, Promise<InvestigatorExplorerIndex>>();
 const fullCaseCorpusPromises = new Map<string, Promise<ExplorerCase[]>>();
@@ -137,6 +139,7 @@ export default function FaroExperience({
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const [guidedTourOpen, setGuidedTourOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
+  const hasAutoStartedGuidedTourRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
   const needsFullCaseCorpus = viewMode === "aportes";
   const hasExplorerIndex = explorerIndexStatus === "ready" && explorerIndex !== null;
@@ -602,6 +605,7 @@ export default function FaroExperience({
   }, []);
 
   const handleStartGuidedTour = useCallback(() => {
+    markGuidedTourSeen();
     if (viewMode !== "map") {
       switchViewMode("map");
     }
@@ -612,6 +616,16 @@ export default function FaroExperience({
     setLeadsPanelOpen(false);
     window.setTimeout(() => setGuidedTourOpen(true), 0);
   }, [switchViewMode, viewMode]);
+
+  useEffect(() => {
+    if (hasAutoStartedGuidedTourRef.current) return;
+    if (initialMode !== "map" || initialCaseId || initialEntryOpen) return;
+    if (hasSeenGuidedTour()) return;
+
+    hasAutoStartedGuidedTourRef.current = true;
+    const timeout = window.setTimeout(handleStartGuidedTour, 650);
+    return () => window.clearTimeout(timeout);
+  }, [handleStartGuidedTour, initialCaseId, initialEntryOpen, initialMode]);
 
   const handleGuidedTourStepChange = useCallback((stepId: GuidedTourStepId) => {
     const isSmallViewport = window.innerWidth <= 900;
@@ -1056,6 +1070,22 @@ function InterfaceThemeToggle({
       </button>
     </div>
   );
+}
+
+function hasSeenGuidedTour(): boolean {
+  try {
+    return window.localStorage.getItem(GUIDED_TOUR_STORAGE_KEY) === GUIDED_TOUR_SEEN_VALUE;
+  } catch {
+    return false;
+  }
+}
+
+function markGuidedTourSeen() {
+  try {
+    window.localStorage.setItem(GUIDED_TOUR_STORAGE_KEY, GUIDED_TOUR_SEEN_VALUE);
+  } catch {
+    // The tutorial can still run if storage is unavailable.
+  }
 }
 
 function getYearBounds(cases: Array<{ year: number | null }>) {

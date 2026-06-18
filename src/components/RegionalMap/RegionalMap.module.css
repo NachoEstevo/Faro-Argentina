@@ -1287,6 +1287,7 @@
 }
 
 .tourButton {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1313,6 +1314,23 @@
     transform 160ms ease;
 }
 
+.tourButton::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--cf-arg-gold);
+  box-shadow:
+    0 0 0 0 rgba(252, 191, 73, 0.5),
+    0 0 18px rgba(252, 191, 73, 0.32);
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: tourButtonCue 1800ms ease-in-out infinite;
+}
+
 .tourButton:hover {
   border-color: var(--cf-accent);
   background: color-mix(in srgb, var(--cf-accent-faint) 44%, var(--cf-bg-elev));
@@ -1322,6 +1340,24 @@
 .tourButton:focus-visible {
   outline: 2px solid var(--cf-arg-gold);
   outline-offset: 2px;
+}
+
+@keyframes tourButtonCue {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: translate(-1px, -50%) scale(0.86);
+    box-shadow:
+      0 0 0 0 rgba(252, 191, 73, 0.34),
+      0 0 16px rgba(252, 191, 73, 0.24);
+  }
+  45% {
+    opacity: 1;
+    transform: translate(6px, -50%) scale(1);
+    box-shadow:
+      0 0 0 8px rgba(252, 191, 73, 0),
+      0 0 22px rgba(252, 191, 73, 0.34);
+  }
 }
 
 .tourLayer {
@@ -2566,7 +2602,8 @@
   .welcomeHeadline,
   .welcomeCopy,
   .welcomeCTA,
-  .welcomeCTAArrow {
+  .welcomeCTAArrow,
+  .tourButton::after {
     animation: none;
     transition: none;
     filter: none;

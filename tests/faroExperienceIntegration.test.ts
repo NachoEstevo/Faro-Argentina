@@ -282,6 +282,13 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 
   assert.match(experienceSource, /GuidedTourButton/);
   assert.match(experienceSource, /handleStartGuidedTour/);
+  assert.match(experienceSource, /const GUIDED_TOUR_STORAGE_KEY = "faro-guided-tour-seen"/);
+  assert.match(experienceSource, /const GUIDED_TOUR_SEEN_VALUE = "seen"/);
+  assert.match(experienceSource, /hasAutoStartedGuidedTourRef/);
+  assert.match(experienceSource, /if \(initialMode !== "map" \|\| initialCaseId \|\| initialEntryOpen\) return;/);
+  assert.match(experienceSource, /if \(hasSeenGuidedTour\(\)\) return;/);
+  assert.match(experienceSource, /window\.setTimeout\(handleStartGuidedTour, 650\)/);
+  assert.match(experienceSource, /window\.localStorage\.setItem\(GUIDED_TOUR_STORAGE_KEY, GUIDED_TOUR_SEEN_VALUE\)/);
   assert.match(experienceSource, /onStartGuide=\{handleStartGuidedTour\}/);
   assert.match(experienceSource, /setGuidedTourOpen\(true\)/);
   assert.match(experienceSource, /data-tour="map-canvas"/);
@@ -303,6 +310,9 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);
   assert.match(styles, /\.tourButton\s*\{/);
+  assert.match(styles, /\.tourButton::after\s*\{[\s\S]*right: -8px;[\s\S]*animation: tourButtonCue 1800ms/);
+  assert.match(styles, /@keyframes tourButtonCue\s*\{/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.tourButton::after[\s\S]*animation: none;/);
   assert.match(styles, /\.mapTourTarget\s*\{[\s\S]*right: 420px;[\s\S]*left: var\(--sidebar-width\);/);
   assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
   assert.match(styles, /\.tourCard\s*\{/);
