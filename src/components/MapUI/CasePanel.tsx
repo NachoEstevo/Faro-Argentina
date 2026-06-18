@@ -39,15 +39,14 @@ export default function CasePanel({
         <div className={styles.divider} aria-hidden />
         <PanelFacts caseFile={caseFile} />
         {caseFile.coordinates && waybackState.status !== "off" && (
-          <>
+          <div className={styles.mobileInlineImagery}>
             <div className={styles.divider} aria-hidden />
             <PanelImagery
               state={waybackState}
               onActiveReleaseChange={onWaybackReleaseChange}
-              onClose={onClose}
               onRetry={onWaybackRetry}
             />
-          </>
+          </div>
         )}
         <PanelTechDetails caseFile={caseFile} signalContext={signalContext} />
         <PanelNextSteps caseFile={caseFile} signalContext={signalContext} />

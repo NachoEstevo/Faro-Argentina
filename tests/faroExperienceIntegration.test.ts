@@ -17,6 +17,8 @@ const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.
 const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
 const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
+const casePanelUrl = new URL("../src/components/MapUI/CasePanel.tsx", import.meta.url);
+const panelImageryUrl = new URL("../src/components/MapUI/panel/PanelImagery.tsx", import.meta.url);
 const casePanelStylesUrl = new URL("../src/components/MapUI/casePanel.module.css", import.meta.url);
 const countriesUrl = new URL("../src/lib/data/countries.ts", import.meta.url);
 const caseFileRouteUrl = new URL("../src/app/api/cases/[id]/case-file/route.ts", import.meta.url);
@@ -59,6 +61,28 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
+});
+
+test("Wayback timeline floats over the map with a mobile inline fallback", async () => {
+  const experienceSource = await readFile(faroExperienceUrl, "utf8");
+  const casePanelSource = await readFile(casePanelUrl, "utf8");
+  const panelImagerySource = await readFile(panelImageryUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+  const casePanelStyles = await readFile(casePanelStylesUrl, "utf8");
+
+  assert.match(experienceSource, /import PanelImagery from "\.\/MapUI\/panel\/PanelImagery"/);
+  assert.match(experienceSource, /const showFloatingWaybackControl =/);
+  assert.match(experienceSource, /className=\{styles\.mapImageryControl\}/);
+  assert.match(experienceSource, /aria-label="Selector de imagen satelital"/);
+  assert.match(experienceSource, /onActiveReleaseChange=\{handleWaybackReleaseChange\}/);
+  assert.match(casePanelSource, /styles\.mobileInlineImagery/);
+  assert.match(casePanelSource, /<PanelImagery[\s\S]*onActiveReleaseChange=\{onWaybackReleaseChange\}/);
+  assert.match(panelImagerySource, /Año de la imagen satelital/);
+  assert.match(styles, /\.mapImageryControl\s*\{[\s\S]*bottom: 22px;[\s\S]*justify-content: center;/);
+  assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControl\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /\.mapImageryControlCard\s*\{[\s\S]*width: min\(540px, calc\(100% - 40px\)\);/);
+  assert.match(casePanelStyles, /\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: flex;/);
 });
 
 test("country route keeps the heavy investigator corpus out of the initial client payload", async () => {
@@ -149,7 +173,9 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
   assert.match(casePanelStyles, /--cp-text: #1f2a32;/);
   assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.watch\)\s*\{[\s\S]*color: #755300;/);
   assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.gap\)\s*\{[\s\S]*color: #1f5f8b;/);
-  assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*min-width: 78px;[\s\S]*min-height: 40px;/);
+  assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*right: 18px;[\s\S]*top: 18px;[\s\S]*min-width: 78px;[\s\S]*min-height: 40px;/);
+  assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDock\s*\{[\s\S]*right: 12px;[\s\S]*top: 16px;/);
+  assert.doesNotMatch(styles, /\.interfaceThemeDock\s*\{[^}]*bottom: 72px;/);
   assert.match(styles, /\.interfaceThemeOption\s*\{/);
   assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
 });
@@ -176,10 +202,13 @@ test("regional welcome starts without sidebar chrome", async () => {
 
   assert.match(source, /!overlayDismissed \? styles\.shellWelcome : ""/);
   assert.match(source, /const showSidebar = overlayDismissed;/);
+  assert.match(source, /showSidebar && sidebarCollapsed \? styles\.shellCollapsed : ""/);
   assert.match(source, /\{showSidebar && <MobileHeader onOpenMenu=\{handleOpenMobileMenu\} \/>}/);
   assert.match(source, /\{showSidebar && \(\s*<RegionalSidebar/);
   assert.match(source, /\{showSidebar && mobileMenuOpen && \(/);
   assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--sidebar-width: 0px;/);
+  assert.match(styles, /\.shellWelcome \.overlayLayer,\s*\.shellWelcome \.welcomeLayer\s*\{[\s\S]*left: 0;/);
+  assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.shell\.shellWelcome\s*\{[\s\S]*--sidebar-width: 0px;/);
   assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--cf-welcome-panel-bg: rgba\(12, 18, 24, 0\.9\);/);
   assert.match(styles, /\.settingRow\s*\{[\s\S]*text-decoration: none;/);
 });
@@ -239,6 +268,7 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /\.shellMobileMenuOpen \.sidebarMobileOpen\s*\{[\s\S]*left: 0;[\s\S]*z-index: 90;/);
   assert.match(styles, /\.mobileBackdrop\s*\{[\s\S]*z-index: 60;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*--sidebar-width: 320px;/);
+  assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.shell\.shellCollapsed\s*\{[\s\S]*--sidebar-width: 64px;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*max-width: 210px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 16px;[\s\S]*right: 72px;/);

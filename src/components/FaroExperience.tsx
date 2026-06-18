@@ -29,6 +29,8 @@ import {
   type SearchSuggestion,
 } from "@/lib/data/searchSuggestions";
 import CasePanel from "./MapUI/CasePanel";
+import PanelImagery from "./MapUI/panel/PanelImagery";
+import casePanelStyles from "./MapUI/casePanel.module.css";
 import PlatformModeNav, { buildPlatformModeHref, type PlatformMode } from "./PlatformModeNav";
 import CountrySidebar from "./RegionalMap/CountrySidebar";
 import GuidedTour, {
@@ -389,6 +391,11 @@ export default function FaroExperience({
   const selectedPanelCase = viewMode === "map" ? selectedFullMapCase : selectedCase;
   const selectedCaseWaybackEligible = shouldEnableWaybackForCase(selectedCase);
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
+  const showFloatingWaybackControl =
+    viewMode === "map" &&
+    selectedCase !== null &&
+    selectedCaseWaybackEligible &&
+    waybackState.status !== "off";
 
   useEffect(() => {
     if (viewMode !== "explorer" || !selectedCaseId) {
@@ -593,6 +600,16 @@ export default function FaroExperience({
     setWaybackTileLoading(loading);
   }, []);
 
+  const handleWaybackReleaseChange = useCallback((releaseId: number) => {
+    setWaybackState((current) =>
+      current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,
+    );
+  }, []);
+
+  const handleWaybackRetry = useCallback(() => {
+    setWaybackRetryToken((token) => token + 1);
+  }, []);
+
   const country = COUNTRY_META[selectedCountry];
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
@@ -640,6 +657,22 @@ export default function FaroExperience({
           </div>
         )}
       </div>
+
+      {showFloatingWaybackControl && (
+        <div className={styles.mapImageryControl} data-tour="satellite-timeline">
+          <div
+            className={`${casePanelStyles.module} ${styles.mapImageryControlCard}`}
+            role="region"
+            aria-label="Selector de imagen satelital"
+          >
+            <PanelImagery
+              state={waybackState}
+              onActiveReleaseChange={handleWaybackReleaseChange}
+              onRetry={handleWaybackRetry}
+            />
+          </div>
+        </div>
+      )}
 
       {showMapChrome && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}
 
@@ -787,12 +820,8 @@ export default function FaroExperience({
             onTraceModeChange={setTraceMode}
             onClose={() => setSelectedCaseId("")}
             waybackState={waybackState}
-            onWaybackReleaseChange={(releaseId) => {
-              setWaybackState((current) =>
-                current.status === "active" ? { ...current, activeReleaseId: releaseId } : current,
-              );
-            }}
-            onWaybackRetry={() => setWaybackRetryToken((token) => token + 1)}
+            onWaybackReleaseChange={handleWaybackReleaseChange}
+            onWaybackRetry={handleWaybackRetry}
           />
         </aside>
       )}

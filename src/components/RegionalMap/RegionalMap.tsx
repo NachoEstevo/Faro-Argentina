@@ -60,15 +60,15 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
     setMobileMenuOpen(false);
   }, []);
 
+  const showSidebar = overlayDismissed;
   const shellClasses = [
     styles.shell,
     !overlayDismissed ? styles.shellWelcome : "",
-    sidebarCollapsed ? styles.shellCollapsed : "",
+    showSidebar && sidebarCollapsed ? styles.shellCollapsed : "",
     mobileMenuOpen ? styles.shellMobileMenuOpen : "",
   ]
     .filter(Boolean)
     .join(" ");
-  const showSidebar = overlayDismissed;
 
   return (
     <main className={shellClasses}>

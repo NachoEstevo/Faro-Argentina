@@ -9,7 +9,6 @@ import styles from "../casePanel.module.css";
 interface Props {
   state: WaybackState;
   onActiveReleaseChange: (releaseId: number) => void;
-  onClose: () => void;
   onRetry: () => void;
 }
 

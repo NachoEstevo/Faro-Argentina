@@ -954,8 +954,8 @@
 .interfaceThemeDock {
   position: absolute;
   right: 18px;
-  bottom: 72px;
-  z-index: 65;
+  top: 18px;
+  z-index: 90;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -1107,7 +1107,7 @@
 
   .interfaceThemeDock {
     right: 12px;
-    bottom: 72px;
+    top: 16px;
     min-width: 74px;
     min-height: 38px;
   }
@@ -1136,6 +1136,9 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  background:
+    radial-gradient(circle at 72% 34%, rgba(117, 170, 219, 0.34), transparent 34%),
+    linear-gradient(135deg, #f4efe3 0%, #eee8dc 42%, #c9e5f7 100%);
 }
 
 .mapTourTarget {
@@ -1191,11 +1194,38 @@
   to { transform: rotate(360deg); }
 }
 
+.mapImageryControl {
+  position: absolute;
+  left: var(--sidebar-width);
+  right: 420px;
+  bottom: 22px;
+  z-index: 620;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mapImageryControlCard {
+  width: min(540px, calc(100% - 40px));
+  padding: 13px 18px 15px;
+  border: 1px solid var(--cf-border-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cf-bg-elev) 94%, transparent);
+  box-shadow: var(--cf-shadow-soft);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+
 @media (max-width: 720px) {
   .mapTileStatusRegion,
   .mapTileStatusRegionWithCase {
     left: 0;
     right: 0;
+  }
+
+  .mapImageryControl {
+    display: none;
   }
 }
 
@@ -1464,8 +1494,26 @@
 }
 
 .leafletHost :global(.leaflet-container) {
-  background: var(--cf-bg-map);
+  background: transparent;
   font-family: var(--cf-font-body);
+}
+
+.leafletHost :global(.leaflet-tile-container),
+.leafletHost :global(.leaflet-marker-pane),
+.leafletHost :global(.leaflet-overlay-pane),
+.leafletHost :global(.leaflet-zoom-animated) {
+  will-change: transform;
+}
+
+.leafletHost :global(.leaflet-tile) {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: opacity 160ms ease-out;
+}
+
+.leafletHost :global(.leaflet-overlay-pane canvas) {
+  image-rendering: auto;
+  will-change: transform;
 }
 
 .leafletHost :global(.leaflet-tooltip) {
@@ -1489,18 +1537,52 @@
   font-size: 11px;
 }
 
+.leafletHost :global(.caseMapHoverLayer) {
+  position: absolute;
+  inset: 0;
+  z-index: 660;
+  pointer-events: none;
+}
+
 .leafletHost :global(.caseMapTooltip) {
   box-sizing: border-box;
   width: min(312px, calc(100vw - 32px)) !important;
   max-width: min(312px, calc(100vw - 32px)) !important;
   background: var(--cf-tooltip-bg) !important;
+  border: 1px solid var(--cf-tooltip-border) !important;
+  border-radius: var(--cf-radius-sm) !important;
   border-color: var(--cf-tooltip-border) !important;
+  color: var(--cf-text) !important;
   box-shadow: var(--cf-tooltip-shadow) !important;
+  font-family: var(--cf-font-body) !important;
   opacity: 1 !important;
   overflow: hidden;
   padding: 0 !important;
   white-space: normal !important;
   backdrop-filter: none !important;
+}
+
+.leafletHost :global(.caseMapHoverCard) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  will-change: transform;
+}
+
+.leafletHost :global(.caseMapTooltipPointer) {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  background: var(--cf-tooltip-bg);
+  border-right: 1px solid var(--cf-tooltip-border);
+  border-bottom: 1px solid var(--cf-tooltip-border);
+  pointer-events: none;
+  will-change: transform;
 }
 
 .leafletHost :global(.caseMapTooltipInner) {
@@ -1662,6 +1744,11 @@
   left: var(--sidebar-width);
   pointer-events: none;
   z-index: 20;
+}
+
+.shellWelcome .overlayLayer,
+.shellWelcome .welcomeLayer {
+  left: 0;
 }
 
 .welcomeLayer > * {
@@ -1965,6 +2052,14 @@
 @media (min-width: 901px) and (max-width: 1180px) {
   .shell {
     --sidebar-width: 320px;
+  }
+
+  .shell.shellCollapsed {
+    --sidebar-width: 64px;
+  }
+
+  .shell.shellWelcome {
+    --sidebar-width: 0px;
   }
 
   .sidebar {

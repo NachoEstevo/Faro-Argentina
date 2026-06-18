@@ -591,6 +591,19 @@
   background: var(--cp-border-soft);
 }
 
+.mobileInlineImagery {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobileInlineImagery {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 48px;
+  }
+}
+
 @starting-style {
   .panel {
     opacity: 0;

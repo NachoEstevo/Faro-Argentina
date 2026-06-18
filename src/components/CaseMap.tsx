@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Circle, CircleMarker, MapContainer, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
-import type { Map as LeafletMap } from "leaflet";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Circle, CircleMarker, MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
+import { canvas as createCanvasRenderer, type Map as LeafletMap } from "leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildCaseMarkerKey, isMapMarkerEligible } from "@/lib/data/mapMarkers";
@@ -31,16 +31,23 @@ const ARGENMAP_LIGHT_URL =
 const ARGENMAP_ATTRIBUTION = "Mapa base: Instituto Geográfico Nacional - Argenmap";
 const ESRI_ATTRIBUTION = "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community";
 const WAYBACK_PREFETCH_ZOOM = 17;
-const WAYBACK_TILE_SIZE = 256;
+const MAP_TILE_SIZE = 256;
 const ARGENTINA_OVERVIEW_CENTER: [number, number] = [-38.4, -64.4];
 const ARGENTINA_INITIAL_ZOOM = 5;
 const ARGENTINA_OVERVIEW_ZOOM = 5;
 const ARGENTINA_OVERVIEW_MAX_ZOOM = 6;
 const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120;
 const prefetchedWaybackTiles = new Set<string>();
+const prefetchedArgenmapTiles = new Set<string>();
 const MAX_TOOLTIP_TITLE_LENGTH = 72;
 const MAX_TOOLTIP_ROW_LENGTH = 38;
 const MAX_TOOLTIP_SIGNAL_LENGTH = 34;
+const HOVER_TOOLTIP_MARGIN = 12;
+const HOVER_TOOLTIP_GAP = 14;
+const MAP_TILE_KEEP_BUFFER = 4;
+const MARKER_CANVAS_HIT_TOLERANCE = 12;
+const MAP_TILE_PREFETCH_RADIUS = 1;
+const MAX_PREFETCHED_ARGENMAP_TILES = 180;
 
 export default function CaseMap({
   cases,
@@ -51,9 +58,18 @@ export default function CaseMap({
   onWaybackTileLoadingChange,
 }: Props) {
   const mapCases = useMemo(() => cases.filter(isMapMarkerEligible), [cases]);
+  const markerRenderer = useMemo(
+    () => createCanvasRenderer({ padding: 0.5, tolerance: MARKER_CANVAS_HIT_TOLERANCE }),
+    [],
+  );
+  const [hoveredCaseId, setHoveredCaseId] = useState<string | null>(null);
   const selectedCase = useMemo(
     () => mapCases.find((caseFile) => caseFile.id === selectedCaseId) ?? null,
     [mapCases, selectedCaseId],
+  );
+  const hoveredCase = useMemo(
+    () => mapCases.find((caseFile) => caseFile.id === hoveredCaseId) ?? null,
+    [hoveredCaseId, mapCases],
   );
 
   const markerContextById = useMemo(() => {
@@ -75,6 +91,13 @@ export default function CaseMap({
     onSelectCase("");
   }, [onSelectCase]);
 
+  useEffect(() => {
+    if (!hoveredCaseId) return;
+    if (!mapCases.some((caseFile) => caseFile.id === hoveredCaseId)) {
+      setHoveredCaseId(null);
+    }
+  }, [hoveredCaseId, mapCases]);
+
   const waybackTileUrl =
     waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
 
@@ -89,7 +112,12 @@ export default function CaseMap({
         minZoom={3}
         maxZoom={19}
         zoomControl={false}
+        preferCanvas
         scrollWheelZoom
+        inertia
+        inertiaDeceleration={2600}
+        easeLinearity={0.22}
+        zoomAnimationThreshold={4}
         className="leafletRoot"
       >
         {waybackTileUrl ? (
@@ -98,7 +126,7 @@ export default function CaseMap({
             attribution={ESRI_ATTRIBUTION}
             url={waybackTileUrl}
             maxZoom={19}
-            keepBuffer={3}
+            keepBuffer={MAP_TILE_KEEP_BUFFER}
             updateWhenZooming={false}
             eventHandlers={{
               loading: () => onWaybackTileLoadingChange(true),
@@ -109,7 +137,12 @@ export default function CaseMap({
             maxNativeZoom={17}
           />
         ) : (
-          <TileLayer attribution={ARGENMAP_ATTRIBUTION} url={ARGENMAP_LIGHT_URL} />
+          <TileLayer
+            attribution={ARGENMAP_ATTRIBUTION}
+            url={ARGENMAP_LIGHT_URL}
+            keepBuffer={MAP_TILE_KEEP_BUFFER}
+            updateWhenZooming={false}
+          />
         )}
         <ZoomControl position="topright" />
         <MapFocus
@@ -118,11 +151,17 @@ export default function CaseMap({
           waybackActive={selectedCase?.coordinates != null && waybackState.status !== "off" && waybackState.status !== "error"}
           onDeselect={handleClose}
         />
+        <ArgenmapTileWarmup enabled={!waybackTileUrl} />
         <WaybackTilePrefetcher selectedCase={selectedCase} waybackState={waybackState} />
+        <HoverTooltipOverlay
+          caseFile={hoveredCase}
+          tooltip={hoveredCase ? markerContextById.get(hoveredCase.id)?.tooltip ?? null : null}
+        />
         {selectedCase?.coordinates && traceMode && (
           <Circle
             center={[selectedCase.coordinates.lat, selectedCase.coordinates.lon]}
             radius={65000}
+            renderer={markerRenderer}
             pathOptions={{
               color: "#5aa9e5",
               fillColor: "#5aa9e5",
@@ -136,7 +175,6 @@ export default function CaseMap({
           const isSelected = caseFile.id === selectedCaseId;
           const markerContext = markerContextById.get(caseFile.id);
           const severity = markerContext?.severity ?? null;
-          const tooltip = markerContext?.tooltip ?? buildMarkerTooltip(caseFile, [], null);
           const coordinates = caseFile.coordinates;
           if (!coordinates) return null;
           const mapGeoEvidence = getMapGeoEvidence(caseFile);
@@ -150,7 +188,17 @@ export default function CaseMap({
               key={buildCaseMarkerKey(caseFile, index)}
               center={[coordinates.lat, coordinates.lon]}
               radius={radius}
-              eventHandlers={{ click: () => onSelectCase(caseFile.id) }}
+              renderer={markerRenderer}
+              eventHandlers={{
+                click: () => {
+                  setHoveredCaseId(null);
+                  onSelectCase(caseFile.id);
+                },
+                mouseover: () => setHoveredCaseId(caseFile.id),
+                mouseout: () => {
+                  setHoveredCaseId((current) => (current === caseFile.id ? null : current));
+                },
+              }}
               pathOptions={{
                 color: colors.stroke,
                 fillColor: colors.fill,
@@ -159,35 +207,7 @@ export default function CaseMap({
                 weight,
                 dashArray: isAdminReference ? "3 4" : undefined,
               }}
-            >
-              <Tooltip direction="top" offset={[0, -10]} className="caseMapTooltip">
-                <div className="caseMapTooltipInner">
-                  <span className="caseMapTooltipKicker">{tooltip.kicker}</span>
-                  <strong className="caseMapTooltipTitle">{tooltip.title}</strong>
-                  {tooltip.rows.length > 0 && (
-                    <dl className="caseMapTooltipFacts">
-                      {tooltip.rows.map((row) => (
-                        <div key={row.label} className="caseMapTooltipFact">
-                          <dt>{row.label}</dt>
-                          <dd>{row.value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                  {tooltip.primarySignal && (
-                    <span className={`caseMapTooltipSignal caseMapTooltipSignal-${tooltip.primarySignal.kind}`}>
-                      <span className="caseMapTooltipSignalLabel">
-                        {tooltip.primarySignal.heading}: {tooltip.primarySignal.label}
-                      </span>
-                    </span>
-                  )}
-                  {tooltip.referenceLabel ? (
-                    <span className="caseMapTooltipReference">{tooltip.referenceLabel}</span>
-                  ) : null}
-                  <span className="caseMapTooltipAction">Abrir expediente</span>
-                </div>
-              </Tooltip>
-            </CircleMarker>
+            />
           );
         })}
       </MapContainer>
@@ -209,6 +229,132 @@ interface MarkerTooltip {
     label: string;
   } | null;
   referenceLabel: string | null;
+}
+
+interface HoverTooltipPosition {
+  left: number;
+  top: number;
+  height: number;
+  arrowX: number;
+  placement: "top" | "bottom";
+}
+
+function HoverTooltipOverlay({
+  caseFile,
+  tooltip,
+}: {
+  caseFile: ExplorerCase | null;
+  tooltip: MarkerTooltip | null;
+}) {
+  const map = useMap();
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const [position, setPosition] = useState<HoverTooltipPosition | null>(null);
+
+  const updatePosition = useCallback(() => {
+    if (!caseFile?.coordinates || !tooltip) {
+      setPosition(null);
+      return;
+    }
+    const containerPoint = map.latLngToContainerPoint([
+      caseFile.coordinates.lat,
+      caseFile.coordinates.lon,
+    ]);
+    const mapSize = map.getSize();
+    const cardRect = cardRef.current?.getBoundingClientRect();
+    const fallbackWidth = Math.min(312, Math.max(220, mapSize.x - HOVER_TOOLTIP_MARGIN * 2));
+    const width = cardRect?.width || fallbackWidth;
+    const height = cardRect?.height || 176;
+    const maxLeft = Math.max(HOVER_TOOLTIP_MARGIN, mapSize.x - HOVER_TOOLTIP_MARGIN - width);
+    const maxTop = Math.max(HOVER_TOOLTIP_MARGIN, mapSize.y - HOVER_TOOLTIP_MARGIN - height);
+
+    let placement: HoverTooltipPosition["placement"] = "top";
+    let top = containerPoint.y - height - HOVER_TOOLTIP_GAP;
+    if (top < HOVER_TOOLTIP_MARGIN) {
+      placement = "bottom";
+      top = containerPoint.y + HOVER_TOOLTIP_GAP;
+    }
+    top = clampNumber(top, HOVER_TOOLTIP_MARGIN, maxTop);
+
+    const left = clampNumber(
+      containerPoint.x - width / 2,
+      HOVER_TOOLTIP_MARGIN,
+      maxLeft,
+    );
+    const arrowX = clampNumber(containerPoint.x - left, 18, Math.max(18, width - 18));
+
+    setPosition({
+      left,
+      top,
+      height,
+      arrowX,
+      placement,
+    });
+  }, [caseFile, map, tooltip]);
+
+  useLayoutEffect(() => {
+    updatePosition();
+  }, [updatePosition]);
+
+  useEffect(() => {
+    if (!caseFile?.coordinates || !tooltip) return;
+    updatePosition();
+    map.on("move", updatePosition);
+    map.on("zoom", updatePosition);
+    map.on("resize", updatePosition);
+    return () => {
+      map.off("move", updatePosition);
+      map.off("zoom", updatePosition);
+      map.off("resize", updatePosition);
+    };
+  }, [caseFile?.coordinates, map, tooltip, updatePosition]);
+
+  if (!caseFile || !tooltip || !position) return null;
+
+  return (
+    <div className="caseMapHoverLayer" aria-hidden>
+      <span
+        className={`caseMapTooltipPointer caseMapTooltipPointer-${position.placement}`}
+        style={{
+          transform: `translate3d(${Math.round(position.left + position.arrowX - 5.5)}px, ${Math.round(
+            position.placement === "top" ? position.top + position.height - 6 : position.top - 5,
+          )}px, 0) rotate(${position.placement === "top" ? 45 : 225}deg)`,
+        }}
+      />
+      <div
+        ref={cardRef}
+        className={`caseMapTooltip caseMapHoverCard caseMapTooltipPlacement-${position.placement}`}
+        style={{
+          transform: `translate3d(${Math.round(position.left)}px, ${Math.round(position.top)}px, 0)`,
+        }}
+      >
+        <div className="caseMapTooltipInner">
+          <span className="caseMapTooltipKicker">{tooltip.kicker}</span>
+          <strong className="caseMapTooltipTitle">{tooltip.title}</strong>
+          {tooltip.rows.length > 0 && (
+            <dl className="caseMapTooltipFacts">
+              {tooltip.rows.map((row) => (
+                <div key={row.label} className="caseMapTooltipFact">
+                  <dt>{row.label}</dt>
+                  <dd>{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {tooltip.primarySignal && (
+            <span className={`caseMapTooltipSignal caseMapTooltipSignal-${tooltip.primarySignal.kind}`}>
+              <span className="caseMapTooltipSignalLabel">
+                {tooltip.primarySignal.heading}: {tooltip.primarySignal.label}
+              </span>
+            </span>
+          )}
+          {tooltip.referenceLabel ? (
+            <span className="caseMapTooltipReference">{tooltip.referenceLabel}</span>
+          ) : null}
+          <span className="caseMapTooltipAction">Abrir expediente</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function WaybackTilePrefetcher({
@@ -258,6 +404,31 @@ function WaybackTilePrefetcher({
     selectedCase?.id,
     waybackState,
   ]);
+
+  return null;
+}
+
+function ArgenmapTileWarmup({ enabled }: { enabled: boolean }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelIdlePrefetch: (() => void) | null = null;
+
+    const scheduleWarmup = () => {
+      cancelIdlePrefetch?.();
+      cancelIdlePrefetch = scheduleIdlePrefetch(() => prefetchArgenmapNextZoomTiles(map));
+    };
+
+    scheduleWarmup();
+    map.on("moveend", scheduleWarmup);
+    map.on("zoomend", scheduleWarmup);
+    return () => {
+      cancelIdlePrefetch?.();
+      map.off("moveend", scheduleWarmup);
+      map.off("zoomend", scheduleWarmup);
+    };
+  }, [enabled, map]);
 
   return null;
 }
@@ -402,6 +573,11 @@ function cleanText(value: string | null | undefined): string {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function clampNumber(value: number, min: number, max: number): number {
+  if (max < min) return min;
+  return Math.min(Math.max(value, min), max);
+}
+
 function getMapGeoEvidence(caseFile: ExplorerCase) {
   if (!("geoEvidence" in caseFile)) return null;
   return caseFile.geoEvidence?.find((evidence) =>
@@ -429,7 +605,7 @@ function buildWaybackCenterTileUrl(
 ): string | null {
   const point = map
     .project([coordinates.lat, coordinates.lon], WAYBACK_PREFETCH_ZOOM)
-    .divideBy(WAYBACK_TILE_SIZE)
+    .divideBy(MAP_TILE_SIZE)
     .floor();
   if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return null;
   return tileUrlForRelease(releaseId)
@@ -441,6 +617,21 @@ function buildWaybackCenterTileUrl(
 function preloadWaybackTile(url: string, priority: "high" | "low"): Promise<void> {
   if (prefetchedWaybackTiles.has(url)) return Promise.resolve();
   prefetchedWaybackTiles.add(url);
+  return preloadTileImage(url, priority);
+}
+
+function preloadArgenmapTile(url: string): Promise<void> {
+  if (prefetchedArgenmapTiles.has(url)) return Promise.resolve();
+  prefetchedArgenmapTiles.add(url);
+  while (prefetchedArgenmapTiles.size > MAX_PREFETCHED_ARGENMAP_TILES) {
+    const oldest = prefetchedArgenmapTiles.values().next().value;
+    if (!oldest) break;
+    prefetchedArgenmapTiles.delete(oldest);
+  }
+  return preloadTileImage(url, "low");
+}
+
+function preloadTileImage(url: string, priority: "high" | "low"): Promise<void> {
   return new Promise((resolve) => {
     const image = new window.Image();
     image.decoding = "async";
@@ -449,6 +640,33 @@ function preloadWaybackTile(url: string, priority: "high" | "low"): Promise<void
     image.onerror = () => resolve();
     image.src = url;
   });
+}
+
+function prefetchArgenmapNextZoomTiles(map: LeafletMap) {
+  const currentZoom = Math.floor(map.getZoom());
+  const targetZoom = Math.min(map.getMaxZoom(), currentZoom + 1);
+  if (targetZoom <= currentZoom) return;
+  const centerTile = map
+    .project(map.getCenter(), targetZoom)
+    .divideBy(MAP_TILE_SIZE)
+    .floor();
+  const maxTileIndex = 2 ** targetZoom - 1;
+  for (let dx = -MAP_TILE_PREFETCH_RADIUS; dx <= MAP_TILE_PREFETCH_RADIUS; dx += 1) {
+    for (let dy = -MAP_TILE_PREFETCH_RADIUS; dy <= MAP_TILE_PREFETCH_RADIUS; dy += 1) {
+      const x = centerTile.x + dx;
+      const y = centerTile.y + dy;
+      if (x < 0 || y < 0 || x > maxTileIndex || y > maxTileIndex) continue;
+      void preloadArgenmapTile(buildArgenmapTileUrl(targetZoom, x, y));
+    }
+  }
+}
+
+function buildArgenmapTileUrl(zoom: number, x: number, y: number): string {
+  const tmsY = 2 ** zoom - 1 - y;
+  return ARGENMAP_LIGHT_URL
+    .replace("{z}", String(zoom))
+    .replace("{x}", String(x))
+    .replace("{-y}", String(tmsY));
 }
 
 function getFollowUpPrefetchReleases(releases: Array<{ releaseId: number }>, activeReleaseId: number) {
