@@ -136,6 +136,7 @@ export default function FaroExperience({
   const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mapResetToken, setMapResetToken] = useState(0);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [waybackTileLoading, setWaybackTileLoading] = useState(false);
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
@@ -720,6 +721,7 @@ export default function FaroExperience({
               cases={countryReviewCases}
               selectedCaseId={selectedCase?.id ?? null}
               onSelectCase={setSelectedCaseId}
+              resetViewToken={mapResetToken}
               waybackState={waybackState}
               onWaybackTileLoadingChange={handleWaybackTileLoadingChange}
             />
@@ -818,6 +820,7 @@ export default function FaroExperience({
               onClick={() => {
                 if (selectedCaseId) {
                   setSelectedCaseId("");
+                  setMapResetToken((token) => token + 1);
                   return;
                 }
                 router.push("/");
@@ -919,7 +922,10 @@ export default function FaroExperience({
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
-            onClose={() => setSelectedCaseId("")}
+            onClose={() => {
+              setSelectedCaseId("");
+              setMapResetToken((token) => token + 1);
+            }}
             waybackState={waybackState}
             onWaybackReleaseChange={handleWaybackReleaseChange}
             onWaybackRetry={handleWaybackRetry}

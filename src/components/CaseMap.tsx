@@ -21,6 +21,7 @@ interface Props {
   cases: ExplorerCase[];
   selectedCaseId: string | null;
   onSelectCase: (id: string) => void;
+  resetViewToken: number;
   waybackState: WaybackState;
   onWaybackTileLoadingChange: (loading: boolean) => void;
 }
@@ -52,6 +53,7 @@ export default function CaseMap({
   cases,
   selectedCaseId,
   onSelectCase,
+  resetViewToken,
   waybackState,
   onWaybackTileLoadingChange,
 }: Props) {
@@ -146,6 +148,7 @@ export default function CaseMap({
         <MapFocus
           cases={mapCases}
           selectedCase={selectedCase}
+          resetViewToken={resetViewToken}
           waybackActive={selectedCase?.coordinates != null && waybackState.status !== "off" && waybackState.status !== "error"}
           onDeselect={handleClose}
         />
@@ -687,35 +690,43 @@ const ZOOM_OUT_ARM_DELAY_MS = 1200;
 function MapFocus({
   cases,
   selectedCase,
+  resetViewToken,
   waybackActive,
   onDeselect,
 }: {
   cases: ExplorerCase[];
   selectedCase: ExplorerCase | null;
+  resetViewToken: number;
   waybackActive: boolean;
   onDeselect: () => void;
 }) {
   const map = useMap();
-  const boundsKey = useMemo(() => cases.map((caseFile) => caseFile.id).join("|"), [cases]);
   // Track the last navigation target so unrelated re-renders (e.g. moving the
   // Wayback year slider) do not yank the user back to the case centroid after
   // they have panned the map. We compare a string key rather than identity so
   // recomputed object references for the same selection are ignored.
   const lastFlightTargetRef = useRef<string | null>(null);
+  const lastResetTokenRef = useRef(resetViewToken);
 
   useEffect(() => {
-    const selectedId = selectedCase?.id ?? null;
-    const targetKey = selectedId ? `case:${selectedId}` : `bounds:${boundsKey}`;
+    if (!selectedCase?.coordinates) {
+      lastFlightTargetRef.current = null;
+      return;
+    }
+    const targetKey = `case:${selectedCase.id}:${selectedCase.coordinates.lat}:${selectedCase.coordinates.lon}`;
     if (lastFlightTargetRef.current === targetKey) return;
     lastFlightTargetRef.current = targetKey;
 
-    if (selectedCase?.coordinates) {
-      map.flyTo([selectedCase.coordinates.lat, selectedCase.coordinates.lon], WAYBACK_TARGET_ZOOM, {
-        animate: true,
-        duration: WAYBACK_FLY_DURATION_SECONDS,
-      });
-      return;
-    }
+    map.flyTo([selectedCase.coordinates.lat, selectedCase.coordinates.lon], WAYBACK_TARGET_ZOOM, {
+      animate: true,
+      duration: WAYBACK_FLY_DURATION_SECONDS,
+    });
+  }, [map, selectedCase?.coordinates?.lat, selectedCase?.coordinates?.lon, selectedCase?.id]);
+
+  useEffect(() => {
+    if (resetViewToken === lastResetTokenRef.current) return;
+    lastResetTokenRef.current = resetViewToken;
+
     const coordinates = cases.flatMap((caseFile) =>
       caseFile.coordinates ? [[caseFile.coordinates.lat, caseFile.coordinates.lon] as [number, number]] : [],
     );
@@ -733,7 +744,7 @@ function MapFocus({
         duration: WAYBACK_FLY_DURATION_SECONDS,
       });
     }
-  }, [boundsKey, cases, map, selectedCase, waybackActive]);
+  }, [cases, map, resetViewToken]);
 
   useEffect(() => {
     if (!selectedCase || !waybackActive) return;

@@ -74,6 +74,21 @@ test("CaseMap keeps selected case zoom independent from Wayback state", async ()
   assert.doesNotMatch(source, /const targetZoom = waybackActive \? WAYBACK_TARGET_ZOOM : 8/);
 });
 
+test("CaseMap keeps filter changes from moving the current map viewport", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+  const faroSource = await readFile(faroExperienceUrl, "utf8");
+
+  assert.match(source, /resetViewToken: number/);
+  assert.match(source, /const lastResetTokenRef = useRef\(resetViewToken\)/);
+  assert.match(source, /if \(resetViewToken === lastResetTokenRef\.current\) return;/);
+  assert.match(source, /map\.flyToBounds\(coordinates,/);
+  assert.doesNotMatch(source, /const boundsKey = useMemo/);
+  assert.doesNotMatch(source, /targetKey = selectedId \? `case:\$\{selectedId\}` : `bounds:\$\{boundsKey\}`/);
+  assert.match(faroSource, /const \[mapResetToken, setMapResetToken\] = useState\(0\)/);
+  assert.match(faroSource, /resetViewToken=\{mapResetToken\}/);
+  assert.match(faroSource, /setSelectedCaseId\(""\);\s*setMapResetToken\(\(token\) => token \+ 1\);/);
+});
+
 test("CaseMap uses the official Argenmap light base layer outside Wayback mode", async () => {
   const source = await readFile(caseMapUrl, "utf8");
 
