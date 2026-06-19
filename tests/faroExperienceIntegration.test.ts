@@ -16,6 +16,7 @@ const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
 const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
+const mobileHeaderUrl = new URL("../src/components/RegionalMap/MobileHeader.tsx", import.meta.url);
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const caseMapUrl = new URL("../src/components/CaseMap.tsx", import.meta.url);
 const caseDetailsUrl = new URL("../src/components/CaseDetails.tsx", import.meta.url);
@@ -95,6 +96,11 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton\s*\{[\s\S]*width: 42px;/);
   assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton span\s*\{[\s\S]*clip-path: inset\(50%\);/);
   assert.match(styles, /@media \(max-width: 1280px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.backToGlobal\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.modeNavAnchor\s*\{[\s\S]*position: fixed;[\s\S]*bottom: 18px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions:not\(\.topRightActionsWorkView\)\s*\{[\s\S]*position: fixed;[\s\S]*flex-direction: column;[\s\S]*right: 14px;[\s\S]*bottom: 64px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrandText\s*\{[\s\S]*display: none;/);
 });
 
 test("case detail back control names the action instead of the country", async () => {
@@ -317,8 +323,7 @@ test("regional welcome starts without sidebar chrome", async () => {
 test("regional navigation omits the public Aportar action", async () => {
   const source = await readFile(regionalMapUrl, "utf8");
 
-  assert.match(source, /<FloatingModeToggle \/>/);
-  assert.doesNotMatch(source, /showSecondaryAction|Aportar/);
+  assert.doesNotMatch(source, /FloatingModeToggle|PlatformModeNav|showSecondaryAction|Aportar/);
   assert.match(source, /<WelcomeOverlay[\s\S]*dismissed=\{overlayDismissed\}[\s\S]*entering=\{enteringMap\}/);
 });
 
@@ -369,7 +374,9 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {
   const styles = await readFile(regionalMapStylesUrl, "utf8");
   const globalStyles = await readFile(globalStylesUrl, "utf8");
+  const mobileHeaderSource = await readFile(mobileHeaderUrl, "utf8");
 
+  assert.match(mobileHeaderSource, /<button[\s\S]*aria-label="Abrir menú"[\s\S]*<\/button>[\s\S]*<Link href="\/" className=\{styles\.mobileBrand\}/);
   assert.match(styles, /\.shellMobileMenuOpen \.overlayLayer\s*\{[\s\S]*z-index: 4;[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.sidebar\s*\{[\s\S]*left: 0;[\s\S]*transition: none;/);
   assert.match(styles, /\.sidebar:not\(\.sidebarMobileOpen\)\s*\{[\s\S]*left: -320px;/);
@@ -383,5 +390,5 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions\s*\{[\s\S]*right: 54px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
-  assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
+  assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*display: none !important;/);
 });

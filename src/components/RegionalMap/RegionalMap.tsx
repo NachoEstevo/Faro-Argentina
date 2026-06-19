@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import type { FeatureCollection, Geometry } from "geojson";
 
 import styles from "./RegionalMap.module.css";
-import FloatingModeToggle from "./FloatingModeToggle";
 import MobileHeader from "./MobileHeader";
 import RegionalSidebar from "./RegionalSidebar";
 import TrustStrip from "./TrustStrip";
@@ -96,7 +95,6 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
       <div className={styles.overlayLayer}>
         <div className={styles.vignetteTop} aria-hidden />
         <div className={styles.vignetteSides} aria-hidden />
-        <FloatingModeToggle />
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>

@@ -121,8 +121,7 @@ a {
 
 @media (max-width: 640px) {
   .leafletRoot .leaflet-top.leaflet-right .leaflet-control-zoom {
-    margin-top: 132px;
-    margin-right: 18px;
+    display: none !important;
   }
 }
 

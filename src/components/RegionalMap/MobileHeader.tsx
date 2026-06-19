@@ -11,12 +11,6 @@ interface Props {
 export default function MobileHeader({ onOpenMenu }: Props) {
   return (
     <header className={styles.mobileHeader}>
-      <Link href="/" className={styles.mobileBrand} aria-label="Volver a la home de Faro">
-        <span className={styles.mobileBrandIcon} aria-hidden>
-          <img src="/brand/faro-mark.png" alt="" width={32} height={32} decoding="async" />
-        </span>
-        <span className={styles.mobileBrandText}>Faro</span>
-      </Link>
       <button
         type="button"
         className={styles.mobileMenuButton}
@@ -25,6 +19,12 @@ export default function MobileHeader({ onOpenMenu }: Props) {
       >
         <Menu size={20} aria-hidden />
       </button>
+      <Link href="/" className={styles.mobileBrand} aria-label="Volver a la home de Faro">
+        <span className={styles.mobileBrandIcon} aria-hidden>
+          <img src="/brand/faro-mark.png" alt="" width={32} height={32} decoding="async" />
+        </span>
+        <span className={styles.mobileBrandText}>Faro</span>
+      </Link>
     </header>
   );
 }

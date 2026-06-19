@@ -6,7 +6,6 @@ const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", impo
 const aportesStylesUrl = new URL("../src/components/Aportes/AportesView.module.css", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
-const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 const resourcesSectionUrl = new URL("../src/components/RegionalMap/ResourcesSection.tsx", import.meta.url);
 
@@ -148,10 +147,7 @@ test("country route can open the aportes mode directly", async () => {
 });
 
 test("regional landing does not expose public Aportes entry points", async () => {
-  const source = [
-    await readFile(floatingToggleUrl, "utf8"),
-    await readFile(platformModeNavUrl, "utf8"),
-  ].join("\n");
+  const source = await readFile(platformModeNavUrl, "utf8");
   const resourcesSource = await readFile(resourcesSectionUrl, "utf8");
 
   assert.match(source, /buildPlatformModeHref/);

@@ -6,7 +6,6 @@ const investigationsViewUrl = new URL("../src/components/Investigations/Investig
 const investigationsChromeUrl = new URL("../src/components/Investigations/InvestigationsChrome.tsx", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
-const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", import.meta.url);
@@ -159,10 +158,7 @@ test("country route falls back to map for removed workspace mode", async () => {
 });
 
 test("regional landing keeps workspace mode out of public navigation", async () => {
-  const floatingSource = [
-    await readFile(floatingToggleUrl, "utf8"),
-    await readFile(platformModeNavUrl, "utf8"),
-  ].join("\n");
+  const floatingSource = await readFile(platformModeNavUrl, "utf8");
   const stylesSource = await readFile(regionalMapStylesUrl, "utf8");
   const aportesSource = [
     await readFile(aportesViewUrl, "utf8"),

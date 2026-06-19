@@ -1880,8 +1880,7 @@
 
 @media (max-width: 640px) {
   .overlayTopBar {
-    /* Sits below the mobile header (brand + menu, ~64px tall) so the back
-       button and mode nav never overlap it. */
+    /* Mobile keeps navigation actions near the thumb and leaves the top map clear. */
     top: 72px;
     left: 12px;
     right: 12px;
@@ -1894,7 +1893,7 @@
     display: none;
   }
   .backToGlobal {
-    padding: 8px 10px;
+    display: none;
   }
 
   .topRightActions {
@@ -2502,6 +2501,7 @@
   }
 
   .mobileBrandText {
+    display: none;
     font-family: var(--cf-font-heading);
     font-size: 17px;
     font-weight: 500;
@@ -2663,6 +2663,29 @@
 }
 
 @media (max-width: 640px) {
+  .mapLegend {
+    display: none;
+  }
+
+  .modeNavAnchor {
+    position: fixed;
+    top: auto;
+    bottom: 18px;
+    left: 50%;
+    max-width: 96px;
+    transform: translateX(-50%);
+  }
+
+  .topRightActions:not(.topRightActionsWorkView) {
+    position: fixed;
+    flex-direction: column;
+    top: auto;
+    right: 14px;
+    bottom: 64px;
+    left: auto;
+    gap: 8px;
+  }
+
   .topRightActions.topRightActionsWorkView {
     right: 0;
   }
