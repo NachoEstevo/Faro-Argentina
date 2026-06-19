@@ -18,6 +18,7 @@ interface Props {
   waybackState: WaybackState;
   onWaybackReleaseChange: (releaseId: number) => void;
   onWaybackRetry: () => void;
+  onReportCase?: () => void;
 }
 
 export default function CasePanel({
@@ -27,6 +28,7 @@ export default function CasePanel({
   waybackState,
   onWaybackReleaseChange,
   onWaybackRetry,
+  onReportCase,
 }: Props) {
   return (
     <div className={`${styles.module} ${styles.panel}`}>
@@ -46,7 +48,7 @@ export default function CasePanel({
         )}
         <PanelTechDetails caseFile={caseFile} signalContext={signalContext} />
         <PanelNextSteps caseFile={caseFile} signalContext={signalContext} />
-        <PanelActions caseFile={caseFile} signalContext={signalContext} />
+        <PanelActions caseFile={caseFile} signalContext={signalContext} onReportCase={onReportCase} />
       </div>
     </div>
   );

@@ -1298,10 +1298,22 @@
   justify-content: center;
 }
 
-.tourButton {
+.topRightActions {
   position: absolute;
   top: 0;
   right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.topRightActions.topRightActionsWorkView {
+  right: 112px;
+}
+
+.tourButton,
+.contributeButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1328,13 +1340,19 @@
     transform 160ms ease;
 }
 
-.tourButton:hover {
+.contributeButton {
+  background: color-mix(in srgb, var(--cf-accent-faint) 42%, var(--cf-bg-elev));
+}
+
+.tourButton:hover,
+.contributeButton:hover {
   border-color: var(--cf-accent);
   background: color-mix(in srgb, var(--cf-accent-faint) 44%, var(--cf-bg-elev));
   transform: translateY(-1px);
 }
 
-.tourButton:focus-visible {
+.tourButton:focus-visible,
+.contributeButton:focus-visible {
   outline: 2px solid var(--cf-arg-gold);
   outline-offset: 2px;
 }
@@ -1844,7 +1862,7 @@
     gap: 8px;
   }
   .modeNavAnchor {
-    max-width: calc(100% - 92px);
+    max-width: calc(100% - 150px);
   }
   .backToGlobal span {
     display: none;
@@ -1853,12 +1871,18 @@
     padding: 8px 10px;
   }
 
-  .tourButton {
+  .topRightActions {
+    gap: 6px;
+  }
+
+  .tourButton,
+  .contributeButton {
     min-width: 38px;
     padding: 0 10px;
   }
 
-  .tourButton span {
+  .tourButton span,
+  .contributeButton span {
     display: none;
   }
 
@@ -2469,7 +2493,8 @@
   }
 
   .backToGlobal,
-  .tourButton {
+  .tourButton,
+  .contributeButton {
     min-height: 40px;
   }
 
@@ -2478,13 +2503,25 @@
     font-size: 13px;
   }
 
-  .tourButton {
+  .topRightActions {
     right: 54px;
+  }
+
+  .topRightActions.topRightActionsWorkView {
+    right: 112px;
+  }
+
+  .tourButton,
+  .contributeButton {
     padding: 0 14px;
   }
 }
 
 @media (max-width: 640px) {
+  .topRightActions.topRightActionsWorkView {
+    right: 0;
+  }
+
   .mapTourTarget {
     top: 132px;
     right: 16px;

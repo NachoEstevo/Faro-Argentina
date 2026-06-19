@@ -67,6 +67,7 @@ export default async function PaisPage({
         ? "aportes"
         : "map";
   const initialCaseId = readParam(search.case);
+  const initialContributionType = readContributionType(readParam(search.type));
   const initialExplorerPreset =
     readParam(search.preset) === "selected" ? "selected" : null;
 
@@ -80,12 +81,20 @@ export default async function PaisPage({
       initialMode={initialMode}
       initialCaseId={initialCaseId}
       initialExplorerPreset={initialExplorerPreset}
+      initialContributionType={initialContributionType}
     />
   );
 }
 
 function readParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function readContributionType(value: string | undefined) {
+  if (value === "add_source" || value === "correct_data" || value === "add_photo") {
+    return value;
+  }
+  return undefined;
 }
 
 export function generateStaticParams() {

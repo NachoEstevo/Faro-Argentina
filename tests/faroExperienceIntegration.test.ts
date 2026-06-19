@@ -88,7 +88,8 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*left: 50%;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*transform: translateX\(-50%\);/);
   assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
-  assert.match(styles, /\.tourButton\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
+  assert.match(styles, /\.topRightActions\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
+  assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{[\s\S]*display: inline-flex;/);
 });
 
 test("case detail back control names the action instead of the country", async () => {
@@ -340,7 +341,7 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);
-  assert.match(styles, /\.tourButton\s*\{/);
+  assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{/);
   assert.doesNotMatch(styles, /\.tourButton::after|tourButtonCue/);
   assert.match(styles, /\.mapTourTarget\s*\{[\s\S]*right: 420px;[\s\S]*left: var\(--sidebar-width\);/);
   assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
@@ -362,6 +363,6 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*max-width: 210px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
-  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.tourButton\s*\{[\s\S]*right: 54px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions\s*\{[\s\S]*right: 54px;/);
   assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
 });

@@ -292,7 +292,7 @@
 
 .actionRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
   gap: 8px;
 }
 
@@ -316,6 +316,12 @@
 .actionButton:hover:not(:disabled) {
   background: var(--cp-hover);
   border-color: var(--cp-border);
+}
+
+.actionButtonPrimary {
+  border-color: rgba(31, 111, 159, 0.28);
+  background: rgba(117, 170, 219, 0.14);
+  color: #1d5f89;
 }
 
 .actionButton:disabled {
