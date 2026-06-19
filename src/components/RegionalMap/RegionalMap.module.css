@@ -131,6 +131,10 @@
   --cf-welcome-panel-accent-soft: rgba(117, 170, 219, 0.14);
 }
 
+.shellNoMapChrome {
+  --sidebar-width: 0px;
+}
+
 .sidebar {
   position: absolute;
   top: 0;
@@ -1268,17 +1272,15 @@
   pointer-events: none;
 }
 
-/* Top control bar: back button (left) + mode nav. Laying them out as flex
-   siblings guarantees they never overlap at any width. The bar itself is
-   click-through; only its children capture pointer events. */
+/* Top control bar: back button (left), mode nav (center) and tutorial (right).
+   The mode nav is independently centered so its position does not drift when
+   sibling controls appear, disappear or change label width. */
 .overlayTopBar {
   position: absolute;
   top: 20px;
   left: 20px;
   right: 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  height: 40px;
   pointer-events: none;
 }
 
@@ -1286,8 +1288,20 @@
   pointer-events: auto;
 }
 
+.modeNavAnchor {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 300px);
+  transform: translateX(-50%);
+  justify-content: center;
+}
+
 .tourButton {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1828,6 +1842,9 @@
 }
 
 .backToGlobal {
+  position: absolute;
+  top: 0;
+  left: 0;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
@@ -1860,6 +1877,9 @@
     left: 12px;
     right: 12px;
     gap: 8px;
+  }
+  .modeNavAnchor {
+    max-width: calc(100% - 92px);
   }
   .backToGlobal span {
     display: none;
@@ -2217,7 +2237,7 @@
   }
 
   .overlayTopBar {
-    top: 16px;
+    top: 20px;
     left: 16px;
     right: 16px;
     gap: 10px;
@@ -2476,9 +2496,9 @@
   }
 
   .overlayTopBar {
-    top: 16px;
+    top: 20px;
     left: 18px;
-    right: 72px;
+    right: 18px;
     gap: 10px;
     align-items: flex-start;
   }
@@ -2494,6 +2514,7 @@
   }
 
   .tourButton {
+    right: 54px;
     padding: 0 14px;
   }
 }

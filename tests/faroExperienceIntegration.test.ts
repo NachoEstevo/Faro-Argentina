@@ -66,16 +66,29 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /useDeferredValue/);
   assert.match(source, /buildSearchSuggestionIndex/);
   assert.match(source, /buildSearchSuggestionsFromIndex/);
+  assert.match(source, /!showMapChrome \? styles\.shellNoMapChrome : ""/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
   assert.match(source, /const hasOpenMapCase = viewMode === "map" && selectedCase !== null;/);
   assert.match(source, /\{!hasOpenMapCase && \(\s*<PlatformModeNav/);
+  assert.match(source, /className=\{styles\.modeNavAnchor\}/);
   assert.match(source, /\{showMapChrome && !hasOpenMapCase && <GuidedTourButton/);
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
   assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);
   assert.doesNotMatch(panelActionsSource, /Rastro visual|Route|traceMode|onTraceModeChange|actionWideActive/);
   assert.doesNotMatch(caseDetailsSource, /Rastro visual|traceMode|onTraceModeChange|traceBox|describeTraceContext/);
+});
+
+test("platform mode nav keeps a stable visual center across country views", async () => {
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(styles, /\.shellNoMapChrome\s*\{[\s\S]*--sidebar-width: 0px;/);
+  assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*position: absolute;/);
+  assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*left: 50%;/);
+  assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*transform: translateX\(-50%\);/);
+  assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
+  assert.match(styles, /\.tourButton\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
 });
 
 test("case detail back control names the action instead of the country", async () => {
@@ -347,6 +360,7 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.shell\.shellCollapsed\s*\{[\s\S]*--sidebar-width: 64px;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*max-width: 210px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
-  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 16px;[\s\S]*right: 72px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.tourButton\s*\{[\s\S]*right: 54px;/);
   assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
 });

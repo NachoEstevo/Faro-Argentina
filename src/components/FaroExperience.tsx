@@ -666,6 +666,7 @@ export default function FaroExperience({
 
   const shellClasses = [
     styles.shell,
+    !showMapChrome ? styles.shellNoMapChrome : "",
     sidebarCollapsed ? styles.shellCollapsed : "",
     mobileMenuOpen ? styles.shellMobileMenuOpen : "",
   ]
@@ -798,6 +799,7 @@ export default function FaroExperience({
               activeMode={viewMode}
               onModeChange={switchViewMode}
               variant="floatingBar"
+              className={styles.modeNavAnchor}
             />
           )}
           {showMapChrome && !hasOpenMapCase && <GuidedTourButton onClick={handleStartGuidedTour} />}
