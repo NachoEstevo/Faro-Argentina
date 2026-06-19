@@ -127,10 +127,14 @@ a {
 }
 
 .leafletRoot .leaflet-control-zoom a {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
   background: transparent !important;
   border: 0 !important;
   color: var(--cf-text) !important;
   border-bottom: 1px solid var(--cf-border) !important;
+  font-size: 20px !important;
 }
 
 .leafletRoot .leaflet-control-zoom a:last-child {

@@ -68,6 +68,9 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /buildSearchSuggestionsFromIndex/);
   assert.match(source, /onSelectCase=\{setSelectedCaseId\}/);
   assert.match(source, /viewMode === "map"/);
+  assert.match(source, /const hasOpenMapCase = viewMode === "map" && selectedCase !== null;/);
+  assert.match(source, /\{!hasOpenMapCase && \(\s*<PlatformModeNav/);
+  assert.match(source, /\{showMapChrome && !hasOpenMapCase && <GuidedTourButton/);
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
   assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);

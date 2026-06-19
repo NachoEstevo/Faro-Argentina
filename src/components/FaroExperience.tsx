@@ -657,6 +657,7 @@ export default function FaroExperience({
   const syncLabel = "Datos hasta mayo 2026";
   const showMapChrome = viewMode === "map";
   const showBackControl = viewMode === "map";
+  const hasOpenMapCase = viewMode === "map" && selectedCase !== null;
   const activePlatformTheme: PlatformTheme = viewMode === "map" ? "mapCream" : interfaceTheme;
   const backControlLabel = selectedCaseId ? "Volver al mapa" : "Mapa general";
   const backControlAriaLabel = selectedCaseId
@@ -792,12 +793,14 @@ export default function FaroExperience({
               <span>{backControlLabel}</span>
             </button>
           )}
-          <PlatformModeNav
-            activeMode={viewMode}
-            onModeChange={switchViewMode}
-            variant="floatingBar"
-          />
-          {showMapChrome && <GuidedTourButton onClick={handleStartGuidedTour} />}
+          {!hasOpenMapCase && (
+            <PlatformModeNav
+              activeMode={viewMode}
+              onModeChange={switchViewMode}
+              variant="floatingBar"
+            />
+          )}
+          {showMapChrome && !hasOpenMapCase && <GuidedTourButton onClick={handleStartGuidedTour} />}
         </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
