@@ -73,6 +73,7 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /\{!hasOpenMapCase && \(\s*<PlatformModeNav/);
   assert.match(source, /className=\{styles\.modeNavAnchor\}/);
   assert.match(source, /\{showMapChrome && !hasOpenMapCase && <GuidedTourButton/);
+  assert.match(source, /title=\{activeContributionCaseId \? "Reportar dato" : "Aportar"\}/);
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
   assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);
@@ -90,6 +91,10 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
   assert.match(styles, /\.topRightActions\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{[\s\S]*display: inline-flex;/);
+  assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*max-width: calc\(100% - 430px\);/);
+  assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton\s*\{[\s\S]*width: 42px;/);
+  assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton span\s*\{[\s\S]*clip-path: inset\(50%\);/);
+  assert.match(styles, /@media \(max-width: 1280px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
 });
 
 test("case detail back control names the action instead of the country", async () => {
@@ -377,5 +382,6 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions\s*\{[\s\S]*right: 54px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
   assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
 });

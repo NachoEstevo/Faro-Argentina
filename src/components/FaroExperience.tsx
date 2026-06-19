@@ -851,6 +851,7 @@ export default function FaroExperience({
                       ? "Aportar o reportar un dato sobre este expediente para revisión privada"
                       : "Aportar una fuente o material para revisión privada"
                   }
+                  title={activeContributionCaseId ? "Reportar dato" : "Aportar"}
                 >
                   <MessageSquarePlus size={14} aria-hidden />
                   <span>{activeContributionCaseId ? "Reportar dato" : "Aportar"}</span>

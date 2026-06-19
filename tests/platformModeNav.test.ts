@@ -32,6 +32,9 @@ test("PlatformModeNav keeps only public primary modes centered", async () => {
   assert.match(styles, /\.item\s*\{[\s\S]*box-sizing: border-box;[\s\S]*min-height: 38px;/);
   assert.match(styles, /\.item svg,[\s\S]*\.item span\s*\{[\s\S]*pointer-events: none;/);
   assert.match(styles, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.floatingBar \.primary\s*\{[\s\S]*display: inline-flex;[\s\S]*flex: 0 0 auto;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.floatingBar \.item\s*\{[\s\S]*width: 40px;[\s\S]*padding: 0;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.floatingBar \.item span\s*\{[\s\S]*display: none;/);
   assert.doesNotMatch(source, /"sidebar"/);
   assert.doesNotMatch(styles, /\.sidebar/);
   assert.doesNotMatch(source, /Carpetas|Mis carpetas|FolderOpen|Aportes<\/span>/);
