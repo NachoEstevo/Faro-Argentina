@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
-  const [overlayDismissed, setOverlayDismissed] = useState(false);
+  const overlayDismissed = false;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
@@ -42,10 +42,6 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
     window.addEventListener("resize", apply);
     return () => window.removeEventListener("resize", apply);
   }, [userToggledSidebar]);
-
-  const handleCTA = useCallback(() => {
-    setOverlayDismissed(true);
-  }, []);
 
   const handleSidebarToggle = useCallback(() => {
     setUserToggledSidebar(true);
@@ -102,7 +98,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>
-        <WelcomeOverlay dismissed={overlayDismissed} ctaHref="/pais/AR" onCTA={handleCTA} />
+        <WelcomeOverlay dismissed={overlayDismissed} ctaHref="/pais/AR" />
       </div>
     </main>
   );

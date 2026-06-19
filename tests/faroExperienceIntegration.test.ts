@@ -247,11 +247,13 @@ test("regional welcome CTA stays a plain map action", async () => {
 
   assert.match(source, /import Link from "next\/link"/);
   assert.match(source, /href=\{ctaHref\}/);
+  assert.doesNotMatch(source, /onClick=\{onCTA\}|onCTA/);
   assert.match(source, /Evidencia oficial de obra pública/);
   assert.match(source, /Mapa, contratos y expedientes públicos/);
   assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Entrar al mapa<\/span>/);
   assert.match(source, /ArrowRight/);
   assert.match(regionalSource, /ctaHref="\/pais\/AR"/);
+  assert.doesNotMatch(regionalSource, /setOverlayDismissed\(true\)|handleCTA|onCTA=\{handleCTA\}/);
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 20px 0 22px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
@@ -279,6 +281,7 @@ test("regional welcome starts without sidebar chrome", async () => {
   const source = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
 
+  assert.match(source, /const overlayDismissed = false;/);
   assert.match(source, /!overlayDismissed \? styles\.shellWelcome : ""/);
   assert.match(source, /const showSidebar = overlayDismissed;/);
   assert.match(source, /showSidebar && sidebarCollapsed \? styles\.shellCollapsed : ""/);

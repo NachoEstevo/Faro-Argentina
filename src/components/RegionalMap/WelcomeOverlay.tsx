@@ -7,10 +7,9 @@ import styles from "./RegionalMap.module.css";
 interface Props {
   dismissed: boolean;
   ctaHref: string;
-  onCTA: () => void;
 }
 
-export default function WelcomeOverlay({ dismissed, ctaHref, onCTA }: Props) {
+export default function WelcomeOverlay({ dismissed, ctaHref }: Props) {
   if (dismissed) return null;
   return (
     <div className={styles.welcomeOverlay} aria-hidden="false">
@@ -19,7 +18,7 @@ export default function WelcomeOverlay({ dismissed, ctaHref, onCTA }: Props) {
       <p className={styles.welcomeCopy}>
         Mapa, contratos y expedientes públicos para ver qué existe, dónde mirar y qué falta verificar.
       </p>
-      <Link className={styles.welcomeCTA} href={ctaHref} onClick={onCTA}>
+      <Link className={styles.welcomeCTA} href={ctaHref}>
         <span className={styles.welcomeCTALabel}>Entrar al mapa</span>
         <span className={styles.welcomeCTAArrow} aria-hidden>
           <ArrowRight size={18} strokeWidth={1.9} />
