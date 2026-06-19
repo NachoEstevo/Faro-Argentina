@@ -24,6 +24,7 @@ interface Props {
 
 export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
   const overlayDismissed = false;
+  const [enteringMap, setEnteringMap] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
@@ -60,6 +61,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
   const shellClasses = [
     styles.shell,
     !overlayDismissed ? styles.shellWelcome : "",
+    enteringMap ? styles.shellEnteringMap : "",
     showSidebar && sidebarCollapsed ? styles.shellCollapsed : "",
     mobileMenuOpen ? styles.shellMobileMenuOpen : "",
   ]
@@ -98,7 +100,12 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>
-        <WelcomeOverlay dismissed={overlayDismissed} ctaHref="/pais/AR" />
+        <WelcomeOverlay
+          dismissed={overlayDismissed}
+          ctaHref="/pais/AR"
+          entering={enteringMap}
+          onEnterStart={() => setEnteringMap(true)}
+        />
       </div>
     </main>
   );

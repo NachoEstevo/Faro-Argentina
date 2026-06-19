@@ -241,25 +241,33 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
   assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
 });
 
-test("regional welcome CTA stays a plain map action", async () => {
+test("regional welcome CTA transitions into the country map", async () => {
   const source = await readFile(welcomeOverlayUrl, "utf8");
   const regionalSource = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
 
+  assert.match(source, /useRouter/);
   assert.match(source, /import Link from "next\/link"/);
   assert.match(source, /href=\{ctaHref\}/);
-  assert.doesNotMatch(source, /onClick=\{onCTA\}|onCTA/);
+  assert.match(source, /onClick=\{handleEnterMap\}/);
+  assert.match(source, /router\.prefetch\(ctaHref\)/);
+  assert.match(source, /window\.setTimeout/);
   assert.match(source, /Evidencia oficial de obra pública/);
   assert.match(source, /Mapa, contratos y expedientes públicos/);
-  assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Entrar al mapa<\/span>/);
+  assert.match(source, /entering \? "Preparando mapa" : "Entrar al mapa"/);
   assert.match(source, /ArrowRight/);
   assert.match(regionalSource, /ctaHref="\/pais\/AR"/);
+  assert.match(regionalSource, /const \[enteringMap, setEnteringMap\] = useState\(false\);/);
+  assert.match(regionalSource, /enteringMap \? styles\.shellEnteringMap : ""/);
+  assert.match(regionalSource, /onEnterStart=\{\(\) => setEnteringMap\(true\)\}/);
   assert.doesNotMatch(regionalSource, /setOverlayDismissed\(true\)|handleCTA|onCTA=\{handleCTA\}/);
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 20px 0 22px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*text-decoration: none;/);
   assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*max-width: 44ch;/);
+  assert.match(styles, /\.shellWelcome\.shellEnteringMap \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapCommit 760ms/);
+  assert.match(styles, /\.welcomeOverlayEntering \.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonCommit 720ms/);
   assert.match(styles, /\.shellWelcome \.leafletHost :global\(\.leaflet-tooltip\)\s*\{[\s\S]*display: none !important;/);
   assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
 });
@@ -272,10 +280,15 @@ test("regional welcome uses a paced entrance animation without forcing motion", 
   assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*animation: welcomeHeroReveal 760ms/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonReveal 780ms/);
   assert.match(styles, /\.shellWelcome \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapSettle 980ms/);
+  assert.match(styles, /\.shellWelcome\.shellEnteringMap \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapCommit 760ms/);
+  assert.match(styles, /\.welcomeOverlayEntering \.welcomeKicker,[\s\S]*\.welcomeOverlayEntering \.welcomeHeadline,[\s\S]*\.welcomeOverlayEntering \.welcomeCopy\s*\{[\s\S]*animation: welcomeCopyCommit 620ms/);
   assert.match(styles, /@keyframes welcomeHeroReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeButtonReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeMapSettle\s*\{/);
+  assert.match(styles, /@keyframes welcomeMapCommit\s*\{/);
+  assert.match(styles, /@keyframes welcomeButtonCommit\s*\{/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeKicker,[\s\S]*\.welcomeHeadline,[\s\S]*\.welcomeCopy,[\s\S]*\.welcomeCTA,[\s\S]*animation: none;/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeOverlayEntering \.welcomeKicker,[\s\S]*\.welcomeOverlayEntering \.welcomeCTAArrow\s*\{[\s\S]*animation: none;/);
 });
 
 test("regional welcome starts without sidebar chrome", async () => {
@@ -301,7 +314,7 @@ test("regional navigation omits the public Aportar action", async () => {
 
   assert.match(source, /<FloatingModeToggle \/>/);
   assert.doesNotMatch(source, /showSecondaryAction|Aportar/);
-  assert.match(source, /<WelcomeOverlay dismissed=\{overlayDismissed\}/);
+  assert.match(source, /<WelcomeOverlay[\s\S]*dismissed=\{overlayDismissed\}[\s\S]*entering=\{enteringMap\}/);
 });
 
 test("guided tutorial is wired to stable map UI targets", async () => {

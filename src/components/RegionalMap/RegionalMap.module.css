@@ -1157,6 +1157,13 @@
   animation: welcomeMapSettle 980ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
 }
 
+.shellWelcome.shellEnteringMap .leafletHost::after {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(5, 10, 14, 0.1) 0 18%, rgba(5, 10, 14, 0.58) 62%, rgba(5, 10, 14, 0.76) 100%),
+    linear-gradient(180deg, rgba(4, 8, 12, 0.28), rgba(4, 8, 12, 0.54));
+  animation: welcomeMapCommit 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .shellWelcome .leafletHost :global(.leaflet-tooltip) {
   display: none !important;
 }
@@ -1909,6 +1916,10 @@
   pointer-events: none;
 }
 
+.welcomeOverlayEntering {
+  pointer-events: none;
+}
+
 .welcomeOverlay::before {
   content: "";
   position: absolute;
@@ -1922,6 +1933,10 @@
   opacity: 0.9;
   pointer-events: none;
   animation: welcomeHaloReveal 920ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+
+.welcomeOverlayEntering::before {
+  animation: welcomeHaloCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .welcomeKicker {
@@ -2010,6 +2025,21 @@
     transform 220ms ease;
   animation: welcomeButtonReveal 780ms cubic-bezier(0.16, 1, 0.3, 1) 340ms both;
   will-change: opacity, transform, filter;
+}
+
+.welcomeOverlayEntering .welcomeKicker,
+.welcomeOverlayEntering .welcomeHeadline,
+.welcomeOverlayEntering .welcomeCopy {
+  animation: welcomeCopyCommit 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcomeOverlayEntering .welcomeCTA {
+  animation: welcomeButtonCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
+}
+
+.welcomeOverlayEntering .welcomeCTAArrow {
+  animation: welcomeArrowCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .welcomeCTALabel {
@@ -2101,6 +2131,66 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes welcomeMapCommit {
+  0% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.68;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes welcomeCopyCommit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.985);
+  }
+}
+
+@keyframes welcomeButtonCommit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  52% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+}
+
+@keyframes welcomeArrowCommit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+@keyframes welcomeHaloCommit {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08);
   }
 }
 
@@ -2628,10 +2718,19 @@
   .welcomeHeadline,
   .welcomeCopy,
   .welcomeCTA,
-  .welcomeCTAArrow {
+  .welcomeCTAArrow,
+  .welcomeOverlayEntering .welcomeKicker,
+  .welcomeOverlayEntering .welcomeHeadline,
+  .welcomeOverlayEntering .welcomeCopy,
+  .welcomeOverlayEntering .welcomeCTA,
+  .welcomeOverlayEntering .welcomeCTAArrow {
     animation: none;
     transition: none;
     filter: none;
+  }
+
+  .shellWelcome.shellEnteringMap .leafletHost::after {
+    opacity: 0.85;
   }
 
   .shellWelcome .leafletHost::after {
