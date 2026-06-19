@@ -341,9 +341,7 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);
   assert.match(styles, /\.tourButton\s*\{/);
-  assert.match(styles, /\.tourButton::after\s*\{[\s\S]*right: -8px;[\s\S]*animation: tourButtonCue 1800ms/);
-  assert.match(styles, /@keyframes tourButtonCue\s*\{/);
-  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.tourButton::after[\s\S]*animation: none;/);
+  assert.doesNotMatch(styles, /\.tourButton::after|tourButtonCue/);
   assert.match(styles, /\.mapTourTarget\s*\{[\s\S]*right: 420px;[\s\S]*left: var\(--sidebar-width\);/);
   assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
   assert.match(styles, /\.tourCard\s*\{/);
