@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Moon, Sun } from "lucide-react";
+import { ArrowLeft, MessageSquarePlus, Moon, Sun } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
@@ -41,6 +41,7 @@ import LeadsPanel from "./RegionalMap/LeadsPanel";
 import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
 import styles from "./RegionalMap/RegionalMap.module.css";
+import type { ContributionTypeId } from "./Aportes/AportesView";
 
 const CaseMap = dynamic(() => import("./CaseMap"), {
   ssr: false,
@@ -67,6 +68,7 @@ interface Props {
   initialMode?: PlatformMode;
   initialCaseId?: string;
   initialExplorerPreset?: "selected" | null;
+  initialContributionType?: ContributionTypeId;
 }
 
 type InterfaceTheme = "dark" | "light";
@@ -94,6 +96,7 @@ export default function FaroExperience({
   initialMode = "map",
   initialCaseId,
   initialExplorerPreset = null,
+  initialContributionType,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -129,14 +132,17 @@ export default function FaroExperience({
   const [selectedFindings, setSelectedFindings] = useState<Set<FindingOption>>(new Set());
   const [selectedSeverities, setSelectedSeverities] = useState<Set<CaseSignalSeverity>>(new Set());
   const [viewMode, setViewMode] = useState<PlatformMode>(initialMode);
+  const [contributionType, setContributionType] = useState<ContributionTypeId | undefined>(initialContributionType);
   const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mapResetToken, setMapResetToken] = useState(0);
   const [waybackState, setWaybackState] = useState<WaybackState>({ status: "off" });
   const [waybackTileLoading, setWaybackTileLoading] = useState(false);
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const [guidedTourOpen, setGuidedTourOpen] = useState(false);
+  const [mobileCaseMapOpen, setMobileCaseMapOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
   const hasAutoStartedGuidedTourRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
@@ -227,8 +233,17 @@ export default function FaroExperience({
     }
   }, []);
 
+  useEffect(() => {
+    setContributionType(initialContributionType);
+  }, [initialContributionType]);
+
   const switchViewMode = useCallback(
     (mode: PlatformMode) => {
+      if (mode !== "aportes") {
+        setSelectedCaseId("");
+        setSelectedExplorerCase(null);
+        setSelectedExplorerCaseStatus("idle");
+      }
       setViewMode(mode);
       router.replace(buildPlatformModeHref(mode, selectedCountry), { scroll: false });
     },
@@ -381,10 +396,7 @@ export default function FaroExperience({
   }, [countryReviewCases]);
 
   useEffect(() => {
-    if (viewMode === "aportes") {
-      setSelectedCaseId("");
-      return;
-    }
+    if (viewMode === "aportes") return;
     if (viewMode === "explorer") {
       if (
         selectedCaseId &&
@@ -566,8 +578,30 @@ export default function FaroExperience({
     setSidebarCollapsed(Boolean(selectedCaseId));
   }, [selectedCaseId]);
 
+  useEffect(() => {
+    if (viewMode !== "map" || !selectedCaseId) {
+      setMobileCaseMapOpen(false);
+      return;
+    }
+    if (window.matchMedia("(max-width: 720px)").matches) {
+      setMobileCaseMapOpen(true);
+    }
+  }, [selectedCaseId, viewMode]);
+
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
+  const handleCloseMapCase = useCallback(() => {
+    setSelectedCaseId("");
+    setMobileMenuOpen(false);
+    setMobileCaseMapOpen(false);
+    setMapResetToken((token) => token + 1);
+    if (searchParams.has("case")) {
+      const nextSearchParams = new URLSearchParams(searchParams.toString());
+      nextSearchParams.delete("case");
+      const nextQuery = nextSearchParams.toString();
+      router.replace(`${pathname}${nextQuery ? `?${nextQuery}` : ""}`, { scroll: false });
+    }
+  }, [pathname, router, searchParams]);
 
   const handleSelectLead = useCallback(
     (caseId: string) => {
@@ -616,6 +650,28 @@ export default function FaroExperience({
     window.setTimeout(() => setGuidedTourOpen(true), 0);
   }, [switchViewMode, viewMode]);
 
+  const openAportes = useCallback(
+    (caseId?: string) => {
+      const targetCaseId = caseId?.trim() ?? "";
+      const nextSearchParams = new URLSearchParams();
+      nextSearchParams.set("mode", "aportes");
+      if (targetCaseId) {
+        nextSearchParams.set("case", targetCaseId);
+        nextSearchParams.set("type", "correct_data");
+      }
+      const nextHref = `/pais/${selectedCountry}?${nextSearchParams.toString()}`;
+
+      setViewMode("aportes");
+      setContributionType(targetCaseId ? "correct_data" : "add_source");
+      setSelectedCaseId(targetCaseId);
+      setEntryOpen(false);
+      setMobileMenuOpen(false);
+      setLeadsPanelOpen(false);
+      router.replace(nextHref, { scroll: false });
+    },
+    [router, selectedCountry],
+  );
+
   useEffect(() => {
     if (hasAutoStartedGuidedTourRef.current) return;
     if (initialMode !== "map" || initialCaseId || initialEntryOpen) return;
@@ -663,6 +719,8 @@ export default function FaroExperience({
   const backControlAriaLabel = selectedCaseId
     ? `Volver al mapa de ${country.label}`
     : "Volver al mapa general";
+  const activeContributionCaseId = selectedCase?.id ?? selectedCaseId;
+  const showContributeButton = viewMode !== "aportes" && !hasOpenMapCase;
 
   const shellClasses = [
     styles.shell,
@@ -686,6 +744,7 @@ export default function FaroExperience({
               cases={countryReviewCases}
               selectedCaseId={selectedCase?.id ?? null}
               onSelectCase={setSelectedCaseId}
+              resetViewToken={mapResetToken}
               waybackState={waybackState}
               onWaybackTileLoadingChange={handleWaybackTileLoadingChange}
             />
@@ -707,7 +766,13 @@ export default function FaroExperience({
       </div>
 
       {showFloatingWaybackControl && (
-        <div className={styles.mapImageryControl} data-tour="satellite-timeline">
+        <div
+          className={[
+            styles.mapImageryControl,
+            mobileCaseMapOpen ? styles.mapImageryControlMobileOpen : "",
+          ].filter(Boolean).join(" ")}
+          data-tour="satellite-timeline"
+        >
           <div
             className={`${casePanelStyles.module} ${styles.mapImageryControlCard}`}
             role="region"
@@ -722,7 +787,13 @@ export default function FaroExperience({
         </div>
       )}
 
-      {showMapChrome && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}
+      {showMapChrome && (
+        <MobileHeader
+          onOpenMenu={handleOpenMobileMenu}
+          backToMap={hasOpenMapCase}
+          onBackToMap={handleCloseMapCase}
+        />
+      )}
 
       {showMapChrome && (
         <CountrySidebar
@@ -783,7 +854,7 @@ export default function FaroExperience({
               className={styles.backToGlobal}
               onClick={() => {
                 if (selectedCaseId) {
-                  setSelectedCaseId("");
+                  handleCloseMapCase();
                   return;
                 }
                 router.push("/");
@@ -802,7 +873,27 @@ export default function FaroExperience({
               className={styles.modeNavAnchor}
             />
           )}
-          {showMapChrome && !hasOpenMapCase && <GuidedTourButton onClick={handleStartGuidedTour} />}
+          {(showContributeButton || (showMapChrome && !hasOpenMapCase)) && (
+            <div className={`${styles.topRightActions} ${!showMapChrome ? styles.topRightActionsWorkView : ""}`}>
+              {showContributeButton && (
+                <button
+                  type="button"
+                  className={styles.contributeButton}
+                  onClick={() => openAportes(activeContributionCaseId || undefined)}
+                  aria-label={
+                    activeContributionCaseId
+                      ? "Aportar o reportar un dato sobre este expediente para revisión privada"
+                      : "Aportar una fuente o material para revisión privada"
+                  }
+                  title={activeContributionCaseId ? "Reportar dato" : "Aportar"}
+                >
+                  <MessageSquarePlus size={14} aria-hidden />
+                  <span>{activeContributionCaseId ? "Reportar dato" : "Aportar"}</span>
+                </button>
+              )}
+              {showMapChrome && !hasOpenMapCase && <GuidedTourButton onClick={handleStartGuidedTour} />}
+            </div>
+          )}
         </div>
         {viewMode === "map" && !selectedCase && (
           <MapLegend
@@ -849,6 +940,8 @@ export default function FaroExperience({
           <AportesView
             selectedCountry={selectedCountry}
             cases={allCases}
+            initialType={contributionType}
+            initialRelatedCaseId={selectedCaseId || undefined}
           />
         ) : (
           <CaseCorpusGate
@@ -860,14 +953,21 @@ export default function FaroExperience({
       )}
 
       {selectedCase && viewMode === "map" && selectedPanelCase && (
-        <aside className="casePanel" aria-label="Expediente Faro" data-tour="case-panel">
+        <aside
+          className={`casePanel ${mobileCaseMapOpen ? "casePanelMobileMapOpen" : ""}`}
+          aria-label="Expediente Faro"
+          data-tour="case-panel"
+        >
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
-            onClose={() => setSelectedCaseId("")}
+            onClose={handleCloseMapCase}
             waybackState={waybackState}
             onWaybackReleaseChange={handleWaybackReleaseChange}
             onWaybackRetry={handleWaybackRetry}
+            onReportCase={() => openAportes(selectedPanelCase.id)}
+            mobileMapOpen={mobileCaseMapOpen}
+            onMobileMapOpenChange={setMobileCaseMapOpen}
           />
         </aside>
       )}

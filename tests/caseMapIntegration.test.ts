@@ -74,6 +74,21 @@ test("CaseMap keeps selected case zoom independent from Wayback state", async ()
   assert.doesNotMatch(source, /const targetZoom = waybackActive \? WAYBACK_TARGET_ZOOM : 8/);
 });
 
+test("CaseMap keeps filter changes from moving the current map viewport", async () => {
+  const source = await readFile(caseMapUrl, "utf8");
+  const faroSource = await readFile(faroExperienceUrl, "utf8");
+
+  assert.match(source, /resetViewToken: number/);
+  assert.match(source, /const lastResetTokenRef = useRef\(resetViewToken\)/);
+  assert.match(source, /if \(resetViewToken === lastResetTokenRef\.current\) return;/);
+  assert.match(source, /map\.flyToBounds\(coordinates,/);
+  assert.doesNotMatch(source, /const boundsKey = useMemo/);
+  assert.doesNotMatch(source, /targetKey = selectedId \? `case:\$\{selectedId\}` : `bounds:\$\{boundsKey\}`/);
+  assert.match(faroSource, /const \[mapResetToken, setMapResetToken\] = useState\(0\)/);
+  assert.match(faroSource, /resetViewToken=\{mapResetToken\}/);
+  assert.match(faroSource, /setSelectedCaseId\(""\);\s*setMapResetToken\(\(token\) => token \+ 1\);/);
+});
+
 test("CaseMap uses the official Argenmap light base layer outside Wayback mode", async () => {
   const source = await readFile(caseMapUrl, "utf8");
 
@@ -115,7 +130,10 @@ test("CaseMap keeps overview zoom on whole Leaflet steps for responsive wheel zo
   assert.match(source, /const ARGENTINA_OVERVIEW_MAX_ZOOM = 6/);
   assert.match(source, /const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120/);
   assert.match(source, /map\.flyTo\(ARGENTINA_OVERVIEW_CENTER, ARGENTINA_OVERVIEW_ZOOM/);
-  assert.match(source, /<ZoomControl position="topright" \/>/);
+  assert.match(source, /function SafeZoomControl\(\)/);
+  assert.match(source, /L\.control\.zoom\(\{ position: "topright" \}\)/);
+  assert.match(source, /!mapInternals\._controlContainer/);
+  assert.doesNotMatch(source, /<ZoomControl position="topright" \/>/);
   assert.doesNotMatch(source, /zoomSnap=\{0\.25\}/);
   assert.doesNotMatch(source, /const ARGENTINA_INITIAL_ZOOM = 5\.25/);
 });

@@ -100,6 +100,9 @@ function Scrubber({
         className={styles.imageryStage}
         style={{ ["--cp-scrub" as string]: `${percent}%` }}
       >
+        <span className={styles.imageryMobileThumbYear} aria-hidden>
+          {formatReleaseYear(activeRelease)}
+        </span>
         <div className={styles.imageryTicks} aria-hidden>
           {releases.map((release, index) => {
             const tickPercent = last === 0 ? 0 : (index / last) * 100;

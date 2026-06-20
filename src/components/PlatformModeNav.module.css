@@ -149,13 +149,21 @@
   }
 
   .floatingBar {
-    justify-content: space-between;
+    justify-content: center;
   }
 
   .floatingBar .primary {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    flex: 1 1 auto;
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .floatingBar .item {
+    width: 40px;
+    padding: 0;
+  }
+
+  .floatingBar .item span {
+    display: none;
   }
 
   .item {

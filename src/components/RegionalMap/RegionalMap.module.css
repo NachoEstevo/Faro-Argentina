@@ -1157,6 +1157,13 @@
   animation: welcomeMapSettle 980ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
 }
 
+.shellWelcome.shellEnteringMap .leafletHost::after {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(5, 10, 14, 0.1) 0 18%, rgba(5, 10, 14, 0.58) 62%, rgba(5, 10, 14, 0.76) 100%),
+    linear-gradient(180deg, rgba(4, 8, 12, 0.28), rgba(4, 8, 12, 0.54));
+  animation: welcomeMapCommit 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .shellWelcome .leafletHost :global(.leaflet-tooltip) {
   display: none !important;
 }
@@ -1237,6 +1244,10 @@
   pointer-events: auto;
 }
 
+.mapImageryControlMobileOpen {
+  display: flex;
+}
+
 @media (max-width: 720px) {
   .mapTileStatusRegion,
   .mapTileStatusRegionWithCase {
@@ -1246,6 +1257,22 @@
 
   .mapImageryControl {
     display: none;
+  }
+
+  .mapImageryControlMobileOpen {
+    left: 0;
+    right: 0;
+    bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+    z-index: 620;
+    display: flex;
+    padding: 0 10px;
+  }
+
+  .mapImageryControlMobileOpen .mapImageryControlCard {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 12px 11px;
+    border-radius: 14px;
   }
 }
 
@@ -1293,15 +1320,28 @@
   top: 0;
   left: 50%;
   width: max-content;
-  max-width: calc(100% - 300px);
+  max-width: calc(100% - 430px);
   transform: translateX(-50%);
   justify-content: center;
 }
 
-.tourButton {
+.topRightActions {
   position: absolute;
   top: 0;
   right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.topRightActions.topRightActionsWorkView {
+  right: 112px;
+}
+
+.tourButton,
+.contributeButton {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1328,13 +1368,37 @@
     transform 160ms ease;
 }
 
-.tourButton:hover {
+.contributeButton {
+  background: color-mix(in srgb, var(--cf-accent-faint) 42%, var(--cf-bg-elev));
+}
+
+.topRightActions:not(.topRightActionsWorkView) .contributeButton {
+  width: 42px;
+  min-width: 42px;
+  padding: 0;
+  border-color: color-mix(in srgb, var(--cf-accent) 70%, var(--cf-border));
+  background: color-mix(in srgb, var(--cf-bg-elev) 94%, transparent);
+}
+
+.topRightActions:not(.topRightActionsWorkView) .contributeButton span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.tourButton:hover,
+.contributeButton:hover {
   border-color: var(--cf-accent);
   background: color-mix(in srgb, var(--cf-accent-faint) 44%, var(--cf-bg-elev));
   transform: translateY(-1px);
 }
 
-.tourButton:focus-visible {
+.tourButton:focus-visible,
+.contributeButton:focus-visible {
   outline: 2px solid var(--cf-arg-gold);
   outline-offset: 2px;
 }
@@ -1836,29 +1900,34 @@
 
 @media (max-width: 640px) {
   .overlayTopBar {
-    /* Sits below the mobile header (brand + menu, ~64px tall) so the back
-       button and mode nav never overlap it. */
+    /* Mobile keeps navigation actions near the thumb and leaves the top map clear. */
     top: 72px;
     left: 12px;
     right: 12px;
     gap: 8px;
   }
   .modeNavAnchor {
-    max-width: calc(100% - 92px);
+    max-width: calc(100% - 150px);
   }
   .backToGlobal span {
     display: none;
   }
   .backToGlobal {
-    padding: 8px 10px;
+    display: none;
   }
 
-  .tourButton {
+  .topRightActions {
+    gap: 6px;
+  }
+
+  .tourButton,
+  .contributeButton {
     min-width: 38px;
     padding: 0 10px;
   }
 
-  .tourButton span {
+  .tourButton span,
+  .contributeButton span {
     display: none;
   }
 
@@ -1867,6 +1936,32 @@
     left: 12px !important;
     width: auto;
     max-height: calc(100dvh - 24px);
+  }
+}
+
+@media (max-width: 1280px) {
+  .modeNavAnchor {
+    max-width: calc(100% - 390px);
+  }
+
+  .topRightActions {
+    gap: 8px;
+  }
+
+  .topRightActions .contributeButton {
+    width: 42px;
+    min-width: 42px;
+    padding: 0;
+  }
+
+  .topRightActions .contributeButton span {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .modeNavAnchor {
+    max-width: 96px;
   }
 }
 
@@ -1885,6 +1980,10 @@
   pointer-events: none;
 }
 
+.welcomeOverlayEntering {
+  pointer-events: none;
+}
+
 .welcomeOverlay::before {
   content: "";
   position: absolute;
@@ -1898,6 +1997,10 @@
   opacity: 0.9;
   pointer-events: none;
   animation: welcomeHaloReveal 920ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+
+.welcomeOverlayEntering::before {
+  animation: welcomeHaloCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .welcomeKicker {
@@ -1986,6 +2089,21 @@
     transform 220ms ease;
   animation: welcomeButtonReveal 780ms cubic-bezier(0.16, 1, 0.3, 1) 340ms both;
   will-change: opacity, transform, filter;
+}
+
+.welcomeOverlayEntering .welcomeKicker,
+.welcomeOverlayEntering .welcomeHeadline,
+.welcomeOverlayEntering .welcomeCopy {
+  animation: welcomeCopyCommit 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcomeOverlayEntering .welcomeCTA {
+  animation: welcomeButtonCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
+}
+
+.welcomeOverlayEntering .welcomeCTAArrow {
+  animation: welcomeArrowCommit 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .welcomeCTALabel {
@@ -2077,6 +2195,66 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes welcomeMapCommit {
+  0% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.68;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes welcomeCopyCommit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.985);
+  }
+}
+
+@keyframes welcomeButtonCommit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  52% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+}
+
+@keyframes welcomeArrowCommit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+@keyframes welcomeHaloCommit {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08);
   }
 }
 
@@ -2343,6 +2521,7 @@
   }
 
   .mobileBrandText {
+    display: none;
     font-family: var(--cf-font-heading);
     font-size: 17px;
     font-weight: 500;
@@ -2469,7 +2648,8 @@
   }
 
   .backToGlobal,
-  .tourButton {
+  .tourButton,
+  .contributeButton {
     min-height: 40px;
   }
 
@@ -2478,13 +2658,62 @@
     font-size: 13px;
   }
 
-  .tourButton {
+  .topRightActions {
     right: 54px;
+  }
+
+  .topRightActions.topRightActionsWorkView {
+    right: 112px;
+  }
+
+  .tourButton,
+  .contributeButton {
     padding: 0 14px;
+  }
+
+  .topRightActions .contributeButton {
+    width: 42px;
+    min-width: 42px;
+    padding: 0;
+  }
+
+  .topRightActions .contributeButton span {
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
+  .mapLegend {
+    display: none;
+  }
+
+  .modeNavAnchor {
+    position: fixed;
+    top: auto;
+    bottom: 18px;
+    left: 50%;
+    max-width: 96px;
+    transform: translateX(-50%);
+  }
+
+  .topRightActions:not(.topRightActionsWorkView) {
+    position: fixed;
+    flex-direction: column;
+    top: auto;
+    right: 14px;
+    bottom: 64px;
+    left: auto;
+    gap: 8px;
+  }
+
+  .topRightActions.topRightActionsWorkView {
+    position: fixed;
+    top: 62px;
+    right: 14px;
+    left: auto;
+    gap: 8px;
+  }
+
   .mapTourTarget {
     top: 132px;
     right: 16px;
@@ -2591,10 +2820,19 @@
   .welcomeHeadline,
   .welcomeCopy,
   .welcomeCTA,
-  .welcomeCTAArrow {
+  .welcomeCTAArrow,
+  .welcomeOverlayEntering .welcomeKicker,
+  .welcomeOverlayEntering .welcomeHeadline,
+  .welcomeOverlayEntering .welcomeCopy,
+  .welcomeOverlayEntering .welcomeCTA,
+  .welcomeOverlayEntering .welcomeCTAArrow {
     animation: none;
     transition: none;
     filter: none;
+  }
+
+  .shellWelcome.shellEnteringMap .leafletHost::after {
+    opacity: 0.85;
   }
 
   .shellWelcome .leafletHost::after {

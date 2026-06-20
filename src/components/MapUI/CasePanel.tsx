@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight, FileText, Map as MapIcon, X } from "lucide-react";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { WaybackState } from "@/components/WaybackControl";
@@ -18,6 +19,9 @@ interface Props {
   waybackState: WaybackState;
   onWaybackReleaseChange: (releaseId: number) => void;
   onWaybackRetry: () => void;
+  onReportCase?: () => void;
+  mobileMapOpen?: boolean;
+  onMobileMapOpenChange?: (open: boolean) => void;
 }
 
 export default function CasePanel({
@@ -27,9 +31,55 @@ export default function CasePanel({
   waybackState,
   onWaybackReleaseChange,
   onWaybackRetry,
+  onReportCase,
+  mobileMapOpen = false,
+  onMobileMapOpenChange,
 }: Props) {
+  const mapModeLabel = waybackState.status === "off" ? "Mapa" : "Mapa satelital";
+  const explorerCaseHref = `/pais/${caseFile.countryCode}?mode=explorer&case=${encodeURIComponent(caseFile.id)}`;
+  const panelClassName = [
+    styles.module,
+    styles.panel,
+    mobileMapOpen ? styles.panelMobileMapOpen : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <div className={`${styles.module} ${styles.panel}`}>
+    <div className={panelClassName}>
+      <div className={styles.mobileModeBar} aria-label="Vista del expediente en mobile">
+        <button
+          type="button"
+          className={`${styles.mobileModeButton} ${mobileMapOpen ? styles.mobileModeButtonActive : ""}`}
+          onClick={() => onMobileMapOpenChange?.(true)}
+          aria-pressed={mobileMapOpen}
+        >
+          <MapIcon size={15} aria-hidden />
+          <span>{mapModeLabel}</span>
+        </button>
+        <button
+          type="button"
+          className={`${styles.mobileModeButton} ${!mobileMapOpen ? styles.mobileModeButtonActive : ""}`}
+          onClick={() => onMobileMapOpenChange?.(false)}
+          aria-pressed={!mobileMapOpen}
+        >
+          <FileText size={15} aria-hidden />
+          <span>Expediente</span>
+        </button>
+      </div>
+      <div className={styles.mobileMapSummary}>
+        <div className={styles.mobileMapSummaryText}>
+          <span>{mapModeLabel}</span>
+          <strong>{caseFile.title}</strong>
+        </div>
+        <button
+          type="button"
+          className={styles.mobileSummaryClose}
+          onClick={onClose}
+          aria-label="Cerrar expediente"
+          title="Cerrar"
+        >
+          <X size={15} aria-hidden />
+        </button>
+      </div>
       <div className={styles.scroll}>
         <PanelHero caseFile={caseFile} signalContext={signalContext} onClose={onClose} />
         <div className={styles.divider} aria-hidden />
@@ -46,8 +96,17 @@ export default function CasePanel({
         )}
         <PanelTechDetails caseFile={caseFile} signalContext={signalContext} />
         <PanelNextSteps caseFile={caseFile} signalContext={signalContext} />
-        <PanelActions caseFile={caseFile} signalContext={signalContext} />
+        <PanelActions caseFile={caseFile} signalContext={signalContext} onReportCase={onReportCase} />
       </div>
+      {!mobileMapOpen && (
+        <a className={styles.mobileFullCaseLink} href={explorerCaseHref}>
+          <span>
+            <strong>Ver expediente completo</strong>
+            <small>Abrir en Explorer</small>
+          </span>
+          <ArrowRight size={18} aria-hidden />
+        </a>
+      )}
     </div>
   );
 }

@@ -16,6 +16,7 @@ const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
 const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
+const mobileHeaderUrl = new URL("../src/components/RegionalMap/MobileHeader.tsx", import.meta.url);
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const caseMapUrl = new URL("../src/components/CaseMap.tsx", import.meta.url);
 const caseDetailsUrl = new URL("../src/components/CaseDetails.tsx", import.meta.url);
@@ -73,6 +74,11 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /\{!hasOpenMapCase && \(\s*<PlatformModeNav/);
   assert.match(source, /className=\{styles\.modeNavAnchor\}/);
   assert.match(source, /\{showMapChrome && !hasOpenMapCase && <GuidedTourButton/);
+  assert.match(source, /const handleCloseMapCase = useCallback/);
+  assert.match(source, /backToMap=\{hasOpenMapCase\}/);
+  assert.match(source, /onBackToMap=\{handleCloseMapCase\}/);
+  assert.match(source, /nextSearchParams\.delete\("case"\)/);
+  assert.match(source, /title=\{activeContributionCaseId \? "Reportar dato" : "Aportar"\}/);
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
   assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);
@@ -88,7 +94,17 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*left: 50%;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*transform: translateX\(-50%\);/);
   assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
-  assert.match(styles, /\.tourButton\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
+  assert.match(styles, /\.topRightActions\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
+  assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{[\s\S]*display: inline-flex;/);
+  assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*max-width: calc\(100% - 430px\);/);
+  assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton\s*\{[\s\S]*width: 42px;/);
+  assert.match(styles, /\.topRightActions:not\(\.topRightActionsWorkView\) \.contributeButton span\s*\{[\s\S]*clip-path: inset\(50%\);/);
+  assert.match(styles, /@media \(max-width: 1280px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.backToGlobal\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.modeNavAnchor\s*\{[\s\S]*position: fixed;[\s\S]*bottom: 18px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions:not\(\.topRightActionsWorkView\)\s*\{[\s\S]*position: fixed;[\s\S]*flex-direction: column;[\s\S]*right: 14px;[\s\S]*bottom: 64px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrandText\s*\{[\s\S]*display: none;/);
 });
 
 test("case detail back control names the action instead of the country", async () => {
@@ -119,30 +135,58 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   const experienceSource = await readFile(faroExperienceUrl, "utf8");
   const casePanelSource = await readFile(casePanelUrl, "utf8");
   const panelImagerySource = await readFile(panelImageryUrl, "utf8");
+  const globalStyles = await readFile(globalStylesUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
   const casePanelStyles = await readFile(casePanelStylesUrl, "utf8");
 
   assert.match(experienceSource, /import PanelImagery from "\.\/MapUI\/panel\/PanelImagery"/);
+  assert.match(experienceSource, /const \[mobileCaseMapOpen, setMobileCaseMapOpen\] = useState\(false\)/);
+  assert.match(experienceSource, /window\.matchMedia\("\(max-width: 720px\)"\)\.matches/);
   assert.match(experienceSource, /const showFloatingWaybackControl =/);
-  assert.match(experienceSource, /className=\{styles\.mapImageryControl\}/);
+  assert.match(experienceSource, /mobileCaseMapOpen \? styles\.mapImageryControlMobileOpen : ""/);
+  assert.match(experienceSource, /className=\{`casePanel \$\{mobileCaseMapOpen \? "casePanelMobileMapOpen" : ""\}`\}/);
+  assert.match(experienceSource, /mobileMapOpen=\{mobileCaseMapOpen\}/);
+  assert.match(experienceSource, /onMobileMapOpenChange=\{setMobileCaseMapOpen\}/);
   assert.match(experienceSource, /aria-label="Selector de imagen satelital"/);
   assert.match(experienceSource, /onActiveReleaseChange=\{handleWaybackReleaseChange\}/);
+  assert.match(casePanelSource, /mobileMapOpen/);
+  assert.match(casePanelSource, /onMobileMapOpenChange/);
+  assert.match(casePanelSource, /Mapa satelital/);
+  assert.match(casePanelSource, /styles\.mobileModeBar/);
+  assert.match(casePanelSource, /styles\.mobileMapSummary/);
   assert.match(casePanelSource, /styles\.mobileInlineImagery/);
+  assert.match(casePanelSource, /mode=explorer&case=\$\{encodeURIComponent\(caseFile\.id\)\}/);
+  assert.match(casePanelSource, /styles\.mobileFullCaseLink/);
+  assert.match(casePanelSource, /Ver expediente completo/);
   assert.match(casePanelSource, /<PanelImagery[\s\S]*onActiveReleaseChange=\{onWaybackReleaseChange\}/);
   assert.match(panelImagerySource, /Año de la imagen satelital/);
   assert.match(panelImagerySource, /Año visible/);
   assert.match(panelImagerySource, /styles\.imageryTicks/);
   assert.match(panelImagerySource, /styles\.imageryYearTick/);
   assert.match(panelImagerySource, /styles\.imageryTickYear/);
+  assert.match(panelImagerySource, /styles\.imageryMobileThumbYear/);
   assert.match(panelImagerySource, /release\.year % 2 === 0/);
   assert.match(styles, /\.mapImageryControl\s*\{[\s\S]*bottom: 22px;[\s\S]*justify-content: center;/);
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControl\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControlMobileOpen\s*\{[\s\S]*bottom: calc\(132px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*display: flex;/);
   assert.match(styles, /\.mapImageryControlCard\s*\{[\s\S]*width: min\(460px, calc\(100% - 40px\)\);/);
+  assert.match(globalStyles, /@media \(max-width: 720px\) \{[\s\S]*\.casePanel\s*\{[\s\S]*top: auto;[\s\S]*bottom: calc\(10px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*height: min\(74svh, 620px\);/);
+  assert.match(globalStyles, /\.casePanel\.casePanelMobileMapOpen\s*\{[\s\S]*height: auto;/);
   assert.match(casePanelStyles, /\.imagerySummary\s*\{/);
   assert.match(casePanelStyles, /\.imageryReadout\s*\{[\s\S]*max-width: 48%;/);
+  assert.match(casePanelStyles, /\.imageryMobileThumbYear\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /\.imageryYearTickActive \.imageryTickLine\s*\{/);
+  assert.match(casePanelStyles, /\.mobileModeBar,\s*\.mobileMapSummary,\s*\.mobileFullCaseLink\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panel\s*\{[\s\S]*max-height: min\(74svh, 620px\);/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.scroll\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.mobileMapSummary\s*\{[\s\S]*display: grid;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileFullCaseLink\s*\{[\s\S]*display: flex;[\s\S]*background: linear-gradient\(135deg, #1f6f9f 0%, #75aadb 100%\);/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryReadout\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryMobileThumbYear\s*\{[\s\S]*display: block;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryTickYear\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imagerySlider::-webkit-slider-thumb\s*\{[\s\S]*width: 21px;[\s\S]*height: 21px;/);
   assert.match(casePanelStyles, /\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
-  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: flex;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
 });
 
 test("country route keeps the heavy investigator corpus out of the initial client payload", async () => {
@@ -240,25 +284,33 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
   assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
 });
 
-test("regional welcome CTA stays a plain map action", async () => {
+test("regional welcome CTA transitions into the country map", async () => {
   const source = await readFile(welcomeOverlayUrl, "utf8");
   const regionalSource = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
 
+  assert.match(source, /useRouter/);
   assert.match(source, /import Link from "next\/link"/);
   assert.match(source, /href=\{ctaHref\}/);
-  assert.doesNotMatch(source, /onClick=\{onCTA\}|onCTA/);
+  assert.match(source, /onClick=\{handleEnterMap\}/);
+  assert.match(source, /router\.prefetch\(ctaHref\)/);
+  assert.match(source, /window\.setTimeout/);
   assert.match(source, /Evidencia oficial de obra pública/);
   assert.match(source, /Mapa, contratos y expedientes públicos/);
-  assert.match(source, /<span className=\{styles\.welcomeCTALabel\}>Entrar al mapa<\/span>/);
+  assert.match(source, /entering \? "Preparando mapa" : "Entrar al mapa"/);
   assert.match(source, /ArrowRight/);
   assert.match(regionalSource, /ctaHref="\/pais\/AR"/);
+  assert.match(regionalSource, /const \[enteringMap, setEnteringMap\] = useState\(false\);/);
+  assert.match(regionalSource, /enteringMap \? styles\.shellEnteringMap : ""/);
+  assert.match(regionalSource, /onEnterStart=\{\(\) => setEnteringMap\(true\)\}/);
   assert.doesNotMatch(regionalSource, /setOverlayDismissed\(true\)|handleCTA|onCTA=\{handleCTA\}/);
   assert.doesNotMatch(source, /faro-mark-transparent|welcomeCTASource|<img/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*padding: 0 20px 0 22px;/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*background: rgba\(8, 12, 17, 0\.88\);/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*text-decoration: none;/);
   assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*max-width: 44ch;/);
+  assert.match(styles, /\.shellWelcome\.shellEnteringMap \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapCommit 760ms/);
+  assert.match(styles, /\.welcomeOverlayEntering \.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonCommit 720ms/);
   assert.match(styles, /\.shellWelcome \.leafletHost :global\(\.leaflet-tooltip\)\s*\{[\s\S]*display: none !important;/);
   assert.doesNotMatch(styles, /welcomeCTASource|welcomeCTA::before|welcomeCTA::after/);
 });
@@ -271,10 +323,15 @@ test("regional welcome uses a paced entrance animation without forcing motion", 
   assert.match(styles, /\.welcomeCopy\s*\{[\s\S]*animation: welcomeHeroReveal 760ms/);
   assert.match(styles, /\.welcomeCTA\s*\{[\s\S]*animation: welcomeButtonReveal 780ms/);
   assert.match(styles, /\.shellWelcome \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapSettle 980ms/);
+  assert.match(styles, /\.shellWelcome\.shellEnteringMap \.leafletHost::after\s*\{[\s\S]*animation: welcomeMapCommit 760ms/);
+  assert.match(styles, /\.welcomeOverlayEntering \.welcomeKicker,[\s\S]*\.welcomeOverlayEntering \.welcomeHeadline,[\s\S]*\.welcomeOverlayEntering \.welcomeCopy\s*\{[\s\S]*animation: welcomeCopyCommit 620ms/);
   assert.match(styles, /@keyframes welcomeHeroReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeButtonReveal\s*\{/);
   assert.match(styles, /@keyframes welcomeMapSettle\s*\{/);
+  assert.match(styles, /@keyframes welcomeMapCommit\s*\{/);
+  assert.match(styles, /@keyframes welcomeButtonCommit\s*\{/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeKicker,[\s\S]*\.welcomeHeadline,[\s\S]*\.welcomeCopy,[\s\S]*\.welcomeCTA,[\s\S]*animation: none;/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*\.welcomeOverlayEntering \.welcomeKicker,[\s\S]*\.welcomeOverlayEntering \.welcomeCTAArrow\s*\{[\s\S]*animation: none;/);
 });
 
 test("regional welcome starts without sidebar chrome", async () => {
@@ -298,9 +355,8 @@ test("regional welcome starts without sidebar chrome", async () => {
 test("regional navigation omits the public Aportar action", async () => {
   const source = await readFile(regionalMapUrl, "utf8");
 
-  assert.match(source, /<FloatingModeToggle \/>/);
-  assert.doesNotMatch(source, /showSecondaryAction|Aportar/);
-  assert.match(source, /<WelcomeOverlay dismissed=\{overlayDismissed\}/);
+  assert.doesNotMatch(source, /FloatingModeToggle|PlatformModeNav|showSecondaryAction|Aportar/);
+  assert.match(source, /<WelcomeOverlay[\s\S]*dismissed=\{overlayDismissed\}[\s\S]*entering=\{enteringMap\}/);
 });
 
 test("guided tutorial is wired to stable map UI targets", async () => {
@@ -340,7 +396,7 @@ test("guided tutorial is wired to stable map UI targets", async () => {
   assert.match(tourSource, /"modes"[\s\S]*"search"[\s\S]*"filters"[\s\S]*"map"[\s\S]*"legend"[\s\S]*"review-button"[\s\S]*"review-list"[\s\S]*"case-detail"/);
   assert.match(tourSource, /No cambian la evidencia ni convierten una pista en conclusión/);
   assert.match(tourSource, /no una acusación/);
-  assert.match(styles, /\.tourButton\s*\{/);
+  assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{/);
   assert.doesNotMatch(styles, /\.tourButton::after|tourButtonCue/);
   assert.match(styles, /\.mapTourTarget\s*\{[\s\S]*right: 420px;[\s\S]*left: var\(--sidebar-width\);/);
   assert.match(styles, /\.tourSpotlight\s*\{[\s\S]*box-shadow:[\s\S]*9999px/);
@@ -350,7 +406,12 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {
   const styles = await readFile(regionalMapStylesUrl, "utf8");
   const globalStyles = await readFile(globalStylesUrl, "utf8");
+  const mobileHeaderSource = await readFile(mobileHeaderUrl, "utf8");
 
+  assert.match(mobileHeaderSource, /backToMap\?: boolean/);
+  assert.match(mobileHeaderSource, /aria-label=\{backToMap \? "Volver al mapa" : "Abrir menú"\}/);
+  assert.match(mobileHeaderSource, /backToMap \? <ArrowLeft size=\{20\} aria-hidden \/> : <Menu size=\{20\} aria-hidden \/>/);
+  assert.match(mobileHeaderSource, /\{!backToMap && \(\s*<Link href="\/" className=\{styles\.mobileBrand\}/);
   assert.match(styles, /\.shellMobileMenuOpen \.overlayLayer\s*\{[\s\S]*z-index: 4;[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.sidebar\s*\{[\s\S]*left: 0;[\s\S]*transition: none;/);
   assert.match(styles, /\.sidebar:not\(\.sidebarMobileOpen\)\s*\{[\s\S]*left: -320px;/);
@@ -362,6 +423,7 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*max-width: 210px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrand\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
-  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.tourButton\s*\{[\s\S]*right: 54px;/);
-  assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*margin-top: 132px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions\s*\{[\s\S]*right: 54px;/);
+  assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
+  assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*display: none !important;/);
 });

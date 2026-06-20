@@ -6,7 +6,6 @@ const aportesViewUrl = new URL("../src/components/Aportes/AportesView.tsx", impo
 const aportesStylesUrl = new URL("../src/components/Aportes/AportesView.module.css", import.meta.url);
 const faroExperienceUrl = new URL("../src/components/FaroExperience.tsx", import.meta.url);
 const countryPageUrl = new URL("../src/app/pais/[code]/page.tsx", import.meta.url);
-const floatingToggleUrl = new URL("../src/components/RegionalMap/FloatingModeToggle.tsx", import.meta.url);
 const platformModeNavUrl = new URL("../src/components/PlatformModeNav.tsx", import.meta.url);
 const resourcesSectionUrl = new URL("../src/components/RegionalMap/ResourcesSection.tsx", import.meta.url);
 
@@ -108,17 +107,25 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
   assert.match(styles, /\.securityNote/);
 });
 
-test("FaroExperience keeps Aportes direct-only and out of public navigation", async () => {
+test("FaroExperience exposes Aportes as contextual review action outside the primary nav", async () => {
   const source = [
     await readFile(faroExperienceUrl, "utf8"),
     await readFile(platformModeNavUrl, "utf8"),
   ].join("\n");
 
   assert.match(source, /AportesView/);
-  assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}/);
+  assert.match(source, /<AportesView[\s\S]*cases=\{allCases\}[\s\S]*initialType=\{contributionType\}/);
+  assert.match(source, /setContributionType\(targetCaseId \? "correct_data" : "add_source"\)/);
+  assert.match(source, /initialRelatedCaseId=\{selectedCaseId \|\| undefined\}/);
   assert.match(source, /type PlatformMode = "map" \| "explorer" \| "aportes"/);
   assert.match(source, /viewMode === "aportes"/);
-  assert.doesNotMatch(source, /MessageSquarePlus|Aportar|mode="aportes"|styles\.secondary|showSecondaryAction/);
+  assert.match(source, /MessageSquarePlus/);
+  assert.match(source, /Aportar/);
+  assert.match(source, /Reportar dato/);
+  assert.match(source, /nextSearchParams\.set\("mode", "aportes"\)/);
+  assert.match(source, /nextSearchParams\.set\("case", targetCaseId\)/);
+  assert.match(source, /nextSearchParams\.set\("type", "correct_data"\)/);
+  assert.doesNotMatch(source, /styles\.secondary|showSecondaryAction/);
   assert.doesNotMatch(source, /Aportes[\s\S]*?aria-pressed=\{false\}/);
 });
 
@@ -135,13 +142,12 @@ test("country route can open the aportes mode directly", async () => {
 
   assert.match(source, /mode\) === "aportes"/);
   assert.match(source, /"aportes"/);
+  assert.match(source, /readContributionType/);
+  assert.match(source, /initialContributionType/);
 });
 
 test("regional landing does not expose public Aportes entry points", async () => {
-  const source = [
-    await readFile(floatingToggleUrl, "utf8"),
-    await readFile(platformModeNavUrl, "utf8"),
-  ].join("\n");
+  const source = await readFile(platformModeNavUrl, "utf8");
   const resourcesSource = await readFile(resourcesSectionUrl, "utf8");
 
   assert.match(source, /buildPlatformModeHref/);

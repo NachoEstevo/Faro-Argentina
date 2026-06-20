@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useDeferredValue, useMemo, useState } from "react";
+import { type ChangeEvent, type FormEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
 import {
   Camera,
   CheckCircle2,
@@ -27,6 +27,8 @@ import styles from "./AportesView.module.css";
 interface Props {
   selectedCountry: "AR";
   cases: SearchSuggestionCase[];
+  initialType?: ContributionTypeId;
+  initialRelatedCaseId?: string;
 }
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -53,7 +55,7 @@ const contributionTypes = [
   },
 ] as const;
 
-type ContributionTypeId = (typeof contributionTypes)[number]["id"];
+export type ContributionTypeId = (typeof contributionTypes)[number]["id"];
 
 const formCopy: Record<ContributionTypeId, {
   heading: string;
@@ -103,17 +105,39 @@ const aporteSteps = [
   { eyebrow: "Paso 3", title: "Revisión", detail: "Confirmá permisos y contacto opcional." },
 ] as const;
 
-export default function AportesView({ selectedCountry, cases }: Props) {
-  const [type, setType] = useState<ContributionTypeId>("add_source");
+export default function AportesView({
+  selectedCountry,
+  cases,
+  initialType,
+  initialRelatedCaseId,
+}: Props) {
+  const [type, setType] = useState<ContributionTypeId>(initialType ?? "add_source");
   const [jurisdiction, setJurisdiction] = useState(selectedCountry);
   const [privacyMode, setPrivacyMode] = useState<PrivacyMode>("anonymous");
   const [files, setFiles] = useState<File[]>([]);
-  const [relatedCaseQuery, setRelatedCaseQuery] = useState("");
-  const [relatedCase, setRelatedCase] = useState("");
+  const [relatedCaseQuery, setRelatedCaseQuery] = useState(() =>
+    formatInitialRelatedCaseLabel(initialRelatedCaseId, cases),
+  );
+  const [relatedCase, setRelatedCase] = useState(initialRelatedCaseId ?? "");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [statusText, setStatusText] = useState("");
   const selectedCopy = formCopy[type];
   const deferredRelatedCaseQuery = useDeferredValue(relatedCaseQuery);
+
+  useEffect(() => {
+    setType(initialType ?? "add_source");
+  }, [initialType]);
+
+  useEffect(() => {
+    if (!initialRelatedCaseId) {
+      setRelatedCase("");
+      setRelatedCaseQuery("");
+      return;
+    }
+
+    setRelatedCase(initialRelatedCaseId);
+    setRelatedCaseQuery(formatInitialRelatedCaseLabel(initialRelatedCaseId, cases));
+  }, [cases, initialRelatedCaseId]);
 
   const fileSummary = useMemo(
     () => files.map((file) => `${file.name} · ${formatBytes(file.size)}`),
@@ -524,6 +548,14 @@ function selectRelatedCaseSuggestion(
 
   setRelatedCase("");
   setRelatedCaseQuery(suggestion.query);
+}
+
+function formatInitialRelatedCaseLabel(caseId: string | undefined, cases: SearchSuggestionCase[]): string {
+  const cleanCaseId = caseId?.trim();
+  if (!cleanCaseId) return "";
+  const caseFile = cases.find((candidate) => candidate.id === cleanCaseId);
+  if (!caseFile) return cleanCaseId;
+  return `${caseFile.id} · ${caseFile.title}`;
 }
 
 function resolveRelatedCaseValue(selectedCaseId: string, query: string): string {
