@@ -870,7 +870,7 @@ export default function FaroExperience({
               activeMode={viewMode}
               onModeChange={switchViewMode}
               variant="floatingBar"
-              className={styles.modeNavAnchor}
+              className={`${styles.modeNavAnchor} ${!showMapChrome ? styles.modeNavAnchorWorkView : ""}`}
             />
           )}
           {(showContributeButton || (showMapChrome && !hasOpenMapCase)) && (

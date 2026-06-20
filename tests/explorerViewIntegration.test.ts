@@ -119,15 +119,19 @@ test("ExplorerView uses one vertical content scroll surface", async () => {
   assert.match(css, /\.sidebar\s*\{[\s\S]*position: sticky;[\s\S]*height: 100dvh;/);
 });
 
-test("ExplorerView keeps detail report actions below the floating mode nav", async () => {
+test("ExplorerView keeps detail report actions inside the mobile detail flow", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
   const css = await readFile(explorerStylesUrl, "utf8");
 
   assert.match(source, /Informe PDF/);
   assert.match(source, /href=\{buildReportHref\(caseFile\.id\)\}/);
   assert.match(css, /\.main\s*\{[\s\S]*padding-top: 72px;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-top: 104px;[\s\S]*padding-bottom: calc\(118px \+ env\(safe-area-inset-bottom, 0px\)\);/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.detailTopBar\s*\{[\s\S]*top: 108px;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.shell\s*\{[\s\S]*scroll-padding-bottom: calc\(170px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-top: 104px;[\s\S]*padding-bottom: calc\(156px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-bottom: calc\(170px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.detailTopBar\s*\{[\s\S]*position: static;/);
+  assert.doesNotMatch(css, /\.detailTopBar\s*\{[^}]*position: sticky;/);
+  assert.doesNotMatch(css, /\.detailTopBar\s*\{[^}]*top: 108px;/);
 });
 
 test("ExplorerView gives mobile Explorer a compact search-first reading order", async () => {

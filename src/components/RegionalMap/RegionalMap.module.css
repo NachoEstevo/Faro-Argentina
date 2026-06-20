@@ -1325,6 +1325,10 @@
   justify-content: center;
 }
 
+.modeNavAnchorWorkView {
+  max-width: 96px;
+}
+
 .topRightActions {
   position: absolute;
   top: 0;
@@ -2694,6 +2698,28 @@
     left: 50%;
     max-width: 96px;
     transform: translateX(-50%);
+  }
+
+  .shellNoMapChrome .modeNavAnchor {
+    top: 16px;
+    bottom: auto;
+    left: 14px;
+    transform: none;
+    isolation: isolate;
+  }
+
+  .shellNoMapChrome .modeNavAnchor::before {
+    content: "";
+    position: absolute;
+    inset: -10px -14px;
+    z-index: -1;
+    border: 1px solid color-mix(in srgb, var(--cf-border) 82%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--cf-bg-elev) 88%, transparent);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--cf-text) 10%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    pointer-events: none;
   }
 
   .topRightActions:not(.topRightActionsWorkView) {

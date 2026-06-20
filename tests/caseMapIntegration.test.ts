@@ -86,7 +86,7 @@ test("CaseMap keeps filter changes from moving the current map viewport", async 
   assert.doesNotMatch(source, /targetKey = selectedId \? `case:\$\{selectedId\}` : `bounds:\$\{boundsKey\}`/);
   assert.match(faroSource, /const \[mapResetToken, setMapResetToken\] = useState\(0\)/);
   assert.match(faroSource, /resetViewToken=\{mapResetToken\}/);
-  assert.match(faroSource, /setSelectedCaseId\(""\);\s*setMapResetToken\(\(token\) => token \+ 1\);/);
+  assert.match(faroSource, /const handleCloseMapCase = useCallback\(\(\) => \{[\s\S]*setSelectedCaseId\(""\);[\s\S]*setMapResetToken\(\(token\) => token \+ 1\);/);
 });
 
 test("CaseMap uses the official Argenmap light base layer outside Wayback mode", async () => {
