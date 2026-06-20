@@ -94,7 +94,7 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*position: absolute;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*left: 50%;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*transform: translateX\(-50%\);/);
-  assert.match(styles, /\.modeNavAnchorWorkView\s*\{[\s\S]*max-width: 96px;/);
+  assert.match(styles, /\.modeNavAnchorWorkView\s*\{[\s\S]*max-width: min\(360px, calc\(100% - 260px\)\);/);
   assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
   assert.match(styles, /\.topRightActions\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{[\s\S]*display: inline-flex;/);
@@ -105,6 +105,7 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.backToGlobal\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.modeNavAnchor\s*\{[\s\S]*position: fixed;[\s\S]*bottom: 18px;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.shellNoMapChrome \.modeNavAnchor\s*\{[\s\S]*top: 16px;[\s\S]*bottom: auto;[\s\S]*left: 50%;[\s\S]*max-width: 112px;[\s\S]*transform: translateX\(-50%\);/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.modeNavAnchorWorkView\s*\{[\s\S]*max-width: 112px;/);
   assert.doesNotMatch(styles, /\.shellNoMapChrome \.modeNavAnchor::before/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions:not\(\.topRightActionsWorkView\)\s*\{[\s\S]*position: fixed;[\s\S]*flex-direction: column;[\s\S]*right: 14px;[\s\S]*bottom: 64px;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions\.topRightActionsWorkView\s*\{[\s\S]*position: fixed;[\s\S]*top: 26px;[\s\S]*right: auto;[\s\S]*left: 20px;/);

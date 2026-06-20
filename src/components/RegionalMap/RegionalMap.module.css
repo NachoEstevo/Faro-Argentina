@@ -1327,7 +1327,7 @@
 }
 
 .modeNavAnchorWorkView {
-  max-width: 96px;
+  max-width: min(360px, calc(100% - 260px));
 }
 
 .topRightActions {
@@ -2935,6 +2935,10 @@
     left: 50%;
     max-width: 112px;
     transform: translateX(-50%);
+  }
+
+  .modeNavAnchorWorkView {
+    max-width: 112px;
   }
 
   .topRightActions:not(.topRightActionsWorkView) {
