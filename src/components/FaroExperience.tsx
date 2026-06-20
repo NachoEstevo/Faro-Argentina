@@ -142,6 +142,7 @@ export default function FaroExperience({
   const [waybackRetryToken, setWaybackRetryToken] = useState(0);
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const [guidedTourOpen, setGuidedTourOpen] = useState(false);
+  const [mobileCaseMapOpen, setMobileCaseMapOpen] = useState(false);
   const hasArmedWaybackRef = useRef(false);
   const hasAutoStartedGuidedTourRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
@@ -577,6 +578,16 @@ export default function FaroExperience({
     setSidebarCollapsed(Boolean(selectedCaseId));
   }, [selectedCaseId]);
 
+  useEffect(() => {
+    if (viewMode !== "map" || !selectedCaseId) {
+      setMobileCaseMapOpen(false);
+      return;
+    }
+    if (window.matchMedia("(max-width: 720px)").matches) {
+      setMobileCaseMapOpen(true);
+    }
+  }, [selectedCaseId, viewMode]);
+
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
@@ -743,7 +754,13 @@ export default function FaroExperience({
       </div>
 
       {showFloatingWaybackControl && (
-        <div className={styles.mapImageryControl} data-tour="satellite-timeline">
+        <div
+          className={[
+            styles.mapImageryControl,
+            mobileCaseMapOpen ? styles.mapImageryControlMobileOpen : "",
+          ].filter(Boolean).join(" ")}
+          data-tour="satellite-timeline"
+        >
           <div
             className={`${casePanelStyles.module} ${styles.mapImageryControlCard}`}
             role="region"
@@ -919,7 +936,11 @@ export default function FaroExperience({
       )}
 
       {selectedCase && viewMode === "map" && selectedPanelCase && (
-        <aside className="casePanel" aria-label="Expediente Faro" data-tour="case-panel">
+        <aside
+          className={`casePanel ${mobileCaseMapOpen ? "casePanelMobileMapOpen" : ""}`}
+          aria-label="Expediente Faro"
+          data-tour="case-panel"
+        >
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
@@ -931,6 +952,8 @@ export default function FaroExperience({
             onWaybackReleaseChange={handleWaybackReleaseChange}
             onWaybackRetry={handleWaybackRetry}
             onReportCase={() => openAportes(selectedPanelCase.id)}
+            mobileMapOpen={mobileCaseMapOpen}
+            onMobileMapOpenChange={setMobileCaseMapOpen}
           />
         </aside>
       )}

@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { CircleMarker, MapContainer, TileLayer, ZoomControl, useMap } from "react-leaflet";
-import { canvas as createCanvasRenderer, type Map as LeafletMap } from "leaflet";
+import { CircleMarker, MapContainer, TileLayer, useMap } from "react-leaflet";
+import L, { canvas as createCanvasRenderer, type Map as LeafletMap } from "leaflet";
 
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import { buildCaseMarkerKey, isMapMarkerEligible } from "@/lib/data/mapMarkers";
@@ -144,7 +144,7 @@ export default function CaseMap({
             updateWhenZooming={false}
           />
         )}
-        <ZoomControl position="topright" />
+        <SafeZoomControl />
         <MapFocus
           cases={mapCases}
           selectedCase={selectedCase}
@@ -199,6 +199,37 @@ export default function CaseMap({
         })}
       </MapContainer>
   );
+}
+
+function SafeZoomControl() {
+  const map = useMap();
+
+  useEffect(() => {
+    const mapInternals = map as LeafletMap & {
+      _controlContainer?: HTMLElement;
+      _controlCorners?: Record<string, HTMLElement>;
+    };
+    if (
+      !map.getContainer().isConnected ||
+      !mapInternals._controlContainer ||
+      !mapInternals._controlCorners
+    ) {
+      return;
+    }
+
+    const zoomControl = L.control.zoom({ position: "topright" });
+    zoomControl.addTo(map);
+
+    return () => {
+      try {
+        zoomControl.remove();
+      } catch {
+        // Leaflet can double-clean controls during development remounts.
+      }
+    };
+  }, [map]);
+
+  return null;
 }
 
 interface MarkerContext {

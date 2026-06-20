@@ -1244,6 +1244,10 @@
   pointer-events: auto;
 }
 
+.mapImageryControlMobileOpen {
+  display: flex;
+}
+
 @media (max-width: 720px) {
   .mapTileStatusRegion,
   .mapTileStatusRegionWithCase {
@@ -1253,6 +1257,22 @@
 
   .mapImageryControl {
     display: none;
+  }
+
+  .mapImageryControlMobileOpen {
+    left: 0;
+    right: 0;
+    bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+    z-index: 620;
+    display: flex;
+    padding: 0 10px;
+  }
+
+  .mapImageryControlMobileOpen .mapImageryControlCard {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 12px 11px;
+    border-radius: 14px;
   }
 }
 

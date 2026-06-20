@@ -130,7 +130,10 @@ test("CaseMap keeps overview zoom on whole Leaflet steps for responsive wheel zo
   assert.match(source, /const ARGENTINA_OVERVIEW_MAX_ZOOM = 6/);
   assert.match(source, /const ARGENTINA_OVERVIEW_FIT_THRESHOLD = 120/);
   assert.match(source, /map\.flyTo\(ARGENTINA_OVERVIEW_CENTER, ARGENTINA_OVERVIEW_ZOOM/);
-  assert.match(source, /<ZoomControl position="topright" \/>/);
+  assert.match(source, /function SafeZoomControl\(\)/);
+  assert.match(source, /L\.control\.zoom\(\{ position: "topright" \}\)/);
+  assert.match(source, /!mapInternals\._controlContainer/);
+  assert.doesNotMatch(source, /<ZoomControl position="topright" \/>/);
   assert.doesNotMatch(source, /zoomSnap=\{0\.25\}/);
   assert.doesNotMatch(source, /const ARGENTINA_INITIAL_ZOOM = 5\.25/);
 });

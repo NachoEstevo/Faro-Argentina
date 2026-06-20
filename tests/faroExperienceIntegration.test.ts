@@ -131,14 +131,25 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   const experienceSource = await readFile(faroExperienceUrl, "utf8");
   const casePanelSource = await readFile(casePanelUrl, "utf8");
   const panelImagerySource = await readFile(panelImageryUrl, "utf8");
+  const globalStyles = await readFile(globalStylesUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
   const casePanelStyles = await readFile(casePanelStylesUrl, "utf8");
 
   assert.match(experienceSource, /import PanelImagery from "\.\/MapUI\/panel\/PanelImagery"/);
+  assert.match(experienceSource, /const \[mobileCaseMapOpen, setMobileCaseMapOpen\] = useState\(false\)/);
+  assert.match(experienceSource, /window\.matchMedia\("\(max-width: 720px\)"\)\.matches/);
   assert.match(experienceSource, /const showFloatingWaybackControl =/);
-  assert.match(experienceSource, /className=\{styles\.mapImageryControl\}/);
+  assert.match(experienceSource, /mobileCaseMapOpen \? styles\.mapImageryControlMobileOpen : ""/);
+  assert.match(experienceSource, /className=\{`casePanel \$\{mobileCaseMapOpen \? "casePanelMobileMapOpen" : ""\}`\}/);
+  assert.match(experienceSource, /mobileMapOpen=\{mobileCaseMapOpen\}/);
+  assert.match(experienceSource, /onMobileMapOpenChange=\{setMobileCaseMapOpen\}/);
   assert.match(experienceSource, /aria-label="Selector de imagen satelital"/);
   assert.match(experienceSource, /onActiveReleaseChange=\{handleWaybackReleaseChange\}/);
+  assert.match(casePanelSource, /mobileMapOpen/);
+  assert.match(casePanelSource, /onMobileMapOpenChange/);
+  assert.match(casePanelSource, /Mapa satelital/);
+  assert.match(casePanelSource, /styles\.mobileModeBar/);
+  assert.match(casePanelSource, /styles\.mobileMapSummary/);
   assert.match(casePanelSource, /styles\.mobileInlineImagery/);
   assert.match(casePanelSource, /<PanelImagery[\s\S]*onActiveReleaseChange=\{onWaybackReleaseChange\}/);
   assert.match(panelImagerySource, /Año de la imagen satelital/);
@@ -149,12 +160,19 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   assert.match(panelImagerySource, /release\.year % 2 === 0/);
   assert.match(styles, /\.mapImageryControl\s*\{[\s\S]*bottom: 22px;[\s\S]*justify-content: center;/);
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControl\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControlMobileOpen\s*\{[\s\S]*bottom: calc\(132px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*display: flex;/);
   assert.match(styles, /\.mapImageryControlCard\s*\{[\s\S]*width: min\(460px, calc\(100% - 40px\)\);/);
+  assert.match(globalStyles, /@media \(max-width: 720px\) \{[\s\S]*\.casePanel\s*\{[\s\S]*top: auto;[\s\S]*bottom: calc\(10px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*height: min\(74svh, 620px\);/);
+  assert.match(globalStyles, /\.casePanel\.casePanelMobileMapOpen\s*\{[\s\S]*height: auto;/);
   assert.match(casePanelStyles, /\.imagerySummary\s*\{/);
   assert.match(casePanelStyles, /\.imageryReadout\s*\{[\s\S]*max-width: 48%;/);
   assert.match(casePanelStyles, /\.imageryYearTickActive \.imageryTickLine\s*\{/);
+  assert.match(casePanelStyles, /\.mobileModeBar,\s*\.mobileMapSummary\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panel\s*\{[\s\S]*max-height: min\(74svh, 620px\);/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.scroll\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.mobileMapSummary\s*\{[\s\S]*display: grid;/);
   assert.match(casePanelStyles, /\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
-  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: flex;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
 });
 
 test("country route keeps the heavy investigator corpus out of the initial client payload", async () => {

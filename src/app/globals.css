@@ -979,7 +979,18 @@ a.faroMark:hover .faroMarkIcon {
 
 @media (max-width: 720px) {
   .casePanel {
-    width: 100vw;
+    top: auto;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    left: 10px;
+    width: auto;
+    max-width: none;
+    height: min(74svh, 620px);
+    z-index: 610;
+  }
+
+  .casePanel.casePanelMobileMapOpen {
+    height: auto;
   }
 }
 
