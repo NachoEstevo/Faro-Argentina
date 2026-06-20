@@ -2963,9 +2963,9 @@
 
   .topRightActions.topRightActionsWorkView {
     position: fixed;
-    top: 62px;
-    right: 14px;
-    left: auto;
+    top: 26px;
+    right: auto;
+    left: 20px;
     gap: 8px;
   }
 

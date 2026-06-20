@@ -107,6 +107,7 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.shellNoMapChrome \.modeNavAnchor\s*\{[\s\S]*top: 16px;[\s\S]*bottom: auto;[\s\S]*left: 50%;[\s\S]*max-width: 112px;[\s\S]*transform: translateX\(-50%\);/);
   assert.doesNotMatch(styles, /\.shellNoMapChrome \.modeNavAnchor::before/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions:not\(\.topRightActionsWorkView\)\s*\{[\s\S]*position: fixed;[\s\S]*flex-direction: column;[\s\S]*right: 14px;[\s\S]*bottom: 64px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions\.topRightActionsWorkView\s*\{[\s\S]*position: fixed;[\s\S]*top: 26px;[\s\S]*right: auto;[\s\S]*left: 20px;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrandText\s*\{[\s\S]*display: none;/);
 });
