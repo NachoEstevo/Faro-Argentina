@@ -488,7 +488,12 @@ export default function ExplorerView({
         ) : (
         <>
         <header className={styles.mainHeader}>
-          <h1 className={styles.mainTitle}>Explorar</h1>
+          <div className={styles.mainHeaderCopy}>
+            <h1 className={styles.mainTitle}>Explorar</h1>
+            <p className={styles.mainMeta}>
+              {explorer.stats.filteredCases.toLocaleString("es-AR")} expedientes · {yearFrom}–{yearTo}
+            </p>
+          </div>
         </header>
         <details className={styles.mobileFilterDetails}>
           <summary>

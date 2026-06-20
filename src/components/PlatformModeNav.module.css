@@ -158,8 +158,14 @@
   }
 
   .floatingBar .item {
-    width: 40px;
+    width: 48px;
+    min-height: 44px;
     padding: 0;
+  }
+
+  .floatingBar .item svg {
+    width: 15px;
+    height: 15px;
   }
 
   .floatingBar .item span {

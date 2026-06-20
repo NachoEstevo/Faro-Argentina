@@ -119,15 +119,37 @@ test("ExplorerView uses one vertical content scroll surface", async () => {
   assert.match(css, /\.sidebar\s*\{[\s\S]*position: sticky;[\s\S]*height: 100dvh;/);
 });
 
-test("ExplorerView keeps detail report actions below the floating mode nav", async () => {
+test("ExplorerView keeps detail report actions inside the mobile detail flow", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
   const css = await readFile(explorerStylesUrl, "utf8");
 
   assert.match(source, /Informe PDF/);
   assert.match(source, /href=\{buildReportHref\(caseFile\.id\)\}/);
   assert.match(css, /\.main\s*\{[\s\S]*padding-top: 72px;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-top: 124px;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.detailTopBar\s*\{[\s\S]*top: 128px;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.shell\s*\{[\s\S]*scroll-padding-bottom: calc\(170px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-top: 104px;[\s\S]*padding-bottom: calc\(156px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.main\s*\{[\s\S]*padding-bottom: calc\(170px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.detailTopBar\s*\{[\s\S]*position: static;/);
+  assert.doesNotMatch(css, /\.detailTopBar\s*\{[^}]*position: sticky;/);
+  assert.doesNotMatch(css, /\.detailTopBar\s*\{[^}]*top: 108px;/);
+});
+
+test("ExplorerView gives mobile Explorer a compact search-first reading order", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+  const css = await readFile(explorerStylesUrl, "utf8");
+
+  assert.match(source, /className=\{styles\.mainHeaderCopy\}/);
+  assert.match(source, /explorer\.stats\.filteredCases\.toLocaleString\("es-AR"\)\} expedientes · \{yearFrom\}–\{yearTo\}/);
+  assert.match(css, /\.mainHeaderCopy\s*\{[\s\S]*display: grid;[\s\S]*gap: 5px;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mainHeader\s*\{[\s\S]*order: 1;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.searchWrap\s*\{[\s\S]*order: 2;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileFilterDetails\s*\{[\s\S]*order: 3;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.statsGrid\s*\{[\s\S]*order: 4;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.profilePanel\s*\{[\s\S]*order: 5;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.tableWrap\s*\{[\s\S]*order: 6;/);
+  assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileGrid\s*\{[\s\S]*display: flex;[\s\S]*overflow-x: auto;[\s\S]*scroll-snap-type: x mandatory;/);
+  assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileCard\s*\{[\s\S]*flex: 0 0 min\(82vw, 300px\);[\s\S]*min-height: 116px;[\s\S]*scroll-snap-align: start;/);
+  assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileCaveat\s*\{[\s\S]*-webkit-line-clamp: 1;/);
 });
 
 test("ExplorerView opens public official source pages instead of raw receipt dataset URLs", async () => {

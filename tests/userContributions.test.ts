@@ -87,6 +87,21 @@ test("validateContributionDraft accepts source aportes with a public URL and no 
   assert.deepEqual(result.errors, []);
 });
 
+test("validateContributionDraft accepts private issue reports without source or attachment", () => {
+  const result = validateContributionDraft({
+    ...baseDraft,
+    type: "report_issue",
+    title: "Problema de carga en vista mobile",
+    explanation: "El usuario reporta que un control visual no responde en el mapa satelital.",
+    publicSourceUrl: "",
+    approximateLocation: "",
+    attachments: [],
+  });
+
+  assert.equal(result.valid, true);
+  assert.deepEqual(result.errors, []);
+});
+
 test("validateContributionDraft requires case, source, field and value for corrections", () => {
   const result = validateContributionDraft({
     ...baseDraft,

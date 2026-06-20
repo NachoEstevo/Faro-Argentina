@@ -53,6 +53,47 @@ test("POST /api/aportes stores a private photo contribution in local review stor
   }
 });
 
+test("POST /api/aportes stores a private contextual issue report without source files", async () => {
+  const storageDir = await mkdtemp(join(tmpdir(), "faro-aportes-"));
+  const previousStorageDir = process.env.FARO_CONTRIBUTIONS_STORAGE_DIR;
+  process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = storageDir;
+
+  try {
+    const form = new FormData();
+    form.set("type", "report_issue");
+    form.set("title", "Problema de carga en vista mobile");
+    form.set("jurisdiction", "AR");
+    form.set("explanation", "El usuario reporta que el control de la vista satelital no responde en mobile.");
+    form.set("relatedCase", "AR-CONTRACT-63-0009-CON22");
+    form.set("missingVerification", "Problema reportado desde la vista mobile del mapa satelital");
+    form.set("privacyMode", "anonymous");
+    form.set("sourcePermissionConfirmed", "true");
+    form.set("reviewConfirmed", "true");
+
+    const response = await POST(new Request("http://localhost/api/aportes", { method: "POST", body: form }));
+    const payload = await response.json() as { submissionId: string; storageMode: string };
+
+    assert.equal(response.status, 201);
+    assert.equal(payload.storageMode, "local");
+
+    const stored = JSON.parse(
+      await readFile(join(storageDir, "submissions", `${payload.submissionId}.json`), "utf8"),
+    );
+    assert.equal(stored.type, "report_issue");
+    assert.equal(stored.status, "submitted");
+    assert.equal(stored.publicationStatus, "private");
+    assert.equal(stored.relatedCase, "AR-CONTRACT-63-0009-CON22");
+    assert.equal(stored.publicSourceUrl, null);
+    assert.equal(stored.attachments.length, 0);
+  } finally {
+    if (previousStorageDir === undefined) {
+      delete process.env.FARO_CONTRIBUTIONS_STORAGE_DIR;
+    } else {
+      process.env.FARO_CONTRIBUTIONS_STORAGE_DIR = previousStorageDir;
+    }
+  }
+});
+
 test("POST /api/aportes rejects invalid contribution payloads", async () => {
   const form = new FormData();
   form.set("type", "add_photo");

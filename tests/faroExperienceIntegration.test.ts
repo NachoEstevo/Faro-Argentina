@@ -72,8 +72,12 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.match(source, /viewMode === "map"/);
   assert.match(source, /const hasOpenMapCase = viewMode === "map" && selectedCase !== null;/);
   assert.match(source, /\{!hasOpenMapCase && \(\s*<PlatformModeNav/);
-  assert.match(source, /className=\{styles\.modeNavAnchor\}/);
+  assert.match(source, /className=\{`\$\{styles\.modeNavAnchor\} \$\{!showMapChrome \? styles\.modeNavAnchorWorkView : ""\}`\}/);
   assert.match(source, /\{showMapChrome && !hasOpenMapCase && <GuidedTourButton/);
+  assert.match(source, /const handleCloseMapCase = useCallback/);
+  assert.match(source, /backToMap=\{hasOpenMapCase\}/);
+  assert.match(source, /onBackToMap=\{handleCloseMapCase\}/);
+  assert.match(source, /nextSearchParams\.delete\("case"\)/);
   assert.match(source, /title=\{activeContributionCaseId \? "Reportar dato" : "Aportar"\}/);
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
@@ -89,6 +93,7 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*position: absolute;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*left: 50%;/);
   assert.match(styles, /\.modeNavAnchor\s*\{[\s\S]*transform: translateX\(-50%\);/);
+  assert.match(styles, /\.modeNavAnchorWorkView\s*\{[\s\S]*max-width: 96px;/);
   assert.match(styles, /\.backToGlobal\s*\{[\s\S]*position: absolute;[\s\S]*left: 0;/);
   assert.match(styles, /\.topRightActions\s*\{[\s\S]*position: absolute;[\s\S]*right: 0;/);
   assert.match(styles, /\.tourButton,\s*\.contributeButton\s*\{[\s\S]*display: inline-flex;/);
@@ -98,6 +103,8 @@ test("platform mode nav keeps a stable visual center across country views", asyn
   assert.match(styles, /@media \(max-width: 1280px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.backToGlobal\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.modeNavAnchor\s*\{[\s\S]*position: fixed;[\s\S]*bottom: 18px;/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.shellNoMapChrome \.modeNavAnchor\s*\{[\s\S]*top: 16px;[\s\S]*bottom: auto;[\s\S]*left: 50%;[\s\S]*max-width: 112px;[\s\S]*transform: translateX\(-50%\);/);
+  assert.doesNotMatch(styles, /\.shellNoMapChrome \.modeNavAnchor::before/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.topRightActions:not\(\.topRightActionsWorkView\)\s*\{[\s\S]*position: fixed;[\s\S]*flex-direction: column;[\s\S]*right: 14px;[\s\S]*bottom: 64px;/);
   assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.mapLegend\s*\{[\s\S]*display: none;/);
   assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileBrandText\s*\{[\s\S]*display: none;/);
@@ -151,12 +158,16 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   assert.match(casePanelSource, /styles\.mobileModeBar/);
   assert.match(casePanelSource, /styles\.mobileMapSummary/);
   assert.match(casePanelSource, /styles\.mobileInlineImagery/);
+  assert.match(casePanelSource, /mode=explorer&case=\$\{encodeURIComponent\(caseFile\.id\)\}/);
+  assert.match(casePanelSource, /styles\.mobileFullCaseLink/);
+  assert.match(casePanelSource, /Ver expediente completo/);
   assert.match(casePanelSource, /<PanelImagery[\s\S]*onActiveReleaseChange=\{onWaybackReleaseChange\}/);
   assert.match(panelImagerySource, /Año de la imagen satelital/);
   assert.match(panelImagerySource, /Año visible/);
   assert.match(panelImagerySource, /styles\.imageryTicks/);
   assert.match(panelImagerySource, /styles\.imageryYearTick/);
   assert.match(panelImagerySource, /styles\.imageryTickYear/);
+  assert.match(panelImagerySource, /styles\.imageryMobileThumbYear/);
   assert.match(panelImagerySource, /release\.year % 2 === 0/);
   assert.match(styles, /\.mapImageryControl\s*\{[\s\S]*bottom: 22px;[\s\S]*justify-content: center;/);
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mapImageryControl\s*\{[\s\S]*display: none;/);
@@ -166,13 +177,40 @@ test("Wayback timeline floats over the map with a mobile inline fallback", async
   assert.match(globalStyles, /\.casePanel\.casePanelMobileMapOpen\s*\{[\s\S]*height: auto;/);
   assert.match(casePanelStyles, /\.imagerySummary\s*\{/);
   assert.match(casePanelStyles, /\.imageryReadout\s*\{[\s\S]*max-width: 48%;/);
+  assert.match(casePanelStyles, /\.imageryMobileThumbYear\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /\.imageryYearTickActive \.imageryTickLine\s*\{/);
-  assert.match(casePanelStyles, /\.mobileModeBar,\s*\.mobileMapSummary\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /\.mobileModeBar,\s*\.mobileMapSummary,\s*\.mobileFullCaseLink\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panel\s*\{[\s\S]*max-height: min\(74svh, 620px\);/);
   assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.scroll\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.panelMobileMapOpen \.mobileMapSummary\s*\{[\s\S]*display: grid;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileFullCaseLink\s*\{[\s\S]*display: flex;[\s\S]*background: linear-gradient\(135deg, #1f6f9f 0%, #75aadb 100%\);/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryReadout\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryMobileThumbYear\s*\{[\s\S]*display: block;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imageryTickYear\s*\{[\s\S]*display: none;/);
+  assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.imagerySlider::-webkit-slider-thumb\s*\{[\s\S]*width: 21px;[\s\S]*height: 21px;/);
   assert.match(casePanelStyles, /\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
   assert.match(casePanelStyles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileInlineImagery\s*\{[\s\S]*display: none;/);
+});
+
+test("selected mobile map cases expose a private contextual issue report", async () => {
+  const experienceSource = await readFile(faroExperienceUrl, "utf8");
+  const styles = await readFile(regionalMapStylesUrl, "utf8");
+
+  assert.match(experienceSource, /type MobileReportStatus = "idle" \| "submitting" \| "success" \| "error";/);
+  assert.match(experienceSource, /const \[mobileReportOpen, setMobileReportOpen\] = useState\(false\)/);
+  assert.match(experienceSource, /const showMobileContextReport = hasOpenMapCase && Boolean\(mobileReportCase\);/);
+  assert.match(experienceSource, /className=\{styles\.mobileContextReportButton\}/);
+  assert.match(experienceSource, /aria-label="Reportar un problema de este punto"/);
+  assert.match(experienceSource, /form\.set\("type", "report_issue"\)/);
+  assert.match(experienceSource, /form\.set\("relatedCase", caseId\)/);
+  assert.match(experienceSource, /fetch\("\/api\/aportes", \{ method: "POST", body: form \}\)/);
+  assert.match(experienceSource, /Reporte recibido para revisión privada/);
+  assert.match(experienceSource, /No modifica el mapa ni se publica automáticamente/);
+  assert.match(styles, /\.mobileContextReportButton\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*\.mobileContextReportButton\s*\{[\s\S]*top: 14px;[\s\S]*right: 18px;[\s\S]*min-width: 104px;/);
+  assert.match(styles, /\.mobileReportLayer\s*\{[\s\S]*z-index: 5200;/);
+  assert.match(styles, /\.mobileReportDialog\s*\{[\s\S]*width: min\(420px, 100%\);/);
+  assert.match(styles, /\.mobileReportSubmit\s*\{[\s\S]*background: var\(--cf-accent\);/);
 });
 
 test("country route keeps the heavy investigator corpus out of the initial client payload", async () => {
@@ -332,9 +370,12 @@ test("regional welcome starts without sidebar chrome", async () => {
   assert.match(source, /\{showSidebar && \(\s*<RegionalSidebar/);
   assert.match(source, /\{showSidebar && mobileMenuOpen && \(/);
   assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--sidebar-width: 0px;/);
+  assert.match(styles, /\.welcomeLayer\s*\{[\s\S]*overflow: hidden;/);
   assert.match(styles, /\.shellWelcome \.overlayLayer,\s*\.shellWelcome \.welcomeLayer\s*\{[\s\S]*left: 0;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.shell\.shellWelcome\s*\{[\s\S]*--sidebar-width: 0px;/);
   assert.match(styles, /\.shellWelcome\s*\{[\s\S]*--cf-welcome-panel-bg: rgba\(12, 18, 24, 0\.9\);/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.welcomeOverlay\s*\{[\s\S]*max-width: calc\(100vw - 32px\);/);
+  assert.match(styles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.welcomeOverlay::before\s*\{[\s\S]*inset: -28px -18px -30px;/);
   assert.match(styles, /\.settingRow\s*\{[\s\S]*text-decoration: none;/);
 });
 
@@ -394,7 +435,10 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   const globalStyles = await readFile(globalStylesUrl, "utf8");
   const mobileHeaderSource = await readFile(mobileHeaderUrl, "utf8");
 
-  assert.match(mobileHeaderSource, /<button[\s\S]*aria-label="Abrir menú"[\s\S]*<\/button>[\s\S]*<Link href="\/" className=\{styles\.mobileBrand\}/);
+  assert.match(mobileHeaderSource, /backToMap\?: boolean/);
+  assert.match(mobileHeaderSource, /aria-label=\{backToMap \? "Volver al mapa" : "Abrir menú"\}/);
+  assert.match(mobileHeaderSource, /backToMap \? <ArrowLeft size=\{20\} aria-hidden \/> : <Menu size=\{20\} aria-hidden \/>/);
+  assert.match(mobileHeaderSource, /\{!backToMap && \(\s*<Link href="\/" className=\{styles\.mobileBrand\}/);
   assert.match(styles, /\.shellMobileMenuOpen \.overlayLayer\s*\{[\s\S]*z-index: 4;[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.sidebar\s*\{[\s\S]*left: 0;[\s\S]*transition: none;/);
   assert.match(styles, /\.sidebar:not\(\.sidebarMobileOpen\)\s*\{[\s\S]*left: -320px;/);
@@ -408,5 +452,6 @@ test("map chrome keeps drawer and tablet layout above floating controls", async 
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.overlayTopBar\s*\{[\s\S]*top: 20px;[\s\S]*right: 18px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions\s*\{[\s\S]*right: 54px;/);
   assert.match(styles, /@media \(min-width: 641px\) and \(max-width: 900px\)\s*\{[\s\S]*\.topRightActions \.contributeButton\s*\{[\s\S]*width: 42px;[\s\S]*padding: 0;/);
+  assert.match(globalStyles, /@media \(max-width: 900px\)\s*\{[\s\S]*html,[\s\S]*body\s*\{[\s\S]*overflow-x: hidden;/);
   assert.match(globalStyles, /@media \(max-width: 640px\)\s*\{[\s\S]*\.leafletRoot \.leaflet-top\.leaflet-right \.leaflet-control-zoom\s*\{[\s\S]*display: none !important;/);
 });

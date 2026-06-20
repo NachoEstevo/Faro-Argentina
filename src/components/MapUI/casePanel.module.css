@@ -382,6 +382,10 @@
   padding-bottom: 24px;
 }
 
+.imageryMobileThumbYear {
+  display: none;
+}
+
 .imageryTicks {
   position: absolute;
   top: 0;
@@ -611,7 +615,8 @@
 }
 
 .mobileModeBar,
-.mobileMapSummary {
+.mobileMapSummary,
+.mobileFullCaseLink {
   display: none;
 }
 
@@ -707,8 +712,9 @@
   }
 
   .scroll {
-    max-height: calc(74svh - 58px);
-    padding: 14px 16px 18px;
+    min-height: 0;
+    max-height: calc(74svh - 126px);
+    padding: 14px 16px 12px;
     gap: 16px;
   }
 
@@ -780,6 +786,124 @@
 
   .mobileInlineImagery {
     display: none;
+  }
+
+  .mobileFullCaseLink {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 10px 10px;
+    padding: 14px 15px;
+    border: 1px solid rgba(31, 111, 159, 0.42);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1f6f9f 0%, #75aadb 100%);
+    box-shadow: 0 14px 30px rgba(31, 111, 159, 0.26);
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .mobileFullCaseLink span {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .mobileFullCaseLink strong {
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .mobileFullCaseLink small {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .mobileFullCaseLink:hover {
+    background: linear-gradient(135deg, #1b638e 0%, #69a2d4 100%);
+  }
+
+  .imagerySummary {
+    align-items: center;
+  }
+
+  .imageryReadout {
+    display: none;
+  }
+
+  .imageryStage {
+    padding-top: 36px;
+    padding-bottom: 18px;
+  }
+
+  .imageryMobileThumbYear {
+    position: absolute;
+    top: 24px;
+    left: clamp(18px, var(--cp-scrub, 0%), calc(100% - 18px));
+    z-index: 2;
+    display: block;
+    transform: translate(-50%, -50%);
+    color: var(--cp-text);
+    font-family: var(--cf-font-data);
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .imageryTicks {
+    top: 0;
+    left: 11px;
+    right: 11px;
+    height: 28px;
+  }
+
+  .imageryYearTick {
+    gap: 0;
+  }
+
+  .imageryTickLine {
+    height: 9px;
+  }
+
+  .imageryTickYear {
+    display: none;
+  }
+
+  .imageryYearTickActive .imageryTickLine {
+    height: 16px;
+  }
+
+  .imagerySlider {
+    height: 28px;
+    margin: 2px 0 0;
+  }
+
+  .imagerySlider::-webkit-slider-runnable-track {
+    height: 3px;
+  }
+
+  .imagerySlider::-moz-range-track,
+  .imagerySlider::-moz-range-progress {
+    height: 3px;
+  }
+
+  .imagerySlider::-webkit-slider-thumb {
+    width: 21px;
+    height: 21px;
+    margin-top: -9px;
+  }
+
+  .imagerySlider::-moz-range-thumb {
+    width: 21px;
+    height: 21px;
   }
 }
 

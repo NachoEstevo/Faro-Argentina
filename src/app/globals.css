@@ -48,6 +48,13 @@ body {
   margin: 0;
 }
 
+@media (max-width: 900px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
 body {
   background: var(--cf-bg);
   color: var(--cf-text);

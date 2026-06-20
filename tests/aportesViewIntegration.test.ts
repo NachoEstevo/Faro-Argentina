@@ -98,13 +98,29 @@ test("AportesView inherits platform work-view theme surfaces", async () => {
   assert.match(styles, /\.sidebarBrandIdentity\s*\{[\s\S]*gap: 12px;/);
   assert.match(styles, /\.sidebarBrandName\s*\{[\s\S]*font-size: 22px;/);
   assert.match(styles, /\.content\s*\{[\s\S]*justify-content: center;[\s\S]*padding: clamp\(84px, 10vh, 104px\)/);
-  assert.match(styles, /\.form\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
+  assert.match(styles, /\.form\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\);[\s\S]*width: 100%;[\s\S]*max-width: 1080px;/);
   assert.match(styles, /\.title\s*\{[\s\S]*font-size: clamp\(36px, 4vw, 50px\);/);
   assert.match(styles, /\.step\s*\{[\s\S]*min-height: 62px;[\s\S]*padding: 10px 12px;/);
   assert.match(styles, /\.typeButton\s*\{[\s\S]*min-height: 98px;[\s\S]*padding: 14px;/);
   assert.match(styles, /\.typeGrid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/);
   assert.match(styles, /\.privacyModes/);
   assert.match(styles, /\.securityNote/);
+});
+
+test("AportesView uses a single integrated mobile scroll surface", async () => {
+  const styles = await readFile(aportesStylesUrl, "utf8");
+
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.shell\s*\{[\s\S]*display: block;[\s\S]*top: calc\(72px \+ env\(safe-area-inset-top, 0px\)\);[\s\S]*overflow-x: hidden;[\s\S]*overflow-y: auto;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.sidebar\s*\{[\s\S]*overflow: visible;[\s\S]*padding: 16px 18px 14px;[\s\S]*border-bottom: 1px solid var\(--cf-border\);/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.sidebarBrand\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.content\s*\{[\s\S]*overflow: visible;[\s\S]*padding: 14px 18px calc\(116px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.stepper\s*\{[\s\S]*display: grid;[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);[\s\S]*overflow: visible;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.step span:last-child\s*\{[\s\S]*display: none;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.typeButton\s*\{[\s\S]*grid-template-columns: 20px minmax\(0, 1fr\);[\s\S]*min-height: 64px;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.label,[\s\S]*\.field,[\s\S]*\.relatedCaseLabel,[\s\S]*\.grid,[\s\S]*\.dropzone,[\s\S]*\.securityNote,[\s\S]*\.checks,[\s\S]*\.checkRow,[\s\S]*\.policyLinks\s*\{[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.input,[\s\S]*\.select,[\s\S]*\.textarea,[\s\S]*\.fileInput\s*\{[\s\S]*width: 100%;[\s\S]*min-width: 0;[\s\S]*max-width: 100%;[\s\S]*box-sizing: border-box;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.actions\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 100%;[\s\S]*min-width: 0;/);
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{[\s\S]*\.submit\s*\{[\s\S]*width: 100%;[\s\S]*max-width: 100%;[\s\S]*min-width: 0;/);
 });
 
 test("FaroExperience exposes Aportes as contextual review action outside the primary nav", async () => {

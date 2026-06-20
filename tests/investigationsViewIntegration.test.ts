@@ -125,7 +125,7 @@ test("FaroExperience keeps private modes isolated from the map sidebar", async (
 
   assert.match(source, /const showMapChrome = viewMode === "map";/);
   assert.match(source, /const showBackControl = viewMode === "map";/);
-  assert.match(source, /{showMapChrome && <MobileHeader/);
+  assert.match(source, /{showMapChrome && \(\s*<MobileHeader/s);
   assert.match(source, /{showMapChrome && \(\s*<CountrySidebar/s);
   assert.match(source, /<PlatformModeNav[\s\S]*activeMode=\{viewMode\}[\s\S]*variant="floatingBar"/);
   assert.match(source, /<div className=\{styles\.overlayLayer\}>/);

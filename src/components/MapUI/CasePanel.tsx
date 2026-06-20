@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Map as MapIcon, X } from "lucide-react";
+import { ArrowRight, FileText, Map as MapIcon, X } from "lucide-react";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { WaybackState } from "@/components/WaybackControl";
@@ -36,6 +36,7 @@ export default function CasePanel({
   onMobileMapOpenChange,
 }: Props) {
   const mapModeLabel = waybackState.status === "off" ? "Mapa" : "Mapa satelital";
+  const explorerCaseHref = `/pais/${caseFile.countryCode}?mode=explorer&case=${encodeURIComponent(caseFile.id)}`;
   const panelClassName = [
     styles.module,
     styles.panel,
@@ -97,6 +98,15 @@ export default function CasePanel({
         <PanelNextSteps caseFile={caseFile} signalContext={signalContext} />
         <PanelActions caseFile={caseFile} signalContext={signalContext} onReportCase={onReportCase} />
       </div>
+      {!mobileMapOpen && (
+        <a className={styles.mobileFullCaseLink} href={explorerCaseHref}>
+          <span>
+            <strong>Ver expediente completo</strong>
+            <small>Abrir en Explorer</small>
+          </span>
+          <ArrowRight size={18} aria-hidden />
+        </a>
+      )}
     </div>
   );
 }

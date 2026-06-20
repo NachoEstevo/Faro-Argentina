@@ -1,8 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, MessageSquarePlus, Moon, Sun } from "lucide-react";
+import { type FormEvent, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, MessageSquarePlus, Moon, Send, Sun, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
@@ -74,6 +74,7 @@ interface Props {
 type InterfaceTheme = "dark" | "light";
 type PlatformTheme = InterfaceTheme | "mapCream";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
+type MobileReportStatus = "idle" | "submitting" | "success" | "error";
 
 const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
 const GUIDED_TOUR_STORAGE_KEY = "faro-guided-tour-seen";
@@ -143,6 +144,10 @@ export default function FaroExperience({
   const [leadsPanelOpen, setLeadsPanelOpen] = useState(false);
   const [guidedTourOpen, setGuidedTourOpen] = useState(false);
   const [mobileCaseMapOpen, setMobileCaseMapOpen] = useState(false);
+  const [mobileReportOpen, setMobileReportOpen] = useState(false);
+  const [mobileReportText, setMobileReportText] = useState("");
+  const [mobileReportStatus, setMobileReportStatus] = useState<MobileReportStatus>("idle");
+  const [mobileReportMessage, setMobileReportMessage] = useState("");
   const hasArmedWaybackRef = useRef(false);
   const hasAutoStartedGuidedTourRef = useRef(false);
   const needsExplorerIndex = viewMode === "explorer";
@@ -419,6 +424,7 @@ export default function FaroExperience({
       ? selectedExplorerCase
       : selectedMapCase;
   const selectedPanelCase = viewMode === "map" ? selectedFullMapCase : selectedCase;
+  const mobileReportCase = selectedPanelCase ?? selectedCase;
   const selectedCaseWaybackEligible = shouldEnableWaybackForCase(selectedCase);
   const activeSignalContext = viewMode === "map" ? countrySignalContext : explorerSignalContext;
   const showFloatingWaybackControl =
@@ -590,6 +596,18 @@ export default function FaroExperience({
 
   const handleOpenMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const handleCloseMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
+  const handleCloseMapCase = useCallback(() => {
+    setSelectedCaseId("");
+    setMobileMenuOpen(false);
+    setMobileCaseMapOpen(false);
+    setMapResetToken((token) => token + 1);
+    if (searchParams.has("case")) {
+      const nextSearchParams = new URLSearchParams(searchParams.toString());
+      nextSearchParams.delete("case");
+      const nextQuery = nextSearchParams.toString();
+      router.replace(`${pathname}${nextQuery ? `?${nextQuery}` : ""}`, { scroll: false });
+    }
+  }, [pathname, router, searchParams]);
 
   const handleSelectLead = useCallback(
     (caseId: string) => {
@@ -637,6 +655,78 @@ export default function FaroExperience({
     setLeadsPanelOpen(false);
     window.setTimeout(() => setGuidedTourOpen(true), 0);
   }, [switchViewMode, viewMode]);
+
+  const handleOpenMobileReport = useCallback(() => {
+    setMobileReportOpen(true);
+    setMobileReportStatus("idle");
+    setMobileReportMessage("");
+  }, []);
+
+  const handleCloseMobileReport = useCallback(() => {
+    if (mobileReportStatus === "submitting") return;
+    setMobileReportOpen(false);
+  }, [mobileReportStatus]);
+
+  const handleMobileReportSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const reportText = mobileReportText.trim();
+      if (!reportText) {
+        setMobileReportStatus("error");
+        setMobileReportMessage("Contanos brevemente qué habría que revisar.");
+        return;
+      }
+
+      const caseId = mobileReportCase?.id ?? selectedCaseId;
+      const activeRelease =
+        waybackState.status === "active"
+          ? waybackState.releases.find((release) => release.releaseId === waybackState.activeReleaseId) ?? null
+          : null;
+      const contextLines = [
+        reportText,
+        "",
+        "Contexto de pantalla:",
+        "- Sección: mapa satelital mobile",
+        caseId ? `- Expediente: ${caseId}` : "",
+        typeof window !== "undefined" ? `- URL: ${window.location.href}` : "",
+        activeRelease ? `- Año visible: ${activeRelease.year}` : "",
+      ].filter(Boolean);
+
+      const form = new FormData();
+      form.set("type", "report_issue");
+      form.set("title", buildMobileReportTitle(mobileReportCase?.title));
+      form.set("jurisdiction", selectedCountry);
+      form.set("explanation", contextLines.join("\n"));
+      form.set("relatedCase", caseId);
+      form.set("missingVerification", "Problema reportado desde la vista mobile del mapa satelital");
+      form.set("privacyMode", "anonymous");
+      form.set("sourcePermissionConfirmed", "true");
+      form.set("reviewConfirmed", "true");
+
+      setMobileReportStatus("submitting");
+      setMobileReportMessage("Enviando reporte para revisión privada...");
+
+      try {
+        const response = await fetch("/api/aportes", { method: "POST", body: form });
+        const payload = await response.json() as {
+          submissionId?: string;
+          errors?: Array<{ message: string }>;
+          message?: string;
+        };
+        if (!response.ok) {
+          const message = payload.errors?.map((error) => error.message).join(" ") || payload.message;
+          throw new Error(message || "No se pudo enviar el reporte.");
+        }
+        setMobileReportStatus("success");
+        setMobileReportText("");
+        setMobileReportMessage(`Reporte recibido para revisión privada: ${payload.submissionId}.`);
+      } catch (error) {
+        setMobileReportStatus("error");
+        setMobileReportMessage(formatMobileReportFailureMessage(error));
+      }
+    },
+    [mobileReportCase, mobileReportText, selectedCaseId, selectedCountry, waybackState],
+  );
 
   const openAportes = useCallback(
     (caseId?: string) => {
@@ -702,6 +792,7 @@ export default function FaroExperience({
   const showMapChrome = viewMode === "map";
   const showBackControl = viewMode === "map";
   const hasOpenMapCase = viewMode === "map" && selectedCase !== null;
+  const showMobileContextReport = hasOpenMapCase && Boolean(mobileReportCase);
   const activePlatformTheme: PlatformTheme = viewMode === "map" ? "mapCream" : interfaceTheme;
   const backControlLabel = selectedCaseId ? "Volver al mapa" : "Mapa general";
   const backControlAriaLabel = selectedCaseId
@@ -775,7 +866,26 @@ export default function FaroExperience({
         </div>
       )}
 
-      {showMapChrome && <MobileHeader onOpenMenu={handleOpenMobileMenu} />}
+      {showMapChrome && (
+        <MobileHeader
+          onOpenMenu={handleOpenMobileMenu}
+          backToMap={hasOpenMapCase}
+          onBackToMap={handleCloseMapCase}
+        />
+      )}
+
+      {showMobileContextReport && (
+        <button
+          type="button"
+          className={styles.mobileContextReportButton}
+          onClick={handleOpenMobileReport}
+          aria-label="Reportar un problema de este punto"
+          title="Reportar problema"
+        >
+          <MessageSquarePlus size={17} aria-hidden />
+          <span>Reportar</span>
+        </button>
+      )}
 
       {showMapChrome && (
         <CountrySidebar
@@ -836,8 +946,7 @@ export default function FaroExperience({
               className={styles.backToGlobal}
               onClick={() => {
                 if (selectedCaseId) {
-                  setSelectedCaseId("");
-                  setMapResetToken((token) => token + 1);
+                  handleCloseMapCase();
                   return;
                 }
                 router.push("/");
@@ -853,7 +962,7 @@ export default function FaroExperience({
               activeMode={viewMode}
               onModeChange={switchViewMode}
               variant="floatingBar"
-              className={styles.modeNavAnchor}
+              className={`${styles.modeNavAnchor} ${!showMapChrome ? styles.modeNavAnchorWorkView : ""}`}
             />
           )}
           {(showContributeButton || (showMapChrome && !hasOpenMapCase)) && (
@@ -944,10 +1053,7 @@ export default function FaroExperience({
           <CasePanel
             caseFile={selectedPanelCase}
             signalContext={activeSignalContext}
-            onClose={() => {
-              setSelectedCaseId("");
-              setMapResetToken((token) => token + 1);
-            }}
+            onClose={handleCloseMapCase}
             waybackState={waybackState}
             onWaybackReleaseChange={handleWaybackReleaseChange}
             onWaybackRetry={handleWaybackRetry}
@@ -977,6 +1083,80 @@ export default function FaroExperience({
           }}
         />
       )}
+      {mobileReportOpen && mobileReportCase && (
+        <div className={styles.mobileReportLayer} role="presentation">
+          <button
+            type="button"
+            className={styles.mobileReportScrim}
+            onClick={handleCloseMobileReport}
+            aria-label="Cerrar reporte"
+          />
+          <form
+            className={styles.mobileReportDialog}
+            onSubmit={handleMobileReportSubmit}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-report-title"
+          >
+            <div className={styles.mobileReportHeader}>
+              <div>
+                <p className={styles.mobileReportKicker}>Revisión privada</p>
+                <h2 id="mobile-report-title">Reportar problema</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.mobileReportClose}
+                onClick={handleCloseMobileReport}
+                disabled={mobileReportStatus === "submitting"}
+                aria-label="Cerrar reporte"
+              >
+                <X size={18} aria-hidden />
+              </button>
+            </div>
+            <p className={styles.mobileReportContext}>{mobileReportCase.title}</p>
+            <label className={styles.mobileReportField}>
+              <span>Qué encontraste</span>
+              <textarea
+                value={mobileReportText}
+                onChange={(event) => {
+                  setMobileReportText(event.target.value);
+                  if (mobileReportStatus !== "submitting") {
+                    setMobileReportStatus("idle");
+                    setMobileReportMessage("");
+                  }
+                }}
+                required
+                maxLength={900}
+                placeholder="Ej. El año no carga, el punto parece tapado, el botón no responde..."
+              />
+            </label>
+            <p className={styles.mobileReportNote}>
+              El reporte queda como aporte privado. No modifica el mapa ni se publica automáticamente.
+            </p>
+            <div className={styles.mobileReportActions}>
+              <button type="button" onClick={handleCloseMobileReport} disabled={mobileReportStatus === "submitting"}>
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className={styles.mobileReportSubmit}
+                disabled={mobileReportStatus === "submitting" || !mobileReportText.trim()}
+              >
+                <Send size={15} aria-hidden />
+                Enviar
+              </button>
+            </div>
+            {mobileReportMessage && (
+              <p
+                className={`${styles.mobileReportStatus} ${mobileReportStatus === "error" ? styles.mobileReportStatusError : ""} ${mobileReportStatus === "success" ? styles.mobileReportStatusSuccess : ""}`}
+                aria-live="polite"
+              >
+                {mobileReportMessage}
+              </p>
+            )}
+          </form>
+        </div>
+      )}
       <GuidedTour
         open={guidedTourOpen}
         onClose={() => {
@@ -988,6 +1168,17 @@ export default function FaroExperience({
       />
     </main>
   );
+}
+
+function buildMobileReportTitle(caseTitle?: string): string {
+  const normalizedTitle = caseTitle?.replace(/\s+/g, " ").trim();
+  if (!normalizedTitle) return "Reporte de problema en mapa mobile";
+  return `Reporte mobile: ${normalizedTitle.slice(0, 96)}`;
+}
+
+function formatMobileReportFailureMessage(error: unknown): string {
+  if (error instanceof Error && error.message.trim()) return error.message;
+  return "No pudimos enviar el reporte. Probá nuevamente en unos minutos.";
 }
 
 function loadFullCaseCorpus(href: string): Promise<ExplorerCase[]> {

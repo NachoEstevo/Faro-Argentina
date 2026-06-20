@@ -103,6 +103,7 @@
 
 .form {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   width: 100%;
   max-width: 1080px;
@@ -501,26 +502,218 @@
 
 @media (max-width: 900px) {
   .shell {
-    grid-template-columns: 1fr;
+    display: block;
+    top: calc(72px + env(safe-area-inset-top, 0px));
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .sidebar {
-    gap: 12px;
-    padding: 16px;
+    gap: 9px;
+    overflow: visible;
+    padding: 16px 18px 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--cf-border);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--cf-workspace-sidebar-bg) 94%, transparent), color-mix(in srgb, var(--cf-workspace-bg) 94%, transparent)),
+      var(--cf-workspace-bg);
+  }
+
+  .sidebarBrand {
+    display: none;
+  }
+
+  .title {
+    max-width: 12ch;
+    font-size: clamp(30px, 9vw, 36px);
+    line-height: 1.04;
+  }
+
+  .intro {
+    max-width: none;
+    font-size: 14px;
+    line-height: 1.45;
   }
 
   .rules {
     margin-top: 0;
+    gap: 6px;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--cf-border);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .rule {
+    grid-template-columns: 18px 1fr;
+    gap: 8px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .rule svg {
+    width: 15px;
+    height: 15px;
+    margin-top: 1px;
   }
 
   .content {
-    padding: 72px 18px 18px;
+    justify-content: stretch;
+    overflow: visible;
+    min-height: auto;
+    padding: 14px 18px calc(116px + env(safe-area-inset-bottom, 0px));
   }
 
-  .stepper,
+  .form {
+    max-width: none;
+    min-width: 0;
+    gap: 15px;
+  }
+
   .typeGrid,
   .grid,
   .privacyModes {
     grid-template-columns: 1fr;
+  }
+
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  .step {
+    min-height: 46px;
+    padding: 8px 6px;
+    scroll-snap-align: none;
+    text-align: center;
+  }
+
+  .step strong {
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .step span:last-child {
+    display: none;
+  }
+
+  .stepEyebrow {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+
+  .section {
+    gap: 11px;
+    min-width: 0;
+    padding-bottom: 18px;
+  }
+
+  .sectionHeader {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+  }
+
+  .sectionHint,
+  .label,
+  .field,
+  .relatedCaseLabel,
+  .grid,
+  .dropzone,
+  .securityNote,
+  .checks,
+  .checkRow,
+  .policyLinks {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .grid {
+    width: 100%;
+  }
+
+  .input,
+  .select,
+  .textarea,
+  .fileInput {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .fileInput {
+    overflow: hidden;
+    font-size: 12px;
+  }
+
+  .typeButton {
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 4px 10px;
+    min-height: 64px;
+    padding: 11px 12px;
+  }
+
+  .typeButton svg {
+    grid-row: span 2;
+  }
+
+  .typeLabel,
+  .typeDescription {
+    min-width: 0;
+  }
+
+  .typeLabel {
+    font-size: 12.5px;
+  }
+
+  .typeDescription {
+    font-size: 10.5px;
+    line-height: 1.25;
+  }
+
+  .privacyMode {
+    min-height: auto;
+  }
+
+  .actions {
+    display: grid;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-bottom: 0;
+  }
+
+  .submit {
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar {
+    padding-top: 20px;
+  }
+
+  .title {
+    font-size: clamp(28px, 9vw, 34px);
   }
 }

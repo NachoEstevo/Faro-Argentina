@@ -2,6 +2,7 @@ export const CONTRIBUTION_TYPES = [
   "add_source",
   "correct_data",
   "add_photo",
+  "report_issue",
 ] as const;
 
 export type ContributionType = (typeof CONTRIBUTION_TYPES)[number];
