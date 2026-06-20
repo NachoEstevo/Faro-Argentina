@@ -636,8 +636,12 @@ export default function FaroExperience({
   }, [viewMode]);
 
   const handleToggleLeadsPanel = useCallback(() => {
-    setLeadsPanelOpen((open) => !open);
-  }, []);
+    const nextOpen = !leadsPanelOpen;
+    setLeadsPanelOpen(nextOpen);
+    if (nextOpen && window.matchMedia("(max-width: 900px)").matches) {
+      setMobileMenuOpen(false);
+    }
+  }, [leadsPanelOpen]);
 
   const handleCloseLeadsPanel = useCallback(() => {
     setLeadsPanelOpen(false);
@@ -764,7 +768,7 @@ export default function FaroExperience({
     const isSmallViewport = window.innerWidth <= 900;
     const needsSidebar = SIDEBAR_TOUR_STEPS.has(stepId);
 
-    if (isSmallViewport && needsSidebar) {
+    if (isSmallViewport && needsSidebar && stepId !== "review-list") {
       setMobileMenuOpen(true);
     } else {
       setMobileMenuOpen(false);

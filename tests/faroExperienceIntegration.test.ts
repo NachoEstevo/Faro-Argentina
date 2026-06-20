@@ -16,6 +16,7 @@ const welcomeOverlayUrl = new URL("../src/components/RegionalMap/WelcomeOverlay.
 const regionalMapStylesUrl = new URL("../src/components/RegionalMap/RegionalMap.module.css", import.meta.url);
 const guidedTourUrl = new URL("../src/components/RegionalMap/GuidedTour.tsx", import.meta.url);
 const countrySidebarUrl = new URL("../src/components/RegionalMap/CountrySidebar.tsx", import.meta.url);
+const leadsPanelStylesUrl = new URL("../src/components/RegionalMap/LeadsPanel.module.css", import.meta.url);
 const mobileHeaderUrl = new URL("../src/components/RegionalMap/MobileHeader.tsx", import.meta.url);
 const mapLegendUrl = new URL("../src/components/RegionalMap/MapLegend.tsx", import.meta.url);
 const caseMapUrl = new URL("../src/components/CaseMap.tsx", import.meta.url);
@@ -432,18 +433,28 @@ test("guided tutorial is wired to stable map UI targets", async () => {
 
 test("map chrome keeps drawer and tablet layout above floating controls", async () => {
   const styles = await readFile(regionalMapStylesUrl, "utf8");
+  const leadsPanelStyles = await readFile(leadsPanelStylesUrl, "utf8");
   const globalStyles = await readFile(globalStylesUrl, "utf8");
   const mobileHeaderSource = await readFile(mobileHeaderUrl, "utf8");
+  const experienceSource = await readFile(faroExperienceUrl, "utf8");
 
   assert.match(mobileHeaderSource, /backToMap\?: boolean/);
   assert.match(mobileHeaderSource, /aria-label=\{backToMap \? "Volver al mapa" : "Abrir menú"\}/);
   assert.match(mobileHeaderSource, /backToMap \? <ArrowLeft size=\{20\} aria-hidden \/> : <Menu size=\{20\} aria-hidden \/>/);
   assert.match(mobileHeaderSource, /\{!backToMap && \(\s*<Link href="\/" className=\{styles\.mobileBrand\}/);
+  assert.match(experienceSource, /const handleToggleLeadsPanel = useCallback\(\(\) => \{[\s\S]*const nextOpen = !leadsPanelOpen;[\s\S]*setLeadsPanelOpen\(nextOpen\);[\s\S]*nextOpen && window\.matchMedia\("\(max-width: 900px\)"\)\.matches[\s\S]*setMobileMenuOpen\(false\);/);
+  assert.match(experienceSource, /if \(isSmallViewport && needsSidebar && stepId !== "review-list"\)/);
   assert.match(styles, /\.shellMobileMenuOpen \.overlayLayer\s*\{[\s\S]*z-index: 4;[\s\S]*pointer-events: none;/);
   assert.match(styles, /\.sidebar\s*\{[\s\S]*left: 0;[\s\S]*transition: none;/);
   assert.match(styles, /\.sidebar:not\(\.sidebarMobileOpen\)\s*\{[\s\S]*left: -320px;/);
   assert.match(styles, /\.sidebarMobileOpen\s*\{[\s\S]*left: 0;[\s\S]*z-index: 90;/);
   assert.match(styles, /\.shellMobileMenuOpen \.sidebarMobileOpen\s*\{[\s\S]*left: 0;[\s\S]*z-index: 90;/);
+  assert.match(leadsPanelStyles, /@media \(max-width: 720px\)\s*\{[\s\S]*\.panel\s*\{[\s\S]*position: fixed;[\s\S]*bottom: calc\(92px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*z-index: 120;/);
+  assert.match(leadsPanelStyles, /@media \(max-width: 720px\)\s*\{[\s\S]*\.panel\[aria-hidden="true"\]\s*\{[\s\S]*transform: translateY\(24px\);/);
+  assert.match(leadsPanelStyles, /\.leadCard\s*\{[\s\S]*flex: 0 0 auto;/);
+  assert.match(leadsPanelStyles, /@media \(max-width: 720px\)\s*\{[\s\S]*\.leadCard\s*\{[\s\S]*min-height: 96px;/);
+  assert.match(leadsPanelStyles, /@media \(max-width: 720px\)\s*\{[\s\S]*\.leadTitle\s*\{[\s\S]*display: -webkit-box;[\s\S]*-webkit-line-clamp: 2;/);
+  assert.match(leadsPanelStyles, /@media \(max-width: 720px\)\s*\{[\s\S]*\.leadWhy\s*\{[\s\S]*-webkit-line-clamp: 1;/);
   assert.match(styles, /\.mobileBackdrop\s*\{[\s\S]*z-index: 60;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*--sidebar-width: 320px;/);
   assert.match(styles, /@media \(min-width: 901px\) and \(max-width: 1180px\)\s*\{[\s\S]*\.shell\.shellCollapsed\s*\{[\s\S]*--sidebar-width: 64px;/);
