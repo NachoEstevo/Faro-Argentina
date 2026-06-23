@@ -1404,16 +1404,132 @@ a.faroMark:hover .faroMarkIcon {
   gap: 6px;
 }
 
+.signalChipDisclosure {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+}
+
 .signalChip {
   width: fit-content;
   min-height: 24px;
   border: 1px solid var(--faro-line);
   background: rgba(255, 255, 255, 0.035);
   padding: 5px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  list-style: none;
+  cursor: help;
+}
+
+.signalChip::-webkit-details-marker {
+  display: none;
+}
+
+.signalChipHint {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.72;
+}
+
+.signalChipDisclosure[open] .signalChip {
+  border-color: currentColor;
+  background: rgba(117, 170, 219, 0.16);
+}
+
+.signalChipPopover {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 0;
+  z-index: 80;
+  width: min(300px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid rgba(125, 111, 82, 0.24);
+  border-radius: 12px;
+  background: #fffaf0;
+  box-shadow: 0 18px 40px rgba(35, 29, 18, 0.24);
+  color: #1f2a32;
+  font-size: 12px;
+  line-height: 1.45;
+  text-transform: none;
+}
+
+.signalChipPopover::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 16px;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid rgba(125, 111, 82, 0.24);
+  border-left: 1px solid rgba(125, 111, 82, 0.24);
+  background: #fffaf0;
+  transform: rotate(45deg);
+}
+
+.signalChipPopover strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #1f2a32;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.signalChipPopover p {
+  margin: 0 0 10px;
+  color: #4f5f68;
+}
+
+.signalChipPopover dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.signalChipPopover div {
+  display: grid;
+  gap: 2px;
+}
+
+.signalChipPopover dt {
+  color: #1f6f9f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signalChipPopover dd {
+  margin: 0;
+  color: #46555e;
+}
+
+@media (max-width: 720px) {
+  .signalChipPopover {
+    position: fixed;
+    top: auto;
+    right: 16px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    width: auto;
+    max-height: min(46svh, 320px);
+    overflow: auto;
+  }
+
+  .signalChipPopover::before {
+    display: none;
+  }
 }
 
 .caseRow span {
