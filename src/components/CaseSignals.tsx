@@ -32,7 +32,10 @@ export function CaseSignalPanel({
             <div>
               <div className="signalTitle">
                 <strong>{signal.label}</strong>
-                <span>{labelKind(signal.kind)}</span>
+                <div className="signalTitleMeta">
+                  <span>{labelKind(signal.kind)}</span>
+                  <SignalHelpDisclosure signal={signal} />
+                </div>
               </div>
               <p>{signal.summary}</p>
               <dl className="signalProof">
@@ -91,6 +94,34 @@ export function CaseSignalChips({
         </details>
       ))}
     </div>
+  );
+}
+
+function SignalHelpDisclosure({ signal }: { signal: CaseSignal }) {
+  return (
+    <details className="signalHelpDisclosure">
+      <summary className="signalHelpButton" aria-label={`${signal.label}. Ver qué significa`}>
+        <CircleHelp size={14} aria-hidden />
+      </summary>
+      <div className="signalHelpPopover" role="note">
+        <strong>{signal.label}</strong>
+        <p>{signal.summary}</p>
+        <dl>
+          <div>
+            <dt>Evidencia</dt>
+            <dd>{signal.evidence}</dd>
+          </div>
+          <div>
+            <dt>Cómo leerlo</dt>
+            <dd>{signal.caveat}</dd>
+          </div>
+          <div>
+            <dt>Próximo paso</dt>
+            <dd>{signal.action}</dd>
+          </div>
+        </dl>
+      </div>
+    </details>
   );
 }
 
