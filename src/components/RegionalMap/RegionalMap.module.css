@@ -2922,8 +2922,8 @@
 
   .modeNavAnchor {
     position: fixed;
-    top: auto;
-    bottom: 18px;
+    top: 22px;
+    bottom: auto;
     left: 50%;
     max-width: 112px;
     transform: translateX(-50%);
