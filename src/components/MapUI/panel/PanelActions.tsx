@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, ExternalLink, MessageSquarePlus } from "lucide-react";
+import { Download, ExternalLink, FileText, MessageSquarePlus } from "lucide-react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
@@ -18,6 +18,12 @@ export default function PanelActions({ caseFile, signalContext, onReportCase }: 
   return (
     <div className={styles.actions}>
       <div className={styles.actionRow}>
+        <a
+          href={expediente.actions.reportHref}
+          className={`${styles.actionButton} ${styles.actionButtonReport}`}
+        >
+          <FileText size={14} aria-hidden /> Informe completo
+        </a>
         {onReportCase && (
           <button type="button" className={`${styles.actionButton} ${styles.actionButtonPrimary}`} onClick={onReportCase}>
             <MessageSquarePlus size={14} aria-hidden /> Reportar dato
