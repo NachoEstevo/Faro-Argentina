@@ -324,6 +324,19 @@
   color: #1d5f89;
 }
 
+.actionButtonReport {
+  grid-column: 1 / -1;
+  border-color: rgba(31, 111, 159, 0.42);
+  background: linear-gradient(135deg, #1f6f9f 0%, #75aadb 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(31, 111, 159, 0.18);
+}
+
+.actionButtonReport:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1a628d 0%, #69a2d4 100%);
+  border-color: rgba(31, 111, 159, 0.52);
+}
+
 .actionButton:disabled {
   color: var(--cp-text-faint);
   cursor: not-allowed;
