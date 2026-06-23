@@ -2922,15 +2922,16 @@
 
   .modeNavAnchor {
     position: fixed;
-    top: 22px;
+    top: calc(16px + env(safe-area-inset-top, 0px));
     bottom: auto;
     left: 50%;
+    z-index: 7;
     max-width: 112px;
     transform: translateX(-50%);
   }
 
   .shellNoMapChrome .modeNavAnchor {
-    top: 16px;
+    top: calc(16px + env(safe-area-inset-top, 0px));
     bottom: auto;
     left: 50%;
     max-width: 112px;
