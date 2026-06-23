@@ -67,11 +67,28 @@ export function CaseSignalChips({
   if (signals.length === 0) return null;
 
   return (
-    <div className="signalChips">
+    <div className="signalChips" aria-label="Pistas de revisión">
       {signals.map((signal) => (
-        <span key={signal.code} className={`signalChip ${signal.kind}`}>
-          {signal.label}
-        </span>
+        <details key={signal.code} className={`signalChipDisclosure ${signal.kind}`}>
+          <summary className={`signalChip ${signal.kind}`} aria-label={`${signal.label}. Ver qué significa`}>
+            <span>{signal.label}</span>
+            <span className="signalChipHint" aria-hidden>?</span>
+          </summary>
+          <div className="signalChipPopover" role="note">
+            <strong>{signal.label}</strong>
+            <p>{signal.summary}</p>
+            <dl>
+              <div>
+                <dt>Cómo leerlo</dt>
+                <dd>{signal.caveat}</dd>
+              </div>
+              <div>
+                <dt>Próximo paso</dt>
+                <dd>{signal.action}</dd>
+              </div>
+            </dl>
+          </div>
+        </details>
       ))}
     </div>
   );
