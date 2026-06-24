@@ -1307,6 +1307,24 @@
   pointer-events: auto;
 }
 
+.shell[data-platform-theme="dark"] .mapImageryControlCard {
+  --cp-surface: #eef6fb;
+  --cp-border: rgba(117, 170, 219, 0.34);
+  --cp-border-soft: rgba(117, 170, 219, 0.2);
+  --cp-hover: rgba(117, 170, 219, 0.16);
+  --cp-text: #f4f8fb;
+  --cp-text-muted: #c7d3dc;
+  --cp-text-faint: #9fb0bd;
+  --cp-accent: #5aa9e5;
+  background:
+    linear-gradient(180deg, rgba(16, 27, 38, 0.95), rgba(10, 18, 27, 0.93)),
+    linear-gradient(90deg, rgba(117, 170, 219, 0.1), rgba(252, 191, 73, 0.04));
+  border-color: rgba(117, 170, 219, 0.4);
+  box-shadow:
+    0 22px 48px rgba(2, 8, 14, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .mapImageryControlMobileOpen {
   display: flex;
 }

@@ -330,6 +330,7 @@ test("FaroExperience shares the light/dark theme across map and work views", asy
   assert.match(styles, /\.shellCaseOpen \.mobileHeader\s*\{[\s\S]*justify-content: flex-start;/);
   assert.match(styles, /\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*right: 490px;/);
   assert.match(styles, /\.interfaceThemeDockHome\s*\{[\s\S]*top: 20px;[\s\S]*right: 22px;/);
+  assert.match(styles, /\.shell\[data-platform-theme="dark"\] \.mapImageryControlCard\s*\{[\s\S]*--cp-text: #f4f8fb;[\s\S]*--cp-text-muted: #c7d3dc;[\s\S]*--cp-accent: #5aa9e5;[\s\S]*rgba\(16, 27, 38, 0\.95\)/);
   assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDock\s*\{[\s\S]*right: 12px;[\s\S]*top: 16px;/);
   assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*display: none;/);
   assert.doesNotMatch(styles, /\.interfaceThemeDock\s*\{[^}]*bottom: 72px;/);
