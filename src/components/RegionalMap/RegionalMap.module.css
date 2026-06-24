@@ -1022,11 +1022,6 @@
   right: 490px;
 }
 
-.interfaceThemeDockHome {
-  top: 20px;
-  right: 22px;
-}
-
 .interfaceThemeDockWorkView {
   top: 18px;
   right: 18px;
@@ -1150,11 +1145,6 @@
 
   .interfaceThemeDockMapCaseOpen {
     display: none;
-  }
-
-  .interfaceThemeDockHome {
-    top: calc(14px + env(safe-area-inset-top, 0px));
-    right: 14px;
   }
 
   .interfaceThemeDockWorkView {

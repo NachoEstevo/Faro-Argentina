@@ -302,10 +302,8 @@ test("FaroExperience shares the light/dark theme across map and work views", asy
   assert.match(source, /className=\{[\s\S]*styles\.interfaceThemeDockMap[\s\S]*styles\.interfaceThemeDockWorkView[\s\S]*\}/);
   assert.doesNotMatch(source, /viewMode !== "map" && \(\s*<InterfaceThemeToggle/);
   assert.doesNotMatch(source, /type PlatformTheme|activePlatformTheme: PlatformTheme|mapCream" : interfaceTheme/);
-  assert.match(regionalSource, /readStoredInterfaceTheme\(\)/);
-  assert.match(regionalSource, /persistInterfaceTheme\(theme\)/);
-  assert.match(regionalSource, /data-platform-theme=\{interfaceTheme\}/);
-  assert.match(regionalSource, /className=\{styles\.interfaceThemeDockHome\}/);
+  assert.match(regionalSource, /data-platform-theme="dark"/);
+  assert.doesNotMatch(regionalSource, /InterfaceThemeToggle|readStoredInterfaceTheme|persistInterfaceTheme|interfaceThemeDockHome/);
   assert.match(themeToggleSource, /role="group" aria-label="Tema de interfaz"/);
   assert.match(themeToggleSource, /aria-label="Modo claro"/);
   assert.match(themeToggleSource, /aria-label="Modo oscuro"/);
@@ -332,7 +330,7 @@ test("FaroExperience shares the light/dark theme across map and work views", asy
   assert.match(styles, /\.shellCaseOpen \.leafletHost :global\(\.leaflet-top\.leaflet-right \.leaflet-control-zoom\)\s*\{[\s\S]*margin-right: calc\(var\(--case-panel-width\) \+ 18px\);/);
   assert.match(styles, /\.shellCaseOpen \.mobileHeader\s*\{[\s\S]*justify-content: flex-start;/);
   assert.match(styles, /\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*right: 490px;/);
-  assert.match(styles, /\.interfaceThemeDockHome\s*\{[\s\S]*top: 20px;[\s\S]*right: 22px;/);
+  assert.doesNotMatch(styles, /\.interfaceThemeDockHome/);
   assert.match(styles, /\.shell\[data-platform-theme="dark"\] \.mapImageryControlCard\s*\{[\s\S]*--cp-text: #f4f8fb;[\s\S]*--cp-text-muted: #c7d3dc;[\s\S]*--cp-accent: #5aa9e5;[\s\S]*rgba\(16, 27, 38, 0\.95\)/);
   assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDock\s*\{[\s\S]*right: 12px;[\s\S]*top: 16px;/);
   assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*display: none;/);
