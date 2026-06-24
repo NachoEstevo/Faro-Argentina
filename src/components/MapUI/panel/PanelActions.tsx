@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, ExternalLink, FileText, MessageSquarePlus } from "lucide-react";
+import { ArrowRight, Download, ExternalLink, FileText, MessageSquarePlus } from "lucide-react";
 import type { ExplorerCase } from "@/lib/data/explorerCases";
 import type { CaseSignalContext } from "@/lib/data/caseSignals";
 import { buildExpediente, type ExpedienteCaseFile } from "@/lib/data/expediente";
@@ -15,14 +15,19 @@ interface Props {
 export default function PanelActions({ caseFile, signalContext, onReportCase }: Props) {
   const expediente = buildExpediente(caseFile as ExpedienteCaseFile, signalContext);
   const encodedId = encodeURIComponent(caseFile.id);
+  const explorerCaseHref = `/pais/${caseFile.countryCode}?mode=explorer&case=${encodedId}`;
+
   return (
     <div className={styles.actions}>
       <div className={styles.actionRow}>
         <a
-          href={expediente.actions.reportHref}
+          href={explorerCaseHref}
           className={`${styles.actionButton} ${styles.actionButtonReport}`}
         >
-          <FileText size={14} aria-hidden /> Informe completo
+          <ArrowRight size={14} aria-hidden /> Informe completo
+        </a>
+        <a href={expediente.actions.reportHref} className={styles.actionButton}>
+          <FileText size={14} aria-hidden /> Informe PDF
         </a>
         {onReportCase && (
           <button type="button" className={`${styles.actionButton} ${styles.actionButtonPrimary}`} onClick={onReportCase}>

@@ -84,9 +84,12 @@ test("FaroExperience preserves operational map case rendering", async () => {
   assert.doesNotMatch(source, /traceMode|setTraceMode|onTraceModeChange/);
   assert.doesNotMatch(caseMapSource, /traceMode|import \{[^}]*\bCircle\b|<Circle\s/);
   assert.doesNotMatch(casePanelSource, /traceMode|onTraceModeChange/);
+  assert.match(panelActionsSource, /const explorerCaseHref = `\/pais\/\$\{caseFile\.countryCode\}\?mode=explorer&case=\$\{encodedId\}`;/);
+  assert.match(panelActionsSource, /href=\{explorerCaseHref\}/);
   assert.match(panelActionsSource, /href=\{expediente\.actions\.reportHref\}/);
   assert.match(panelActionsSource, /styles\.actionButtonReport/);
   assert.match(panelActionsSource, /Informe completo/);
+  assert.match(panelActionsSource, /Informe PDF/);
   assert.match(casePanelStyles, /\.actionButtonReport\s*\{[\s\S]*grid-column: 1 \/ -1;[\s\S]*background: linear-gradient\(135deg, #1f6f9f 0%, #75aadb 100%\);/);
   assert.doesNotMatch(panelActionsSource, /Rastro visual|Route|traceMode|onTraceModeChange|actionWideActive/);
   assert.doesNotMatch(caseDetailsSource, /Rastro visual|traceMode|onTraceModeChange|traceBox|describeTraceContext/);
