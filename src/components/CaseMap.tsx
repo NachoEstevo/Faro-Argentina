@@ -16,6 +16,7 @@ import {
 } from "@/lib/data/caseSignals";
 import { tileUrlForRelease } from "@/lib/data/wayback";
 import type { WaybackState } from "./WaybackControl";
+import type { InterfaceTheme } from "./InterfaceThemeToggle";
 
 interface Props {
   cases: ExplorerCase[];
@@ -24,6 +25,7 @@ interface Props {
   resetViewToken: number;
   waybackState: WaybackState;
   onWaybackTileLoadingChange: (loading: boolean) => void;
+  baseTheme: InterfaceTheme;
 }
 
 const ARGENMAP_LIGHT_URL =
@@ -56,6 +58,7 @@ export default function CaseMap({
   resetViewToken,
   waybackState,
   onWaybackTileLoadingChange,
+  baseTheme,
 }: Props) {
   const mapCases = useMemo(() => cases.filter(isMapMarkerEligible), [cases]);
   const markerRenderer = useMemo(
@@ -100,6 +103,12 @@ export default function CaseMap({
 
   const waybackTileUrl =
     waybackState.status === "active" ? tileUrlForRelease(waybackState.activeReleaseId) : null;
+  const mapClassName = [
+    "leafletRoot",
+    !waybackTileUrl && baseTheme === "dark" ? "leafletRootDarkBase" : "leafletRootLightBase",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   useEffect(() => {
     onWaybackTileLoadingChange(Boolean(waybackTileUrl));
@@ -118,7 +127,7 @@ export default function CaseMap({
         inertiaDeceleration={2600}
         easeLinearity={0.22}
         zoomAnimationThreshold={4}
-        className="leafletRoot"
+        className={mapClassName}
       >
         {waybackTileUrl ? (
           <TileLayer
@@ -145,6 +154,7 @@ export default function CaseMap({
           />
         )}
         <SafeZoomControl />
+        <MapThemeClassSync baseTheme={baseTheme} waybackActive={Boolean(waybackTileUrl)} />
         <MapFocus
           cases={mapCases}
           selectedCase={selectedCase}
@@ -228,6 +238,25 @@ function SafeZoomControl() {
       }
     };
   }, [map]);
+
+  return null;
+}
+
+function MapThemeClassSync({
+  baseTheme,
+  waybackActive,
+}: {
+  baseTheme: InterfaceTheme;
+  waybackActive: boolean;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    const useDarkBase = !waybackActive && baseTheme === "dark";
+    container.classList.toggle("leafletRootDarkBase", useDarkBase);
+    container.classList.toggle("leafletRootLightBase", !useDarkBase);
+  }, [baseTheme, map, waybackActive]);
 
   return null;
 }

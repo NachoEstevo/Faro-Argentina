@@ -280,31 +280,43 @@ test("country map initial cases stay compact while preserving map signal fields"
   assert.equal(argentinaInitialMapCases.some((caseFile) => "supplierName" in caseFile), true);
 });
 
-test("FaroExperience uses a cream map theme and keeps work-view theme toggles scoped", async () => {
+test("FaroExperience shares the light/dark theme across map and work views", async () => {
   const source = await readFile(faroExperienceUrl, "utf8");
+  const themeToggleSource = await readFile(new URL("../src/components/InterfaceThemeToggle.tsx", import.meta.url), "utf8");
+  const regionalSource = await readFile(regionalMapUrl, "utf8");
   const styles = await readFile(regionalMapStylesUrl, "utf8");
+  const globals = await readFile(new URL("../src/app/globals.css", import.meta.url), "utf8");
   const casePanelStyles = await readFile(casePanelStylesUrl, "utf8");
 
-  assert.match(source, /type InterfaceTheme = "dark" \| "light"/);
-  assert.match(source, /type PlatformTheme = InterfaceTheme \| "mapCream"/);
-  assert.match(source, /faro-interface-theme/);
-  assert.match(source, /const activePlatformTheme: PlatformTheme = viewMode === "map" \? "mapCream" : interfaceTheme;/);
+  assert.match(themeToggleSource, /export type InterfaceTheme = "dark" \| "light"/);
+  assert.match(themeToggleSource, /INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme"/);
+  assert.match(source, /readStoredInterfaceTheme\(\)/);
+  assert.match(source, /persistInterfaceTheme\(theme\)/);
+  assert.match(source, /const activePlatformTheme: InterfaceTheme = interfaceTheme;/);
   assert.match(source, /data-platform-theme=\{activePlatformTheme\}/);
-  assert.match(source, /viewMode !== "map" && \(\s*<InterfaceThemeToggle/);
-  assert.match(source, /role="group" aria-label="Tema de interfaz"/);
-  assert.match(source, /aria-label="Modo claro"/);
-  assert.match(source, /aria-label="Modo oscuro"/);
-  assert.match(source, /aria-pressed=\{theme === "light"\}/);
-  assert.match(source, /aria-pressed=\{theme === "dark"\}/);
-  assert.doesNotMatch(source, /<span>Claro<\/span>|<span>Oscuro<\/span>|const nextTheme/);
+  assert.match(source, /baseTheme=\{interfaceTheme\}/);
+  assert.match(source, /hasOpenMapCase \? styles\.shellCaseOpen : ""/);
+  assert.match(source, /className=\{[\s\S]*styles\.interfaceThemeDockMap[\s\S]*styles\.interfaceThemeDockWorkView[\s\S]*\}/);
+  assert.doesNotMatch(source, /viewMode !== "map" && \(\s*<InterfaceThemeToggle/);
+  assert.doesNotMatch(source, /type PlatformTheme|activePlatformTheme: PlatformTheme|mapCream" : interfaceTheme/);
+  assert.match(regionalSource, /readStoredInterfaceTheme\(\)/);
+  assert.match(regionalSource, /persistInterfaceTheme\(theme\)/);
+  assert.match(regionalSource, /data-platform-theme=\{interfaceTheme\}/);
+  assert.match(regionalSource, /className=\{styles\.interfaceThemeDockHome\}/);
+  assert.match(themeToggleSource, /role="group" aria-label="Tema de interfaz"/);
+  assert.match(themeToggleSource, /aria-label="Modo claro"/);
+  assert.match(themeToggleSource, /aria-label="Modo oscuro"/);
+  assert.match(themeToggleSource, /aria-pressed=\{theme === "light"\}/);
+  assert.match(themeToggleSource, /aria-pressed=\{theme === "dark"\}/);
+  assert.doesNotMatch(themeToggleSource, /<span>Claro<\/span>|<span>Oscuro<\/span>|const nextTheme/);
 
   assert.match(styles, /\.shell\[data-platform-theme="light"\]/);
-  assert.match(styles, /\.shell\[data-platform-theme="mapCream"\]/);
+  assert.match(styles, /\.shell\[data-platform-theme="dark"\] \.leafletHost/);
   assert.match(styles, /--cf-bg: #eee8dc;/);
   assert.match(styles, /--cf-arg-sky: #75aadb;/);
   assert.match(styles, /--cf-arg-gold: #fcbf49;/);
   assert.match(styles, /\.shell\[data-platform-theme="light"\]\s*\{[\s\S]*--cf-workspace-sidebar-bg: rgba\(247, 242, 230, 0\.92\);/);
-  assert.match(styles, /\.shell\[data-platform-theme="mapCream"\] \.sidebar\s*\{[\s\S]*linear-gradient\(180deg, rgba\(250, 246, 235, 0\.97\), rgba\(238, 232, 218, 0\.96\)\);/);
+  assert.match(styles, /\.shell\[data-platform-theme="light"\] \.sidebar,[\s\S]*\.shell\[data-platform-theme="mapCream"\] \.sidebar\s*\{[\s\S]*linear-gradient\(180deg, rgba\(250, 246, 235, 0\.97\), rgba\(238, 232, 218, 0\.96\)\);/);
   assert.match(styles, /\.mapLegend\s*\{[\s\S]*background: color-mix\(in srgb, var\(--cf-bg-elev\) 92%, transparent\);/);
   assert.doesNotMatch(styles, /\.mapLegend\s*\{[\s\S]*background: rgba\(13, 15, 19, 0\.86\);/);
   assert.match(casePanelStyles, /--cp-surface: #f3eddf;/);
@@ -312,10 +324,19 @@ test("FaroExperience uses a cream map theme and keeps work-view theme toggles sc
   assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.watch\)\s*\{[\s\S]*color: #755300;/);
   assert.match(casePanelStyles, /\.chips :global\(\.signalChip\.gap\)\s*\{[\s\S]*color: #1f5f8b;/);
   assert.match(styles, /\.interfaceThemeDock\s*\{[\s\S]*right: 18px;[\s\S]*top: 18px;[\s\S]*min-width: 78px;[\s\S]*min-height: 40px;/);
+  assert.match(styles, /\.interfaceThemeDockMap\s*\{[\s\S]*top: 84px;[\s\S]*right: 72px;/);
+  assert.match(styles, /\.shellCaseOpen\s*\{[\s\S]*--case-panel-width: 420px;/);
+  assert.match(styles, /\.shellCaseOpen \.leafletHost :global\(\.leaflet-top\.leaflet-right \.leaflet-control-zoom\)\s*\{[\s\S]*margin-right: calc\(var\(--case-panel-width\) \+ 18px\);/);
+  assert.match(styles, /\.shellCaseOpen \.mobileHeader\s*\{[\s\S]*justify-content: flex-start;/);
+  assert.match(styles, /\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*right: 490px;/);
+  assert.match(styles, /\.interfaceThemeDockHome\s*\{[\s\S]*top: 20px;[\s\S]*right: 22px;/);
   assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDock\s*\{[\s\S]*right: 12px;[\s\S]*top: 16px;/);
+  assert.match(styles, /@media \(max-width: 600px\) \{[\s\S]*\.interfaceThemeDockMapCaseOpen\s*\{[\s\S]*display: none;/);
   assert.doesNotMatch(styles, /\.interfaceThemeDock\s*\{[^}]*bottom: 72px;/);
   assert.match(styles, /\.interfaceThemeOption\s*\{/);
   assert.match(styles, /\.interfaceThemeOptionActive\s*\{[\s\S]*background: var\(--cf-accent\);/);
+  assert.match(globals, /\.leafletRoot\.leafletRootDarkBase \.leaflet-tile-pane/);
+  assert.match(globals, /\[data-platform-theme="light"\] \.leafletRoot \.leaflet-control-attribution/);
 });
 
 test("regional welcome CTA transitions into the country map", async () => {

@@ -89,12 +89,20 @@ test("CaseMap keeps filter changes from moving the current map viewport", async 
   assert.match(faroSource, /const handleCloseMapCase = useCallback\(\(\) => \{[\s\S]*setSelectedCaseId\(""\);[\s\S]*setMapResetToken\(\(token\) => token \+ 1\);/);
 });
 
-test("CaseMap uses the official Argenmap light base layer outside Wayback mode", async () => {
+test("CaseMap uses the official Argenmap base with theme-aware styling outside Wayback mode", async () => {
   const source = await readFile(caseMapUrl, "utf8");
+  const globals = await readFile(new URL("../src/app/globals.css", import.meta.url), "utf8");
 
   assert.match(source, /ARGENMAP_LIGHT_URL/);
   assert.match(source, /capabaseargenmap@EPSG%3A3857@png\/\{z\}\/\{x\}\/\{-y\}\.png/);
   assert.match(source, /Instituto Geogr[aá]fico Nacional - Argenmap/);
+  assert.match(source, /baseTheme: InterfaceTheme/);
+  assert.match(source, /baseTheme === "dark" \? "leafletRootDarkBase" : "leafletRootLightBase"/);
+  assert.match(source, /function MapThemeClassSync/);
+  assert.match(source, /container\.classList\.toggle\("leafletRootDarkBase", useDarkBase\)/);
+  assert.match(source, /container\.classList\.toggle\("leafletRootLightBase", !useDarkBase\)/);
+  assert.match(globals, /\.leafletRoot\.leafletRootDarkBase \.leaflet-tile-pane/);
+  assert.match(globals, /\.leafletRoot\.leafletRootLightBase \.leaflet-tile-pane/);
   assert.doesNotMatch(source, /basemaps\.cartocdn\.com/);
 });
 

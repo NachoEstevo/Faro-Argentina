@@ -135,6 +135,10 @@
   --sidebar-width: 0px;
 }
 
+.shellCaseOpen {
+  --case-panel-width: 420px;
+}
+
 .sidebar {
   position: absolute;
   top: 0;
@@ -152,6 +156,7 @@
   min-height: 0;
 }
 
+.shell[data-platform-theme="light"] .sidebar,
 .shell[data-platform-theme="mapCream"] .sidebar {
   background:
     linear-gradient(180deg, rgba(250, 246, 235, 0.97), rgba(238, 232, 218, 0.96));
@@ -1007,6 +1012,26 @@
   color: var(--cf-on-accent);
 }
 
+.interfaceThemeDockMap {
+  top: 84px;
+  right: 72px;
+}
+
+.interfaceThemeDockMapCaseOpen {
+  top: 20px;
+  right: 490px;
+}
+
+.interfaceThemeDockHome {
+  top: 20px;
+  right: 22px;
+}
+
+.interfaceThemeDockWorkView {
+  top: 18px;
+  right: 18px;
+}
+
 .caseCorpusGate {
   position: absolute;
   inset: 0;
@@ -1116,6 +1141,27 @@
     min-height: 38px;
   }
 
+  .interfaceThemeDockMap {
+    position: fixed;
+    top: calc(78px + env(safe-area-inset-top, 0px));
+    right: 14px;
+    z-index: 88;
+  }
+
+  .interfaceThemeDockMapCaseOpen {
+    display: none;
+  }
+
+  .interfaceThemeDockHome {
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 14px;
+  }
+
+  .interfaceThemeDockWorkView {
+    top: calc(18px + env(safe-area-inset-top, 0px));
+    right: 16px;
+  }
+
   .caseCorpusGatePanel {
     align-items: flex-start;
     flex-direction: column;
@@ -1140,6 +1186,23 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  background:
+    radial-gradient(circle at 72% 34%, rgba(117, 170, 219, 0.34), transparent 34%),
+    linear-gradient(135deg, #f4efe3 0%, #eee8dc 42%, #c9e5f7 100%);
+}
+
+.shellCaseOpen .leafletHost :global(.leaflet-top.leaflet-right .leaflet-control-zoom) {
+  margin-right: calc(var(--case-panel-width) + 18px);
+}
+
+.shell[data-platform-theme="dark"] .leafletHost {
+  background:
+    radial-gradient(circle at 74% 34%, rgba(117, 170, 219, 0.18), transparent 34%),
+    linear-gradient(135deg, #0e1822 0%, #172636 48%, #203849 100%);
+}
+
+.shell[data-platform-theme="light"] .leafletHost,
+.shell[data-platform-theme="mapCream"] .leafletHost {
   background:
     radial-gradient(circle at 72% 34%, rgba(117, 170, 219, 0.34), transparent 34%),
     linear-gradient(135deg, #f4efe3 0%, #eee8dc 42%, #c9e5f7 100%);
@@ -2895,8 +2958,22 @@
     right: 54px;
   }
 
+  .interfaceThemeDockMap {
+    top: 82px;
+    right: 74px;
+  }
+
+  .interfaceThemeDockMapCaseOpen {
+    top: 82px;
+    right: 490px;
+  }
+
   .topRightActions.topRightActionsWorkView {
     right: 112px;
+  }
+
+  .shellCaseOpen .mobileHeader {
+    justify-content: flex-start;
   }
 
   .tourButton,

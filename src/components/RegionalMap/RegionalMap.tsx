@@ -9,6 +9,11 @@ import MobileHeader from "./MobileHeader";
 import RegionalSidebar from "./RegionalSidebar";
 import TrustStrip from "./TrustStrip";
 import WelcomeOverlay from "./WelcomeOverlay";
+import InterfaceThemeToggle, {
+  persistInterfaceTheme,
+  readStoredInterfaceTheme,
+  type InterfaceTheme,
+} from "../InterfaceThemeToggle";
 
 const CountryMap = dynamic(() => import("./CountryMap"), {
   ssr: false,
@@ -27,6 +32,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userToggledSidebar, setUserToggledSidebar] = useState(false);
+  const [interfaceTheme, setInterfaceThemeState] = useState<InterfaceTheme>("dark");
 
   useEffect(() => {
     if (userToggledSidebar) return;
@@ -42,6 +48,16 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
     window.addEventListener("resize", apply);
     return () => window.removeEventListener("resize", apply);
   }, [userToggledSidebar]);
+
+  useEffect(() => {
+    const stored = readStoredInterfaceTheme();
+    if (stored) setInterfaceThemeState(stored);
+  }, []);
+
+  const setInterfaceTheme = useCallback((theme: InterfaceTheme) => {
+    setInterfaceThemeState(theme);
+    persistInterfaceTheme(theme);
+  }, []);
 
   const handleSidebarToggle = useCallback(() => {
     setUserToggledSidebar(true);
@@ -68,7 +84,7 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
     .join(" ");
 
   return (
-    <main className={shellClasses}>
+    <main className={shellClasses} data-platform-theme={interfaceTheme}>
       <div className={styles.mapArea}>
         <div className={styles.leafletHost}>
           <CountryMap geojson={geojson} />
@@ -95,6 +111,11 @@ export default function RegionalMap({ geojson, totalCases, syncLabel }: Props) {
       <div className={styles.overlayLayer}>
         <div className={styles.vignetteTop} aria-hidden />
         <div className={styles.vignetteSides} aria-hidden />
+        <InterfaceThemeToggle
+          theme={interfaceTheme}
+          onThemeChange={setInterfaceTheme}
+          className={styles.interfaceThemeDockHome}
+        />
         <TrustStrip totalCases={totalCases} />
       </div>
       <div className={styles.welcomeLayer}>

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { type FormEvent, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, MessageSquarePlus, Moon, Send, Sun, X } from "lucide-react";
+import { ArrowLeft, MessageSquarePlus, Send, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { loadYearlyReleases, pickReleaseForYear } from "@/lib/data/wayback";
@@ -42,6 +42,11 @@ import MapLegend from "./RegionalMap/MapLegend";
 import MobileHeader from "./RegionalMap/MobileHeader";
 import styles from "./RegionalMap/RegionalMap.module.css";
 import type { ContributionTypeId } from "./Aportes/AportesView";
+import InterfaceThemeToggle, {
+  persistInterfaceTheme,
+  readStoredInterfaceTheme,
+  type InterfaceTheme,
+} from "./InterfaceThemeToggle";
 
 const CaseMap = dynamic(() => import("./CaseMap"), {
   ssr: false,
@@ -71,12 +76,9 @@ interface Props {
   initialContributionType?: ContributionTypeId;
 }
 
-type InterfaceTheme = "dark" | "light";
-type PlatformTheme = InterfaceTheme | "mapCream";
 type CaseCorpusStatus = "initial" | "loading" | "ready" | "error";
 type MobileReportStatus = "idle" | "submitting" | "success" | "error";
 
-const INTERFACE_THEME_STORAGE_KEY = "faro-interface-theme";
 const GUIDED_TOUR_STORAGE_KEY = "faro-guided-tour-seen";
 const GUIDED_TOUR_SEEN_VALUE = "seen";
 const SIDEBAR_TOUR_STEPS = new Set<GuidedTourStepId>(["search", "filters", "review-button"]);
@@ -219,23 +221,13 @@ export default function FaroExperience({
   }, [explorerIndexHref]);
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(INTERFACE_THEME_STORAGE_KEY);
-      if (stored === "dark" || stored === "light") {
-        setInterfaceThemeState(stored);
-      }
-    } catch {
-      // Theme persistence is a convenience; platform views still render.
-    }
+    const stored = readStoredInterfaceTheme();
+    if (stored) setInterfaceThemeState(stored);
   }, []);
 
   const setInterfaceTheme = useCallback((theme: InterfaceTheme) => {
     setInterfaceThemeState(theme);
-    try {
-      window.localStorage.setItem(INTERFACE_THEME_STORAGE_KEY, theme);
-    } catch {
-      // Ignore private-mode storage failures.
-    }
+    persistInterfaceTheme(theme);
   }, []);
 
   useEffect(() => {
@@ -797,7 +789,7 @@ export default function FaroExperience({
   const showBackControl = viewMode === "map";
   const hasOpenMapCase = viewMode === "map" && selectedCase !== null;
   const showMobileContextReport = hasOpenMapCase && Boolean(mobileReportCase);
-  const activePlatformTheme: PlatformTheme = viewMode === "map" ? "mapCream" : interfaceTheme;
+  const activePlatformTheme: InterfaceTheme = interfaceTheme;
   const backControlLabel = selectedCaseId ? "Volver al mapa" : "Mapa general";
   const backControlAriaLabel = selectedCaseId
     ? `Volver al mapa de ${country.label}`
@@ -810,6 +802,7 @@ export default function FaroExperience({
     !showMapChrome ? styles.shellNoMapChrome : "",
     sidebarCollapsed ? styles.shellCollapsed : "",
     mobileMenuOpen ? styles.shellMobileMenuOpen : "",
+    hasOpenMapCase ? styles.shellCaseOpen : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -830,6 +823,7 @@ export default function FaroExperience({
               resetViewToken={mapResetToken}
               waybackState={waybackState}
               onWaybackTileLoadingChange={handleWaybackTileLoadingChange}
+              baseTheme={interfaceTheme}
             />
           ) : (
             <div className="explorerBackdrop" />
@@ -1000,12 +994,18 @@ export default function FaroExperience({
         )}
       </div>
 
-      {viewMode !== "map" && (
-        <InterfaceThemeToggle
-          theme={interfaceTheme}
-          onThemeChange={setInterfaceTheme}
-        />
-      )}
+      <InterfaceThemeToggle
+        theme={interfaceTheme}
+        onThemeChange={setInterfaceTheme}
+        className={
+          showMapChrome
+            ? [
+                styles.interfaceThemeDockMap,
+                hasOpenMapCase ? styles.interfaceThemeDockMapCaseOpen : "",
+              ].filter(Boolean).join(" ")
+            : styles.interfaceThemeDockWorkView
+        }
+      />
 
       {viewMode === "explorer" && (
         hasExplorerIndex ? (
@@ -1318,39 +1318,6 @@ function CaseCorpusGate({
         )}
       </div>
     </section>
-  );
-}
-
-function InterfaceThemeToggle({
-  theme,
-  onThemeChange,
-}: {
-  theme: InterfaceTheme;
-  onThemeChange: (theme: InterfaceTheme) => void;
-}) {
-  return (
-    <div className={styles.interfaceThemeDock} role="group" aria-label="Tema de interfaz">
-      <button
-        type="button"
-        className={`${styles.interfaceThemeOption} ${theme === "light" ? styles.interfaceThemeOptionActive : ""}`}
-        onClick={() => onThemeChange("light")}
-        aria-label="Modo claro"
-        aria-pressed={theme === "light"}
-        title="Modo claro"
-      >
-        <Sun size={15} aria-hidden />
-      </button>
-      <button
-        type="button"
-        className={`${styles.interfaceThemeOption} ${theme === "dark" ? styles.interfaceThemeOptionActive : ""}`}
-        onClick={() => onThemeChange("dark")}
-        aria-label="Modo oscuro"
-        aria-pressed={theme === "dark"}
-        title="Modo oscuro"
-      >
-        <Moon size={15} aria-hidden />
-      </button>
-    </div>
   );
 }
 
