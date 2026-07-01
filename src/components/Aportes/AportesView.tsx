@@ -436,7 +436,7 @@ export default function AportesView({
             <div className={styles.securityNote}>
               <ShieldCheck size={16} aria-hidden />
               <p>
-                Sin contacto no significa anonimato absoluto: navegador, red, hosting o requerimientos legales pueden generar metadata tecnica. Ver{" "}
+                Sin contacto no significa anonimato absoluto: navegador, red, hosting o requerimientos legales pueden generar metadatos técnicos. Ver{" "}
                 <Link href="/seguridad">seguridad y anonimato</Link>.
                 Al recibir un archivo sin contacto, Faro guarda un nombre neutralizado en el manifiesto interno, pero el contenido puede conservar metadatos EXIF o PDF.
               </p>

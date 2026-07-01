@@ -110,10 +110,10 @@ const staticSuggestions: StaticSuggestion[] = [
   },
   {
     kind: "signal",
-    label: "Sin geometría",
-    detail: "Brecha: falta ubicación oficial",
-    query: "sin geometria",
-    keywords: ["sin ubicacion", "missing geometry", "missing_official_geometry"],
+    label: "Sin punto en mapa",
+    detail: "Brecha: falta punto oficial en mapa",
+    query: "sin punto en mapa",
+    keywords: ["sin geometria", "sin ubicacion", "missing geometry", "missing_official_geometry"],
   },
 ];
 

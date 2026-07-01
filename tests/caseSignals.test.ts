@@ -299,13 +299,13 @@ test("buildCaseSignals uses collection context to surface recurring low-competit
       kind: "exact_cuit",
       label: "CUIT exacto",
       confidence: "high",
-      caveat: "Coincidencia por identificador fiscal declarado; no prueba por si sola una relacion fuera de los registros comparados.",
+      caveat: "Coincidencia por identificador fiscal declarado; no prueba por sí sola una relación fuera de los registros comparados.",
     },
     {
       kind: "same_agency",
       label: "Mismo organismo",
       confidence: "medium",
-      caveat: "Compartir organismo ayuda a priorizar revision; no confirma coordinacion ni una relacion sustantiva entre expedientes.",
+      caveat: "Compartir organismo ayuda a priorizar revisión; no confirma coordinación ni una relación sustantiva entre expedientes.",
     },
   ]);
   assert.doesNotMatch(JSON.stringify(signals), /corrup|fraude|delito|culpable|estafa|abuso|favorit|incumpl|irregular/i);

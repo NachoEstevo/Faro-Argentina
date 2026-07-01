@@ -108,12 +108,12 @@ function buildFollowUps(
     followUps.push({
       claimCode: "budget_execution",
       sourceId: "AR-PRESUPUESTO-ABIERTO-CREDITO-BAPIN",
-      sourceName: "Presupuesto Abierto - credito por BAPIN",
+      sourceName: "Presupuesto Abierto - crédito por BAPIN",
       sourceStatus: "candidate",
       joinKey: "codigo_bapin_id",
       joinValue: bapin,
-      action: "Probar query read-only por BAPIN y guardar URL, columnas, fecha de actualizacion, hash y caveat antes de integrar.",
-      caveat: "El cruce puede mostrar ejecucion presupuestaria declarada, no pago a proveedor.",
+      action: "Probar query read-only por BAPIN y guardar URL, columnas, fecha de actualización, hash y caveat antes de integrar.",
+      caveat: "El cruce puede mostrar ejecución presupuestaria declarada, no pago a proveedor.",
     });
   }
 
@@ -167,13 +167,13 @@ function gapSeverity(claim: EvidenceClaim): CaseInvestigationGapSeverity {
 
 function gapWhyItMatters(claim: EvidenceClaim): string {
   if (claim.code === "provider_payment") {
-    return "Evita tratar contratos, avances o credito presupuestario como pago efectivo.";
+    return "Evita tratar contratos, avances o crédito presupuestario como pago efectivo.";
   }
   if (claim.code === "budget_execution") {
     return "Permite separar rastro presupuestario de pago a proveedor y conservar la llave oficial.";
   }
   if (claim.code === "official_location") {
-    return "Define si el expediente puede usarse en mapa o verificacion territorial sin inferir coordenadas.";
+    return "Define si el expediente puede usarse en mapa o verificación territorial sin inferir coordenadas.";
   }
   if (claim.code === "supplier_identity") {
     return "Sin CUIT/documento exacto, los pivots por proveedor pueden mezclar entidades distintas.";
@@ -186,8 +186,8 @@ function gapWhyItMatters(claim: EvidenceClaim): string {
 
 function doNotClaimText(claim: EvidenceClaim): string {
   if (claim.code === "provider_payment") return "No afirmar pago a proveedor con el corpus actual.";
-  if (claim.code === "official_location") return "No afirmar punto exacto de obra sin geometria oficial validada.";
-  if (claim.code === "budget_execution") return "No afirmar ejecucion presupuestaria integrada sin query y receipt.";
+  if (claim.code === "official_location") return "No afirmar punto exacto de obra sin geometría oficial validada.";
+  if (claim.code === "budget_execution") return "No afirmar ejecución presupuestaria integrada sin query y receipt.";
   if (claim.code === "supplier_identity") return "No relacionar proveedor sin CUIT/documento o fuente exacta.";
   if (claim.code === "judicial_context") return "No relacionar contexto judicial sin documento que una los hechos.";
   return `No afirmar ${claim.label.toLowerCase()} sin fuente complementaria.`;
@@ -205,7 +205,7 @@ function summarizeReadiness(
   followUps: CaseInvestigationFollowUp[],
 ): string {
   if (readiness === "strong_start") {
-    return "Hay evidencia oficial suficiente para iniciar revision y brechas explicitas para no sobreinterpretar.";
+    return "Hay evidencia oficial suficiente para iniciar revisión y brechas explícitas para no sobreinterpretar.";
   }
   if (readiness === "needs_source_cross") {
     const candidate = followUps.find((item) => item.sourceStatus === "candidate");

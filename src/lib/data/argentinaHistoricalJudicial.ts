@@ -110,11 +110,11 @@ export function buildArgentinaHistoricalJudicialCases(
       caseType: record.caseType,
       workNumber: record.contextId,
       year: record.year,
-      title: clean(record.title) || record.contextId,
+      title: polishCuratedSpanishCopy(clean(record.title)) || record.contextId,
       procedureNumber: clean(record.procedureNumber) || record.contextId,
-      agencyName: clean(record.agencyName),
+      agencyName: polishCuratedSpanishCopy(clean(record.agencyName)),
       agencyCode: clean(record.agencyCode) || "AR-JUDICIAL",
-      contractingUnit: clean(record.contractingUnit),
+      contractingUnit: polishCuratedSpanishCopy(clean(record.contractingUnit)),
       executionTerm: null,
       executionTermType: null,
       coordinates: null,
@@ -123,9 +123,9 @@ export function buildArgentinaHistoricalJudicialCases(
       officialBudget: normalizeAmount(record.officialBudget, record.year, options.fxRegistry),
       supplierName: nullable(record.supplierName),
       supplierDocument: nullable(record.supplierDocument),
-      judicialStatus: clean(record.judicialStatus),
-      contextSummary: clean(record.contextSummary),
-      localMatchStatus: clean(record.localMatchStatus),
+      judicialStatus: polishCuratedSpanishCopy(clean(record.judicialStatus)),
+      contextSummary: polishCuratedSpanishCopy(clean(record.contextSummary)),
+      localMatchStatus: polishCuratedSpanishCopy(clean(record.localMatchStatus)),
       relatedCaseIds,
       receipt: createEvidenceReceipt({
         sourceId: options.sourceId,
@@ -141,9 +141,9 @@ export function buildArgentinaHistoricalJudicialCases(
       }),
       relatedReceipts,
       caveats: uniqueStrings([
-        ...record.caveats,
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro.",
+        ...record.caveats.map((caveat) => polishCuratedSpanishCopy(caveat)),
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro.",
       ]),
     };
   });
@@ -157,7 +157,7 @@ function buildRelatedReceipts(
   const officialReceipts = (record.relatedSourceRefs ?? []).map((sourceRef) =>
     createEvidenceReceipt({
       sourceId: sourceRef.sourceId,
-      sourceName: sourceRef.sourceName,
+        sourceName: polishCuratedSpanishCopy(sourceRef.sourceName),
       sourceUrl: sourceRef.sourceUrl,
       rawPath: options.rawPath,
       snapshotHash: options.fileHash,
@@ -176,6 +176,31 @@ function buildRelatedReceipts(
     .filter((receipt): receipt is EvidenceReceipt => receipt !== undefined);
 
   return dedupeReceipts([...officialReceipts, ...localReceipts]);
+}
+
+function polishCuratedSpanishCopy(value: string): string {
+  return value
+    .replaceAll("Ministerio Publico Fiscal de la Nacion", "Ministerio Público Fiscal de la Nación")
+    .replaceAll("Banco Central de la Republica Argentina", "Banco Central de la República Argentina")
+    .replaceAll("Comunicacion", "Comunicación")
+    .replaceAll("acusacion", "acusación")
+    .replaceAll("Camara", "Cámara")
+    .replace(/\bpublica\b/g, "pública")
+    .replaceAll("por si solo", "por sí solo")
+    .replaceAll("geometria", "geometría")
+    .replaceAll("historico", "histórico")
+    .replaceAll("documentacion", "documentación")
+    .replaceAll("razon social", "razón social")
+    .replaceAll("categoria", "categoría")
+    .replaceAll("adjudicacion", "adjudicación")
+    .replaceAll("cesion", "cesión")
+    .replaceAll("segun", "según")
+    .replaceAll("ubicacion", "ubicación")
+    .replaceAll("verificacion", "verificación")
+    .replaceAll("recaudacion", "recaudación")
+    .replaceAll("declaracion", "declaración")
+    .replaceAll("encontro", "encontró")
+    .replaceAll("recuperacion", "recuperación");
 }
 
 function normalizeAmount(

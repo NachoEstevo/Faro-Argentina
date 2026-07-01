@@ -23,11 +23,13 @@ test("ExplorerView avoids overconfident evidence-state copy", async () => {
   assert.doesNotMatch(source, /Verificadas|Verificado|Sin datos/);
 });
 
-test("ExplorerView counts contextual signals as visible signals", async () => {
+test("ExplorerView keeps repeated summary metrics out of the main Explorer canvas", async () => {
   const source = await readFile(explorerViewUrl, "utf8");
 
-  assert.match(source, /filteredCasesWithPrimarySignal/);
-  assert.doesNotMatch(source, /primarySignal\?\.kind === "watch"/);
+  assert.doesNotMatch(source, /<StatCard/);
+  assert.doesNotMatch(source, /filteredCasesWithPrimarySignal/);
+  assert.doesNotMatch(source, /filteredCasesWithoutMapGeometry/);
+  assert.doesNotMatch(source, /explorer\.stats\.facets/);
 });
 
 test("ExplorerView labels judicial-context amounts as contextual", async () => {
@@ -35,6 +37,18 @@ test("ExplorerView labels judicial-context amounts as contextual", async () => {
 
   assert.match(source, /function amountDetailLabel/);
   assert.match(source, /Monto contextual/);
+});
+
+test("ExplorerView labels contract chronology stages with their exact source meaning", async () => {
+  const source = await readFile(explorerViewUrl, "utf8");
+
+  assert.match(source, /getField<string>\(caseFile, "inquiryStartAt"\)/);
+  assert.match(source, /getField<string>\(caseFile, "inquiryEndAt"\)/);
+  assert.match(source, /label="Inicio de consultas"/);
+  assert.match(source, /label="Cierre de consultas"/);
+  assert.match(source, /label="Acta de apertura"/);
+  assert.match(source, /const genericClosing = inquiryEnd \? null : closing;/);
+  assert.doesNotMatch(source, /label="Apertura"/);
 });
 
 test("ExplorerView only shows map links for map-eligible geometry", async () => {
@@ -144,9 +158,10 @@ test("ExplorerView gives mobile Explorer a compact search-first reading order", 
   assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mainHeader\s*\{[\s\S]*order: 1;/);
   assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.searchWrap\s*\{[\s\S]*order: 2;/);
   assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.mobileFilterDetails\s*\{[\s\S]*order: 3;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.statsGrid\s*\{[\s\S]*order: 4;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.profilePanel\s*\{[\s\S]*order: 5;/);
-  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.tableWrap\s*\{[\s\S]*order: 6;/);
+  assert.doesNotMatch(source, /<StatCard/);
+  assert.doesNotMatch(css, /\.statsGrid/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.profilePanel\s*\{[\s\S]*order: 4;/);
+  assert.match(css, /@media \(max-width: 900px\)\s*\{[\s\S]*\.tableWrap\s*\{[\s\S]*order: 5;/);
   assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileGrid\s*\{[\s\S]*display: flex;[\s\S]*overflow-x: auto;[\s\S]*scroll-snap-type: x mandatory;/);
   assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileCard\s*\{[\s\S]*flex: 0 0 min\(82vw, 300px\);[\s\S]*min-height: 116px;[\s\S]*scroll-snap-align: start;/);
   assert.match(css, /@media \(max-width: 640px\)\s*\{[\s\S]*\.profileCaveat\s*\{[\s\S]*-webkit-line-clamp: 1;/);

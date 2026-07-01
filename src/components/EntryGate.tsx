@@ -26,7 +26,7 @@ export default function EntryGate({ onEnterMap, onEnterExplorer, onStartGuide }:
         </div>
         <h1>No acusa, ilumina.</h1>
         <p>
-          Faro convierte compras publicas, proveedores y fuentes oficiales en un
+          Faro convierte compras públicas, proveedores y fuentes oficiales en un
           recorrido simple: ver el mapa, abrir una pista y comprobar la evidencia.
         </p>
         <div className="entryActionStack">

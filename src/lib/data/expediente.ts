@@ -80,7 +80,7 @@ export interface ExpedienteView {
 
 const verificationSteps = [
   "Abrir la fuente oficial indicada en el receipt.",
-  "Cruzar pagos, avance fisico y documentos antes de publicar conclusiones.",
+  "Cruzar pagos, avance físico y documentos antes de publicar conclusiones.",
 ];
 
 export function buildExpediente(
@@ -177,9 +177,9 @@ function describeCaseType(caseType: string | undefined): string {
   if (caseType === "procurement_contract") return "Contrato";
   if (caseType === "procurement_process") return "Proceso de compra";
   if (caseType === "public_works_progress") return "Obra con avance declarado";
-  if (caseType === "public_work") return "Obra publica";
+  if (caseType === "public_work") return "Obra pública";
   if (caseType === "judicial_context") return "Contexto judicial";
-  if (caseType === "historical_public_work") return "Obra historica";
+  if (caseType === "historical_public_work") return "Obra histórica";
   if (caseType === "supplier_judicial_context") return "Proveedor con contexto judicial";
   return "Caso";
 }
@@ -195,7 +195,7 @@ function buildLocationLabel(caseFile: ExpedienteCaseFile): string {
     evidence.exposeOnMap && evidence.coordinates,
   );
   if (mapEvidence) return mapEvidence.label;
-  if (!caseFile.coordinates) return "Sin geometria oficial";
+  if (!caseFile.coordinates) return "Sin geometría oficial";
   return `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`;
 }
 

@@ -33,7 +33,7 @@ export default function LegalDocument({ eyebrow, title, intro, updatedAt, sectio
           <Link href="/" className={styles.brandLink}>
             Faro
           </Link>
-          <nav className={styles.nav} aria-label="Politicas">
+          <nav className={styles.nav} aria-label="Políticas">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className={styles.navLink}>
                 {item.label}
@@ -45,10 +45,12 @@ export default function LegalDocument({ eyebrow, title, intro, updatedAt, sectio
           </p>
         </aside>
         <article className={styles.document}>
-          <p className={styles.eyebrow}>{eyebrow}</p>
-          <h1>{title}</h1>
-          <p className={styles.intro}>{intro}</p>
-          <p className={styles.updated}>Ultima actualizacion: {updatedAt}</p>
+          <header className={styles.hero}>
+            <p className={styles.eyebrow}>{eyebrow}</p>
+            <h1>{title}</h1>
+            <p className={styles.intro}>{intro}</p>
+            <p className={styles.updated}>Última actualización: {updatedAt}</p>
+          </header>
           <div className={styles.sections}>
             {sections.map((section) => (
               <section key={section.title} className={styles.section}>

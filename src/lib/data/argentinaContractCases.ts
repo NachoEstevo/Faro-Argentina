@@ -23,6 +23,8 @@ export interface ArgentinaContractCaseFile {
   locationSource?: string | null;
   geoEvidence?: GeoEvidenceItem[];
   publishedAt?: string | null;
+  inquiryStartAt?: string | null;
+  inquiryEndAt?: string | null;
   closedAt?: string | null;
   openingAt?: string | null;
   awardedAt?: string | null;

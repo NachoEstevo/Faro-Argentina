@@ -20,7 +20,7 @@ test("CaseMap labels administrative centroid markers as references", async () =>
   const source = await readFile(caseMapUrl, "utf8");
 
   assert.match(source, /official_admin_centroid/);
-  assert.match(source, /Referencia comunal, no ubicacion exacta/);
+  assert.match(source, /Referencia comunal, no ubicación exacta/);
   assert.match(source, /dashArray/);
 });
 

@@ -57,6 +57,7 @@ export interface ArgentinaProcedureRow {
   procedimiento_tipo?: string;
   presupuesto_oficial_monto?: string;
   publicacion_contratar_fecha?: string;
+  consultas_inicio_fecha?: string;
   consultas_fin_fecha?: string;
 }
 
@@ -200,6 +201,10 @@ function buildCase({
   const openingActs = openingActsByProcedure.get(procedureNumber) ?? [];
   const offerStats = offerStatsByProcedure.get(procedureNumber);
   const openingOfferCount = maxInteger(openingActs.map((act) => act.cantidad_ofertas_confirmadas));
+  const publishedAt = normalizeDate(procedure?.publicacion_contratar_fecha);
+  const inquiryStartAt = normalizeDate(procedure?.consultas_inicio_fecha);
+  const inquiryEndAt = normalizeDate(procedure?.consultas_fin_fecha);
+  const openingAt = earliestNormalizedDate(openingActs.map((act) => act.fecha_creacion));
   const amount = parseMoney(row.contrato_monto);
   const coordinates = work ? parseCoordinates(work.latitud_1, work.longitud_1) : null;
   const procedureTitle = clean(procedure?.procedimiento_nombre)
@@ -232,9 +237,11 @@ function buildCase({
     workProvince: location?.province ?? null,
     workDepartment: location?.department ?? null,
     workLocality: location?.locality ?? null,
-    publishedAt: normalizeDate(procedure?.publicacion_contratar_fecha),
-    closedAt: normalizeDate(procedure?.consultas_fin_fecha),
-    openingAt: normalizeDate(openingActs[0]?.fecha_creacion),
+    publishedAt,
+    inquiryStartAt,
+    inquiryEndAt,
+    closedAt: null,
+    openingAt,
     procedureState: clean(procedure?.procedimiento_estado) || null,
     procurementMethodDetails: clean(procedure?.procedimiento_tipo) || null,
     bidderCount: offerStats?.bidderCount ?? openingOfferCount,
@@ -246,8 +253,8 @@ function buildCase({
         : { value: amount, currency: clean(row.contrato_moneda) || "ARS", label: "monto_contrato" },
       [
         { field: "contract_signed", date: normalizeDate(row.contrato_perfeccionamiento_fecha) },
-        { field: "opening", date: normalizeDate(openingActs[0]?.fecha_creacion) },
-        { field: "published", date: normalizeDate(procedure?.publicacion_contratar_fecha) },
+        { field: "opening", date: openingAt },
+        { field: "published", date: publishedAt },
         { field: "year", date: yearAsAnchor(normalizeDate(row.contrato_perfeccionamiento_fecha)) },
       ],
       options.fxRegistry,
@@ -256,8 +263,8 @@ function buildCase({
       buildOfficialBudget(procedure),
       [
         { field: "contract_signed", date: normalizeDate(row.contrato_perfeccionamiento_fecha) },
-        { field: "opening", date: normalizeDate(openingActs[0]?.fecha_creacion) },
-        { field: "published", date: normalizeDate(procedure?.publicacion_contratar_fecha) },
+        { field: "opening", date: openingAt },
+        { field: "published", date: publishedAt },
         { field: "year", date: yearAsAnchor(normalizeDate(row.contrato_perfeccionamiento_fecha)) },
       ],
       options.fxRegistry,
@@ -297,6 +304,13 @@ function buildCase({
       hasLocation: locationRows.length > 0,
     }),
   };
+}
+
+function earliestNormalizedDate(values: Array<string | undefined>): string | null {
+  return values
+    .map((value) => normalizeDate(value))
+    .filter((value): value is string => value !== null)
+    .sort((left, right) => left.localeCompare(right))[0] ?? null;
 }
 
 function normalizeContext(

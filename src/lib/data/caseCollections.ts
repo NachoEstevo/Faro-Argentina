@@ -146,7 +146,7 @@ export function buildCaseCollectionPack(
       "Reproducir el snapshot usando rawPath, hash y parserVersion.",
       "Cruzar contratos, presupuesto, pagos y avance antes de publicar conclusiones.",
       "Usar referencias periodisticas solo como contexto; no sustituyen receipts oficiales.",
-      "No publicar conclusiones fuertes sin revision documental adicional.",
+      "No publicar conclusiones fuertes sin revisión documental adicional.",
     ],
   };
 }

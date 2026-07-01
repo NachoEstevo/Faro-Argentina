@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   buildArgentinaContractCases,
@@ -28,6 +29,11 @@ test("buildArgentinaContractCases turns official contracts into supplier-aware A
   assert.equal(caseFile?.supplierDocument, "30-12345678-9");
   assert.equal(caseFile?.bidderCount, 2);
   assert.equal(caseFile?.amount?.currency, "ARS");
+  assert.equal(caseFile?.publishedAt, "2022-03-01");
+  assert.equal(caseFile?.inquiryStartAt, "2022-03-02");
+  assert.equal(caseFile?.inquiryEndAt, "2022-03-15");
+  assert.equal(caseFile?.closedAt, null);
+  assert.equal(caseFile?.openingAt, "2022-03-20");
   assert.equal(caseFile?.receipt.parserVersion, "argentina-contracts@1");
 });
 
@@ -65,6 +71,40 @@ test("buildArgentinaContractCases canonicalizes duplicate contract numbers befor
     "AR-CONTRACT-CON-2",
   ]);
   assert.equal(cases[0]?.receipt.recordId, "CON-1");
+});
+
+test("checked-in Argentina contract chronology keeps consultation and opening stages distinct", () => {
+  const data = JSON.parse(
+    readFileSync(new URL("../src/data/argentinaContractCases.json", import.meta.url), "utf8"),
+  ) as {
+    datasets: Array<{
+      cases: Array<{
+        id: string;
+        publishedAt?: string | null;
+        inquiryStartAt?: string | null;
+        inquiryEndAt?: string | null;
+        closedAt?: string | null;
+        openingAt?: string | null;
+      }>;
+    }>;
+  };
+  const cases = data.datasets.flatMap((dataset) => dataset.cases) as Array<{
+    id: string;
+    publishedAt?: string | null;
+    inquiryStartAt?: string | null;
+    inquiryEndAt?: string | null;
+    closedAt?: string | null;
+    openingAt?: string | null;
+  }>;
+
+  const badRecords = cases.filter((caseFile) => {
+    if (caseFile.closedAt !== null && caseFile.closedAt !== undefined) return true;
+    if (caseFile.publishedAt && caseFile.inquiryStartAt && caseFile.publishedAt > caseFile.inquiryStartAt) return true;
+    if (caseFile.inquiryStartAt && caseFile.inquiryEndAt && caseFile.inquiryStartAt > caseFile.inquiryEndAt) return true;
+    return Boolean(caseFile.inquiryEndAt && caseFile.openingAt && caseFile.inquiryEndAt > caseFile.openingAt);
+  });
+
+  assert.deepEqual(badRecords, []);
 });
 
 function contractCsv(): string {
@@ -117,6 +157,7 @@ function argentinaContext(): ArgentinaContractBuildContext {
           procedimiento_tipo: "Licitacion publica",
           presupuesto_oficial_monto: "1000000",
           publicacion_contratar_fecha: "2022-03-01",
+          consultas_inicio_fecha: "2022-03-02",
           consultas_fin_fecha: "2022-03-15",
         },
       ],

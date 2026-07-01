@@ -551,7 +551,7 @@ function buildTooltipKicker(caseFile: ExplorerCase): string {
 }
 
 function labelCaseType(caseFile: ExplorerCase): string {
-  if (!("caseType" in caseFile) || !caseFile.caseType) return "Obra publica";
+  if (!("caseType" in caseFile) || !caseFile.caseType) return "Obra pública";
   if (caseFile.caseType === "procurement_contract") return "Contrato";
   if (caseFile.caseType === "public_works_progress") return "Avance de obra";
   if (caseFile.caseType === "judicial_context") return "Contexto judicial";
@@ -637,12 +637,12 @@ function buildReferenceLabel(
 ): string | null {
   if (evidence?.precision !== "official_admin_centroid") return null;
   if (evidence.granularity === "commune") {
-    return "Referencia comunal, no ubicacion exacta";
+    return "Referencia comunal, no ubicación exacta";
   }
   if (evidence.granularity === "district") {
-    return "Referencia distrital, no ubicacion exacta";
+    return "Referencia distrital, no ubicación exacta";
   }
-  return "Referencia administrativa, no ubicacion exacta";
+  return "Referencia administrativa, no ubicación exacta";
 }
 
 function buildWaybackCenterTileUrl(

@@ -121,7 +121,7 @@ function buildCase(
     agencyCode: cleanParty(row.organismo_financiador_1) ?? "",
     contractingUnit: clean(row.programa_infraestructura) || clean(row.sectornombre),
     executionTerm: nullable(row.duracionobrasdias),
-    executionTermType: nullable(row.duracionobrasdias) ? "dias" : null,
+    executionTermType: nullable(row.duracionobrasdias) ? "días" : null,
     coordinates: null,
     locationName,
     locationSource: null,
@@ -150,7 +150,7 @@ function buildCase(
       row: { ...row },
     }),
     caveats: [
-      "Mapa de Inversiones informa avance y monto declarados; no confirma pagos ni ejecucion por si solo.",
+      "Mapa de Inversiones informa avance y monto declarados; no confirma pagos ni ejecución por sí solo.",
       "El snapshot actual no incluye latitud/longitud; Faro conserva provincia/departamento pero no dibuja el caso en mapa.",
       "La URL de perfil proviene de la fila oficial; revisar el perfil y el dataset antes de citar.",
     ],

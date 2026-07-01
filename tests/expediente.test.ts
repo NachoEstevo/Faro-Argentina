@@ -176,7 +176,7 @@ test("buildExpediente marks cases without coordinates as missing official geomet
     caveats: ["Contrato oficial; falta geometria oficial para mapa."],
   });
 
-  assert.equal(expediente.summary.locationLabel, "Sin geometria oficial");
+  assert.equal(expediente.summary.locationLabel, "Sin geometría oficial");
   assert.equal(
     expediente.whyItAppeared.some((signal) => signal.code === "missing_official_geometry"),
     true,

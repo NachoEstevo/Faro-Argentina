@@ -112,11 +112,11 @@
             }
           ],
           "caveats": [
-            "Este registro resume el estado judicial oficial de la causa; no identifica por si solo contratos actuales de Faro.",
+            "Este registro resume el estado judicial oficial de la causa; no identifica por sí solo contratos actuales de Faro.",
             "Los procesos mencionados corresponden a 2003-2015 en Santa Cruz; CONTRAT.AR moderno tiene otra cobertura temporal.",
             "Abrir CIJ y MPF antes de citar personas, montos o estado procesal.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         }
       ]
@@ -222,10 +222,10 @@
           ],
           "caveats": [
             "El proveedor y monto surgen del alegato MPF; falta contrato administrativo completo en los snapshots Faro.",
-            "No mapear sin traza o geometria oficial de la obra.",
-            "Usar como expediente historico, no como match con contratos modernos.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "No mapear sin traza o geometría oficial de la obra.",
+            "Usar como expediente histórico, no como match con contratos modernos.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -302,11 +302,11 @@
             }
           ],
           "caveats": [
-            "MPF usa la categoria Grupo Baez; verificar razon social contractual exacta antes de citar.",
-            "No mapear sin traza o geometria oficial de la obra.",
-            "Usar como expediente historico, no como match con contratos modernos.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "MPF usa la categoría Grupo Baez; verificar razón social contractual exacta antes de citar.",
+            "No mapear sin traza o geometría oficial de la obra.",
+            "Usar como expediente histórico, no como match con contratos modernos.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -334,8 +334,8 @@
           "officialBudget": null,
           "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
           "supplierDocument": null,
-          "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; se consigna cadena de adjudicacion y cesion segun fuente fiscal.",
-          "contextSummary": "El alegato MPF indica adjudicacion inicial a Equimac y posterior cesion a UTE vinculada a Austral Construcciones.",
+          "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; se consigna cadena de adjudicación y cesión según fuente fiscal.",
+          "contextSummary": "El alegato MPF indica adjudicación inicial a Equimac y posterior cesión a UTE vinculada a Austral Construcciones.",
           "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
           "relatedCaseIds": [],
           "receipt": {
@@ -383,11 +383,11 @@
             }
           ],
           "caveats": [
-            "La cadena de cesion debe verificarse contra expediente contractual antes de publicar.",
-            "No mapear sin traza o geometria oficial de la obra.",
-            "Usar como expediente historico, no como match con contratos modernos.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "La cadena de cesión debe verificarse contra expediente contractual antes de publicar.",
+            "No mapear sin traza o geometría oficial de la obra.",
+            "Usar como expediente histórico, no como match con contratos modernos.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -415,7 +415,7 @@
           "officialBudget": null,
           "supplierName": "Grupo Baez",
           "supplierDocument": null,
-          "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; ubicacion territorial requiere verificacion documental.",
+          "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; ubicación territorial requiere verificación documental.",
           "contextSummary": "El alegato MPF trata la obra de canteras y advierte una descripcion territorial amplia sobre RN 3.",
           "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
           "relatedCaseIds": [],
@@ -465,10 +465,10 @@
           ],
           "caveats": [
             "La descripcion de tramo no alcanza para ubicar canteras puntuales.",
-            "No mapear sin traza o geometria oficial de la obra.",
-            "Usar como expediente historico, no como match con contratos modernos.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "No mapear sin traza o geometría oficial de la obra.",
+            "Usar como expediente histórico, no como match con contratos modernos.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -477,7 +477,7 @@
           "caseType": "historical_public_work",
           "workNumber": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3",
           "year": 2008,
-          "title": "DNV 1615/2008 - Restauracion y remediacion de 9 canteras RN 3, segunda etapa",
+          "title": "DNV 1615/2008 - Restauracion y remediacion de 9 canteras RN 3, segúnda etapa",
           "procedureNumber": "DNV 1615/2008",
           "agencyName": "Direccion Nacional de Vialidad",
           "agencyCode": "DNV",
@@ -497,7 +497,7 @@
           "supplierName": "Austral Construcciones S.A.",
           "supplierDocument": null,
           "judicialStatus": "Obra mencionada en indice de alegato MPF de Causa Vialidad.",
-          "contextSummary": "El indice MPF identifica la segunda etapa de restauracion de canteras sobre RN 3 dentro del universo del caso.",
+          "contextSummary": "El indice MPF identifica la segúnda etapa de restauracion de canteras sobre RN 3 dentro del universo del caso.",
           "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
           "relatedCaseIds": [],
           "receipt": {
@@ -532,10 +532,10 @@
           ],
           "caveats": [
             "Falta traza o coordenada oficial de cada cantera en Faro.",
-            "No mapear sin traza o geometria oficial de la obra.",
-            "Usar como expediente historico, no como match con contratos modernos.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "No mapear sin traza o geometría oficial de la obra.",
+            "Usar como expediente histórico, no como match con contratos modernos.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         }
       ]
@@ -576,7 +576,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -592,7 +592,7 @@
           "supplierName": "Camara Argentina de Empresas Viales",
           "supplierDocument": null,
           "judicialStatus": "Juicio oral en curso ante TOF 7; sin sentencia firme al 2026-05-17.",
-          "contextSummary": "MPF informa que el tramo La Camarita trata una acusacion vinculada a obra publica civil y a la Camara Argentina de Empresas Viales.",
+          "contextSummary": "MPF informa que el tramo La Camarita trata una acusación vinculada a obra pública civil y a la Cámara Argentina de Empresas Viales.",
           "localMatchStatus": "Contexto de red; no es una obra o contrato individual.",
           "relatedCaseIds": [],
           "receipt": {
@@ -642,10 +642,10 @@
           "caveats": [
             "El juicio esta en curso; no tratar como sentencia ni como conclusion cerrada.",
             "Este expediente es de contexto de red, no de contrato individual Faro.",
-            "El monto USD 30.000.000 es una recaudacion total aproximada citada en el requerimiento MPF a partir de una declaracion de imputado colaborador; no es monto adjudicado, contrato individual ni pago probado por sentencia.",
+            "El monto USD 30.000.000 es una recaudación total aproximada citada en el requerimiento MPF a partir de una declaración de imputado colaborador; no es monto adjudicado, contrato individual ni pago probado por sentencia.",
             "Abrir MPF y el requerimiento antes de citar nombres, fechas o alcance.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -658,7 +658,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -668,8 +668,8 @@
           "supplierName": "CONSTRUMEX S.A.",
           "supplierDocument": "30-69639421-7",
           "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-          "contextSummary": "El requerimiento MPF incluye a Construmex S.A.; Faro encontro contratos CONTRAT.AR actuales con la misma razon social y CUIT.",
-          "localMatchStatus": "Match exacto por razon social y CUIT en casos relacionados.",
+          "contextSummary": "El requerimiento MPF incluye a Construmex S.A.; Faro encontró contratos CONTRAT.AR actuales con la misma razón social y CUIT.",
+          "localMatchStatus": "Match exacto por razón social y CUIT en casos relacionados.",
           "relatedCaseIds": [
             "AR-CONTRACT-451-1613-CON19",
             "AR-CONTRACT-501-0474-CON20",
@@ -749,10 +749,10 @@
           ],
           "caveats": [
             "El match es a nivel entidad/proveedor; no afirma que los contratos Faro relacionados sean hechos del juicio.",
-            "Los contratos Faro relacionados son 2018-2020 y el requerimiento trata documentacion de otra ventana temporal.",
-            "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "Los contratos Faro relacionados son 2018-2020 y el requerimiento trata documentación de otra ventana temporal.",
+            "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -765,7 +765,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -775,8 +775,8 @@
           "supplierName": "MARCALBA S.A.",
           "supplierDocument": "30-60867483-3",
           "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-          "contextSummary": "El requerimiento MPF incluye a Marcalba S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-          "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+          "contextSummary": "El requerimiento MPF incluye a Marcalba S.A.; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+          "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
           "relatedCaseIds": [
             "AR-CONTRACT-451-1005-CON18"
           ],
@@ -826,10 +826,10 @@
           ],
           "caveats": [
             "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-            "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-            "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+            "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -842,7 +842,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -852,8 +852,8 @@
           "supplierName": "COARCO SA",
           "supplierDocument": "30-51650063-4",
           "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-          "contextSummary": "El requerimiento MPF y la nota MPF mencionan a Coarco; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-          "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+          "contextSummary": "El requerimiento MPF y la nota MPF mencionan a Coarco; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+          "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
           "relatedCaseIds": [
             "AR-CONTRACT-451-1003-CON18"
           ],
@@ -903,10 +903,10 @@
           ],
           "caveats": [
             "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-            "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-            "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+            "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -919,7 +919,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -929,8 +929,8 @@
           "supplierName": "CONCRET NOR S.A.",
           "supplierDocument": "30-69327676-0",
           "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-          "contextSummary": "El requerimiento MPF incluye a Concret-Nor S.A.; Faro encontro un contrato CONTRAT.AR actual con razon social y CUIT compatibles.",
-          "localMatchStatus": "Match por CUIT y razon social normalizada en caso relacionado.",
+          "contextSummary": "El requerimiento MPF incluye a Concret-Nor S.A.; Faro encontró un contrato CONTRAT.AR actual con razón social y CUIT compatibles.",
+          "localMatchStatus": "Match por CUIT y razón social normalizada en caso relacionado.",
           "relatedCaseIds": [
             "AR-CONTRACT-451-1002-CON18"
           ],
@@ -980,10 +980,10 @@
           ],
           "caveats": [
             "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-            "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-            "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+            "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         },
         {
@@ -996,7 +996,7 @@
           "procedureNumber": "CFP 13816/2018",
           "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
           "agencyCode": "TOF7",
-          "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+          "contractingUnit": "Ministerio Público Fiscal de la Nación",
           "executionTerm": null,
           "executionTermType": null,
           "coordinates": null,
@@ -1006,8 +1006,8 @@
           "supplierName": "CONORVIAL SA",
           "supplierDocument": "30-51649274-7",
           "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-          "contextSummary": "El requerimiento MPF incluye a Conorvial S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-          "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+          "contextSummary": "El requerimiento MPF incluye a Conorvial S.A.; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+          "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
           "relatedCaseIds": [
             "AR-CONTRACT-23-0003-CON17"
           ],
@@ -1057,10 +1057,10 @@
           ],
           "caveats": [
             "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-            "El contrato Faro relacionado es 2017 y el requerimiento trata documentacion de otra ventana temporal.",
-            "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-            "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-            "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+            "El contrato Faro relacionado es 2017 y el requerimiento trata documentación de otra ventana temporal.",
+            "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+            "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+            "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
           ]
         }
       ]
@@ -1152,11 +1152,11 @@
         }
       ],
       "caveats": [
-        "Este registro resume el estado judicial oficial de la causa; no identifica por si solo contratos actuales de Faro.",
+        "Este registro resume el estado judicial oficial de la causa; no identifica por sí solo contratos actuales de Faro.",
         "Los procesos mencionados corresponden a 2003-2015 en Santa Cruz; CONTRAT.AR moderno tiene otra cobertura temporal.",
         "Abrir CIJ y MPF antes de citar personas, montos o estado procesal.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1234,10 +1234,10 @@
       ],
       "caveats": [
         "El proveedor y monto surgen del alegato MPF; falta contrato administrativo completo en los snapshots Faro.",
-        "No mapear sin traza o geometria oficial de la obra.",
-        "Usar como expediente historico, no como match con contratos modernos.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "No mapear sin traza o geometría oficial de la obra.",
+        "Usar como expediente histórico, no como match con contratos modernos.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1314,11 +1314,11 @@
         }
       ],
       "caveats": [
-        "MPF usa la categoria Grupo Baez; verificar razon social contractual exacta antes de citar.",
-        "No mapear sin traza o geometria oficial de la obra.",
-        "Usar como expediente historico, no como match con contratos modernos.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "MPF usa la categoría Grupo Baez; verificar razón social contractual exacta antes de citar.",
+        "No mapear sin traza o geometría oficial de la obra.",
+        "Usar como expediente histórico, no como match con contratos modernos.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1346,8 +1346,8 @@
       "officialBudget": null,
       "supplierName": "Austral Construcciones S.A. / Sucesion Adelmo Biancalani",
       "supplierDocument": null,
-      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; se consigna cadena de adjudicacion y cesion segun fuente fiscal.",
-      "contextSummary": "El alegato MPF indica adjudicacion inicial a Equimac y posterior cesion a UTE vinculada a Austral Construcciones.",
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; se consigna cadena de adjudicación y cesión según fuente fiscal.",
+      "contextSummary": "El alegato MPF indica adjudicación inicial a Equimac y posterior cesión a UTE vinculada a Austral Construcciones.",
       "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
       "relatedCaseIds": [],
       "receipt": {
@@ -1395,11 +1395,11 @@
         }
       ],
       "caveats": [
-        "La cadena de cesion debe verificarse contra expediente contractual antes de publicar.",
-        "No mapear sin traza o geometria oficial de la obra.",
-        "Usar como expediente historico, no como match con contratos modernos.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "La cadena de cesión debe verificarse contra expediente contractual antes de publicar.",
+        "No mapear sin traza o geometría oficial de la obra.",
+        "Usar como expediente histórico, no como match con contratos modernos.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1427,7 +1427,7 @@
       "officialBudget": null,
       "supplierName": "Grupo Baez",
       "supplierDocument": null,
-      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; ubicacion territorial requiere verificacion documental.",
+      "judicialStatus": "Obra mencionada en alegato MPF de Causa Vialidad; ubicación territorial requiere verificación documental.",
       "contextSummary": "El alegato MPF trata la obra de canteras y advierte una descripcion territorial amplia sobre RN 3.",
       "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
       "relatedCaseIds": [],
@@ -1477,10 +1477,10 @@
       ],
       "caveats": [
         "La descripcion de tramo no alcanza para ubicar canteras puntuales.",
-        "No mapear sin traza o geometria oficial de la obra.",
-        "Usar como expediente historico, no como match con contratos modernos.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "No mapear sin traza o geometría oficial de la obra.",
+        "Usar como expediente histórico, no como match con contratos modernos.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1489,7 +1489,7 @@
       "caseType": "historical_public_work",
       "workNumber": "VIALIDAD-DNV-1615-2008-CANTERAS-RN3",
       "year": 2008,
-      "title": "DNV 1615/2008 - Restauracion y remediacion de 9 canteras RN 3, segunda etapa",
+      "title": "DNV 1615/2008 - Restauracion y remediacion de 9 canteras RN 3, segúnda etapa",
       "procedureNumber": "DNV 1615/2008",
       "agencyName": "Direccion Nacional de Vialidad",
       "agencyCode": "DNV",
@@ -1509,7 +1509,7 @@
       "supplierName": "Austral Construcciones S.A.",
       "supplierDocument": null,
       "judicialStatus": "Obra mencionada en indice de alegato MPF de Causa Vialidad.",
-      "contextSummary": "El indice MPF identifica la segunda etapa de restauracion de canteras sobre RN 3 dentro del universo del caso.",
+      "contextSummary": "El indice MPF identifica la segúnda etapa de restauracion de canteras sobre RN 3 dentro del universo del caso.",
       "localMatchStatus": "Sin match directo en snapshots CONTRAT.AR de Faro.",
       "relatedCaseIds": [],
       "receipt": {
@@ -1544,10 +1544,10 @@
       ],
       "caveats": [
         "Falta traza o coordenada oficial de cada cantera en Faro.",
-        "No mapear sin traza o geometria oficial de la obra.",
-        "Usar como expediente historico, no como match con contratos modernos.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "No mapear sin traza o geometría oficial de la obra.",
+        "Usar como expediente histórico, no como match con contratos modernos.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1560,7 +1560,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1576,7 +1576,7 @@
       "supplierName": "Camara Argentina de Empresas Viales",
       "supplierDocument": null,
       "judicialStatus": "Juicio oral en curso ante TOF 7; sin sentencia firme al 2026-05-17.",
-      "contextSummary": "MPF informa que el tramo La Camarita trata una acusacion vinculada a obra publica civil y a la Camara Argentina de Empresas Viales.",
+      "contextSummary": "MPF informa que el tramo La Camarita trata una acusación vinculada a obra pública civil y a la Cámara Argentina de Empresas Viales.",
       "localMatchStatus": "Contexto de red; no es una obra o contrato individual.",
       "relatedCaseIds": [],
       "receipt": {
@@ -1626,10 +1626,10 @@
       "caveats": [
         "El juicio esta en curso; no tratar como sentencia ni como conclusion cerrada.",
         "Este expediente es de contexto de red, no de contrato individual Faro.",
-        "El monto USD 30.000.000 es una recaudacion total aproximada citada en el requerimiento MPF a partir de una declaracion de imputado colaborador; no es monto adjudicado, contrato individual ni pago probado por sentencia.",
+        "El monto USD 30.000.000 es una recaudación total aproximada citada en el requerimiento MPF a partir de una declaración de imputado colaborador; no es monto adjudicado, contrato individual ni pago probado por sentencia.",
         "Abrir MPF y el requerimiento antes de citar nombres, fechas o alcance.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1642,7 +1642,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1652,8 +1652,8 @@
       "supplierName": "CONSTRUMEX S.A.",
       "supplierDocument": "30-69639421-7",
       "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-      "contextSummary": "El requerimiento MPF incluye a Construmex S.A.; Faro encontro contratos CONTRAT.AR actuales con la misma razon social y CUIT.",
-      "localMatchStatus": "Match exacto por razon social y CUIT en casos relacionados.",
+      "contextSummary": "El requerimiento MPF incluye a Construmex S.A.; Faro encontró contratos CONTRAT.AR actuales con la misma razón social y CUIT.",
+      "localMatchStatus": "Match exacto por razón social y CUIT en casos relacionados.",
       "relatedCaseIds": [
         "AR-CONTRACT-451-1613-CON19",
         "AR-CONTRACT-501-0474-CON20",
@@ -1733,10 +1733,10 @@
       ],
       "caveats": [
         "El match es a nivel entidad/proveedor; no afirma que los contratos Faro relacionados sean hechos del juicio.",
-        "Los contratos Faro relacionados son 2018-2020 y el requerimiento trata documentacion de otra ventana temporal.",
-        "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "Los contratos Faro relacionados son 2018-2020 y el requerimiento trata documentación de otra ventana temporal.",
+        "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1749,7 +1749,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1759,8 +1759,8 @@
       "supplierName": "MARCALBA S.A.",
       "supplierDocument": "30-60867483-3",
       "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-      "contextSummary": "El requerimiento MPF incluye a Marcalba S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "contextSummary": "El requerimiento MPF incluye a Marcalba S.A.; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+      "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
       "relatedCaseIds": [
         "AR-CONTRACT-451-1005-CON18"
       ],
@@ -1810,10 +1810,10 @@
       ],
       "caveats": [
         "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-        "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+        "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1826,7 +1826,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1836,8 +1836,8 @@
       "supplierName": "COARCO SA",
       "supplierDocument": "30-51650063-4",
       "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-      "contextSummary": "El requerimiento MPF y la nota MPF mencionan a Coarco; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "contextSummary": "El requerimiento MPF y la nota MPF mencionan a Coarco; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+      "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
       "relatedCaseIds": [
         "AR-CONTRACT-451-1003-CON18"
       ],
@@ -1887,10 +1887,10 @@
       ],
       "caveats": [
         "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-        "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+        "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1903,7 +1903,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1913,8 +1913,8 @@
       "supplierName": "CONCRET NOR S.A.",
       "supplierDocument": "30-69327676-0",
       "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-      "contextSummary": "El requerimiento MPF incluye a Concret-Nor S.A.; Faro encontro un contrato CONTRAT.AR actual con razon social y CUIT compatibles.",
-      "localMatchStatus": "Match por CUIT y razon social normalizada en caso relacionado.",
+      "contextSummary": "El requerimiento MPF incluye a Concret-Nor S.A.; Faro encontró un contrato CONTRAT.AR actual con razón social y CUIT compatibles.",
+      "localMatchStatus": "Match por CUIT y razón social normalizada en caso relacionado.",
       "relatedCaseIds": [
         "AR-CONTRACT-451-1002-CON18"
       ],
@@ -1964,10 +1964,10 @@
       ],
       "caveats": [
         "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-        "El contrato Faro relacionado es 2018 y el requerimiento trata documentacion de otra ventana temporal.",
-        "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "El contrato Faro relacionado es 2018 y el requerimiento trata documentación de otra ventana temporal.",
+        "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     },
     {
@@ -1980,7 +1980,7 @@
       "procedureNumber": "CFP 13816/2018",
       "agencyName": "Tribunal Oral en lo Criminal Federal Nro. 7",
       "agencyCode": "TOF7",
-      "contractingUnit": "Ministerio Publico Fiscal de la Nacion",
+      "contractingUnit": "Ministerio Público Fiscal de la Nación",
       "executionTerm": null,
       "executionTermType": null,
       "coordinates": null,
@@ -1990,8 +1990,8 @@
       "supplierName": "CONORVIAL SA",
       "supplierDocument": "30-51649274-7",
       "judicialStatus": "Mencion en requerimiento MPF; juicio oral en curso, sin sentencia firme.",
-      "contextSummary": "El requerimiento MPF incluye a Conorvial S.A.; Faro encontro un contrato CONTRAT.AR actual con la misma razon social y CUIT.",
-      "localMatchStatus": "Match exacto por razon social y CUIT en caso relacionado.",
+      "contextSummary": "El requerimiento MPF incluye a Conorvial S.A.; Faro encontró un contrato CONTRAT.AR actual con la misma razón social y CUIT.",
+      "localMatchStatus": "Match exacto por razón social y CUIT en caso relacionado.",
       "relatedCaseIds": [
         "AR-CONTRACT-23-0003-CON17"
       ],
@@ -2041,10 +2041,10 @@
       ],
       "caveats": [
         "El match es a nivel entidad/proveedor; no afirma que el contrato Faro relacionado sea hecho del juicio.",
-        "El contrato Faro relacionado es 2017 y el requerimiento trata documentacion de otra ventana temporal.",
-        "Verificar razon social, CUIT y continuidad societaria antes de publicar.",
-        "Contexto judicial o historico; no convierte por si solo a otros registros Faro en casos judicializados.",
-        "No se dibuja en mapa porque no hay geometria oficial validada para este registro."
+        "El contrato Faro relacionado es 2017 y el requerimiento trata documentación de otra ventana temporal.",
+        "Verificar razón social, CUIT y continuidad societaria antes de publicar.",
+        "Contexto judicial o histórico; no convierte por sí solo a otros registros Faro en casos judicializados.",
+        "No se dibuja en mapa porque no hay geometría oficial validada para este registro."
       ]
     }
   ]

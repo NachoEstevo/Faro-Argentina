@@ -125,7 +125,7 @@ function buildRelationContextCheck(workspace: InvestigationWorkspace): Investiga
       "relation_context",
       "Relacion declarada",
       "blocked",
-      "Ningun expediente tiene nota de relacion.",
+      "Ningún expediente tiene nota de relación.",
       ["Escribir una nota breve por expediente: que ayuda a verificar y que queda pendiente."],
     );
   }
@@ -135,8 +135,8 @@ function buildRelationContextCheck(workspace: InvestigationWorkspace): Investiga
       "relation_context",
       "Relacion declarada",
       "review",
-      `${formatCount(missingRelationNotes, "expediente")} sin nota de relacion.`,
-      ["Completar notas de relacion antes de compartir el dossier internamente."],
+      `${formatCount(missingRelationNotes, "expediente")} sin nota de relación.`,
+      ["Completar notas de relación antes de compartir el dossier internamente."],
     );
   }
 
@@ -144,7 +144,7 @@ function buildRelationContextCheck(workspace: InvestigationWorkspace): Investiga
     "relation_context",
     "Relacion declarada",
     "ready",
-    "Cada expediente tiene motivo y nota de relacion.",
+    "Cada expediente tiene motivo y nota de relación.",
     [],
   );
 }
@@ -198,7 +198,7 @@ function buildDataGapsCheck(packs: EvidencePack[]): InvestigationReadinessCheck 
   const missingAmount = packs.filter((pack) => !hasPositiveAmount(pack)).length;
   const missingSupplier = packs.filter((pack) => !hasSupplierIdentity(pack)).length;
   const gapParts = [
-    missingMapGeometry > 0 ? `${formatCount(missingMapGeometry, "expediente")} sin geometria map-safe` : "",
+    missingMapGeometry > 0 ? `${formatCount(missingMapGeometry, "expediente")} sin geometría map-safe` : "",
     missingAmount > 0 ? `${formatCount(missingAmount, "expediente")} sin monto comparable` : "",
     missingSupplier > 0 ? `${formatCount(missingSupplier, "expediente")} sin proveedor identificado` : "",
   ].filter(Boolean);
@@ -209,7 +209,7 @@ function buildDataGapsCheck(packs: EvidencePack[]): InvestigationReadinessCheck 
       "Brechas de datos",
       "review",
       gapParts.join("; "),
-      ["Tratar estas ausencias como pendientes de verificacion, no como conclusiones."],
+      ["Tratar estas ausencias como pendientes de verificación, no como conclusiones."],
     );
   }
 
@@ -217,7 +217,7 @@ function buildDataGapsCheck(packs: EvidencePack[]): InvestigationReadinessCheck 
     "data_gaps",
     "Brechas de datos",
     "ready",
-    "No hay brechas automaticas basicas en monto, proveedor o geometria map-safe.",
+    "No hay brechas automáticas básicas en monto, proveedor o geometría map-safe.",
     [],
   );
 }
@@ -227,10 +227,10 @@ function buildVerificationPlanCheck(workspace: InvestigationWorkspace): Investig
   if (tasks.length === 0) {
     return check(
       "verification_plan",
-      "Plan de verificacion",
+      "Plan de verificación",
       "blocked",
-      "No hay tareas de verificacion guardadas.",
-      ["Guardar proximos pasos del dossier como tareas antes del handoff."],
+      "No hay tareas de verificación guardadas.",
+      ["Guardar próximos pasos del dossier como tareas antes del handoff."],
     );
   }
 
@@ -238,7 +238,7 @@ function buildVerificationPlanCheck(workspace: InvestigationWorkspace): Investig
   if (openTasks > 0) {
     return check(
       "verification_plan",
-      "Plan de verificacion",
+      "Plan de verificación",
       "review",
       `${formatCount(openTasks, "tarea")} sin cerrar.`,
       ["Cerrar, asignar o marcar como bloqueadas las tareas abiertas."],
@@ -247,9 +247,9 @@ function buildVerificationPlanCheck(workspace: InvestigationWorkspace): Investig
 
   return check(
     "verification_plan",
-    "Plan de verificacion",
+    "Plan de verificación",
     "ready",
-    "Las tareas cargadas estan cerradas.",
+    "Las tareas cargadas están cerradas.",
     [],
   );
 }
@@ -270,7 +270,7 @@ function buildManualMaterialCheck(workspace: InvestigationWorkspace): Investigat
     "manual_material",
     "Material manual",
     "review",
-    `${formatCount(manualItems, "pieza")} cargada por el usuario requiere validacion manual.`,
+    `${formatCount(manualItems, "pieza")} cargada por el usuario requiere validación manual.`,
     ["Confirmar fuente, permiso, metadata y relevancia antes de citar material manual."],
   );
 }
@@ -278,9 +278,9 @@ function buildManualMaterialCheck(workspace: InvestigationWorkspace): Investigat
 function buildPublicationBoundaryCheck(): InvestigationReadinessCheck {
   return check(
     "publication_boundary",
-    "Limite publico",
+    "Límite público",
     "ready",
-    "El espacio es privado y no publica aportes ni hipotesis automaticamente.",
+    "El espacio es privado y no publica aportes ni hipótesis automáticamente.",
     [],
   );
 }
@@ -335,7 +335,7 @@ function summarizeReadiness(
   if (score.review > 0) {
     return `El dossier tiene ${formatCount(packs.length, "expediente")} y puede circular internamente si se conservan los caveats.`;
   }
-  return "El dossier tiene evidencia, notas de relacion y tareas cerradas para handoff interno.";
+  return "El dossier tiene evidencia, notas de relación y tareas cerradas para handoff interno.";
 }
 
 function hasMapEligibleGeometry(pack: EvidencePack): boolean {

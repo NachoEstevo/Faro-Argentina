@@ -49,21 +49,21 @@ export function CaseDetails({
             <Metric label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
             <Metric label="Oferentes" value={formatBidderCount(caseFile)} />
             <Metric label="Estado" value={caseFile.procedureState ?? "Sin dato"} />
-            <Metric label="Ubicacion" value={formatWorkLocation(caseFile)} />
+            <Metric label="Ubicación" value={formatWorkLocation(caseFile)} />
           </>
         )}
         {isInvestmentMap && (
           <>
             <Metric label="Monto" value={renderAmount(caseFile.amount as AmountInput | null)} />
-            <Metric label="Avance fisico" value={formatProgress(caseFile.physicalProgress)} />
+            <Metric label="Avance físico" value={formatProgress(caseFile.physicalProgress)} />
             <Metric label="Avance financiero" value={formatProgress(caseFile.financialProgress)} />
-            <Metric label="Ubicacion" value={formatInvestmentLocation(caseFile)} />
+            <Metric label="Ubicación" value={formatInvestmentLocation(caseFile)} />
           </>
         )}
       </div>
 
       <section className="whyBox">
-        <h2>Por que aparecio</h2>
+        <h2>Por qué apareció</h2>
         <p>{expediente.summary.plainSummary}</p>
       </section>
 
@@ -111,7 +111,7 @@ export function CaseDetails({
       <ContextualCitationsPanel citations={expediente.investigationContext.contextualCitations} />
 
       <section className="nextStepsBox">
-        <h2>Que verificar despues</h2>
+        <h2>Qué verificar después</h2>
         <ol>
           {expediente.nextVerification.slice(0, 5).map((step) => (
             <li key={step}>{step}</li>
@@ -224,7 +224,7 @@ function shortSource(sourceId: string): string {
   if (sourceId.includes("CONTRATOS")) return "Contratos";
   if (sourceId.includes("OFERTAS")) return "Ofertas";
   if (sourceId.includes("PROCEDIMIENTOS")) return "Procedimiento";
-  if (sourceId.includes("UBICACION")) return "Ubicacion";
+  if (sourceId.includes("UBICACION")) return "Ubicación";
   if (sourceId.includes("SIPRO")) return "SIPRO";
   return "Fuente";
 }

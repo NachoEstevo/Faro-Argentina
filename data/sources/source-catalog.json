@@ -19,7 +19,7 @@
       "procedimiento_estado"
     ],
     "caveats": [
-      "Un proyecto puede aparecer como varios procedimientos; no asumir relacion uno a uno con obra."
+      "Un proyecto puede aparecer como varios procedimientos; no asumir relación uno a uno con obra."
     ]
   },
   {
@@ -42,7 +42,7 @@
       "oferta_monto"
     ],
     "caveats": [
-      "Usar para competencia/ofertas; no equivale a adjudicacion ni pago."
+      "Usar para competencia/ofertas; no equivale a adjudicación ni pago."
     ]
   },
   {
@@ -66,8 +66,8 @@
       "longitud_1"
     ],
     "caveats": [
-      "Dataset de obras declaradas; no prueba pagos ni avance fisico por si solo.",
-      "Las coordenadas pueden requerir verificacion puntual antes de usar Sentinel-2."
+      "Dataset de obras declaradas; no prueba pagos ni avance físico por sí solo.",
+      "Las coordenadas pueden requerir verificación puntual antes de usar Sentinel-2."
     ]
   },
   {
@@ -90,13 +90,13 @@
       "contrato_monto"
     ],
     "caveats": [
-      "Debe cruzarse con obras y ubicacion para lectura territorial."
+      "Debe cruzarse con obras y ubicación para lectura territorial."
     ]
   },
   {
     "sourceId": "AR-CONTRATAR-UBICACION",
     "countryCode": "AR",
-    "name": "CONTRAT.AR ubicacion geografica",
+    "name": "CONTRAT.AR ubicación geográfica",
     "agency": "Jefatura de Gabinete de Ministros",
     "category": "geo",
     "priority": "mvp",
@@ -114,14 +114,14 @@
       "renglon_numero"
     ],
     "caveats": [
-      "Una obra puede tener multiples ubicaciones; no colapsar sin conservar relacion 1:N."
+      "Una obra puede tener múltiples ubicaciones; no colapsar sin conservar relación 1:N."
     ]
   },
   {
     "sourceId": "AR-SIPRO-PROVEEDORES",
     "countryCode": "AR",
     "name": "SIPRO proveedores",
-    "agency": "Secretaria de Innovacion Publica",
+    "agency": "Secretaría de Innovación Pública",
     "category": "suppliers",
     "priority": "mvp",
     "official": true,
@@ -186,7 +186,7 @@
     ],
     "caveats": [
       "Usar con health-check y snapshot cache; si el endpoint falla, mostrarlo como brecha de cobertura.",
-      "El CSV actual no incluye latitud/longitud; no mapear casos desde esta fuente sin geometria oficial adicional."
+      "El CSV actual no incluye latitud/longitud; no mapear casos desde esta fuente sin geometría oficial adicional."
     ]
   },
   {
@@ -212,13 +212,13 @@
       "lon"
     ],
     "caveats": [
-      "Normaliza territorio; no prueba ubicacion exacta de una obra."
+      "Normaliza territorio; no prueba ubicación exacta de una obra."
     ]
   },
   {
     "sourceId": "AR-CONTRATAR-HISTORICO-OBRAS",
     "countryCode": "AR",
-    "name": "Contratar historico obras",
+    "name": "Contratar histórico obras",
     "agency": "Jefatura de Gabinete de Ministros",
     "category": "historical_public_works",
     "priority": "later",
@@ -267,7 +267,7 @@
     "sourceId": "AR-MPF-VIALIDAD-ALEGATO",
     "countryCode": "AR",
     "name": "MPF Causa Vialidad alegato",
-    "agency": "Ministerio Publico Fiscal de la Nacion",
+    "agency": "Ministerio Público Fiscal de la Nación",
     "category": "judicial_context",
     "priority": "mvp",
     "official": true,
@@ -284,14 +284,14 @@
     ],
     "caveats": [
       "Fuente fiscal y judicial; verificar contra expediente administrativo antes de publicar una obra individual.",
-      "No mapear sin traza o geometria oficial validada."
+      "No mapear sin traza o geometría oficial validada."
     ]
   },
   {
     "sourceId": "AR-MPF-CUADERNOS-CAMARITA",
     "countryCode": "AR",
     "name": "MPF Cuadernos La Camarita",
-    "agency": "Ministerio Publico Fiscal de la Nacion",
+    "agency": "Ministerio Público Fiscal de la Nación",
     "category": "judicial_context",
     "priority": "mvp",
     "official": true,
@@ -314,8 +314,8 @@
   {
     "sourceId": "AR-BCRA-COM-A3500",
     "countryCode": "AR",
-    "name": "BCRA Comunicacion A 3500 - Tipo de cambio mayorista",
-    "agency": "Banco Central de la Republica Argentina",
+    "name": "BCRA Comunicación A 3500 - Tipo de cambio mayorista",
+    "agency": "Banco Central de la República Argentina",
     "category": "fx_reference_rate",
     "priority": "mvp",
     "official": true,

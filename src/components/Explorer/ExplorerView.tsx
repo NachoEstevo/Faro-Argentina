@@ -411,10 +411,10 @@ export default function ExplorerView({
         </div>
         <div className={styles.sidebarScrollRegion}>
           <hr className={styles.sidebarDivider} />
-          <section className={styles.sidebarSection} aria-labelledby="explorer-pivots-heading">
+          <section className={styles.sidebarSection} aria-labelledby="explorer-crosses-heading">
             <div className={styles.sectionHead}>
-              <p className={styles.eyebrow} id="explorer-pivots-heading">
-                Pivots
+              <p className={styles.eyebrow} id="explorer-crosses-heading">
+                Cruces
               </p>
               {activeFacets.length > 0 && (
                 <button type="button" className={styles.sectionLink} onClick={clearActiveFacets}>
@@ -423,7 +423,7 @@ export default function ExplorerView({
               )}
             </div>
             {activeFacets.length > 0 && (
-              <div className={styles.activePivotList} aria-label="Pivots activos">
+              <div className={styles.activePivotList} aria-label="Cruces activos">
                 {activeFacets.map((facet) => (
                   <button
                     key={`active-${facet.type}:${facet.key}`}
@@ -539,7 +539,7 @@ export default function ExplorerView({
               />
             </div>
             {activeFacets.length > 0 && (
-              <div className={styles.activePivotList} aria-label="Pivots activos">
+              <div className={styles.activePivotList} aria-label="Cruces activos">
                 {activeFacets.map((facet) => (
                   <button
                     key={`mobile-active-${facet.type}:${facet.key}`}
@@ -645,12 +645,6 @@ export default function ExplorerView({
                 suggestions={searchSuggestions}
                 onSelectSuggestion={handleSuggestionSelect}
               />
-            </div>
-            <div className={styles.statsGrid} aria-label="Resumen">
-              <StatCard label="Expedientes" value={explorer.stats.filteredCases.toLocaleString("es-AR")} />
-              <StatCard label="Con señal prioritaria" value={explorer.stats.filteredCasesWithPrimarySignal.toLocaleString("es-AR")} />
-              <StatCard label="Sin geometría de mapa" value={explorer.stats.filteredCasesWithoutMapGeometry.toLocaleString("es-AR")} />
-              <StatCard label="Pivots" value={explorer.stats.facets.toLocaleString("es-AR")} />
             </div>
             <InvestigatorProfilesPanel
               profiles={explorer.profiles}
@@ -1804,18 +1798,23 @@ function amountDetailLabel(amount: Exclude<Amount, null | undefined>): string {
 
 function CronologiaCard({ caseFile }: { caseFile: ExplorerCase }) {
   const published = formatDate(getField<string>(caseFile, "publishedAt"));
+  const inquiryStart = formatDate(getField<string>(caseFile, "inquiryStartAt"));
+  const inquiryEnd = formatDate(getField<string>(caseFile, "inquiryEndAt"));
   const opening = formatDate(getField<string>(caseFile, "openingAt"));
   const closing = formatDate(getField<string>(caseFile, "closedAt"));
   const awarded = formatDate(getField<string>(caseFile, "awardedAt"));
   const year = caseFile.year ? String(caseFile.year) : null;
-  const hasAny = published || opening || closing || awarded;
+  const genericClosing = inquiryEnd ? null : closing;
+  const hasAny = published || inquiryStart || inquiryEnd || opening || genericClosing || awarded;
   if (!hasAny && !year) return null;
   return (
     <div className={styles.detailCard}>
       <p className={styles.detailCardHead}>Cronología</p>
       {published && <DetailRow label="Publicación" value={published} />}
-      {opening && <DetailRow label="Apertura" value={opening} />}
-      {closing && <DetailRow label="Cierre" value={closing} />}
+      {inquiryStart && <DetailRow label="Inicio de consultas" value={inquiryStart} />}
+      {inquiryEnd && <DetailRow label="Cierre de consultas" value={inquiryEnd} />}
+      {opening && <DetailRow label="Acta de apertura" value={opening} />}
+      {genericClosing && <DetailRow label="Cierre" value={genericClosing} />}
       {awarded && <DetailRow label="Adjudicación" value={awarded} />}
       {!hasAny && year && <DetailRow label="Año" value={year} />}
     </div>
@@ -1976,7 +1975,7 @@ function computeRowState(row: {
 }): { tone: "verified" | "review" | "flag" | "unknown"; label: string } {
   if (row.primarySignal?.severity === "high") return { tone: "flag", label: "Prioritaria" };
   if (row.primarySignal?.severity === "medium") return { tone: "review", label: "Revisar" };
-  if (!row.hasOfficialGeometry) return { tone: "unknown", label: "Sin geometría" };
+  if (!row.hasOfficialGeometry) return { tone: "unknown", label: "Sin punto en mapa" };
   return { tone: "verified", label: "Con fuente" };
 }
 
@@ -1984,8 +1983,8 @@ const CASE_TYPE_LABELS: Record<string, string> = {
   argentina_contract: "Contrato AR",
   argentina_work: "Obra AR",
   procurement_contract: "Contrato",
-  procurement_process: "Compra o adjudicacion",
-  public_work: "Obra publica",
+  procurement_process: "Compra o adjudicación",
+  public_work: "Obra pública",
   public_works_progress: "Obra con avance",
   judicial_context: "Contexto judicial",
   historical_public_work: "Obra histórica",
@@ -2060,15 +2059,5 @@ function InvestigatorProfilesPanel({
         ))}
       </div>
     </section>
-  );
-}
-
-function StatCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string }) {
-  return (
-    <div className={styles.statCard}>
-      <p className={styles.statLabel}>{label}</p>
-      <p className={styles.statValue}>{value}</p>
-      {sublabel && <p className={styles.statSublabel}>{sublabel}</p>}
-    </div>
   );
 }

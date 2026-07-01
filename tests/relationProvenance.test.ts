@@ -47,7 +47,7 @@ test("relation provenance caveats do not overclaim wrongdoing or proven relation
   assert.deepEqual(provenances.map((item) => item.label), [
     "CUIT exacto",
     "Mismo organismo",
-    "Mismo numero de obra",
+    "Mismo número de obra",
     "Nombre normalizado",
     "Fuente judicial contextual",
     "Sugerido por usuario",

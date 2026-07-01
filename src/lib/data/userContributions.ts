@@ -208,29 +208,29 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
     errors.push({ field: "title", message: "Usa lenguaje neutral en el titulo." });
   }
   if (!jurisdiction) {
-    errors.push({ field: "jurisdiction", message: "Indica el pais o jurisdiccion." });
+    errors.push({ field: "jurisdiction", message: "Indicá el país o jurisdicción." });
   }
   if (!explanation) {
-    errors.push({ field: "explanation", message: "Contanos que dato aporta o que deberiamos revisar." });
+    errors.push({ field: "explanation", message: "Contanos qué dato aporta o qué deberíamos revisar." });
   } else if (hasUnsafeCopy(explanation)) {
-    errors.push({ field: "explanation", message: "Usa lenguaje neutral. Faro revisa fuentes, no publica acusaciones." });
+    errors.push({ field: "explanation", message: "Usá lenguaje neutral. Faro revisa fuentes, no publica acusaciones." });
   }
   if (publicSourceUrl && !isValidHttpUrl(publicSourceUrl)) {
-    errors.push({ field: "publicSourceUrl", message: "El link publico debe ser una URL valida." });
+    errors.push({ field: "publicSourceUrl", message: "El link público debe ser una URL válida." });
   }
   if (contactEmail && !isValidEmail(contactEmail)) {
-    errors.push({ field: "contactEmail", message: "El email de contacto no parece valido." });
+    errors.push({ field: "contactEmail", message: "El email de contacto no parece válido." });
   }
   if (privacyMode === "contact" && !contactEmail) {
     errors.push({
       field: "contactEmail",
-      message: "Para permitir contacto, agrega un email o elegi enviar sin contacto.",
+      message: "Para permitir contacto, agregá un email o elegí enviar sin contacto.",
     });
   }
   if (privacyMode === "anonymous" && (contactName || contactEmail)) {
     errors.push({
       field: "privacyMode",
-      message: "Para enviar sin contacto, deja nombre y email vacios.",
+      message: "Para enviar sin contacto, dejá nombre y email vacíos.",
     });
   }
   validateTypeSpecificFields({
@@ -246,19 +246,19 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
   if (!draft.sourcePermissionConfirmed) {
     errors.push({
       field: "sourcePermissionConfirmed",
-      message: "Confirma que la informacion viene de fuentes publicas o material propio autorizado.",
+      message: "Confirmá que la información viene de fuentes públicas o material propio autorizado.",
     });
   }
   if (!draft.reviewConfirmed) {
     errors.push({
       field: "reviewConfirmed",
-      message: "Confirma que el aporte entra a revision antes de usarse.",
+      message: "Confirmá que el aporte entra a revisión antes de usarse.",
     });
   }
   if (attachments.length > MAX_CONTRIBUTION_ATTACHMENTS) {
     errors.push({
       field: "attachments",
-      message: `Subi hasta ${MAX_CONTRIBUTION_ATTACHMENTS} archivos por aporte.`,
+      message: `Subí hasta ${MAX_CONTRIBUTION_ATTACHMENTS} archivos por aporte.`,
     });
   }
   attachments.forEach((attachment, index) => {
@@ -266,14 +266,14 @@ export function validateContributionDraft(draft: UserContributionDraft): Contrib
     if (!ACCEPTED_CONTRIBUTION_ATTACHMENT_TYPES.includes(mimeType as AcceptedAttachmentType)) {
       errors.push({
         field: `attachments.${index}`,
-        message: "Solo aceptamos JPG, PNG, WebP o PDF para revision privada.",
+        message: "Solo aceptamos JPG, PNG, WebP o PDF para revisión privada.",
       });
       return;
     }
     if (!Number.isFinite(attachment.sizeBytes) || attachment.sizeBytes <= 0) {
       errors.push({
         field: `attachments.${index}`,
-        message: "El archivo esta vacio o no se pudo leer.",
+        message: "El archivo está vacío o no se pudo leer.",
       });
       return;
     }
@@ -434,28 +434,28 @@ function validateTypeSpecificFields({
   attachments: readonly ContributionAttachmentDraft[];
 }) {
   if (type === "add_source" && !publicSourceUrl) {
-    errors.push({ field: "publicSourceUrl", message: "Agrega el link oficial o publico de la fuente." });
+    errors.push({ field: "publicSourceUrl", message: "Agregá el link oficial o público de la fuente." });
   }
   if (type === "correct_data") {
     if (!relatedCase) {
-      errors.push({ field: "relatedCase", message: "Indica el expediente o caso Faro que queres corregir." });
+      errors.push({ field: "relatedCase", message: "Indicá el expediente o caso Faro que querés corregir." });
     }
     if (!publicSourceUrl) {
-      errors.push({ field: "publicSourceUrl", message: "Agrega una fuente que respalde la correccion." });
+      errors.push({ field: "publicSourceUrl", message: "Agregá una fuente que respalde la corrección." });
     }
     if (!missingVerification) {
-      errors.push({ field: "missingVerification", message: "Indica que campo visible deberiamos corregir." });
+      errors.push({ field: "missingVerification", message: "Indicá qué campo visible deberíamos corregir." });
     }
     if (!amountOrDate) {
-      errors.push({ field: "amountOrDate", message: "Agrega el valor sugerido o la correccion propuesta." });
+      errors.push({ field: "amountOrDate", message: "Agregá el valor sugerido o la corrección propuesta." });
     }
   }
   if (type === "add_photo") {
     if (!approximateLocation) {
-      errors.push({ field: "approximateLocation", message: "Agrega una ubicacion aproximada para revisar el material." });
+      errors.push({ field: "approximateLocation", message: "Agregá una ubicación aproximada para revisar el material." });
     }
     if (attachments.length === 0) {
-      errors.push({ field: "attachments", message: "Subi al menos un archivo o foto para este tipo de aporte." });
+      errors.push({ field: "attachments", message: "Subí al menos un archivo o foto para este tipo de aporte." });
     }
   }
 }

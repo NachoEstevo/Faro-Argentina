@@ -57,7 +57,7 @@ test("buildInvestigationDossierReadiness marks handoff ready with caveats when g
   assert.equal(readiness.label, "Lista para handoff interno con caveats");
   assert.equal(readiness.score.blocked, 0);
   assert.ok(readiness.checks.find((check) => check.id === "data_gaps")?.status === "review");
-  assert.match(readiness.nextActions.join("\n"), /pendientes de verificacion/);
+  assert.match(readiness.nextActions.join("\n"), /pendientes de verificación/);
 });
 
 test("buildInvestigationDossierReadiness requires relation notes and verification tasks", () => {

@@ -751,49 +751,6 @@
   color: var(--cf-text-muted);
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  padding: 24px 40px 0;
-}
-
-.statCard {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 16px 18px;
-  background: var(--cf-workspace-card-bg, var(--cf-bg-elev));
-  border: 1px solid var(--cf-border);
-  border-radius: 10px;
-}
-
-.statLabel {
-  margin: 0;
-  font-family: var(--cf-font-data);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cf-text-muted);
-}
-
-.statValue {
-  margin: 0;
-  font-family: var(--cf-font-heading);
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--cf-text);
-  letter-spacing: -0.3px;
-}
-
-.statSublabel {
-  margin: 4px 0 0;
-  font-family: var(--cf-font-data);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--cf-text-muted);
-}
-
 .profilePanel {
   display: grid;
   gap: 12px;
@@ -2043,7 +2000,6 @@
     color: var(--cf-text);
   }
   .searchWrap,
-  .statsGrid,
   .profilePanel,
   .tableWrap,
   .detail {
@@ -2051,7 +2007,7 @@
     padding-right: 16px;
   }
   .profilePanel {
-    order: 5;
+    order: 4;
     margin-left: 16px;
     margin-right: 16px;
     padding: 12px;
@@ -2093,21 +2049,6 @@
   .searchBox input {
     font-size: 13px;
   }
-  .statsGrid {
-    order: 4;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    padding-top: 14px;
-  }
-  .statCard {
-    padding: 12px 10px;
-    gap: 4px;
-    border-radius: 8px;
-  }
-  .statLabel {
-    font-size: 9px;
-    letter-spacing: 0.12em;
-  }
   .statValue {
     font-size: 16px;
     letter-spacing: -0.2px;
@@ -2132,7 +2073,7 @@
     gap: 12px;
   }
   .tableWrap {
-    order: 6;
+    order: 5;
     overflow: visible;
     padding-top: 18px;
   }
@@ -2375,7 +2316,6 @@
     padding-top: 14px;
   }
   .searchWrap,
-  .statsGrid,
   .profilePanel,
   .tableWrap,
   .detail {
@@ -2392,21 +2332,10 @@
     margin-left: 12px;
     margin-right: 12px;
   }
-  .statsGrid,
   .profileGrid,
   .table tbody,
   .mobileFacetGroups {
     grid-template-columns: 1fr;
-  }
-  .statsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .statCard {
-    min-height: 92px;
-    padding: 14px;
-  }
-  .statLabel {
-    font-size: 10px;
   }
   .statValue {
     font-size: 21px;

@@ -273,8 +273,8 @@ export function buildEvidencePack(caseFile: FaroCaseFile): EvidencePack {
       "Abrir la fuente oficial indicada en el receipt.",
       "Buscar el numero de obra, contrato o procedimiento en el dataset original.",
       "Revisar receipts relacionados antes de tratar el caso como evidencia cruzada.",
-      "Cruzar contratos, pagos y avance fisico antes de publicar conclusiones.",
-      "Si se usa Sentinel-2, revisar nubes, fecha de escena y resolucion antes de inferir avance.",
+      "Cruzar contratos, pagos y avance físico antes de publicar conclusiones.",
+      "Si se usa Sentinel-2, revisar nubes, fecha de escena y resolución antes de inferir avance.",
     ],
   };
 }

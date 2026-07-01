@@ -102,15 +102,15 @@ export function buildCaveats({
   hasLocation: boolean;
 }): string[] {
   return [
-    "Contrato oficial de obra publica; no confirma pago ni avance fisico por si solo.",
+    "Contrato oficial de obra pública; no confirma pago ni avance físico por sí solo.",
     hasCoordinates
       ? "Ubicacion de obra cruzada con obra oficial por numero_obra; no se infiere desde el proveedor."
-      : "La ubicacion de obra debe cruzarse con fuente geografica oficial antes de dibujarse en mapa.",
+      : "La ubicación de obra debe cruzarse con fuente geográfica oficial antes de dibujarse en mapa.",
     hasLocation
       ? "Ubicacion administrativa declarada por CONTRAT.AR; puede haber multiples renglones por obra."
-      : "Falta ubicacion administrativa declarada para esta obra.",
+      : "Falta ubicación administrativa declarada para esta obra.",
     hasSupplier
-      ? "Datos de proveedor cruzados contra SIPRO; provincia/localidad del proveedor no equivalen a lugar de ejecucion."
+      ? "Datos de proveedor cruzados contra SIPRO; provincia/localidad del proveedor no equivalen a lugar de ejecución."
       : "Proveedor tomado del contrato; falta cruce SIPRO para domicilio registrado.",
     hasCompetitionStats
       ? "Competencia calculada desde ofertas/actas de apertura; no equivale a evaluacion legal del proceso."

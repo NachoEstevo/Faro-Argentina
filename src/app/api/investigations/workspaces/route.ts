@@ -72,7 +72,7 @@ export async function PUT(request: Request) {
       return Response.json(
         {
           error: "invalid_workspace_collection",
-          message: "No pudimos guardar el espacio privado porque el payload esta incompleto.",
+          message: "No pudimos guardar el espacio privado porque el payload está incompleto.",
         },
         { status: 400 },
       );

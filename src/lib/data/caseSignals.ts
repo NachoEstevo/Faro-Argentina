@@ -197,7 +197,7 @@ function addJudicialContextSignals(signals: CaseSignal[], caseFile: SignalCaseFi
         ? `${relatedCaseCount} receipt(s) local(es) relacionados para abrir en Faro.`
         : `Fuente principal: ${caseFile.receipt.sourceId}.`,
     ].filter(Boolean).join(" "),
-    caveat: "El contexto judicial no prueba por si solo nada sobre otros contratos Faro; requiere lectura documental y match exacto.",
+    caveat: "El contexto judicial no prueba por sí solo nada sobre otros contratos Faro; requiere lectura documental y match exacto.",
     action: "Abrir la fuente judicial y los receipts relacionados antes de citar el caso.",
     relatedCaseIds: caseFile.relatedCaseIds,
     relationProvenance: [buildRelationProvenance("judicial_context")],
@@ -221,9 +221,9 @@ function addCompetitionSignals(signals: CaseSignal[], caseFile: SignalCaseFile) 
       confidence: "high",
       priority: 100,
       label: "Competencia baja",
-      summary: "El registro oficial muestra 1 oferente. Es una pista para revisar pliego, rubro y justificacion del procedimiento.",
+      summary: "El registro oficial muestra 1 oferente. Es una pista para revisar pliego, rubro y justificación del procedimiento.",
       evidence: "Cantidad de oferentes declarada por fuente oficial: 1.",
-      caveat: "Un solo oferente no alcanza como conclusion; puede tener explicacion documental o de mercado.",
+      caveat: "Un solo oferente no alcanza como conclusión; puede tener explicación documental o de mercado.",
       action: "Abrir actas/ofertas y comparar con procedimientos similares.",
     });
     return;
@@ -238,9 +238,9 @@ function addCompetitionSignals(signals: CaseSignal[], caseFile: SignalCaseFile) 
       confidence: "high",
       priority: 82,
       label: "Competencia limitada",
-      summary: `El registro oficial muestra ${bidderCount} oferentes. Conviene revisar si hubo barreras, rubro muy especifico o baja concurrencia repetida.`,
+      summary: `El registro oficial muestra ${bidderCount} oferentes. Conviene revisar si hubo barreras, rubro muy específico o baja concurrencia repetida.`,
       evidence: `Cantidad de oferentes declarada por fuente oficial: ${bidderCount}.`,
-      caveat: "La cantidad de oferentes es una senal de priorizacion, no una conclusion.",
+      caveat: "La cantidad de oferentes es una señal de priorización, no una conclusión.",
       action: "Comparar ofertas, pliego, fechas y compras del mismo rubro.",
     });
     return;
@@ -256,8 +256,8 @@ function addCompetitionSignals(signals: CaseSignal[], caseFile: SignalCaseFile) 
     label: "Competencia medida",
     summary: `La fuente oficial informa ${bidderCount} oferentes para este proceso.`,
     evidence: `Cantidad de oferentes declarada por fuente oficial: ${bidderCount}.`,
-    caveat: "Faro no evalua calidad de ofertas ni requisitos tecnicos sin documentos adicionales.",
-    action: "Usar el dato como contexto al revisar monto y adjudicacion.",
+    caveat: "Faro no evalúa calidad de ofertas ni requisitos técnicos sin documentos adicionales.",
+    action: "Usar el dato como contexto al revisar monto y adjudicación.",
   });
 }
 
@@ -286,7 +286,7 @@ function addBudgetSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
     summary: `El monto registrado supera el presupuesto oficial por aproximadamente ${percent}%.`,
     evidence: `${amount.currency} ${round(amount.value)} frente a presupuesto oficial ${round(officialBudget.value)}.`,
     caveat: "El presupuesto oficial puede cambiar por ampliaciones o documentos no incluidos en este snapshot.",
-    action: "Buscar ampliaciones, dictamen de evaluacion y detalle de adjudicacion.",
+    action: "Buscar ampliaciones, dictamen de evaluación y detalle de adjudicación.",
   });
 }
 
@@ -302,10 +302,10 @@ function addAmountGapSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
     confidence: "high",
     priority: 78,
     label: "Monto faltante",
-    summary: "El caso tiene registro oficial de compra, contrato o adjudicacion, pero no expone un monto usable en este snapshot.",
+    summary: "El caso tiene registro oficial de compra, contrato o adjudicación, pero no expone un monto usable en este snapshot.",
     evidence: `Fuente principal: ${caseFile.receipt.sourceId}.`,
-    caveat: "La falta de monto puede ser un problema de cobertura, formato o etapa del proceso; no alcanza como conclusion por si sola.",
-    action: "Abrir fuente oficial y buscar contrato, orden, adjudicacion o partida presupuestaria con monto verificable.",
+    caveat: "La falta de monto puede ser un problema de cobertura, formato o etapa del proceso; no alcanza como conclusión por sí sola.",
+    action: "Abrir fuente oficial y buscar contrato, orden, adjudicación o partida presupuestaria con monto verificable.",
   });
 }
 
@@ -323,7 +323,7 @@ function addClaimSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
     label: "Reclamos asociados",
     summary: `La fuente oficial informa ${claimCount} reclamos asociados al proceso o comprador.`,
     evidence: `Cantidad de reclamos oficial: ${claimCount}.`,
-    caveat: "Los reclamos no alcanzan como conclusion; indican que vale abrir documentos y contexto.",
+    caveat: "Los reclamos no alcanzan como conclusión; indican que vale abrir documentos y contexto.",
     action: "Revisar acta, preguntas, reclamos y respuesta de la entidad compradora.",
   });
 }
@@ -338,7 +338,7 @@ function addTraceabilitySignals(signals: CaseSignal[], caseFile: SignalCaseFile)
       confidence: "high",
       priority: 72,
       label: "Acta oficial disponible",
-      summary: "Hay un enlace oficial directo al acta o detalle de adjudicacion.",
+      summary: "Hay un enlace oficial directo al acta o detalle de adjudicación.",
       evidence: caseFile.awardActUrl,
       caveat: "El acta debe leerse junto con bases, ofertas y eventuales pagos.",
       action: "Abrir acta oficial y citarla desde el receipt.",
@@ -357,7 +357,7 @@ function addTraceabilitySignals(signals: CaseSignal[], caseFile: SignalCaseFile)
       label: "Evidencia cruzada",
       summary: `Este caso enlaza ${relatedCount} receipt${relatedCount === 1 ? "" : "s"} adicional${relatedCount === 1 ? "" : "es"} de fuentes oficiales.`,
       evidence: (caseFile.relatedReceipts ?? []).map((receipt) => receipt.sourceId).join(", "),
-      caveat: "Mas fuentes mejoran trazabilidad, pero no reemplazan verificacion documental.",
+      caveat: "Más fuentes mejoran trazabilidad, pero no reemplazan verificación documental.",
       action: "Abrir receipts relacionados y reproducir el cruce.",
     });
   }
@@ -387,7 +387,7 @@ function addPublicWorksProgressSignals(signals: CaseSignal[], caseFile: SignalCa
   if (physical === null && financial === null && !stage) return;
 
   const progressEvidence = [
-    physical !== null ? `avance fisico ${Math.round(physical)}%` : "",
+    physical !== null ? `avance físico ${Math.round(physical)}%` : "",
     financial !== null ? `avance financiero ${Math.round(financial)}%` : "",
     stage ? `etapa ${stage}` : "",
   ].filter(Boolean).join("; ");
@@ -400,10 +400,10 @@ function addPublicWorksProgressSignals(signals: CaseSignal[], caseFile: SignalCa
     confidence: "high",
     priority: 46,
     label: "Avance declarado",
-    summary: "La fuente oficial informa avance o etapa del proyecto para priorizar revision documental.",
+    summary: "La fuente oficial informa avance o etapa del proyecto para priorizar revisión documental.",
     evidence: progressEvidence,
-    caveat: "El avance declarado no equivale a verificacion independiente ni confirma pagos.",
-    action: "Abrir el perfil oficial y cruzar con certificados, pagos y geometria oficial antes de publicar.",
+    caveat: "El avance declarado no equivale a verificación independiente ni confirma pagos.",
+    action: "Abrir el perfil oficial y cruzar con certificados, pagos y geometría oficial antes de publicar.",
   });
 }
 
@@ -422,7 +422,7 @@ function addAggregateSupplierSignals(
   const isLowConfidenceSupplierIdentity = supplierProfile.identityConfidence === "low";
   const supplierIdentityConfidence = isLowConfidenceSupplierIdentity ? "low" : "medium";
   const identityCaveat = isLowConfidenceSupplierIdentity
-    ? " Faro agrupo este proveedor por nombre normalizado porque falta documento fiscal confiable."
+    ? " Faro agrupó este proveedor por nombre normalizado porque falta documento fiscal confiable."
     : "";
   const supplierProvenance = buildRelationProvenance(
     supplierProfile.identityMethod === "document" ? "exact_cuit" : "normalized_name",
@@ -444,7 +444,7 @@ function addAggregateSupplierSignals(
       summary: `El proveedor aparece como ganador en ${supplierAgencyProfile.singleBidCaseCount} contratos del mismo organismo con 1 oferente registrado.`,
       evidence: `${supplierAgencyProfile.agencyLabel}: ${supplierAgencyProfile.singleBidCaseCount} contratos con 1 oferente; ${supplierAgencyProfile.caseCount} contratos del proveedor en ese organismo.`,
       caveat: `La recurrencia depende del alcance del dataset cargado y no prueba direccionamiento.${identityCaveat}`,
-      action: "Comparar pliegos, oferentes, fechas y justificacion del organismo en los contratos relacionados.",
+      action: "Comparar pliegos, oferentes, fechas y justificación del organismo en los contratos relacionados.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
       relationProvenance: supplierAgencyProvenance,
     });
@@ -461,7 +461,7 @@ function addAggregateSupplierSignals(
       label: "Proveedor recurrente por organismo",
       summary: `El proveedor aparece en ${supplierAgencyProfile.caseCount} contratos del mismo organismo dentro del set analizado.`,
       evidence: `${supplierAgencyProfile.agencyLabel}: ${supplierAgencyProfile.caseCount} contratos; monto acumulado con monto informado: ${round(supplierAgencyProfile.totalAmount)}.`,
-      caveat: `Un proveedor recurrente puede reflejar especializacion o mercado chico; requiere comparar rubro, pliegos y competencia.${identityCaveat}`,
+      caveat: `Un proveedor recurrente puede reflejar especialización o mercado chico; requiere comparar rubro, pliegos y competencia.${identityCaveat}`,
       action: "Abrir los contratos relacionados y revisar si se repiten rubro, unidad compradora, requisitos y oferentes.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
       relationProvenance: supplierAgencyProvenance,
@@ -479,11 +479,11 @@ function addAggregateSupplierSignals(
       severity: "medium",
       confidence: supplierIdentityConfidence,
       priority: 90,
-      label: "Concentracion proveedor-organismo",
+      label: "Concentración proveedor-organismo",
       summary: `En este set, ${Math.round(concentrationRatio * 100)}% de los contratos del proveedor aparecen asociados al mismo organismo.`,
       evidence: `${supplierAgencyProfile.caseCount} de ${supplierProfile.caseCount} contratos del proveedor se concentran en ${supplierAgencyProfile.agencyLabel}.`,
-      caveat: `La concentracion depende del alcance del dataset cargado; debe validarse con mas fuentes y periodo completo.${identityCaveat}`,
-      action: "Ampliar periodo/fuentes y comparar contra otros proveedores del mismo rubro.",
+      caveat: `La concentración depende del alcance del dataset cargado; debe validarse con más fuentes y período completo.${identityCaveat}`,
+      action: "Ampliar período/fuentes y comparar contra otros proveedores del mismo rubro.",
       relatedCaseIds: supplierAgencyProfile.caseIds.filter((caseId) => caseId !== caseFile.id).slice(0, 8),
       relationProvenance: supplierAgencyProvenance,
     });
@@ -527,14 +527,14 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
       severity: "low",
       confidence: isAdminCentroid ? "medium" : "high",
       priority: 58,
-      label: isAdminCentroid ? "Referencia territorial validada" : "Ubicacion oficial validada",
+      label: isAdminCentroid ? "Referencia territorial validada" : "Ubicación oficial validada",
       summary: isAdminCentroid
-        ? "El caso tiene un centroide administrativo oficial para orientacion territorial en el mapa."
+        ? "El caso tiene un centroide administrativo oficial para orientación territorial en el mapa."
         : "El caso tiene coordenadas declaradas por fuente oficial y puede aparecer en el mapa.",
       evidence: mapGeoEvidence
         ? `${mapGeoEvidence.label}: ${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`
         : `${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}`,
-      caveat: mapGeoEvidence?.caveat ?? "La coordenada ubica el caso, no prueba avance fisico ni pagos.",
+      caveat: mapGeoEvidence?.caveat ?? "La coordenada ubica el caso, no prueba avance físico ni pagos.",
       action: "Abrir mapa, fuente y expediente antes de interpretar el punto.",
     });
 
@@ -552,10 +552,10 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
         confidence: "medium",
         priority: 76,
         label: "Candidato Sentinel-2",
-        summary: "Tiene fecha aproximada y coordenada oficial suficientes para preparar una comparacion satelital antes/despues.",
-        evidence: `Anio ${caseFile.year}; coordenada ${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}.`,
-        caveat: "Sentinel-2 aporta contexto visual; nubes, resolucion y fecha pueden limitar conclusiones.",
-        action: "Buscar escena anterior al contrato y ultima escena disponible.",
+        summary: "Tiene fecha aproximada y coordenada oficial suficientes para preparar una comparación satelital antes/después.",
+        evidence: `Año ${caseFile.year}; coordenada ${caseFile.coordinates.lat}, ${caseFile.coordinates.lon}.`,
+        caveat: "Sentinel-2 aporta contexto visual; nubes, resolución y fecha pueden limitar conclusiones.",
+        action: "Buscar escena anterior al contrato y última escena disponible.",
       });
     }
     return;
@@ -569,10 +569,10 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
       severity: "medium",
       confidence: "high",
       priority: 52,
-      label: "Sin geometria oficial",
+      label: "Sin punto en mapa",
       summary: "El caso es verificable por fuente, pero no se dibuja en mapa porque falta una coordenada oficial confiable.",
       evidence: `Fuente principal: ${caseFile.receipt.sourceId}.`,
-      caveat: "Faro no infiere ubicaciones desde nombres cuando no hay geometria oficial suficiente.",
+      caveat: "Faro no infiere ubicaciones desde nombres cuando no hay geometría oficial suficiente.",
       action: "Cruzar con catastro, UBIGEO, comuna o dataset territorial oficial antes de mapear.",
     });
     return;
@@ -585,10 +585,10 @@ function addGeoSignals(signals: CaseSignal[], caseFile: SignalCaseFile) {
     severity: "medium",
     confidence: "high",
     priority: 56,
-    label: "Geometria requiere revision",
-    summary: "La fuente incluye coordenadas, pero no pasan los controles geograficos para dibujarlas como ubicacion oficial validada.",
+    label: "Geometría requiere revisión",
+    summary: "La fuente incluye coordenadas, pero no pasan los controles geográficos para dibujarlas como ubicación oficial validada.",
     evidence: `${coordinateQuality.summary} Fuente principal: ${caseFile.receipt.sourceId}.`,
-    caveat: "Faro preserva la coordenada como dato de fuente, pero no la dibuja ni la corrige sin verificacion oficial.",
+    caveat: "Faro preserva la coordenada como dato de fuente, pero no la dibuja ni la corrige sin verificación oficial.",
     action: "Revisar fuente, expediente o dataset territorial oficial antes de usar la coordenada en mapa.",
   });
 }
@@ -604,10 +604,10 @@ function addVerificationGapSignals(signals: CaseSignal[], caseFile: SignalCaseFi
     confidence: "high",
     priority: 48,
     label: "Falta pago/avance",
-    summary: "El registro muestra compra, contrato o adjudicacion; todavia falta cruzar pago efectivo y avance cuando aplique.",
+    summary: "El registro muestra compra, contrato o adjudicación; todavía falta cruzar pago efectivo y avance cuando aplique.",
     evidence: `Tipo de caso: ${caseFile.caseType}.`,
     caveat: "Adjudicar o contratar no significa que el dinero se haya pagado ni que la obra haya avanzado.",
-    action: "Cruzar con ejecucion presupuestaria, pagos, recepciones y avance fisico.",
+    action: "Cruzar con ejecución presupuestaria, pagos, recepciones y avance físico.",
   });
 }
 

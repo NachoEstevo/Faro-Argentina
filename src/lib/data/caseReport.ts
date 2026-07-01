@@ -189,7 +189,7 @@ function toTechnicalReceipt(receipt: ExpedienteReceipt): CaseReportTechnicalRece
 }
 
 function toReportCitation(citation: ArticleCitation): CaseReportCitation {
-  const primaryClaim = citation.claimSummaries[0]?.summary ?? "Referencia periodistica revisada para contexto.";
+  const primaryClaim = citation.claimSummaries[0]?.summary ?? "Referencia periodística revisada para contexto.";
   return {
     title: `Nota de ${citation.publisher}`,
     sourceLabel: citation.authors.length > 0
@@ -217,12 +217,12 @@ function countryLabel(countryCode: string): string {
 
 function caseTypeLabel(caseType: string | null): string {
   if (caseType === "procurement_contract") return "Contrato";
-  if (caseType === "procurement_process") return "Compra o adjudicacion";
-  if (caseType === "budget_execution") return "Ejecucion presupuestaria";
+  if (caseType === "procurement_process") return "Compra o adjudicación";
+  if (caseType === "budget_execution") return "Ejecución presupuestaria";
   if (caseType === "public_works_progress") return "Obra con avance declarado";
-  if (caseType === "public_work") return "Obra publica";
+  if (caseType === "public_work") return "Obra pública";
   if (caseType === "judicial_context") return "Contexto judicial";
-  if (caseType === "historical_public_work") return "Obra historica";
+  if (caseType === "historical_public_work") return "Obra histórica";
   if (caseType === "supplier_judicial_context") return "Proveedor con contexto judicial";
   return "Expediente";
 }

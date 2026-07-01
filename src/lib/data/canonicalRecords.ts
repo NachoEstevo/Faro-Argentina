@@ -153,7 +153,7 @@ export function buildCanonicalRecordsFromArgentinaWork(
       countryCode: "AR",
       receiptIds,
       confidence: "official_dataset",
-      caveats: ["Coordenada declarada por fuente oficial; no reemplaza verificacion en terreno."],
+      caveats: ["Coordenada declarada por fuente oficial; no reemplaza verificación en terreno."],
       label: caseFile.title,
       coordinates: caseFile.coordinates,
       officialIds: {
@@ -209,7 +209,7 @@ export function buildCanonicalRecordsFromArgentinaContractCase(
       countryCode: caseFile.countryCode,
       receiptIds,
       confidence: "official_dataset",
-      caveats: ["Proveedor declarado en adjudicacion oficial; no prueba pago."],
+      caveats: ["Proveedor declarado en adjudicación oficial; no prueba pago."],
       name: caseFile.supplierName ?? `Proveedor ${caseFile.supplierDocument}`,
       officialIds: {
         normalizedName: slug(caseFile.supplierName ?? supplierKey),
@@ -225,7 +225,7 @@ export function buildCanonicalRecordsFromArgentinaContractCase(
       countryCode: caseFile.countryCode,
       receiptIds,
       confidence: "official_dataset",
-      caveats: ["Obra publica enlazada desde identificador oficial relacionado."],
+      caveats: ["Obra pública enlazada desde identificador oficial relacionado."],
       title: caseFile.locationName ?? caseFile.title,
       officialIds: {
         workNumber: caseFile.publicWorkNumber,

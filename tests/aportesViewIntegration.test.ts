@@ -197,10 +197,10 @@ test("legal policy pages exist as static app routes", async () => {
   const privacySource = await readFile(routeUrls[0], "utf8");
   const securitySource = await readFile(routeUrls[2], "utf8");
   const policySource = await readFile(routeUrls[3], "utf8");
-  assert.match(privacySource, /Retencion/);
+  assert.match(privacySource, /Retención/);
   assert.match(privacySource, /transferencias internacionales/);
   assert.match(securitySource, /Metadatos de archivos/);
-  assert.match(securitySource, /URLs publicas permanentes/);
+  assert.match(securitySource, /URLs públicas permanentes/);
   assert.match(policySource, /Modo sin contacto/);
-  assert.match(policySource, /Retencion y descarte/);
+  assert.match(policySource, /Retención y descarte/);
 });

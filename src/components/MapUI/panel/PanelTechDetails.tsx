@@ -24,7 +24,7 @@ function shortSource(sourceId: string): string {
   if (sourceId.includes("CONTRATOS")) return "Contratos";
   if (sourceId.includes("OFERTAS")) return "Ofertas";
   if (sourceId.includes("PROCEDIMIENTOS")) return "Procedimiento";
-  if (sourceId.includes("UBICACION")) return "Ubicacion";
+  if (sourceId.includes("UBICACION")) return "Ubicación";
   if (sourceId.includes("SIPRO")) return "SIPRO";
   if (sourceId.includes("OCDS")) return "OCDS";
   if (sourceId.includes("GASTO")) return "Presupuesto";
